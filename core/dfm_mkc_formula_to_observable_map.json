@@ -1,0 +1,96 @@
+{
+  "surface": "DFM_MKC_formula_to_observable_map",
+  "status": "conditional_interface_only",
+  "external_repo": "inaciovasquez2020/dfm-mkc-cosmology",
+  "repo_claim_scope": {
+    "assumptions": [
+      "FLRW background geometry",
+      "metric gravity with covariant conservation",
+      "single dark fluid sector with minimal kinetic coupling",
+      "linear perturbation theory valid on comparison scales",
+      "standard baryon/radiation/neutrino treatment",
+      "observational inputs remain within published systematics and calibration bounds"
+    ],
+    "repo_boundaries": [
+      "not an identifiability theorem",
+      "not an independent likelihood reproduction",
+      "not a final cosmological truth claim",
+      "not a Lambda-CDM rejection claim",
+      "not a dark-sector closure claim",
+      "not a matter-sector closure claim"
+    ]
+  },
+  "map_definition": {
+    "name": "DFM_MKC_formula_to_observable_map",
+    "type": "DFM_MKC_FormulaSurface -> ObservablePredictionSurface",
+    "required_fields": [
+      "formula_source_file",
+      "parameter_vector",
+      "parameter_priors",
+      "redshift_or_multipole_domain",
+      "prediction_operator",
+      "observable_name",
+      "covariance_source",
+      "likelihood_operator",
+      "falsification_threshold"
+    ],
+    "observable_predictions": [
+      {
+        "surface": "DESI_DR2_BAO_DFM_MKC_Test",
+        "observable": "BAO distance-scale predictions",
+        "required_model_outputs": [
+          "H(z)",
+          "D_M(z)",
+          "D_H(z)",
+          "D_V(z)",
+          "r_d"
+        ],
+        "dataset_role": "first expansion-history falsification surface",
+        "falsification_rule": "reject only if DESI_DR2_BAO likelihood mismatch exceeds declared threshold after allowed parameter variation"
+      },
+      {
+        "surface": "PantheonPlus_DFM_MKC_HubbleDiagram_Test",
+        "observable": "Type Ia supernova luminosity-distance / distance-modulus predictions",
+        "required_model_outputs": [
+          "D_L(z)",
+          "mu(z)",
+          "nuisance-calibrated residual model"
+        ],
+        "dataset_role": "second Hubble-diagram falsification surface",
+        "falsification_rule": "reject only if PantheonPlus likelihood mismatch exceeds declared threshold after allowed parameter variation and covariance treatment"
+      },
+      {
+        "surface": "Planck_ACT_DFM_MKC_CMB_Consistency_Test",
+        "observable": "CMB background and angular-power-spectrum consistency predictions",
+        "required_model_outputs": [
+          "theta_star",
+          "sound_horizon",
+          "angular_diameter_distance_to_last_scattering",
+          "linear perturbation transfer consistency",
+          "C_ell summary or likelihood-compatible compressed prediction"
+        ],
+        "dataset_role": "third CMB consistency falsification surface",
+        "falsification_rule": "reject only if Planck_ACT consistency likelihood mismatch exceeds declared threshold under stated assumptions"
+      }
+    ]
+  },
+  "deep_search_result": {
+    "dfm_mkc_repo_status": "repository surface closed under declared reproducibility rules, not a cosmological truth claim",
+    "desi_dr2_bao": "public expansion-history falsification target",
+    "pantheonplus": "public Hubble-diagram falsification target",
+    "planck_act": "public CMB consistency falsification target",
+    "interface_result": "DFM_MKC_FORMULA_SURFACE_FOUND_BUT_NO_ZD_CLOSURE_DERIVED"
+  },
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove a DFM-MKC cosmology theorem",
+    "does not validate cosmology empirically",
+    "does not reject Lambda-CDM",
+    "does not independently reproduce DESI DR2 likelihoods",
+    "does not independently reproduce PantheonPlus likelihoods",
+    "does not independently reproduce Planck or ACT likelihoods",
+    "does not discharge LiftSourceChainCompositionGap"
+  ],
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure"
+}
