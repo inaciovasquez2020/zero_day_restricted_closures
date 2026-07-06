@@ -131,6 +131,37 @@ def main():
                 print("ANTI_UNCONDITIONAL_RULE_FAIL restricted closure receipt missing TerminalExistsSource-alone boundary")
                 return 1
 
+    planck_act_path = ROOT / "artifacts/tests/planck_act_dfm_mkc_cmb_consistency_test_2026_07_06.json"
+    if planck_act_path.exists():
+        planck_act_text = planck_act_path.read_text(encoding="utf-8")
+        required_planck_act_tokens = [
+            "Planck_ACT_DFM_MKC_CMB_Consistency_Test",
+            "falsification_surface_only",
+            "DFM_MKC_formula_to_observable_map",
+            "third CMB consistency falsification surface",
+            "theta_star",
+            "sound_horizon",
+            "angular_diameter_distance_to_last_scattering",
+            "linear perturbation transfer consistency",
+            "C_ell summary or likelihood-compatible compressed prediction",
+            "PLANCK_ACT_CMB_CONSISTENCY_TEST_DEFINED_BUT_NOT_EXECUTED",
+            "DFM_MKC_FORMULA_SURFACE_FOUND_BUT_NO_ZD_CLOSURE_DERIVED",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not validate cosmology empirically",
+            "does not reject Lambda-CDM",
+            "does not independently reproduce Planck likelihoods",
+            "does not independently reproduce ACT likelihoods",
+            "does not claim Planck falsifies DFM-MKC",
+            "does not claim ACT falsifies DFM-MKC",
+            "does not claim Planck supports DFM-MKC",
+            "does not claim ACT supports DFM-MKC",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_planck_act_token in required_planck_act_tokens:
+            if required_planck_act_token not in planck_act_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL planck act dfm mkc cmb consistency test missing token: {required_planck_act_token}")
+                return 1
+
     pantheon_path = ROOT / "artifacts/tests/pantheonplus_dfm_mkc_hubble_diagram_test_2026_07_06.json"
     if pantheon_path.exists():
         pantheon_text = pantheon_path.read_text(encoding="utf-8")
