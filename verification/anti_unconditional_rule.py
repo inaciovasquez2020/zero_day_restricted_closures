@@ -592,6 +592,38 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition witness receipt missing token: {required_composition_witness_receipt_token}")
                 return 1
 
+    composition_assumption_path = ROOT / "core/restricted_composition_witness_assumption_surface.json"
+    if composition_assumption_path.exists():
+        composition_assumption_text = composition_assumption_path.read_text(encoding="utf-8")
+        required_composition_assumption_tokens = [
+            "RestrictedCompositionWitnessAssumptionSurface",
+            "explicit_assumption_surface_only",
+            "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "RestrictedLiftSourceChainCompositionInputContract",
+            "RestrictedLiftSourceChainCompositionTargetSurface",
+            "RestrictedLiftSourceChainCompositionWitnessSurface",
+            "RestrictedCompositionTarget",
+            "RESTRICTED_COMPOSITION_WITNESS_ASSUMPTION_SURFACE_DEFINED_BUT_NOT_INHABITED",
+            "LiftSourceChainCompositionGap",
+            "RestrictedCoverageSource",
+            "DomainErasureSource",
+            "LiftAdmissibilitySource",
+            "NoEscapeBoundary",
+            "does not prove ZeroDayClosure",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not discharge LiftSourceChainCompositionGap",
+            "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "does not construct RestrictedCompositionTarget",
+            "does not construct an unrestricted zero-day closure",
+            "does not erase the restricted boundary",
+            "does not prove the restricted-to-unrestricted lift",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_composition_assumption_token in required_composition_assumption_tokens:
+            if required_composition_assumption_token not in composition_assumption_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition witness assumption missing token: {required_composition_assumption_token}")
+                return 1
+
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
