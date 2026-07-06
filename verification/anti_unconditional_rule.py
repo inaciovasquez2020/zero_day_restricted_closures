@@ -472,6 +472,35 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted lift composition receipt missing token: {required_composition_receipt_token}")
                 return 1
 
+    composition_target_path = ROOT / "core/restricted_lift_source_chain_composition_target_surface.json"
+    if composition_target_path.exists():
+        composition_target_text = composition_target_path.read_text(encoding="utf-8")
+        required_composition_target_tokens = [
+            "RestrictedLiftSourceChainCompositionTargetSurface",
+            "conditional_theorem_target_surface_only",
+            "RestrictedLiftSourceChainCompositionInputContract",
+            "RestrictedCoverageSource",
+            "DomainErasureSource",
+            "LiftAdmissibilitySource",
+            "NoEscapeBoundary",
+            "LiftSourceChainCompositionGap",
+            "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "restricted_zero_day_instance_only",
+            "RESTRICTED_COMPOSITION_TARGET_SURFACE_DEFINED_BUT_NO_THEOREM_SUPPLIED",
+            "does not prove ZeroDayClosure",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not discharge LiftSourceChainCompositionGap",
+            "does not prove RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "does not construct an unrestricted zero-day closure",
+            "does not erase the restricted boundary",
+            "does not prove the restricted-to-unrestricted lift",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_composition_target_token in required_composition_target_tokens:
+            if required_composition_target_token not in composition_target_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition target surface missing token: {required_composition_target_token}")
+                return 1
+
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
