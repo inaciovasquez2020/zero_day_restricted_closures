@@ -706,6 +706,41 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL unrestricted zero day closure blocker receipt missing token: {required_unrestricted_zero_day_closure_blocker_receipt_token}")
                 return 1
 
+    restricted_composition_witness_construction_obligation_path = ROOT / "core/restricted_composition_witness_construction_obligation_surface.json"
+    if restricted_composition_witness_construction_obligation_path.exists():
+        restricted_composition_witness_construction_obligation_text = restricted_composition_witness_construction_obligation_path.read_text(encoding="utf-8")
+        required_restricted_composition_witness_construction_obligation_tokens = [
+            "RestrictedCompositionWitnessConstructionObligationSurface",
+            "construction_obligation_surface_only",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+            "RestrictedLiftSourceChainCompositionInputContract",
+            "RestrictedCompositionTarget",
+            "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "RestrictedCoverageSource",
+            "DomainErasureSource",
+            "LiftAdmissibilitySource",
+            "NoEscapeBoundary",
+            "restricted_instance",
+            "restricted_closure_surface",
+            "LiftSourceChainCompositionGap",
+            "unrestricted ZeroDayClosure",
+            "positive inhabitant of RestrictedCompositionWitnessAssumptionSurface",
+            "constructed RestrictedCompositionTarget -> ZeroDayClosure",
+            "does not prove ZeroDayClosure",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not discharge LiftSourceChainCompositionGap",
+            "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "does not construct RestrictedCompositionTarget",
+            "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+            "does not construct an unrestricted zero-day closure",
+            "does not erase the restricted boundary",
+            "does not prove the restricted-to-unrestricted lift",
+        ]
+        for required_restricted_composition_witness_construction_obligation_token in required_restricted_composition_witness_construction_obligation_tokens:
+            if required_restricted_composition_witness_construction_obligation_token not in restricted_composition_witness_construction_obligation_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition witness construction obligation surface missing token: {required_restricted_composition_witness_construction_obligation_token}")
+                return 1
+
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
