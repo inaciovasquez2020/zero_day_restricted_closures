@@ -1,0 +1,35 @@
+{
+  "surface": "RestrictedLiftSourceChainCompositionInputContract",
+  "date": "2026-07-06",
+  "status": "conditional_input_contract_only",
+  "depends_on": [
+    "RestrictedCoverageSource",
+    "DomainErasureSource",
+    "LiftAdmissibilitySource",
+    "NoEscapeBoundary",
+    "LiftSourceChainCompositionGap"
+  ],
+  "contract_role": "packages the existing restricted lift-source chain inputs without deriving ZeroDayClosure",
+  "required_inputs": [
+    "coverage_source",
+    "domain_erasure_source",
+    "lift_admissibility_source",
+    "no_escape_boundary",
+    "restricted_instance",
+    "restricted_closure_surface"
+  ],
+  "target_gap": "LiftSourceChainCompositionGap",
+  "missing_theorem": "RestrictedCoverageSource -> DomainErasureSource -> LiftAdmissibilitySource -> NoEscapeBoundary -> ZeroDayClosure",
+  "current_result": "RESTRICTED_LIFT_SOURCE_CHAIN_COMPOSITION_INPUT_CONTRACT_DEFINED_BUT_NOT_DISCHARGED",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct an unrestricted zero-day closure",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift",
+    "does not claim empirical validation",
+    "does not claim DFM-MKC theorem closure"
+  ],
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure"
+}
