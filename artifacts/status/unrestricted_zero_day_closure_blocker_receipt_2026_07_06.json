@@ -1,0 +1,43 @@
+{
+  "object": "UnrestrictedZeroDayClosureBlockerReceipt",
+  "status": "negative_blocker_receipt_only",
+  "date": "2026-07-06",
+  "current_boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "current_main_before_receipt": "e71cd6e",
+  "inspected_objects": [
+    "core/restricted_composition_witness_assumption_surface.json",
+    "core/restricted_to_unrestricted_lift_boundary_surface.json",
+    "artifacts/status/restricted_composition_witness_assumption_positive_inhabitant_gap_receipt_2026_07_06.json",
+    "verification/anti_unconditional_rule.py"
+  ],
+  "blocked_goal": "unrestricted ZeroDayClosure",
+  "ranked_blockers": [
+    {
+      "rank": 1,
+      "blocker": "No positive inhabitant of RestrictedCompositionWitnessAssumptionSurface",
+      "missing_shape": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget"
+    },
+    {
+      "rank": 2,
+      "blocker": "LiftSourceChainCompositionGap remains undischarged",
+      "missing_shape": "constructed restricted composition witness"
+    },
+    {
+      "rank": 3,
+      "blocker": "No restricted-to-unrestricted lift is proved",
+      "missing_shape": "RestrictedCompositionTarget -> ZeroDayClosure"
+    }
+  ],
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not construct an unrestricted zero-day closure",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift"
+  ],
+  "next_weakest_point": "A real construction of RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget is still required before any restricted-to-unrestricted ZeroDayClosure route can be considered."
+}
