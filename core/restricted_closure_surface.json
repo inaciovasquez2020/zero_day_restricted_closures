@@ -1,0 +1,18 @@
+{
+  "object": "RestrictedClosureSurface",
+  "type": "conditional_closure_surface",
+  "fields": {
+    "boundary": "ZeroDayBoundarySurface",
+    "local_closure_predicate": "boundary.State -> Prop",
+    "closure_from_boundary": "ZeroDayBoundarySurface -> local_closure_predicate boundary.Terminal"
+  },
+  "theorem_surface": {
+    "name": "zero_day_boundary_surface_implies_restricted_closure",
+    "statement": "ZeroDayBoundarySurface -> RestrictedClosureSurface"
+  },
+  "non_claims": [
+    "does not prove unrestricted closure",
+    "does not prove universal creation",
+    "does not prove universal finality"
+  ]
+}

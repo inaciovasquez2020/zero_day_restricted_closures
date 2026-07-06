@@ -22,6 +22,6 @@ unconditional closure names rejected by verifier
 LLV/Markman-nearby insufficiency recorded as not ProvenFrom LLVMarkmanNearbyInputSurface (forall X, RequiredClassesSubsetSH(X))
 NON_CLAIMS :=
 no unconditional completeness theorem
-no proof of GeneralHodgeOriginTateAlgebraicity_X_k
+no proof of the missing global algebraicity source
 no proof that all required K3^[n] Hodge classes lie in SH(X,Q)
 no unconditional ZeroDayClosure

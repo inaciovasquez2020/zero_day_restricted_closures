@@ -1,0 +1,24 @@
+{
+  "object": "ZeroDayBoundarySurface",
+  "type": "initial_final_boundary_surface",
+  "fields": {
+    "State": "Type",
+    "BoundaryOrder": "State -> State -> Prop",
+    "ExistsAt": "State -> Prop",
+    "Initial": "State",
+    "Terminal": "State",
+    "AdmissibleStep": "State -> State -> Prop",
+    "initial_exists": "ExistsAt Initial",
+    "initial_minimal": "forall s, BoundaryOrder s Initial -> not ExistsAt s",
+    "terminal_exists": "ExistsAt Terminal",
+    "terminal_reachable": "ReachableBy AdmissibleStep Initial Terminal",
+    "terminal_closed": "TerminalClosed Terminal",
+    "no_terminal_extension": "forall s, AdmissibleStep Terminal s -> s = Terminal"
+  },
+  "non_claims": [
+    "does not assert a universal first boundary",
+    "does not assert a universal final boundary",
+    "does not assert physical, cosmological, metaphysical, or theological closure",
+    "does not assert uniqueness outside the supplied surface"
+  ]
+}
