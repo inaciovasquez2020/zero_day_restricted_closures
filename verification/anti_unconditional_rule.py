@@ -52,6 +52,9 @@ REQUIRED = [
     "no unrestricted closure theorem",
     "RequiredClassesSubsetSH",
     "not ProvenFrom LLVMarkmanNearbyInputSurface",
+    "core/terminal_exists_source_surface.json",
+    "TerminalExistsSource",
+    "terminal_exists_source : ExistsAt Terminal",
 ]
 
 ALLOWED_BOUNDARY_MENTIONS = {
