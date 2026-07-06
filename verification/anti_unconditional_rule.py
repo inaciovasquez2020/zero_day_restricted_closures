@@ -416,6 +416,33 @@ def main():
         print("ANTI_UNCONDITIONAL_RULE_FAIL missing boundary marker")
         return 1
 
+    composition_contract_path = ROOT / "core/restricted_lift_source_chain_composition_input_contract.json"
+    if composition_contract_path.exists():
+        composition_contract_text = composition_contract_path.read_text(encoding="utf-8")
+        required_composition_contract_tokens = [
+            "RestrictedLiftSourceChainCompositionInputContract",
+            "conditional_input_contract_only",
+            "RestrictedCoverageSource",
+            "DomainErasureSource",
+            "LiftAdmissibilitySource",
+            "NoEscapeBoundary",
+            "LiftSourceChainCompositionGap",
+            "packages the existing restricted lift-source chain inputs without deriving ZeroDayClosure",
+            "RestrictedCoverageSource -> DomainErasureSource -> LiftAdmissibilitySource -> NoEscapeBoundary -> ZeroDayClosure",
+            "RESTRICTED_LIFT_SOURCE_CHAIN_COMPOSITION_INPUT_CONTRACT_DEFINED_BUT_NOT_DISCHARGED",
+            "does not prove ZeroDayClosure",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not discharge LiftSourceChainCompositionGap",
+            "does not construct an unrestricted zero-day closure",
+            "does not erase the restricted boundary",
+            "does not prove the restricted-to-unrestricted lift",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_composition_contract_token in required_composition_contract_tokens:
+            if required_composition_contract_token not in composition_contract_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL composition input contract missing token: {required_composition_contract_token}")
+                return 1
+
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
