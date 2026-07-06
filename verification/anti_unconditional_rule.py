@@ -131,6 +131,21 @@ def main():
                 print("ANTI_UNCONDITIONAL_RULE_FAIL restricted closure receipt missing TerminalExistsSource-alone boundary")
                 return 1
 
+    lift_boundary_path = ROOT / "core/restricted_to_unrestricted_lift_boundary_surface.json"
+    if lift_boundary_path.exists():
+        lift_boundary_text = lift_boundary_path.read_text(encoding="utf-8")
+        required_lift_boundary_tokens = [
+            "RestrictedToUnrestrictedLiftBoundarySurface",
+            "restricted_to_unrestricted_lift_source : RestrictedClosureSurface -> ZeroDayClosure",
+            "zeroday_closure_from_lift_source : ZeroDayClosure",
+            "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+            "unconditional ZeroDayClosure",
+        ]
+        for required_lift_boundary_token in required_lift_boundary_tokens:
+            if required_lift_boundary_token not in lift_boundary_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL lift boundary missing token: {required_lift_boundary_token}")
+                return 1
+
     for token in REQUIRED:
         if token not in joined:
             print(f"ANTI_UNCONDITIONAL_RULE_FAIL missing required token: {token}")
