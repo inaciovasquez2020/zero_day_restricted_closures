@@ -131,6 +131,34 @@ def main():
                 print("ANTI_UNCONDITIONAL_RULE_FAIL restricted closure receipt missing TerminalExistsSource-alone boundary")
                 return 1
 
+    desi_bao_path = ROOT / "artifacts/tests/desi_dr2_bao_dfm_mkc_test_2026_07_06.json"
+    if desi_bao_path.exists():
+        desi_bao_text = desi_bao_path.read_text(encoding="utf-8")
+        required_desi_bao_tokens = [
+            "DESI_DR2_BAO_DFM_MKC_Test",
+            "falsification_surface_only",
+            "DFM_MKC_formula_to_observable_map",
+            "first expansion-history falsification surface",
+            "H(z)",
+            "D_M(z)",
+            "D_H(z)",
+            "D_V(z)",
+            "r_d",
+            "DESI_DR2_BAO_FALSIFICATION_TEST_DEFINED_BUT_NOT_EXECUTED",
+            "DFM_MKC_FORMULA_SURFACE_FOUND_BUT_NO_ZD_CLOSURE_DERIVED",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not validate cosmology empirically",
+            "does not reject Lambda-CDM",
+            "does not independently reproduce DESI DR2 likelihoods",
+            "does not claim DESI DR2 falsifies DFM-MKC",
+            "does not claim DESI DR2 supports DFM-MKC",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_desi_bao_token in required_desi_bao_tokens:
+            if required_desi_bao_token not in desi_bao_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL desi dr2 bao dfm mkc test missing token: {required_desi_bao_token}")
+                return 1
+
     dfm_map_path = ROOT / "core/dfm_mkc_formula_to_observable_map.json"
     if dfm_map_path.exists():
         dfm_map_text = dfm_map_path.read_text(encoding="utf-8")
