@@ -1,0 +1,21 @@
+{
+  "object": "ReachabilitySurface",
+  "type": "supplied_relation_reachability_surface",
+  "fields": {
+    "State": "Type",
+    "AdmissibleStep": "State -> State -> Prop",
+    "Initial": "State",
+    "Terminal": "State",
+    "ReachableBy": "AdmissibleStep -> Initial -> Terminal -> Prop",
+    "reachable": "ReachableBy AdmissibleStep Initial Terminal"
+  },
+  "use_rule": {
+    "required_relation": "AdmissibleStep",
+    "forbidden_pattern": "ReachableBy without a supplied AdmissibleStep relation"
+  },
+  "non_claims": [
+    "does not assert reachability without a supplied relation",
+    "does not assert unrestricted closure",
+    "does not assert universal creation or universal finality"
+  ]
+}

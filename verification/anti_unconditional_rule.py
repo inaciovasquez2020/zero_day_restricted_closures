@@ -9,11 +9,13 @@ CONTROLLED_FILES = [
     ROOT / "STATUS.md",
     ROOT / "core" / "zero_day_boundary_surface.json",
     ROOT / "core" / "restricted_closure_surface.json",
+    ROOT / "core" / "reachability_surface.json",
     ROOT / "specializations" / "k3n_hodge" / "schema" / "required_classes.json",
     ROOT / "specializations" / "k3n_hodge" / "schema" / "subalgebra_sh.json",
     ROOT / "specializations" / "k3n_hodge" / "proofs" / "conditional_closure.v",
     ROOT / "specializations" / "k3n_hodge" / "receipts" / "llv_insufficiency_report.md",
     ROOT / ".github" / "workflows" / "anti-unconditional-rule.yml",
+    ROOT / "artifacts" / "status" / "zero_day_reachability_bootstrap_receipt_2026_07_06.json",
 ]
 
 FORBIDDEN = [
@@ -34,7 +36,9 @@ FORBIDDEN = [
 REQUIRED = [
     "ZeroDayBoundarySurface",
     "RestrictedClosureSurface",
+    "ReachabilitySurface",
     "ZeroDayBoundarySurface -> RestrictedClosureSurface",
+    "ReachableBy AdmissibleStep Initial Terminal",
     "no universal creation theorem",
     "no universal finality theorem",
     "no unrestricted closure theorem",
@@ -61,6 +65,12 @@ def main():
     for token in FORBIDDEN:
         if token in joined and token not in ALLOWED_BOUNDARY_MENTIONS:
             print(f"ANTI_UNCONDITIONAL_RULE_FAIL forbidden token: {token}")
+            return 1
+
+
+    for path, text in read_all():
+        if "ReachableBy" in text and "AdmissibleStep" not in text:
+            print(f"ANTI_UNCONDITIONAL_RULE_FAIL ReachableBy without supplied AdmissibleStep relation: {path.relative_to(ROOT)}")
             return 1
 
     for token in REQUIRED:

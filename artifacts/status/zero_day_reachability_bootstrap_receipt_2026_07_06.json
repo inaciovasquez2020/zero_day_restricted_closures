@@ -1,0 +1,28 @@
+{
+  "receipt": "zero_day_reachability_bootstrap_receipt_2026_07_06",
+  "status": "noop_workflow_test_receipt",
+  "purpose": "exercise the GitHub Actions anti-unconditional verifier after workflow bootstrap",
+  "objects": [
+    "ZeroDayBoundarySurface",
+    "RestrictedClosureSurface",
+    "ReachabilitySurface"
+  ],
+  "verified_command": "python3 verification/anti_unconditional_rule.py",
+  "expected_output": "ANTI_UNCONDITIONAL_RULE_OK",
+  "boundary": [
+    "no universal creation theorem",
+    "no universal finality theorem",
+    "no unrestricted closure theorem",
+    "no reachability theorem without supplied AdmissibleStep relation"
+  ],
+  "claims": [
+    "ReachableBy is recorded only with a supplied AdmissibleStep relation",
+    "this receipt adds no mathematical closure claim"
+  ],
+  "non_claims": [
+    "no new creation theorem",
+    "no new finality theorem",
+    "no unrestricted ZeroDayClosure",
+    "no K3/Hodge completeness claim"
+  ]
+}
