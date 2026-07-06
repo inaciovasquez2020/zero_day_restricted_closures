@@ -1,0 +1,20 @@
+{
+  "surface": "RestrictedCoverageSource",
+  "status": "conditional_only",
+  "source": {
+    "name": "coverage_source",
+    "type": "UnrestrictedZeroDayInstance -> RestrictedClosureSurface"
+  },
+  "conditional_target": {
+    "name": "restricted_surface_from_unrestricted_instance",
+    "type": "RestrictedClosureSurface"
+  },
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not erase restricted-source hypotheses",
+    "does not supply DomainErasureSource",
+    "does not supply LiftAdmissibilitySource"
+  ],
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure"
+}

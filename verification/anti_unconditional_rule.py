@@ -131,6 +131,23 @@ def main():
                 print("ANTI_UNCONDITIONAL_RULE_FAIL restricted closure receipt missing TerminalExistsSource-alone boundary")
                 return 1
 
+    coverage_source_path = ROOT / "core/restricted_coverage_source.json"
+    if coverage_source_path.exists():
+        coverage_source_text = coverage_source_path.read_text(encoding="utf-8")
+        required_coverage_source_tokens = [
+            "RestrictedCoverageSource",
+            "coverage_source",
+            "UnrestrictedZeroDayInstance -> RestrictedClosureSurface",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not supply DomainErasureSource",
+            "does not supply LiftAdmissibilitySource",
+            "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        ]
+        for required_coverage_source_token in required_coverage_source_tokens:
+            if required_coverage_source_token not in coverage_source_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL coverage source missing token: {required_coverage_source_token}")
+                return 1
+
     lift_boundary_path = ROOT / "core/restricted_to_unrestricted_lift_boundary_surface.json"
     if lift_boundary_path.exists():
         lift_boundary_text = lift_boundary_path.read_text(encoding="utf-8")
