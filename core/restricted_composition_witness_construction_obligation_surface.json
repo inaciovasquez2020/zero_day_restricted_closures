@@ -1,0 +1,38 @@
+{
+  "surface": "RestrictedCompositionWitnessConstructionObligationSurface",
+  "status": "construction_obligation_surface_only",
+  "date": "2026-07-06",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "obligation_role": "names the exact bounded construction still required to inhabit RestrictedCompositionWitnessAssumptionSurface",
+  "source_contract": "RestrictedLiftSourceChainCompositionInputContract",
+  "target": "RestrictedCompositionTarget",
+  "required_witness_shape": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "available_contract_inputs": [
+    "RestrictedCoverageSource",
+    "DomainErasureSource",
+    "LiftAdmissibilitySource",
+    "NoEscapeBoundary",
+    "restricted_instance",
+    "restricted_closure_surface"
+  ],
+  "preserved_gap": "LiftSourceChainCompositionGap",
+  "blocked_unrestricted_goal": "unrestricted ZeroDayClosure",
+  "missing_objects": [
+    "positive inhabitant of RestrictedCompositionWitnessAssumptionSurface",
+    "constructed RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "constructed RestrictedCompositionTarget",
+    "constructed RestrictedCompositionTarget -> ZeroDayClosure"
+  ],
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not construct an unrestricted zero-day closure",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift"
+  ],
+  "next_weakest_point": "Supply a real construction from RestrictedLiftSourceChainCompositionInputContract to RestrictedCompositionTarget; until then unrestricted ZeroDayClosure remains blocked."
+}
