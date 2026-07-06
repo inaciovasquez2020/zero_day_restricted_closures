@@ -1,0 +1,21 @@
+{
+  "object": "InitialMinimalitySurface",
+  "type": "explicit_initial_minimality_surface",
+  "fields": {
+    "State": "Type",
+    "Initial": "State",
+    "BoundaryOrder": "State -> State -> Prop",
+    "ExistsAt": "State -> Prop",
+    "initial_exists": "ExistsAt Initial",
+    "initial_minimal": "forall s, BoundaryOrder s Initial -> not ExistsAt s"
+  },
+  "source_rules": {
+    "initial_exists_source": "explicit supplied field",
+    "initial_minimality_source": "explicit supplied field"
+  },
+  "non_claims": [
+    "does not assert universal creation",
+    "does not assert a global first state",
+    "does not assert uniqueness outside the supplied boundary order"
+  ]
+}

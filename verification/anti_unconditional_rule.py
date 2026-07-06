@@ -10,6 +10,9 @@ CONTROLLED_FILES = [
     ROOT / "core" / "zero_day_boundary_surface.json",
     ROOT / "core" / "restricted_closure_surface.json",
     ROOT / "core" / "reachability_surface.json",
+    ROOT / "core" / "terminal_closure_surface.json",
+    ROOT / "core" / "initial_minimality_surface.json",
+    ROOT / "core" / "conditional_restricted_closure_theorem_surface.json",
     ROOT / "specializations" / "k3n_hodge" / "schema" / "required_classes.json",
     ROOT / "specializations" / "k3n_hodge" / "schema" / "subalgebra_sh.json",
     ROOT / "specializations" / "k3n_hodge" / "proofs" / "conditional_closure.v",
@@ -37,6 +40,11 @@ REQUIRED = [
     "ZeroDayBoundarySurface",
     "RestrictedClosureSurface",
     "ReachabilitySurface",
+    "TerminalClosureSurface",
+    "InitialMinimalitySurface",
+    "ConditionalRestrictedClosureTheoremSurface",
+    "ReachabilitySurface + TerminalClosureSurface + InitialMinimalitySurface -> RestrictedClosureSurface",
+    "terminal_exists_source",
     "ZeroDayBoundarySurface -> RestrictedClosureSurface",
     "ReachableBy AdmissibleStep Initial Terminal",
     "no universal creation theorem",
@@ -71,6 +79,15 @@ def main():
     for path, text in read_all():
         if "ReachableBy" in text and "AdmissibleStep" not in text:
             print(f"ANTI_UNCONDITIONAL_RULE_FAIL ReachableBy without supplied AdmissibleStep relation: {path.relative_to(ROOT)}")
+            return 1
+
+
+    for path, text in read_all():
+        if "TerminalClosed -> ExistsAt" in text and "terminal_exists_source" not in text:
+            print(f"ANTI_UNCONDITIONAL_RULE_FAIL TerminalClosed implies ExistsAt without explicit supplied terminal_exists_source: {path.relative_to(ROOT)}")
+            return 1
+        if "TerminalClosed Terminal -> ExistsAt Terminal" in text and "terminal_exists_source" not in text:
+            print(f"ANTI_UNCONDITIONAL_RULE_FAIL TerminalClosed Terminal implies ExistsAt Terminal without explicit supplied terminal_exists_source: {path.relative_to(ROOT)}")
             return 1
 
     for token in REQUIRED:

@@ -1,0 +1,24 @@
+{
+  "object": "TerminalClosureSurface",
+  "type": "explicit_terminal_closure_surface",
+  "fields": {
+    "State": "Type",
+    "Terminal": "State",
+    "ExistsAt": "State -> Prop",
+    "TerminalClosed": "State -> Prop",
+    "AdmissibleStep": "State -> State -> Prop",
+    "terminal_exists": "ExistsAt Terminal",
+    "terminal_is_closed": "TerminalClosed Terminal",
+    "closed_sink": "forall s, TerminalClosed s -> (forall s_prime, AdmissibleStep s s_prime -> s_prime = s)"
+  },
+  "source_rules": {
+    "terminal_exists_source": "explicit supplied field",
+    "terminal_closed_source": "explicit supplied field",
+    "forbidden_inference": "TerminalClosed does not imply ExistsAt unless terminal_exists is supplied separately"
+  },
+  "non_claims": [
+    "does not derive existence from terminal closure",
+    "does not assert universal finality",
+    "does not assert unrestricted closure"
+  ]
+}
