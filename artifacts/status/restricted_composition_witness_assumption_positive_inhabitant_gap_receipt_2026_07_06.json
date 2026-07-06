@@ -1,0 +1,55 @@
+{
+  "object": "RestrictedCompositionWitnessAssumptionPositiveInhabitantGapReceipt",
+  "status": "negative_shape_receipt_only",
+  "date": "2026-07-06",
+  "current_boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "inspected_objects": [
+    "core/restricted_composition_witness_assumption_surface.json",
+    "core/restricted_lift_source_chain_composition_input_contract.json"
+  ],
+  "missing_positive_inhabitant": {
+    "surface": "RestrictedCompositionWitnessAssumptionSurface",
+    "required_shape": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "status": "absent"
+  },
+  "available_contract_components": [
+    "RestrictedCoverageSource",
+    "DomainErasureSource",
+    "LiftAdmissibilitySource",
+    "NoEscapeBoundary",
+    "LiftSourceChainCompositionGap"
+  ],
+  "blocked_transition": {
+    "from": "RestrictedLiftSourceChainCompositionInputContract",
+    "to": "RestrictedCompositionTarget",
+    "blocker": "no constructed witness inhabiting the explicit restricted composition witness assumption"
+  },
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct an unrestricted zero-day closure",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift"
+  ],
+  "ranked_gaps": [
+    {
+      "rank": 1,
+      "gap": "positive inhabitant of RestrictedCompositionWitnessAssumptionSurface",
+      "needed_object": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget"
+    },
+    {
+      "rank": 2,
+      "gap": "discharge of LiftSourceChainCompositionGap",
+      "needed_object": "constructed restricted composition witness"
+    },
+    {
+      "rank": 3,
+      "gap": "restricted-to-unrestricted lift",
+      "needed_object": "RestrictedCompositionTarget -> ZeroDayClosure"
+    }
+  ],
+  "next_weakest_point": "Construct, or explicitly assume under guard, a positive inhabitant of RestrictedCompositionWitnessAssumptionSurface; unrestricted ZeroDayClosure remains outside the current boundary."
+}
