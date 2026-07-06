@@ -1,0 +1,125 @@
+{
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "date": "2026-07-06",
+  "external_repo": "dfm-mkc-cosmology",
+  "formula_candidates": [
+    {
+      "path": ".cobaya_packages/code/CAMB/.github/ISSUE_TEMPLATE/bug_report.md",
+      "sha256": "deb8386a03a5db4c0bfcaba8bd22c26696a165d0e74733306d8e9860dee207f9"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/.github/ISSUE_TEMPLATE/feature_request.md",
+      "sha256": "d9a4810b51c27fdbf9aa04607ae29af8e5d62c6366c095ea770745f6aac610d7"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/.vscode/extensions.json",
+      "sha256": "d21c11db613f1b43373d435897c406fe6d34a6edbd1ed63b7a5ede1c9239dbf3"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/.vscode/launch.json",
+      "sha256": "e9058e1eb6006113b40f7217f0468669e4690e8ae35afd85934ab009408ae90b"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/.vscode/settings.json",
+      "sha256": "bcef36bed4affb90a54934bbfe24f5ff46643f0ec14426811961c6ad9549f56d"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/AGENTS.md",
+      "sha256": "d224d667c4b2df63caa2d5f7d677a1bc26c297447255261e7e698fca5d11906e"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/CONTRIBUTING.md",
+      "sha256": "a20f74bdec05dd4073b3470c5a17510fe5806867e6994ccc01636c5c6e225c50"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/__init__.py",
+      "sha256": "a2191df07d50a48cefceff86de2a0fafbc2a20ace8fdcfa3187a2163b8b41fe0"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/_command_line.py",
+      "sha256": "85a509edfc8cc49ac04b13ef5e9e36588e0d30540ef7936ec4e7d060c1beb2db"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/_compilers.py",
+      "sha256": "3d98d92a53c0149666c13668c1d27ac73ce3cd172b338db67b9331c73a6fff47"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/_config.py",
+      "sha256": "5fa0a36a7364d591628e06876fa4bc153e341e3e33347e6e9309a7fb1da1d52e"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/_ini.py",
+      "sha256": "68e8942df7384c39b15eb96af768d066cec4cd837bd9899e4c9f012c30626de0"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/baseconfig.py",
+      "sha256": "6af3e204c323812789ff0ac379668e21817aa8f5758e8a0de5be48cb20705884"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/bbn.py",
+      "sha256": "879304e01c5df30eb38707e29ffc7cf7c6595f452a36382abcfbfca5189b78ec"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/bispectrum.py",
+      "sha256": "5f4c8eb80d94fccad9ab56a8ce9f71801256ce2cfac947d6398a65cc4daa0b3d"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/camb.py",
+      "sha256": "0e8eb46f94523e43c9c5da6a02bf7d4de7db8cf956f3f74302d71db6f6643273"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/constants.py",
+      "sha256": "43e40ba181fc88a033e851f0ee86a345777b9bb2437bb09e84261d8acd28090d"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/correlations.py",
+      "sha256": "ea4d56f2fa606d7d13ac9e8ce3fe7017547b171b47ba2fc7cb9b1723b0d57d64"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/dark_energy.py",
+      "sha256": "1eee14318eb9de8f74c3194660dc64b286a9cafafbfbb43ab6c5660c51e686d4"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/emission_angle.py",
+      "sha256": "0ae34832bbd60e5182b00210b13f6e4aed3f63158e23a4ef77d7fb7a6af90c4d"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/inifile.py",
+      "sha256": "c4f3399550542447bfbb8496a81e0704dcd4bd675fa2658f99c0a6048a97ac82"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/initialpower.py",
+      "sha256": "32482b17fe55e3239c037bc68299ceb1398597fb7ff63db238f3af9bdb60270d"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/mathutils.py",
+      "sha256": "d2929114f234f3334915955227a84b0574a6c0a21fb922ac7f5d932c5ae70c5d"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/model.py",
+      "sha256": "f3d03af027a145e4aa2842b0f49673faad3251b4c03656c398c9536846aefc57"
+    },
+    {
+      "path": ".cobaya_packages/code/CAMB/camb/nonlinear.py",
+      "sha256": "bb9420a701836e7daa67f4de43a4239a9ec3f279c8f48f5851a7e1e0aa60fd96"
+    }
+  ],
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove a DFM-MKC cosmology theorem",
+    "does not validate cosmology empirically",
+    "does not compose the lift-source chain",
+    "does not discharge LiftSourceChainCompositionGap"
+  ],
+  "status": "interface_test_only",
+  "test": "DfmMkcCosmologyZeroDayInterfaceTest",
+  "test_result": "DFM_MKC_FORMULA_SURFACE_FOUND_BUT_NO_ZD_CLOSURE_DERIVED",
+  "zd_locked_surfaces_required": [
+    "RestrictedCoverageSource",
+    "DomainErasureSource",
+    "LiftAdmissibilitySource",
+    "NoEscapeBoundary",
+    "LiftSourceChainCompositionGap"
+  ]
+}
