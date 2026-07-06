@@ -1,0 +1,18 @@
+{
+  "binds": {
+    "restricted_to_unrestricted_lift_source": "restricted_to_unrestricted_lift_source : RestrictedClosureSurface -> ZeroDayClosure"
+  },
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "conditional_statement": "zeroday_closure_from_lift_source : ZeroDayClosure",
+  "derivation_rule": "derive only zeroday_closure_from_lift_source from restricted_closure_from_supplied_sources plus restricted_to_unrestricted_lift_source",
+  "does_not_claim": [
+    "unconditional ZeroDayClosure",
+    "coverage of all unrestricted zero-day instances",
+    "domain-erasure of the prior explicit sources",
+    "RestrictedClosureSurface -> ZeroDayClosure without restricted_to_unrestricted_lift_source"
+  ],
+  "required_input": "restricted_closure_from_supplied_sources : RestrictedClosureSurface",
+  "status": "hypothesis_supplied_not_discharged",
+  "surface": "RestrictedToUnrestrictedLiftBoundarySurface",
+  "type": "conditional_lift_boundary_surface"
+}
