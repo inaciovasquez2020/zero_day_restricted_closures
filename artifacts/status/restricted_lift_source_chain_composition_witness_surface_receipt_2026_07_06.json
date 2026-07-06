@@ -1,0 +1,27 @@
+{
+  "receipt": "RestrictedLiftSourceChainCompositionWitnessSurfaceReceipt",
+  "date": "2026-07-06",
+  "main": "765c0f9",
+  "status": "guarded_conditional_witness_surface_only",
+  "guarded_surface": "RestrictedLiftSourceChainCompositionWitnessSurface",
+  "guarded_file": "core/restricted_lift_source_chain_composition_witness_surface.json",
+  "guard": "verification/anti_unconditional_rule.py",
+  "input_contract": "RestrictedLiftSourceChainCompositionInputContract",
+  "target_surface": "RestrictedLiftSourceChainCompositionTargetSurface",
+  "target": "RestrictedCompositionTarget",
+  "required_witness_shape": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "current_result": "RESTRICTED_COMPOSITION_WITNESS_SURFACE_GUARDED_BUT_WITNESS_NOT_SUPPLIED",
+  "preserved_gap": "LiftSourceChainCompositionGap",
+  "preserved_boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct an unrestricted zero-day closure",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift"
+  ],
+  "next_weakest_point": "A positive restricted composition witness is still absent"
+}
