@@ -131,6 +131,31 @@ def main():
                 print("ANTI_UNCONDITIONAL_RULE_FAIL restricted closure receipt missing TerminalExistsSource-alone boundary")
                 return 1
 
+    dfm_map_path = ROOT / "core/dfm_mkc_formula_to_observable_map.json"
+    if dfm_map_path.exists():
+        dfm_map_text = dfm_map_path.read_text(encoding="utf-8")
+        required_dfm_map_tokens = [
+            "DFM_MKC_formula_to_observable_map",
+            "conditional_interface_only",
+            "DFM_MKC_FormulaSurface -> ObservablePredictionSurface",
+            "DESI_DR2_BAO_DFM_MKC_Test",
+            "PantheonPlus_DFM_MKC_HubbleDiagram_Test",
+            "Planck_ACT_DFM_MKC_CMB_Consistency_Test",
+            "DFM_MKC_FORMULA_SURFACE_FOUND_BUT_NO_ZD_CLOSURE_DERIVED",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not validate cosmology empirically",
+            "does not reject Lambda-CDM",
+            "does not independently reproduce DESI DR2 likelihoods",
+            "does not independently reproduce PantheonPlus likelihoods",
+            "does not independently reproduce Planck or ACT likelihoods",
+            "does not discharge LiftSourceChainCompositionGap",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_dfm_map_token in required_dfm_map_tokens:
+            if required_dfm_map_token not in dfm_map_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL dfm mkc formula observable map missing token: {required_dfm_map_token}")
+                return 1
+
     dfm_zd_interface_path = ROOT / "artifacts/tests/dfm_mkc_cosmology_zd_interface_test_2026_07_06.json"
     if dfm_zd_interface_path.exists():
         dfm_zd_interface_text = dfm_zd_interface_path.read_text(encoding="utf-8")
