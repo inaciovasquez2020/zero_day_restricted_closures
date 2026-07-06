@@ -1,0 +1,34 @@
+{
+  "bound_statement": "restricted_closure_from_supplied_sources : RestrictedClosureSurface",
+  "bound_statements": {
+    "base_invariant_source": "base_invariant_source : local_closure_predicate Initial",
+    "inductive_step_source": "inductive_step_source : forall s1 s2, local_closure_predicate s1 -> AdmissibleStep s1 s2 -> local_closure_predicate s2",
+    "restricted_closure_from_supplied_sources": "restricted_closure_from_supplied_sources : RestrictedClosureSurface",
+    "terminal_exists_source": "terminal_exists_source : ExistsAt Terminal"
+  },
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "derivation_rule": "derive only restricted_closure_from_supplied_sources from TerminalExistsSource + LocalClosureInvariantSource + ReachabilitySurface + TerminalClosureSurface + InitialMinimalitySurface",
+  "forbidden_derivations": [
+    "RestrictedClosureSurface from TerminalExistsSource alone",
+    "RestrictedClosureSurface from TerminalClosed Terminal",
+    "TerminalClosed Terminal -> ExistsAt Terminal",
+    "unrestricted ZeroDayClosure"
+  ],
+  "non_claims": [
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove zero day solved",
+    "does not prove TerminalClosed Terminal -> ExistsAt Terminal",
+    "does not remove conditional source requirements"
+  ],
+  "required_sources": {
+    "initial_minimality": "InitialMinimalitySurface",
+    "local_closure_invariant_source": "LocalClosureInvariantSource",
+    "reachability": "ReachabilitySurface",
+    "terminal_closure": "TerminalClosureSurface",
+    "terminal_exists_source": "TerminalExistsSource"
+  },
+  "self_source_file": "core/restricted_closure_derivation_receipt_surface.json",
+  "status": "restricted_closure_derived_from_supplied_sources_only",
+  "surface": "RestrictedClosureDerivationReceipt",
+  "type": "conditional_derivation_receipt"
+}
