@@ -4,7 +4,25 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 
+CONTROLLED_FILES = [
+    ROOT / "README.md",
+    ROOT / "STATUS.md",
+    ROOT / "core" / "zero_day_boundary_surface.json",
+    ROOT / "core" / "restricted_closure_surface.json",
+    ROOT / "specializations" / "k3n_hodge" / "schema" / "required_classes.json",
+    ROOT / "specializations" / "k3n_hodge" / "schema" / "subalgebra_sh.json",
+    ROOT / "specializations" / "k3n_hodge" / "proofs" / "conditional_closure.v",
+    ROOT / "specializations" / "k3n_hodge" / "receipts" / "llv_insufficiency_report.md",
+    ROOT / ".github" / "workflows" / "anti-unconditional-rule.yml",
+]
+
 FORBIDDEN = [
+    "UniversalCreationTheorem",
+    "UniversalFinalityTheorem",
+    "UnrestrictedZeroDayClosure",
+    "zero_day_universal_creation",
+    "zero_day_universal_finality",
+    "zero_day_unrestricted_closure",
     "UnconditionalCompletenessSourceForZeroDayRequiredK3nHodgeClasses",
     "zero_day_required_k3n_hodge_classes_subset_SH_unconditional",
     "general_hodge_origin_tate_algebraicity_X_k",
@@ -14,17 +32,19 @@ FORBIDDEN = [
 ]
 
 REQUIRED = [
+    "ZeroDayBoundarySurface",
+    "RestrictedClosureSurface",
+    "ZeroDayBoundarySurface -> RestrictedClosureSurface",
+    "no universal creation theorem",
+    "no universal finality theorem",
+    "no unrestricted closure theorem",
     "RequiredClassesSubsetSH",
-    "ZeroDayConditionalClosureSurface",
     "not ProvenFrom LLVMarkmanNearbyInputSurface",
 ]
 
-CONTROLLED_FILES = [
-    ROOT / "schema" / "required_classes.json",
-    ROOT / "schema" / "subalgebra_sh.json",
-    ROOT / "proofs" / "conditional_closure.v",
-    ROOT / "receipts" / "llv_insufficiency_report.md",
-]
+ALLOWED_BOUNDARY_MENTIONS = {
+    "UnconditionalCompletenessSourceForZeroDayRequiredK3nHodgeClasses",
+}
 
 def read_all():
     for path in CONTROLLED_FILES:
@@ -39,7 +59,7 @@ def main():
         joined += f"\n--- {path.relative_to(ROOT)} ---\n{text}\n"
 
     for token in FORBIDDEN:
-        if token in joined and token != "UnconditionalCompletenessSourceForZeroDayRequiredK3nHodgeClasses":
+        if token in joined and token not in ALLOWED_BOUNDARY_MENTIONS:
             print(f"ANTI_UNCONDITIONAL_RULE_FAIL forbidden token: {token}")
             return 1
 
@@ -48,7 +68,7 @@ def main():
             print(f"ANTI_UNCONDITIONAL_RULE_FAIL missing required token: {token}")
             return 1
 
-    if "Boundary:" not in joined and "BOUNDARY :=" not in joined:
+    if "BOUNDARY :=" not in joined and "Boundary:" not in joined:
         print("ANTI_UNCONDITIONAL_RULE_FAIL missing boundary marker")
         return 1
 
