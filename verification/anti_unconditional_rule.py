@@ -561,6 +561,37 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition witness surface missing token: {required_composition_witness_token}")
                 return 1
 
+    composition_witness_receipt_path = ROOT / "artifacts/status/restricted_lift_source_chain_composition_witness_surface_receipt_2026_07_06.json"
+    if composition_witness_receipt_path.exists():
+        composition_witness_receipt_text = composition_witness_receipt_path.read_text(encoding="utf-8")
+        required_composition_witness_receipt_tokens = [
+            "RestrictedLiftSourceChainCompositionWitnessSurfaceReceipt",
+            "guarded_conditional_witness_surface_only",
+            "RestrictedLiftSourceChainCompositionWitnessSurface",
+            "core/restricted_lift_source_chain_composition_witness_surface.json",
+            "verification/anti_unconditional_rule.py",
+            "RestrictedLiftSourceChainCompositionInputContract",
+            "RestrictedLiftSourceChainCompositionTargetSurface",
+            "RestrictedCompositionTarget",
+            "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "RESTRICTED_COMPOSITION_WITNESS_SURFACE_GUARDED_BUT_WITNESS_NOT_SUPPLIED",
+            "LiftSourceChainCompositionGap",
+            "does not prove ZeroDayClosure",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not discharge LiftSourceChainCompositionGap",
+            "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "does not construct RestrictedCompositionTarget",
+            "does not construct an unrestricted zero-day closure",
+            "does not erase the restricted boundary",
+            "does not prove the restricted-to-unrestricted lift",
+            "A positive restricted composition witness is still absent",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_composition_witness_receipt_token in required_composition_witness_receipt_tokens:
+            if required_composition_witness_receipt_token not in composition_witness_receipt_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition witness receipt missing token: {required_composition_witness_receipt_token}")
+                return 1
+
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
