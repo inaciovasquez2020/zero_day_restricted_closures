@@ -1,0 +1,25 @@
+{
+  "receipt": "RestrictedCompositionWitnessDependencyMatrixReceipt",
+  "status": "guarded_dependency_matrix_surface_only",
+  "date": "2026-07-06",
+  "guarded_surface": "RestrictedCompositionWitnessDependencyMatrixSurface",
+  "guarded_file": "core/restricted_composition_witness_dependency_matrix_surface.json",
+  "guarded_by": "verification/anti_unconditional_rule.py",
+  "required_witness_shape": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "first_missing_edge": "available contract inputs -> RestrictedCompositionTarget",
+  "preserved_gap": "LiftSourceChainCompositionGap",
+  "preserved_boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "blocked_unrestricted_goal": "unrestricted ZeroDayClosure",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not construct an unrestricted zero-day closure",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift"
+  ],
+  "next_weakest_point": "The first missing edge remains a real construction from available contract inputs to RestrictedCompositionTarget."
+}
