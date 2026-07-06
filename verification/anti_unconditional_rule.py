@@ -131,6 +131,28 @@ def main():
                 print("ANTI_UNCONDITIONAL_RULE_FAIL restricted closure receipt missing TerminalExistsSource-alone boundary")
                 return 1
 
+    composition_gap_path = ROOT / "core/lift_source_chain_composition_gap.json"
+    if composition_gap_path.exists():
+        composition_gap_text = composition_gap_path.read_text(encoding="utf-8")
+        required_composition_gap_tokens = [
+            "LiftSourceChainCompositionGap",
+            "boundary_only",
+            "no_composition_theorem_for_lift_source_chain",
+            "RestrictedCoverageSource -> DomainErasureSource -> LiftAdmissibilitySource -> ZeroDayClosure",
+            "RestrictedCoverageSource",
+            "DomainErasureSource",
+            "LiftAdmissibilitySource",
+            "NoEscapeBoundary",
+            "LiftSourceChainStatusReceipt",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not compose the lift-source chain",
+            "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        ]
+        for required_composition_gap_token in required_composition_gap_tokens:
+            if required_composition_gap_token not in composition_gap_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL lift source chain composition gap missing token: {required_composition_gap_token}")
+                return 1
+
     lift_receipt_path = ROOT / "artifacts/status/lift_source_chain_status_receipt_2026_07_06.json"
     if lift_receipt_path.exists():
         lift_receipt_text = lift_receipt_path.read_text(encoding="utf-8")
