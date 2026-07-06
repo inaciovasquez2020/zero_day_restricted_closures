@@ -1,0 +1,36 @@
+{
+  "surface": "RestrictedLiftSourceChainCompositionTargetSurface",
+  "date": "2026-07-06",
+  "status": "conditional_theorem_target_surface_only",
+  "input_contract": "RestrictedLiftSourceChainCompositionInputContract",
+  "depends_on": [
+    "RestrictedCoverageSource",
+    "DomainErasureSource",
+    "LiftAdmissibilitySource",
+    "NoEscapeBoundary",
+    "LiftSourceChainCompositionGap"
+  ],
+  "target_role": "names the restricted composition target that would follow from the guarded input contract if a separate conditional theorem were supplied",
+  "conditional_target_shape": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "restricted_composition_target": {
+    "name": "RestrictedCompositionTarget",
+    "scope": "restricted_zero_day_instance_only",
+    "not_unrestricted": true,
+    "does_not_imply": [
+      "ZeroDayClosure",
+      "unrestricted ZeroDayClosure"
+    ]
+  },
+  "current_result": "RESTRICTED_COMPOSITION_TARGET_SURFACE_DEFINED_BUT_NO_THEOREM_SUPPLIED",
+  "preserved_gap": "LiftSourceChainCompositionGap",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not prove RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct an unrestricted zero-day closure",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift"
+  ],
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure"
+}
