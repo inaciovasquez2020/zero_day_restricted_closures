@@ -60,6 +60,9 @@ REQUIRED = [
     "base_invariant_source : local_closure_predicate Initial",
     "inductive_step_source : forall s1 s2, local_closure_predicate s1 -> AdmissibleStep s1 s2 -> local_closure_predicate s2",
     "TerminalExistsSource + LocalClosureInvariantSource",
+    "RestrictedClosureDerivationReceipt",
+    "restricted_closure_from_supplied_sources : RestrictedClosureSurface",
+    "BOUNDARY := ¬ unrestricted ZeroDayClosure",
 ]
 
 ALLOWED_BOUNDARY_MENTIONS = {
@@ -106,6 +109,26 @@ def main():
                 or "inductive_step_source : forall s1 s2, local_closure_predicate s1 -> AdmissibleStep s1 s2 -> local_closure_predicate s2" not in text
             ):
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL conditional restricted closure missing explicit TerminalExistsSource + LocalClosureInvariantSource: {path.relative_to(ROOT)}")
+                return 1
+
+    for path, text in read_all():
+        if path.name == "restricted_closure_derivation_receipt_surface.json":
+            required_receipt_sources = [
+                "core/restricted_closure_derivation_receipt_surface.json",
+                "TerminalExistsSource",
+                "LocalClosureInvariantSource",
+                "ReachabilitySurface",
+                "TerminalClosureSurface",
+                "InitialMinimalitySurface",
+                "restricted_closure_from_supplied_sources : RestrictedClosureSurface",
+                "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+            ]
+            for required_receipt_source in required_receipt_sources:
+                if required_receipt_source not in text:
+                    print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted closure receipt missing source: {required_receipt_source}")
+                    return 1
+            if "RestrictedClosureSurface from TerminalExistsSource alone" not in text:
+                print("ANTI_UNCONDITIONAL_RULE_FAIL restricted closure receipt missing TerminalExistsSource-alone boundary")
                 return 1
 
     for token in REQUIRED:

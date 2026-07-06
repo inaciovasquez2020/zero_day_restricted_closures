@@ -1,4 +1,5 @@
 {
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
   "bridge_rules": {
     "initial_exists": "taken from InitialMinimalitySurface.initial_exists",
     "initial_minimal": "taken from InitialMinimalitySurface.initial_minimal",
@@ -52,6 +53,19 @@
   "object": "ConditionalRestrictedClosureTheoremSurface",
   "output": {
     "restricted_closure": "RestrictedClosureSurface"
+  },
+  "restricted_closure_derivation_receipt_dependency": {
+    "required_boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+    "required_sources": [
+      "TerminalExistsSource",
+      "LocalClosureInvariantSource",
+      "ReachabilitySurface",
+      "TerminalClosureSurface",
+      "InitialMinimalitySurface"
+    ],
+    "required_statement": "restricted_closure_from_supplied_sources : RestrictedClosureSurface",
+    "source_file": "core/restricted_closure_derivation_receipt_surface.json",
+    "source_surface": "RestrictedClosureDerivationReceipt"
   },
   "statement": "TerminalExistsSource + LocalClosureInvariantSource + ReachabilitySurface + TerminalClosureSurface + InitialMinimalitySurface -> RestrictedClosureSurface",
   "terminal_exists_source_dependency": {
