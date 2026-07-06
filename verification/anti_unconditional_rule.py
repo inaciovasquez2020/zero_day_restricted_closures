@@ -131,6 +131,30 @@ def main():
                 print("ANTI_UNCONDITIONAL_RULE_FAIL restricted closure receipt missing TerminalExistsSource-alone boundary")
                 return 1
 
+    dfm_zd_interface_path = ROOT / "artifacts/tests/dfm_mkc_cosmology_zd_interface_test_2026_07_06.json"
+    if dfm_zd_interface_path.exists():
+        dfm_zd_interface_text = dfm_zd_interface_path.read_text(encoding="utf-8")
+        required_dfm_zd_interface_tokens = [
+            "DfmMkcCosmologyZeroDayInterfaceTest",
+            "interface_test_only",
+            "dfm-mkc-cosmology",
+            "DFM_MKC_FORMULA_SURFACE_FOUND_BUT_NO_ZD_CLOSURE_DERIVED",
+            "RestrictedCoverageSource",
+            "DomainErasureSource",
+            "LiftAdmissibilitySource",
+            "NoEscapeBoundary",
+            "LiftSourceChainCompositionGap",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not validate cosmology empirically",
+            "does not prove a DFM-MKC cosmology theorem",
+            "does not discharge LiftSourceChainCompositionGap",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_dfm_zd_interface_token in required_dfm_zd_interface_tokens:
+            if required_dfm_zd_interface_token not in dfm_zd_interface_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL dfm mkc zd interface receipt missing token: {required_dfm_zd_interface_token}")
+                return 1
+
     composition_gap_path = ROOT / "core/lift_source_chain_composition_gap.json"
     if composition_gap_path.exists():
         composition_gap_text = composition_gap_path.read_text(encoding="utf-8")
