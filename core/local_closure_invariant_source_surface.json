@@ -1,0 +1,26 @@
+{
+  "allowed_use": [
+    "derive conditional restricted closure only from TerminalExistsSource + LocalClosureInvariantSource",
+    "transport local_closure_predicate from Initial to Terminal only through supplied base_invariant_source and inductive_step_source"
+  ],
+  "non_claims": [
+    "RestrictedClosureSurface from TerminalExistsSource alone",
+    "RestrictedClosureSurface from TerminalClosed Terminal",
+    "TerminalClosed Terminal -> ExistsAt Terminal",
+    "TerminalClosed -> ExistsAt",
+    "unrestricted closure theorem",
+    "zero day solved"
+  ],
+  "objects": {
+    "initial": "Initial",
+    "local_predicate": "local_closure_predicate",
+    "state_relation": "AdmissibleStep",
+    "terminal": "Terminal"
+  },
+  "proved_statements": {
+    "base_invariant_source": "base_invariant_source : local_closure_predicate Initial",
+    "inductive_step_source": "inductive_step_source : forall s1 s2, local_closure_predicate s1 -> AdmissibleStep s1 s2 -> local_closure_predicate s2"
+  },
+  "status": "supplied_local_closure_invariant_source",
+  "surface": "LocalClosureInvariantSource"
+}
