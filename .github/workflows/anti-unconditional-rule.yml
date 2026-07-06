@@ -1,11 +1,17 @@
 name: anti-unconditional-rule
+
 on:
-push:
-pull_request:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
 jobs:
-anti-unconditional-rule:
-runs-on: ubuntu-latest
-steps:
-- uses: actions/checkout@v4
-- name: Run anti-unconditional verifier
-run: python3 verification/anti_unconditional_rule.py
+  verify:
+    name: anti-unconditional-rule
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run anti-unconditional verifier
+        run: python3 verification/anti_unconditional_rule.py
