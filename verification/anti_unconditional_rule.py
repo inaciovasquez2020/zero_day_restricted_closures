@@ -624,6 +624,29 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition witness assumption missing token: {required_composition_assumption_token}")
                 return 1
 
+    composition_witness_assumption_receipt_path = ROOT / "artifacts/status/restricted_composition_witness_assumption_surface_receipt_2026_07_06.json"
+    if composition_witness_assumption_receipt_path.exists():
+        composition_witness_assumption_receipt_text = composition_witness_assumption_receipt_path.read_text(encoding="utf-8")
+        required_composition_witness_assumption_receipt_tokens = [
+            "RestrictedCompositionWitnessAssumptionSurface",
+            "guarded",
+            "guarded_explicit_assumption_surface_only",
+            "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "RestrictedCompositionTarget",
+            "LiftSourceChainCompositionGap",
+            "does not prove ZeroDayClosure",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not discharge LiftSourceChainCompositionGap",
+            "does not construct an unrestricted zero-day closure",
+            "does not erase the restricted boundary",
+            "does not prove the restricted-to-unrestricted lift",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_composition_witness_assumption_receipt_token in required_composition_witness_assumption_receipt_tokens:
+            if required_composition_witness_assumption_receipt_token not in composition_witness_assumption_receipt_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition witness assumption receipt missing token: {required_composition_witness_assumption_receipt_token}")
+                return 1
+
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
