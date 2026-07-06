@@ -443,6 +443,35 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL composition input contract missing token: {required_composition_contract_token}")
                 return 1
 
+    composition_receipt_path = ROOT / "artifacts/status/restricted_lift_source_chain_composition_input_contract_receipt_2026_07_06.json"
+    if composition_receipt_path.exists():
+        composition_receipt_text = composition_receipt_path.read_text(encoding="utf-8")
+        required_composition_receipt_tokens = [
+            "RestrictedLiftSourceChainCompositionInputContractReceipt",
+            "guarded_conditional_input_contract_only",
+            "RestrictedLiftSourceChainCompositionInputContract",
+            "core/restricted_lift_source_chain_composition_input_contract.json",
+            "verification/anti_unconditional_rule.py",
+            "RestrictedCoverageSource",
+            "DomainErasureSource",
+            "LiftAdmissibilitySource",
+            "NoEscapeBoundary",
+            "LiftSourceChainCompositionGap",
+            "RESTRICTED_LIFT_SOURCE_CHAIN_COMPOSITION_INPUT_CONTRACT_GUARDED_BUT_NOT_DISCHARGED",
+            "does not prove ZeroDayClosure",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not discharge LiftSourceChainCompositionGap",
+            "does not construct an unrestricted zero-day closure",
+            "does not erase the restricted boundary",
+            "does not prove the restricted-to-unrestricted lift",
+            "A conditional theorem surface from the guarded input contract to a restricted composition target is still absent",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_composition_receipt_token in required_composition_receipt_tokens:
+            if required_composition_receipt_token not in composition_receipt_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted lift composition receipt missing token: {required_composition_receipt_token}")
+                return 1
+
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
