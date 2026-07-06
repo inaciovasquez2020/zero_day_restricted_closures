@@ -1,0 +1,19 @@
+{
+  "receipt": "LiftSourceChainCompositionGapStatusReceipt",
+  "date": "2026-07-06",
+  "status": "boundary_only",
+  "main": "586a639",
+  "locked_gap_surface": "LiftSourceChainCompositionGap",
+  "missing_theorem": "RestrictedCoverageSource -> DomainErasureSource -> LiftAdmissibilitySource -> ZeroDayClosure",
+  "validation": "ANTI_UNCONDITIONAL_RULE_OK",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not compose the lift-source chain",
+    "does not discharge RestrictedCoverageSource",
+    "does not discharge DomainErasureSource",
+    "does not discharge LiftAdmissibilitySource"
+  ],
+  "remaining_boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "next_weakest_point": "No admissible composition theorem has been supplied for the lift-source chain"
+}
