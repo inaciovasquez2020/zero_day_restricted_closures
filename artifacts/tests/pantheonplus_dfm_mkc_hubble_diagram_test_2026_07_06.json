@@ -1,0 +1,43 @@
+{
+  "test": "PantheonPlus_DFM_MKC_HubbleDiagram_Test",
+  "date": "2026-07-06",
+  "status": "falsification_surface_only",
+  "main": "465bd41",
+  "input_surface": "DFM_MKC_formula_to_observable_map",
+  "dataset": {
+    "name": "PantheonPlus",
+    "role": "second Hubble-diagram falsification surface",
+    "public_data_status": "public reference target",
+    "observational_summary": "Type Ia supernova luminosity-distance and distance-modulus comparison target"
+  },
+  "required_model_outputs": [
+    "D_L(z)",
+    "mu(z)",
+    "nuisance-calibrated residual model"
+  ],
+  "required_test_inputs": [
+    "DFM_MKC executable formula source",
+    "parameter_vector",
+    "parameter_priors",
+    "redshift_domain",
+    "PantheonPlus data vector",
+    "PantheonPlus covariance or likelihood",
+    "absolute-magnitude or calibration convention",
+    "falsification_threshold"
+  ],
+  "falsification_rule": "reject only if PantheonPlus likelihood mismatch exceeds declared threshold after allowed parameter variation and covariance treatment",
+  "current_result": "PANTHEONPLUS_HUBBLE_DIAGRAM_FALSIFICATION_TEST_DEFINED_BUT_NOT_EXECUTED",
+  "preserved_result": "DFM_MKC_FORMULA_SURFACE_FOUND_BUT_NO_ZD_CLOSURE_DERIVED",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove a DFM-MKC cosmology theorem",
+    "does not validate cosmology empirically",
+    "does not reject Lambda-CDM",
+    "does not independently reproduce PantheonPlus likelihoods",
+    "does not claim PantheonPlus falsifies DFM-MKC",
+    "does not claim PantheonPlus supports DFM-MKC",
+    "does not discharge LiftSourceChainCompositionGap"
+  ],
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure"
+}
