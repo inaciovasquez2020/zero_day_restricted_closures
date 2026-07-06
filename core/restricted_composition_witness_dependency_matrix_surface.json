@@ -1,0 +1,72 @@
+{
+  "surface": "RestrictedCompositionWitnessDependencyMatrixSurface",
+  "status": "dependency_matrix_surface_only",
+  "date": "2026-07-06",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "matrix_role": "ranks the concrete dependencies still needed before constructing RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "required_witness_shape": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "source_contract": "RestrictedLiftSourceChainCompositionInputContract",
+  "target": "RestrictedCompositionTarget",
+  "available_contract_inputs": [
+    {
+      "name": "coverage_source",
+      "surface": "RestrictedCoverageSource",
+      "status": "available_input_only"
+    },
+    {
+      "name": "domain_erasure_source",
+      "surface": "DomainErasureSource",
+      "status": "available_input_only"
+    },
+    {
+      "name": "lift_admissibility_source",
+      "surface": "LiftAdmissibilitySource",
+      "status": "available_input_only"
+    },
+    {
+      "name": "no_escape_boundary",
+      "surface": "NoEscapeBoundary",
+      "status": "available_input_only"
+    },
+    {
+      "name": "restricted_instance",
+      "surface": "restricted_zero_day_instance_only",
+      "status": "available_input_only"
+    },
+    {
+      "name": "restricted_closure_surface",
+      "surface": "RestrictedClosureSurface",
+      "status": "available_input_only"
+    }
+  ],
+  "ranked_missing_edges": [
+    {
+      "rank": 1,
+      "missing_edge": "available contract inputs -> RestrictedCompositionTarget",
+      "blocked_shape": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget"
+    },
+    {
+      "rank": 2,
+      "missing_edge": "RestrictedCompositionTarget -> ZeroDayClosure",
+      "blocked_shape": "restricted-to-unrestricted lift"
+    },
+    {
+      "rank": 3,
+      "missing_edge": "ZeroDayClosure without restricted-to-unrestricted lift",
+      "blocked_shape": "unrestricted ZeroDayClosure"
+    }
+  ],
+  "preserved_gap": "LiftSourceChainCompositionGap",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not construct an unrestricted zero-day closure",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift"
+  ],
+  "next_weakest_point": "The first missing edge is still a real construction from the available contract inputs to RestrictedCompositionTarget."
+}
