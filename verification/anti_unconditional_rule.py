@@ -529,6 +529,38 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition target receipt missing token: {required_composition_target_receipt_token}")
                 return 1
 
+    composition_witness_path = ROOT / "core/restricted_lift_source_chain_composition_witness_surface.json"
+    if composition_witness_path.exists():
+        composition_witness_text = composition_witness_path.read_text(encoding="utf-8")
+        required_composition_witness_tokens = [
+            "RestrictedLiftSourceChainCompositionWitnessSurface",
+            "conditional_witness_surface_only",
+            "RestrictedLiftSourceChainCompositionInputContract",
+            "RestrictedLiftSourceChainCompositionTargetSurface",
+            "RestrictedCompositionTarget",
+            "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "assumption_surface_required_not_constructed",
+            "RESTRICTED_COMPOSITION_WITNESS_SURFACE_DEFINED_BUT_WITNESS_NOT_SUPPLIED",
+            "LiftSourceChainCompositionGap",
+            "RestrictedCoverageSource",
+            "DomainErasureSource",
+            "LiftAdmissibilitySource",
+            "NoEscapeBoundary",
+            "does not prove ZeroDayClosure",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not discharge LiftSourceChainCompositionGap",
+            "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "does not construct RestrictedCompositionTarget",
+            "does not construct an unrestricted zero-day closure",
+            "does not erase the restricted boundary",
+            "does not prove the restricted-to-unrestricted lift",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_composition_witness_token in required_composition_witness_tokens:
+            if required_composition_witness_token not in composition_witness_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition witness surface missing token: {required_composition_witness_token}")
+                return 1
+
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
