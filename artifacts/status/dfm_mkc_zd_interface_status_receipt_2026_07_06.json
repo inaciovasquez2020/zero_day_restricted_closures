@@ -1,0 +1,19 @@
+{
+  "receipt": "DfmMkcCosmologyZeroDayInterfaceStatusReceipt",
+  "date": "2026-07-06",
+  "status": "interface_test_only",
+  "main": "0871c4a",
+  "locked_test": "DfmMkcCosmologyZeroDayInterfaceTest",
+  "test_result": "DFM_MKC_FORMULA_SURFACE_FOUND_BUT_NO_ZD_CLOSURE_DERIVED",
+  "validation": "ANTI_UNCONDITIONAL_RULE_OK",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove a DFM-MKC cosmology theorem",
+    "does not validate cosmology empirically",
+    "does not compose the lift-source chain",
+    "does not discharge LiftSourceChainCompositionGap"
+  ],
+  "remaining_boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "next_weakest_point": "No theorem maps the DFM-MKC formula surface into a discharged zero-day closure source chain"
+}
