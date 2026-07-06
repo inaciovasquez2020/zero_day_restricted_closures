@@ -741,6 +741,35 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition witness construction obligation surface missing token: {required_restricted_composition_witness_construction_obligation_token}")
                 return 1
 
+    restricted_composition_witness_construction_obligation_receipt_path = ROOT / "artifacts/status/restricted_composition_witness_construction_obligation_receipt_2026_07_06.json"
+    if restricted_composition_witness_construction_obligation_receipt_path.exists():
+        restricted_composition_witness_construction_obligation_receipt_text = restricted_composition_witness_construction_obligation_receipt_path.read_text(encoding="utf-8")
+        required_restricted_composition_witness_construction_obligation_receipt_tokens = [
+            "RestrictedCompositionWitnessConstructionObligationReceipt",
+            "guarded_construction_obligation_surface_only",
+            "RestrictedCompositionWitnessConstructionObligationSurface",
+            "core/restricted_composition_witness_construction_obligation_surface.json",
+            "verification/anti_unconditional_rule.py",
+            "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "LiftSourceChainCompositionGap",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+            "unrestricted ZeroDayClosure",
+            "does not prove ZeroDayClosure",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not discharge LiftSourceChainCompositionGap",
+            "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "does not construct RestrictedCompositionTarget",
+            "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+            "does not construct an unrestricted zero-day closure",
+            "does not erase the restricted boundary",
+            "does not prove the restricted-to-unrestricted lift",
+            "A real construction of RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget remains absent.",
+        ]
+        for required_restricted_composition_witness_construction_obligation_receipt_token in required_restricted_composition_witness_construction_obligation_receipt_tokens:
+            if required_restricted_composition_witness_construction_obligation_receipt_token not in restricted_composition_witness_construction_obligation_receipt_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition witness construction obligation receipt missing token: {required_restricted_composition_witness_construction_obligation_receipt_token}")
+                return 1
+
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
