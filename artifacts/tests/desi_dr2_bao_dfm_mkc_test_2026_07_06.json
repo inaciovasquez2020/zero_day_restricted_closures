@@ -1,0 +1,44 @@
+{
+  "test": "DESI_DR2_BAO_DFM_MKC_Test",
+  "date": "2026-07-06",
+  "status": "falsification_surface_only",
+  "main": "86f8b50",
+  "input_surface": "DFM_MKC_formula_to_observable_map",
+  "dataset": {
+    "name": "DESI DR2 BAO",
+    "role": "first expansion-history falsification surface",
+    "public_data_status": "public reference target",
+    "observational_summary": "BAO expansion-history comparison target"
+  },
+  "required_model_outputs": [
+    "H(z)",
+    "D_M(z)",
+    "D_H(z)",
+    "D_V(z)",
+    "r_d"
+  ],
+  "required_test_inputs": [
+    "DFM_MKC executable formula source",
+    "parameter_vector",
+    "parameter_priors",
+    "redshift_domain",
+    "DESI_DR2_BAO data vector",
+    "DESI_DR2_BAO covariance or likelihood",
+    "falsification_threshold"
+  ],
+  "falsification_rule": "reject only if DESI_DR2_BAO likelihood mismatch exceeds declared threshold after allowed parameter variation",
+  "current_result": "DESI_DR2_BAO_FALSIFICATION_TEST_DEFINED_BUT_NOT_EXECUTED",
+  "preserved_result": "DFM_MKC_FORMULA_SURFACE_FOUND_BUT_NO_ZD_CLOSURE_DERIVED",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove a DFM-MKC cosmology theorem",
+    "does not validate cosmology empirically",
+    "does not reject Lambda-CDM",
+    "does not independently reproduce DESI DR2 likelihoods",
+    "does not claim DESI DR2 falsifies DFM-MKC",
+    "does not claim DESI DR2 supports DFM-MKC",
+    "does not discharge LiftSourceChainCompositionGap"
+  ],
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure"
+}
