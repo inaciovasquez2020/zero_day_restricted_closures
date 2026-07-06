@@ -678,6 +678,34 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition witness inhabitant gap receipt missing token: {required_composition_witness_inhabitant_gap_receipt_token}")
                 return 1
 
+    unrestricted_zero_day_closure_blocker_receipt_path = ROOT / "artifacts/status/unrestricted_zero_day_closure_blocker_receipt_2026_07_06.json"
+    if unrestricted_zero_day_closure_blocker_receipt_path.exists():
+        unrestricted_zero_day_closure_blocker_receipt_text = unrestricted_zero_day_closure_blocker_receipt_path.read_text(encoding="utf-8")
+        required_unrestricted_zero_day_closure_blocker_receipt_tokens = [
+            "UnrestrictedZeroDayClosureBlockerReceipt",
+            "negative_blocker_receipt_only",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+            "unrestricted ZeroDayClosure",
+            "No positive inhabitant of RestrictedCompositionWitnessAssumptionSurface",
+            "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "LiftSourceChainCompositionGap remains undischarged",
+            "No restricted-to-unrestricted lift is proved",
+            "RestrictedCompositionTarget -> ZeroDayClosure",
+            "does not prove ZeroDayClosure",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not discharge LiftSourceChainCompositionGap",
+            "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "does not construct RestrictedCompositionTarget",
+            "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+            "does not construct an unrestricted zero-day closure",
+            "does not erase the restricted boundary",
+            "does not prove the restricted-to-unrestricted lift",
+        ]
+        for required_unrestricted_zero_day_closure_blocker_receipt_token in required_unrestricted_zero_day_closure_blocker_receipt_tokens:
+            if required_unrestricted_zero_day_closure_blocker_receipt_token not in unrestricted_zero_day_closure_blocker_receipt_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL unrestricted zero day closure blocker receipt missing token: {required_unrestricted_zero_day_closure_blocker_receipt_token}")
+                return 1
+
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
