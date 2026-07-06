@@ -1,0 +1,31 @@
+{
+  "surface": "NoEscapeBoundary",
+  "status": "guard_only",
+  "rule": {
+    "name": "no_zeroday_closure_without_lift_sources",
+    "type": "ZeroDayClosure may appear only with RestrictedCoverageSource, DomainErasureSource, and LiftAdmissibilitySource"
+  },
+  "required_sources": [
+    "RestrictedCoverageSource",
+    "coverage_source : UnrestrictedZeroDayInstance -> RestrictedClosureSurface",
+    "DomainErasureSource",
+    "domain_erasure_source : RestrictedClosureSurface -> ZeroDayClosure",
+    "LiftAdmissibilitySource",
+    "lift_admissibility_source : UnrestrictedZeroDayInstance -> RestrictedClosureSurface -> ZeroDayClosure"
+  ],
+  "forbidden_escape": [
+    "unconditional ZeroDayClosure",
+    "unrestricted ZeroDayClosure",
+    "ZeroDayClosure without RestrictedCoverageSource",
+    "ZeroDayClosure without DomainErasureSource",
+    "ZeroDayClosure without LiftAdmissibilitySource"
+  ],
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge RestrictedCoverageSource",
+    "does not discharge DomainErasureSource",
+    "does not discharge LiftAdmissibilitySource"
+  ],
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure"
+}

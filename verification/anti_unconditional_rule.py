@@ -131,6 +131,31 @@ def main():
                 print("ANTI_UNCONDITIONAL_RULE_FAIL restricted closure receipt missing TerminalExistsSource-alone boundary")
                 return 1
 
+    no_escape_path = ROOT / "core/no_escape_boundary.json"
+    if no_escape_path.exists():
+        no_escape_text = no_escape_path.read_text(encoding="utf-8")
+        required_no_escape_tokens = [
+            "NoEscapeBoundary",
+            "no_zeroday_closure_without_lift_sources",
+            "ZeroDayClosure may appear only with RestrictedCoverageSource, DomainErasureSource, and LiftAdmissibilitySource",
+            "RestrictedCoverageSource",
+            "coverage_source : UnrestrictedZeroDayInstance -> RestrictedClosureSurface",
+            "DomainErasureSource",
+            "domain_erasure_source : RestrictedClosureSurface -> ZeroDayClosure",
+            "LiftAdmissibilitySource",
+            "lift_admissibility_source : UnrestrictedZeroDayInstance -> RestrictedClosureSurface -> ZeroDayClosure",
+            "unconditional ZeroDayClosure",
+            "ZeroDayClosure without RestrictedCoverageSource",
+            "ZeroDayClosure without DomainErasureSource",
+            "ZeroDayClosure without LiftAdmissibilitySource",
+            "does not prove unrestricted ZeroDayClosure",
+            "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        ]
+        for required_no_escape_token in required_no_escape_tokens:
+            if required_no_escape_token not in no_escape_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL no escape boundary missing token: {required_no_escape_token}")
+                return 1
+
     lift_admissibility_path = ROOT / "core/lift_admissibility_source.json"
     if lift_admissibility_path.exists():
         lift_admissibility_text = lift_admissibility_path.read_text(encoding="utf-8")
