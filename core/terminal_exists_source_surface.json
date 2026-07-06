@@ -1,0 +1,19 @@
+{
+  "allowed_use": [
+    "derive conditional restricted closure only from supplied terminal_exists_source"
+  ],
+  "non_claims": [
+    "TerminalClosed Terminal -> ExistsAt Terminal",
+    "TerminalClosed -> ExistsAt",
+    "unconditional restricted closure theorem",
+    "zero day solved"
+  ],
+  "objects": {
+    "existence_predicate": "ExistsAt",
+    "terminal": "Terminal"
+  },
+  "proved_statement": "terminal_exists_source : ExistsAt Terminal",
+  "role": "explicit supplied source for terminal existence",
+  "status": "supplied_terminal_existence_source",
+  "surface": "TerminalExistsSource"
+}

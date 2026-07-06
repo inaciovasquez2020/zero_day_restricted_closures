@@ -1,32 +1,43 @@
 {
-  "object": "ConditionalRestrictedClosureTheoremSurface",
-  "type": "conditional_theorem_surface",
-  "statement": "ReachabilitySurface + TerminalClosureSurface + InitialMinimalitySurface -> RestrictedClosureSurface",
-  "inputs": {
-    "reachability": "ReachabilitySurface",
-    "terminal_closure": "TerminalClosureSurface",
-    "initial_minimality": "InitialMinimalitySurface",
-    "base_invariant": "local_closure_predicate Initial",
-    "inductive_step": "forall s1 s2, local_closure_predicate s1 -> AdmissibleStep s1 s2 -> local_closure_predicate s2"
-  },
-  "output": {
-    "restricted_closure": "RestrictedClosureSurface"
-  },
   "bridge_rules": {
-    "terminal_exists": "taken from TerminalClosureSurface.terminal_exists",
-    "terminal_closed": "taken from TerminalClosureSurface.terminal_is_closed",
     "initial_exists": "taken from InitialMinimalitySurface.initial_exists",
     "initial_minimal": "taken from InitialMinimalitySurface.initial_minimal",
-    "reachable": "taken from ReachabilitySurface.reachable"
+    "reachable": "taken from ReachabilitySurface.reachable",
+    "terminal_closed": "taken from TerminalClosureSurface.terminal_is_closed",
+    "terminal_exists": "taken from TerminalClosureSurface.terminal_exists"
   },
   "forbidden_bridges": [
     "do not infer ExistsAt Terminal from TerminalClosed Terminal",
     "do not infer creation from initial minimality alone",
     "do not infer unrestricted closure from restricted closure"
   ],
+  "inputs": {
+    "base_invariant": "local_closure_predicate Initial",
+    "inductive_step": "forall s1 s2, local_closure_predicate s1 -> AdmissibleStep s1 s2 -> local_closure_predicate s2",
+    "initial_minimality": "InitialMinimalitySurface",
+    "reachability": "ReachabilitySurface",
+    "terminal_closure": "TerminalClosureSurface"
+  },
   "non_claims": [
     "does not prove universal creation",
     "does not prove universal finality",
-    "does not prove unrestricted ZeroDayClosure"
-  ]
+    "does not prove unrestricted ZeroDayClosure",
+    "TerminalClosed Terminal -> ExistsAt Terminal",
+    "TerminalClosed -> ExistsAt",
+    "unconditional restricted closure theorem",
+    "zero day solved"
+  ],
+  "object": "ConditionalRestrictedClosureTheoremSurface",
+  "output": {
+    "restricted_closure": "RestrictedClosureSurface"
+  },
+  "statement": "ReachabilitySurface + TerminalClosureSurface + InitialMinimalitySurface -> RestrictedClosureSurface",
+  "terminal_exists_source_dependency": {
+    "derivation_rule": "conditional restricted closure may use ExistsAt Terminal only when supplied by terminal_exists_source",
+    "forbidden_rule": "TerminalClosed Terminal -> ExistsAt Terminal",
+    "required_statement": "terminal_exists_source : ExistsAt Terminal",
+    "source_file": "core/terminal_exists_source_surface.json",
+    "source_surface": "TerminalExistsSource"
+  },
+  "type": "conditional_theorem_surface"
 }
