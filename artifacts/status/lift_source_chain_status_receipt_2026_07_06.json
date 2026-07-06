@@ -1,0 +1,24 @@
+{
+  "receipt": "LiftSourceChainStatusReceipt",
+  "date": "2026-07-06",
+  "status": "conditional_only",
+  "main": "72a354e",
+  "locked_surfaces": [
+    "RestrictedToUnrestrictedLiftBoundarySurface",
+    "RestrictedCoverageSource",
+    "DomainErasureSource",
+    "LiftAdmissibilitySource",
+    "NoEscapeBoundary"
+  ],
+  "validation": "ANTI_UNCONDITIONAL_RULE_OK",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge RestrictedCoverageSource",
+    "does not discharge DomainErasureSource",
+    "does not discharge LiftAdmissibilitySource",
+    "does not convert conditional lift sources into an unconditional theorem"
+  ],
+  "remaining_boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "next_weakest_point": "No concrete theorem composes all lift sources into an admissible restricted-to-unrestricted closure result"
+}
