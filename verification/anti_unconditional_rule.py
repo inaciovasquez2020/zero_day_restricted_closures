@@ -807,6 +807,36 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition witness dependency matrix surface missing token: {required_restricted_composition_witness_dependency_matrix_token}")
                 return 1
 
+    restricted_composition_witness_dependency_matrix_receipt_path = ROOT / "artifacts/status/restricted_composition_witness_dependency_matrix_receipt_2026_07_06.json"
+    if restricted_composition_witness_dependency_matrix_receipt_path.exists():
+        restricted_composition_witness_dependency_matrix_receipt_text = restricted_composition_witness_dependency_matrix_receipt_path.read_text(encoding="utf-8")
+        required_restricted_composition_witness_dependency_matrix_receipt_tokens = [
+            "RestrictedCompositionWitnessDependencyMatrixReceipt",
+            "guarded_dependency_matrix_surface_only",
+            "RestrictedCompositionWitnessDependencyMatrixSurface",
+            "core/restricted_composition_witness_dependency_matrix_surface.json",
+            "verification/anti_unconditional_rule.py",
+            "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "available contract inputs -> RestrictedCompositionTarget",
+            "LiftSourceChainCompositionGap",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+            "unrestricted ZeroDayClosure",
+            "does not prove ZeroDayClosure",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not discharge LiftSourceChainCompositionGap",
+            "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "does not construct RestrictedCompositionTarget",
+            "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+            "does not construct an unrestricted zero-day closure",
+            "does not erase the restricted boundary",
+            "does not prove the restricted-to-unrestricted lift",
+            "The first missing edge remains a real construction from available contract inputs to RestrictedCompositionTarget.",
+        ]
+        for required_restricted_composition_witness_dependency_matrix_receipt_token in required_restricted_composition_witness_dependency_matrix_receipt_tokens:
+            if required_restricted_composition_witness_dependency_matrix_receipt_token not in restricted_composition_witness_dependency_matrix_receipt_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition witness dependency matrix receipt missing token: {required_restricted_composition_witness_dependency_matrix_receipt_token}")
+                return 1
+
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
