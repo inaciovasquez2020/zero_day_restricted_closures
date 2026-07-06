@@ -55,6 +55,11 @@ REQUIRED = [
     "core/terminal_exists_source_surface.json",
     "TerminalExistsSource",
     "terminal_exists_source : ExistsAt Terminal",
+    "core/local_closure_invariant_source_surface.json",
+    "LocalClosureInvariantSource",
+    "base_invariant_source : local_closure_predicate Initial",
+    "inductive_step_source : forall s1 s2, local_closure_predicate s1 -> AdmissibleStep s1 s2 -> local_closure_predicate s2",
+    "TerminalExistsSource + LocalClosureInvariantSource",
 ]
 
 ALLOWED_BOUNDARY_MENTIONS = {
@@ -92,6 +97,16 @@ def main():
         if "TerminalClosed Terminal -> ExistsAt Terminal" in text and "terminal_exists_source" not in text:
             print(f"ANTI_UNCONDITIONAL_RULE_FAIL TerminalClosed Terminal implies ExistsAt Terminal without explicit supplied terminal_exists_source: {path.relative_to(ROOT)}")
             return 1
+
+    for path, text in read_all():
+        if path.name == "conditional_restricted_closure_theorem_surface.json":
+            if "RestrictedClosureSurface" in text and (
+                "TerminalExistsSource + LocalClosureInvariantSource" not in text
+                or "base_invariant_source : local_closure_predicate Initial" not in text
+                or "inductive_step_source : forall s1 s2, local_closure_predicate s1 -> AdmissibleStep s1 s2 -> local_closure_predicate s2" not in text
+            ):
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL conditional restricted closure missing explicit TerminalExistsSource + LocalClosureInvariantSource: {path.relative_to(ROOT)}")
+                return 1
 
     for token in REQUIRED:
         if token not in joined:
