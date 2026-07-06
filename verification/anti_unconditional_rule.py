@@ -131,6 +131,27 @@ def main():
                 print("ANTI_UNCONDITIONAL_RULE_FAIL restricted closure receipt missing TerminalExistsSource-alone boundary")
                 return 1
 
+    lift_receipt_path = ROOT / "artifacts/status/lift_source_chain_status_receipt_2026_07_06.json"
+    if lift_receipt_path.exists():
+        lift_receipt_text = lift_receipt_path.read_text(encoding="utf-8")
+        required_lift_receipt_tokens = [
+            "LiftSourceChainStatusReceipt",
+            "conditional_only",
+            "RestrictedToUnrestrictedLiftBoundarySurface",
+            "RestrictedCoverageSource",
+            "DomainErasureSource",
+            "LiftAdmissibilitySource",
+            "NoEscapeBoundary",
+            "ANTI_UNCONDITIONAL_RULE_OK",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not convert conditional lift sources into an unconditional theorem",
+            "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        ]
+        for required_lift_receipt_token in required_lift_receipt_tokens:
+            if required_lift_receipt_token not in lift_receipt_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL lift source chain receipt missing token: {required_lift_receipt_token}")
+                return 1
+
     no_escape_path = ROOT / "core/no_escape_boundary.json"
     if no_escape_path.exists():
         no_escape_text = no_escape_path.read_text(encoding="utf-8")
