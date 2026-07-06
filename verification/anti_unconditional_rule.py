@@ -131,6 +131,28 @@ def main():
                 print("ANTI_UNCONDITIONAL_RULE_FAIL restricted closure receipt missing TerminalExistsSource-alone boundary")
                 return 1
 
+    lift_admissibility_path = ROOT / "core/lift_admissibility_source.json"
+    if lift_admissibility_path.exists():
+        lift_admissibility_text = lift_admissibility_path.read_text(encoding="utf-8")
+        required_lift_admissibility_tokens = [
+            "LiftAdmissibilitySource",
+            "lift_admissibility_source",
+            "UnrestrictedZeroDayInstance -> RestrictedClosureSurface -> ZeroDayClosure",
+            "RestrictedCoverageSource",
+            "coverage_source : UnrestrictedZeroDayInstance -> RestrictedClosureSurface",
+            "DomainErasureSource",
+            "domain_erasure_source : RestrictedClosureSurface -> ZeroDayClosure",
+            "assumption_surface_only",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not supply NoEscapeBoundary",
+            "does not make lift admissibility unconditional",
+            "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        ]
+        for required_lift_admissibility_token in required_lift_admissibility_tokens:
+            if required_lift_admissibility_token not in lift_admissibility_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL lift admissibility missing token: {required_lift_admissibility_token}")
+                return 1
+
     domain_erasure_path = ROOT / "core/domain_erasure_source.json"
     if domain_erasure_path.exists():
         domain_erasure_text = domain_erasure_path.read_text(encoding="utf-8")

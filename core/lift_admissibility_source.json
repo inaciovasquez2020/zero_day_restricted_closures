@@ -1,0 +1,27 @@
+{
+  "surface": "LiftAdmissibilitySource",
+  "status": "conditional_only",
+  "source": {
+    "name": "lift_admissibility_source",
+    "type": "UnrestrictedZeroDayInstance -> RestrictedClosureSurface -> ZeroDayClosure"
+  },
+  "input_dependencies": [
+    "RestrictedCoverageSource",
+    "coverage_source : UnrestrictedZeroDayInstance -> RestrictedClosureSurface",
+    "DomainErasureSource",
+    "domain_erasure_source : RestrictedClosureSurface -> ZeroDayClosure"
+  ],
+  "admissibility_obligation": {
+    "name": "restricted_closure_result_applies_to_unrestricted_domain",
+    "status": "assumption_surface_only"
+  },
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not bypass RestrictedCoverageSource",
+    "does not bypass DomainErasureSource",
+    "does not supply NoEscapeBoundary",
+    "does not make lift admissibility unconditional"
+  ],
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure"
+}
