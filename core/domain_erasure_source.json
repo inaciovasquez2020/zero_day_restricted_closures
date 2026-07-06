@@ -1,0 +1,24 @@
+{
+  "surface": "DomainErasureSource",
+  "status": "conditional_only",
+  "source": {
+    "name": "domain_erasure_source",
+    "type": "RestrictedClosureSurface -> ZeroDayClosure"
+  },
+  "input_dependencies": [
+    "RestrictedCoverageSource",
+    "coverage_source : UnrestrictedZeroDayInstance -> RestrictedClosureSurface"
+  ],
+  "erasure_obligation": {
+    "name": "restricted_source_hypotheses_erased_or_supplied",
+    "status": "assumption_surface_only"
+  },
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not supply LiftAdmissibilitySource",
+    "does not bypass RestrictedCoverageSource",
+    "does not erase hypotheses unconditionally"
+  ],
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure"
+}
