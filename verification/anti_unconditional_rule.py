@@ -131,6 +131,32 @@ def main():
                 print("ANTI_UNCONDITIONAL_RULE_FAIL restricted closure receipt missing TerminalExistsSource-alone boundary")
                 return 1
 
+    pantheon_path = ROOT / "artifacts/tests/pantheonplus_dfm_mkc_hubble_diagram_test_2026_07_06.json"
+    if pantheon_path.exists():
+        pantheon_text = pantheon_path.read_text(encoding="utf-8")
+        required_pantheon_tokens = [
+            "PantheonPlus_DFM_MKC_HubbleDiagram_Test",
+            "falsification_surface_only",
+            "DFM_MKC_formula_to_observable_map",
+            "second Hubble-diagram falsification surface",
+            "D_L(z)",
+            "mu(z)",
+            "nuisance-calibrated residual model",
+            "PANTHEONPLUS_HUBBLE_DIAGRAM_FALSIFICATION_TEST_DEFINED_BUT_NOT_EXECUTED",
+            "DFM_MKC_FORMULA_SURFACE_FOUND_BUT_NO_ZD_CLOSURE_DERIVED",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not validate cosmology empirically",
+            "does not reject Lambda-CDM",
+            "does not independently reproduce PantheonPlus likelihoods",
+            "does not claim PantheonPlus falsifies DFM-MKC",
+            "does not claim PantheonPlus supports DFM-MKC",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_pantheon_token in required_pantheon_tokens:
+            if required_pantheon_token not in pantheon_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL pantheonplus dfm mkc hubble diagram test missing token: {required_pantheon_token}")
+                return 1
+
     desi_bao_path = ROOT / "artifacts/tests/desi_dr2_bao_dfm_mkc_test_2026_07_06.json"
     if desi_bao_path.exists():
         desi_bao_text = desi_bao_path.read_text(encoding="utf-8")
