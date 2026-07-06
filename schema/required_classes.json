@@ -1,0 +1,17 @@
+{
+  "object": "ZeroDayRequiredK3nHodgeClasses",
+  "type": "finite_indexed_required_class_surface",
+  "boundary": "not UnconditionalCompletenessSourceForZeroDayRequiredK3nHodgeClasses",
+  "fields": {
+    "I": "finite index type",
+    "degree": "I -> Nat",
+    "class": "forall i : I, H^(2 * degree(i))(X,Q)",
+    "hodge": "forall i : I, class(i) in H^(degree(i),degree(i))(X)",
+    "required_by_defect_witness": "forall i : I, ZeroDayDefectWitnessRequires(X,class(i))"
+  },
+  "non_claims": [
+    "does not assert completeness of required classes",
+    "does not prove all required classes lie in SH(X,Q)",
+    "does not invoke the missing global algebraicity source"
+  ]
+}

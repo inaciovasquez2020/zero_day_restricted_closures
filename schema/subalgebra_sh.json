@@ -1,0 +1,16 @@
+{
+  "object": "SH(X,Q)",
+  "type": "image_of_symmetric_algebra_cup_product_map",
+  "definition": {
+    "source": "Sym_Q(H^2(X,Q))",
+    "target": "H^*(X,Q)",
+    "map": "cup_product_algebra_map",
+    "SH": "image(Sym_Q(H^2(X,Q)) -> H^*(X,Q))",
+    "degree_2k_component": "image(Sym_Q^k(H^2(X,Q)) -> H^(2k)(X,Q))"
+  },
+  "non_claims": [
+    "not literal direct sum of symmetric powers",
+    "not full cohomology",
+    "not all Hodge classes"
+  ]
+}
