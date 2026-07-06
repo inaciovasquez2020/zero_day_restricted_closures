@@ -501,6 +501,34 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition target surface missing token: {required_composition_target_token}")
                 return 1
 
+    composition_target_receipt_path = ROOT / "artifacts/status/restricted_lift_source_chain_composition_target_surface_receipt_2026_07_06.json"
+    if composition_target_receipt_path.exists():
+        composition_target_receipt_text = composition_target_receipt_path.read_text(encoding="utf-8")
+        required_composition_target_receipt_tokens = [
+            "RestrictedLiftSourceChainCompositionTargetSurfaceReceipt",
+            "guarded_conditional_theorem_target_surface_only",
+            "RestrictedLiftSourceChainCompositionTargetSurface",
+            "core/restricted_lift_source_chain_composition_target_surface.json",
+            "verification/anti_unconditional_rule.py",
+            "RestrictedLiftSourceChainCompositionInputContract",
+            "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "RESTRICTED_COMPOSITION_TARGET_SURFACE_GUARDED_BUT_NO_THEOREM_SUPPLIED",
+            "LiftSourceChainCompositionGap",
+            "does not prove ZeroDayClosure",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not discharge LiftSourceChainCompositionGap",
+            "does not prove RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "does not construct an unrestricted zero-day closure",
+            "does not erase the restricted boundary",
+            "does not prove the restricted-to-unrestricted lift",
+            "A conditional theorem witness surface from the guarded input contract to RestrictedCompositionTarget is still absent",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_composition_target_receipt_token in required_composition_target_receipt_tokens:
+            if required_composition_target_receipt_token not in composition_target_receipt_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition target receipt missing token: {required_composition_target_receipt_token}")
+                return 1
+
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
