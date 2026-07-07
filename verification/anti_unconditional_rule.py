@@ -77,6 +77,7 @@ def read_all():
         yield path, path.read_text(encoding="utf-8", errors="ignore")
 
 def main():
+    _guard_variable_domain_and_guards_witness_target()
     _guard_physical_system_context_witness_target()
     _guard_f_physical_derivation_obligation_uninhabited()
     _guard_non_toy_law_dependency_contract_boundary()
@@ -1403,6 +1404,98 @@ def _guard_physical_system_context_witness_target() -> None:
 
         raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: no-identification guard missing from fixture")
 
+
+
+def _guard_variable_domain_and_guards_witness_target() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    required = [
+        "core/physical_system_context_witness_target_surface.json",
+        "core/physical_system_context_witness_weakest_dependency_receipt_2026_07_07.json",
+        "core/f_physical_derivation_input_witness_obligation_surface.json",
+        "core/f_physical_missing_derivation_input_gap_ranking_receipt_2026_07_07.json",
+        "core/f_physical_equals_f_toy_forbidden_shortcut_fixture_2026_07_07.json",
+        "core/variable_domain_and_guards_witness_target_surface.json",
+        "core/variable_domain_and_guards_witness_next_dependency_receipt_2026_07_07.json",
+    ]
+
+    payloads = {}
+    for rel in required:
+        path = root / rel
+        if not path.exists():
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing {rel}")
+        payloads[rel] = json.loads(path.read_text(encoding="utf-8"))
+
+    physical_target = payloads["core/physical_system_context_witness_target_surface.json"]
+    physical_receipt = payloads["core/physical_system_context_witness_weakest_dependency_receipt_2026_07_07.json"]
+    obligation = payloads["core/f_physical_derivation_input_witness_obligation_surface.json"]
+    ranking = payloads["core/f_physical_missing_derivation_input_gap_ranking_receipt_2026_07_07.json"]
+    fixture = payloads["core/f_physical_equals_f_toy_forbidden_shortcut_fixture_2026_07_07.json"]
+    target = payloads["core/variable_domain_and_guards_witness_target_surface.json"]
+    receipt = payloads["core/variable_domain_and_guards_witness_next_dependency_receipt_2026_07_07.json"]
+
+    for rel, payload in payloads.items():
+        body = json.dumps(payload, sort_keys=True)
+        if "physical_time_dilation" not in body:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing physical_time_dilation boundary in {rel}")
+        if "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x" not in body:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing upstream non-toy law object in {rel}")
+
+    if physical_target.get("target") != "physical_system_context_witness":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: prior physical_system_context_witness target changed")
+    if physical_target.get("available") is not False or physical_target.get("inhabited") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: prior physical_system_context_witness became available")
+    if physical_receipt.get("weakest_missing_input") != "physical_system_context_witness":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: prior weakest missing input changed")
+    if physical_receipt.get("rank") != 1:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: prior physical_system_context_witness rank changed")
+
+    obligation_inputs = {item.get("name"): item for item in obligation.get("required_witness_inputs", [])}
+    if "variable_domain_and_guards_witness" not in obligation_inputs:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: base obligation lost variable_domain_and_guards_witness")
+    if obligation_inputs["variable_domain_and_guards_witness"].get("available") is True:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: variable_domain_and_guards_witness unexpectedly available")
+
+    ranked = ranking.get("ranked_gaps_weakest_first", [])
+    if len(ranked) < 2:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: ranked gaps lost rank-2 input")
+    if ranked[0].get("rank") != 1 or ranked[0].get("gap") != "physical_system_context_witness":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: rank-1 physical_system_context_witness changed")
+    if ranked[1].get("rank") != 2 or ranked[1].get("gap") != "variable_domain_and_guards_witness":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: rank-2 variable_domain_and_guards_witness changed")
+
+    if target.get("status") != "witness_target_surface_uninhabited":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: variable_domain_and_guards_witness target status changed")
+    if target.get("target") != "variable_domain_and_guards_witness":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: variable_domain_and_guards_witness target name changed")
+    if target.get("rank") != 2:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: variable_domain_and_guards_witness rank changed")
+    if target.get("depends_on_prior_missing_input") != "physical_system_context_witness":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: variable_domain_and_guards_witness prior dependency changed")
+    for field in ["available", "inhabited", "witness_present", "constructor_present", "theorem_present"]:
+        if target.get(field) is not False:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: variable_domain_and_guards_witness {field} became available")
+    if target.get("boundary") != "not(physical_time_dilation)":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: variable_domain_and_guards_witness boundary changed")
+
+    if receipt.get("status") != "next_dependency_receipt_only":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: variable_domain_and_guards_witness receipt is not receipt-only")
+    prior = receipt.get("prior_ranked_missing_input", {})
+    nxt = receipt.get("next_ranked_missing_input", {})
+    if prior.get("rank") != 1 or prior.get("name") != "physical_system_context_witness" or prior.get("available") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: next-dependency receipt prior input changed")
+    if nxt.get("rank") != 2 or nxt.get("name") != "variable_domain_and_guards_witness" or nxt.get("available") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: next-dependency receipt rank-2 input changed")
+
+    if fixture.get("candidate_shortcut") != "F_physical := F_toy":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: forbidden shortcut fixture target changed")
+    if fixture.get("expected_verdict") != "rejected":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical := F_toy shortcut not rejected")
+    fixture_body = json.dumps(fixture, sort_keys=True)
+    if "does_not_identify_F_toy_with_F_physical" not in fixture_body:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: no-identification guard missing from fixture")
 
 if __name__ == "__main__":
     sys.exit(main())

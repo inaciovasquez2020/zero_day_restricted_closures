@@ -1,0 +1,56 @@
+{
+  "object": "variable_domain_and_guards_witness_target_surface",
+  "status": "witness_target_surface_uninhabited",
+  "target": "variable_domain_and_guards_witness",
+  "required_for": [
+    "F_physical_derivation_input_witness",
+    "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x"
+  ],
+  "depends_on_prior_missing_input": "physical_system_context_witness",
+  "rank_after": "physical_system_context_witness",
+  "rank": 2,
+  "available": false,
+  "inhabited": false,
+  "witness_present": false,
+  "constructor_present": false,
+  "theorem_present": false,
+  "base_obligation": "core/f_physical_derivation_input_witness_obligation_surface.json",
+  "base_gap_ranking": "core/f_physical_missing_derivation_input_gap_ranking_receipt_2026_07_07.json",
+  "minimal_target_shape": {
+    "intended_role": "guards sufficient to define a future non-toy law domain without importing toy affine closure as physical evidence",
+    "candidate_guard_slots": [
+      "domain_for_S",
+      "domain_for_t",
+      "domain_for_x",
+      "well_defined_RelativeTimeScale_x",
+      "non_toy_domain_independent_of_F_toy"
+    ],
+    "must_not_import": [
+      "F_toy",
+      "F_toy(x) := 1 + x",
+      "toy affine bijection as physical evidence",
+      "F_physical := F_toy",
+      "physical_time_dilation"
+    ]
+  },
+  "claims": [
+    "names the next ranked missing witness target after physical_system_context_witness",
+    "keeps the variable domain and guards witness target-only",
+    "keeps the target non-inhabited"
+  ],
+  "non_claims": [
+    "does_not_supply_variable_domain_and_guards_witness",
+    "does_not_supply_physical_system_context_witness",
+    "does_not_construct_F_physical",
+    "does_not_supply_a_derivation_input_witness",
+    "does_not_prove_RelativeTimeScale_x_equals_F_physical",
+    "does_not_identify_F_toy_with_F_physical",
+    "does_not_prove_physical_time_dilation",
+    "does_not_prove_relativistic_time_dilation",
+    "does_not_prove_any_empirical_physics_claim"
+  ],
+  "missing_object": "variable_domain_and_guards_witness",
+  "prior_missing_object": "physical_system_context_witness",
+  "upstream_missing_object": "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x",
+  "boundary": "not(physical_time_dilation)"
+}
