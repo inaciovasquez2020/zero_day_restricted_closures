@@ -1812,3 +1812,49 @@ def _guard_f_physical_derivation_input_witness_target() -> None:
     if fixture.get("candidate_shortcut") != "F_physical := F_toy" or fixture.get("expected_verdict") != "rejected":
         raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: forbidden shortcut fixture changed")
 _guard_f_physical_derivation_input_witness_target()
+
+
+def _guard_f_physical_constructor_target() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    target_path = root / "core/f_physical_constructor_target_surface.json"
+    witness_path = root / "core/f_physical_derivation_input_witness_target_surface.json"
+    fixture_path = root / "core/f_physical_equals_f_toy_forbidden_shortcut_fixture_2026_07_07.json"
+
+    for path in [target_path, witness_path, fixture_path]:
+        if not path.exists():
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing {path.relative_to(root)}")
+
+    target = json.loads(target_path.read_text(encoding="utf-8"))
+    witness = json.loads(witness_path.read_text(encoding="utf-8"))
+    fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
+
+    if target.get("status") != "constructor_target_surface_uninhabited":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical constructor target status changed")
+    if target.get("target") != "F_physical_constructor":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical constructor target name changed")
+    if target.get("constructs") != "F_physical":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical constructor target construct changed")
+    for field in ["available", "inhabited", "constructor_present", "value_present", "theorem_present"]:
+        if target.get(field) is not False:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: F_physical constructor {field} became available")
+    if witness.get("available") is not False or witness.get("inhabited") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical derivation witness became available")
+
+    body = json.dumps(target, sort_keys=True)
+    for token in [
+        "F_physical := F_toy",
+        "does_not_supply_F_physical_constructor",
+        "does_not_supply_F_physical",
+        "does_not_construct_F_physical",
+        "does_not_identify_F_toy_with_F_physical",
+        "does_not_prove_physical_time_dilation",
+    ]:
+        if token not in body:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: F_physical constructor target missing {token}")
+
+    if fixture.get("candidate_shortcut") != "F_physical := F_toy" or fixture.get("expected_verdict") != "rejected":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: forbidden shortcut fixture changed")
+_guard_f_physical_constructor_target()
