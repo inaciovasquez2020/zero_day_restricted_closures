@@ -1671,3 +1671,54 @@ def _guard_derivation_evidence_for_f_physical_witness_target() -> None:
     if f.get("candidate_shortcut")!="F_physical := F_toy" or f.get("expected_verdict")!="rejected":
         raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: forbidden shortcut fixture changed")
 _guard_derivation_evidence_for_f_physical_witness_target()
+
+
+def _guard_relative_time_scale_bridge_proof_witness_target() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    target_path = root / "core/relative_time_scale_bridge_proof_witness_target_surface.json"
+    receipt_path = root / "core/relative_time_scale_bridge_proof_witness_next_dependency_receipt_2026_07_07.json"
+    ranking_path = root / "core/f_physical_missing_derivation_input_gap_ranking_receipt_2026_07_07.json"
+    fixture_path = root / "core/f_physical_equals_f_toy_forbidden_shortcut_fixture_2026_07_07.json"
+
+    for path in [target_path, receipt_path, ranking_path, fixture_path]:
+        if not path.exists():
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing {path.relative_to(root)}")
+
+    target = json.loads(target_path.read_text(encoding="utf-8"))
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    ranking = json.loads(ranking_path.read_text(encoding="utf-8"))
+    fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
+
+    ranked = ranking.get("ranked_gaps_weakest_first", [])
+    if len(ranked) < 5 or ranked[4].get("rank") != 5 or ranked[4].get("gap") != "relative_time_scale_bridge_proof_witness":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: rank-5 relative_time_scale_bridge_proof_witness changed")
+
+    if target.get("status") != "witness_target_surface_uninhabited":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: rank-5 witness target status changed")
+    if target.get("target") != "relative_time_scale_bridge_proof_witness":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: rank-5 witness target name changed")
+    if target.get("rank") != 5:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: rank-5 witness rank changed")
+    for field in ["available", "inhabited", "witness_present", "constructor_present", "theorem_present"]:
+        if target.get(field) is not False:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: rank-5 witness {field} became available")
+    if target.get("boundary") != "not(physical_time_dilation)":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: physical_time_dilation boundary changed")
+
+    nxt = receipt.get("next_ranked_missing_input", {})
+    if receipt.get("status") != "next_dependency_receipt_only" or nxt.get("rank") != 5 or nxt.get("name") != "relative_time_scale_bridge_proof_witness" or nxt.get("available") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: rank-5 receipt changed")
+
+    body = json.dumps(target, sort_keys=True) + json.dumps(receipt, sort_keys=True)
+    if "RelativeTimeScale_x_equals_F_physical_bridge" not in body:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: relative time bridge block missing")
+    if "F_physical := F_toy" not in body:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical := F_toy rejection missing")
+    if "does_not_identify_F_toy_with_F_physical" not in body:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_toy/F_physical no-identification missing")
+    if fixture.get("candidate_shortcut") != "F_physical := F_toy" or fixture.get("expected_verdict") != "rejected":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: forbidden shortcut fixture changed")
+_guard_relative_time_scale_bridge_proof_witness_target()

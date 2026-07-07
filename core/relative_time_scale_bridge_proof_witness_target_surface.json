@@ -1,0 +1,47 @@
+{
+  "available": false,
+  "boundary": "not(physical_time_dilation)",
+  "constructor_present": false,
+  "depends_on_prior_missing_inputs": [
+    "physical_system_context_witness",
+    "variable_domain_and_guards_witness",
+    "non_toy_structure_source_witness",
+    "derivation_evidence_for_F_physical_witness"
+  ],
+  "inhabited": false,
+  "missing_object": "relative_time_scale_bridge_proof_witness",
+  "non_claims": [
+    "does_not_supply_relative_time_scale_bridge_proof_witness",
+    "does_not_supply_derivation_evidence_for_F_physical_witness",
+    "does_not_construct_F_physical",
+    "does_not_supply_a_derivation_input_witness",
+    "does_not_identify_F_toy_with_F_physical",
+    "does_not_prove_physical_time_dilation",
+    "does_not_prove_relativistic_time_dilation",
+    "does_not_prove_any_empirical_physics_claim"
+  ],
+  "object": "relative_time_scale_bridge_proof_witness_target_surface",
+  "preserved_rejections": [
+    "F_physical := F_toy",
+    "F_physical(x) := 1 + x",
+    "toy_affine_bijection_proves_physical_time_dilation",
+    "toy_affine_bijection_proves_relativistic_time_dilation"
+  ],
+  "prior_missing_objects": [
+    "physical_system_context_witness",
+    "variable_domain_and_guards_witness",
+    "non_toy_structure_source_witness",
+    "derivation_evidence_for_F_physical_witness"
+  ],
+  "rank": 5,
+  "required_for": [
+    "F_physical_derivation_input_witness",
+    "RelativeTimeScale_x_equals_F_physical_bridge",
+    "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x"
+  ],
+  "status": "witness_target_surface_uninhabited",
+  "target": "relative_time_scale_bridge_proof_witness",
+  "theorem_present": false,
+  "upstream_missing_object": "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x",
+  "witness_present": false
+}
