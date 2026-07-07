@@ -1,0 +1,34 @@
+{
+  "object": "f_physical_equals_f_toy_forbidden_shortcut_fixture",
+  "date": "2026-07-07",
+  "status": "forbidden_shortcut_regression_fixture",
+  "candidate_shortcut": "F_physical := F_toy",
+  "candidate_formula": "F_physical(x) := 1 + x",
+  "expected_verdict": "rejected",
+  "rejection_reasons": [
+    "no physical_system_context_witness",
+    "no variable_domain_and_guards_witness independent of toy affine closure",
+    "no non_toy_structure_source_witness",
+    "no derivation_evidence_for_F_physical_witness",
+    "no relative_time_scale_bridge_proof_witness",
+    "toy affine bijection does not prove physical time dilation"
+  ],
+  "must_remain_false": [
+    "F_physical_is_F_toy_without_derivation",
+    "F_physical_is_inhabited_by_1_plus_x",
+    "RelativeTimeScale_x_equals_F_physical_without_bridge",
+    "toy_affine_bijection_proves_physical_time_dilation",
+    "toy_affine_bijection_proves_relativistic_time_dilation"
+  ],
+  "non_claims": [
+    "does_not_construct_F_physical",
+    "does_not_supply_a_derivation_input_witness",
+    "does_not_prove_RelativeTimeScale_x_equals_F_physical",
+    "does_not_identify_F_toy_with_F_physical",
+    "does_not_prove_physical_time_dilation",
+    "does_not_prove_relativistic_time_dilation",
+    "does_not_prove_any_empirical_physics_claim"
+  ],
+  "missing_object": "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x",
+  "boundary": "not(physical_time_dilation)"
+}
