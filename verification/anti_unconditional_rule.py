@@ -1075,3 +1075,68 @@ def _verify_urf_core_shadow_time_external_evidence_pin_receipt_2026_07_07():
 
 
 _verify_urf_core_shadow_time_external_evidence_pin_receipt_2026_07_07()
+
+# RESTRICTED_COMPOSITION_TARGET_DEFINITION_SURFACE_GUARD
+def _verify_restricted_composition_target_definition_surface():
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    surface = root / "core/restricted_composition_target_definition_surface.json"
+
+    if not surface.exists():
+        raise SystemExit(f"MISSING_OBJECT := {surface.relative_to(root)}")
+
+    raw = surface.read_text(encoding="utf-8")
+    data = json.loads(raw)
+    joined = raw + "\n" + json.dumps(data, ensure_ascii=False, sort_keys=True)
+
+    required_tokens = [
+        "RestrictedCompositionTargetDefinitionSurface",
+        "definition_surface_only",
+        "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        "RestrictedCompositionTarget",
+        "restricted_zero_day_instance_only",
+        '"not_unrestricted": true',
+        "RestrictedLiftSourceChainCompositionInputContract",
+        "TerminalComposite(C,T)",
+        "RestrictedBoundaryInvariant(T)",
+        "TargetRealizesRestrictedLiftSourceChainComposition(C,T)",
+        "restricted_scope_guard",
+        "not_supplied",
+        "not_inhabited",
+        "does not prove ZeroDayClosure",
+        "does not prove unrestricted ZeroDayClosure",
+        "does not discharge LiftSourceChainCompositionGap",
+        "does not inhabit the restricted target",
+        "does not supply a theorem rule from input contract to restricted target",
+        "does not supply a theorem rule from restricted target to ZeroDayClosure",
+        "does not erase the restricted boundary",
+        "does not prove the restricted-to-unrestricted lift",
+    ]
+
+    for token in required_tokens:
+        if token not in joined:
+            raise SystemExit(f"MISSING_OBJECT := token {token!r}")
+
+    forbidden_tokens = [
+        '"status": "theorem"',
+        '"rule_status": "supplied"',
+        '"target_status": "inhabited"',
+        "RestrictedCompositionTargetIntro",
+        "RestrictedTargetBridge",
+        "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+        "RestrictedCompositionTarget -> ZeroDayClosure",
+        "restricted-to-unrestricted lift proved",
+        "unrestricted ZeroDayClosure proved",
+        "same_family_implies_same_theory := true",
+        "physical_time_dilation := true",
+        "universal physical minimum nonzero speed theorem",
+    ]
+
+    for token in forbidden_tokens:
+        if token in joined:
+            raise SystemExit(f"BOUNDARY := forbidden promotion present: {token}")
+
+
+_verify_restricted_composition_target_definition_surface()

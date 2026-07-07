@@ -1,0 +1,43 @@
+{
+  "surface": "RestrictedCompositionTargetDefinitionSurface",
+  "date": "2026-07-07",
+  "status": "definition_surface_only",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "name": "RestrictedCompositionTarget",
+  "scope": "restricted_zero_day_instance_only",
+  "not_unrestricted": true,
+  "input_contract": "RestrictedLiftSourceChainCompositionInputContract",
+  "definition_fields": {
+    "terminal_restricted_composite": "TerminalComposite(C,T)",
+    "restricted_boundary_invariant": "RestrictedBoundaryInvariant(T)",
+    "restricted_chain_realization": "TargetRealizesRestrictedLiftSourceChainComposition(C,T)",
+    "restricted_scope_guard": "restricted_zero_day_instance_only"
+  },
+  "definition_role": "records the field vocabulary of the restricted target object before any theorem rule is supplied",
+  "rule_status": "not_supplied",
+  "target_status": "not_inhabited",
+  "does_not_imply": [
+    "ZeroDayClosure",
+    "unrestricted ZeroDayClosure",
+    "same_family_implies_same_theory",
+    "physical time dilation",
+    "universal physical minimum nonzero speed"
+  ],
+  "blocked_edges": [
+    "restricted target from input contract",
+    "restricted target to ZeroDayClosure",
+    "restricted-to-unrestricted lift",
+    "unrestricted ZeroDayClosure"
+  ],
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not inhabit the restricted target",
+    "does not supply a theorem rule from input contract to restricted target",
+    "does not supply a theorem rule from restricted target to ZeroDayClosure",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift"
+  ],
+  "next_weakest_point": "Guard this definition surface, then separately decide whether the listed fields are sufficient for a future theorem rule."
+}
