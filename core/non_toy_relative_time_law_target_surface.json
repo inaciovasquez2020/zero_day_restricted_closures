@@ -1,0 +1,27 @@
+{
+  "object": "non_toy_relative_time_law_target_surface",
+  "status": "target_surface_uninhabited",
+  "target": "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x",
+  "inhabited": false,
+  "constructor_present": false,
+  "theorem_present": false,
+  "intended_future_shape": {
+    "law_symbol": "F_physical(x)",
+    "bridge_target": "RelativeTimeScale_x(S,t,x) = F_physical(x)",
+    "required_inputs": [
+      "physical hypotheses for S,t,x",
+      "derivation of F_physical from non-toy structure",
+      "proof that F_physical replaces F_toy rather than assuming it"
+    ]
+  },
+  "forbidden_claims": [
+    "does_not_construct_F_physical",
+    "does_not_prove_RelativeTimeScale_x_equals_F_physical",
+    "does_not_identify_F_toy_with_F_physical",
+    "does_not_prove_physical_time_dilation",
+    "does_not_prove_relativistic_time_dilation",
+    "does_not_prove_any_empirical_physics_claim"
+  ],
+  "boundary": "not(physical_time_dilation)",
+  "missing_object": "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x"
+}

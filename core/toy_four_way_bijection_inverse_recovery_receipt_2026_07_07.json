@@ -1,0 +1,60 @@
+{
+  "object": "toy_four_way_bijection_inverse_recovery_receipt",
+  "date": "2026-07-07",
+  "status": "receipt_only",
+  "base_surface": "core/toy_four_way_bijection_closure_surface.json",
+  "guards": [
+    "0 < V",
+    "V < c",
+    "N(S) > 0",
+    "E in (N(S),2N(S))"
+  ],
+  "inverse_chain": [
+    {
+      "map": "E -> R",
+      "formula": "R = E / N(S)",
+      "domain": "(N(S),2N(S))",
+      "codomain": "(1,2)",
+      "well_defined_reason": "N(S) > 0"
+    },
+    {
+      "map": "R -> x",
+      "formula": "x = R - 1",
+      "domain": "(1,2)",
+      "codomain": "(0,1)",
+      "well_defined_reason": "subtracting 1 preserves strict interval recovery"
+    },
+    {
+      "map": "x -> v",
+      "formula": "v = V + x * (c - V)",
+      "domain": "(0,1)",
+      "codomain": "(V,c)",
+      "well_defined_reason": "c - V > 0"
+    },
+    {
+      "map": "E -> v",
+      "formula": "v = V + ((E / N(S)) - 1) * (c - V)",
+      "domain": "(N(S),2N(S))",
+      "codomain": "(V,c)",
+      "well_defined_reason": "N(S) > 0 and c - V > 0"
+    }
+  ],
+  "recovery_equalities": [
+    "v -> x -> R -> E -> R recovers R",
+    "v -> x -> R -> E -> R -> x recovers x",
+    "v -> x -> R -> E -> R -> x -> v recovers v",
+    "E -> R -> x -> v -> x -> R -> E recovers E"
+  ],
+  "claims": [
+    "the already-merged toy inverse chain recovers the toy coordinates exactly",
+    "the toy elapsed-time coordinate E determines a unique toy speed coordinate v under the stated guards"
+  ],
+  "non_claims": [
+    "does_not_derive_a_non_toy_relative_time_law",
+    "does_not_identify_inverse_recovery_with_a_physical_speed_measurement_law",
+    "does_not_prove_physical_time_dilation",
+    "does_not_prove_relativistic_time_dilation",
+    "does_not_prove_any_empirical_physics_claim"
+  ],
+  "boundary": "not(physical_time_dilation)"
+}
