@@ -2332,3 +2332,52 @@ def _guard_f_physical_realization_source_input_contract_realization_source_targe
         if token not in body:
             raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: source-input realization source missing {token}")
 _guard_f_physical_realization_source_input_contract_realization_source_target()
+
+
+def _guard_f_physical_realization_source_input_contract_realization_source_input_contract() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    contract_path = root / "core/f_physical_realization_source_input_contract_realization_source_input_contract_surface.json"
+    source_path = root / "core/f_physical_realization_source_input_contract_realization_source_target_surface.json"
+    realization_path = root / "core/f_physical_realization_source_input_contract_realization_target_surface.json"
+    f_constructor_path = root / "core/f_physical_constructor_target_surface.json"
+
+    for path in [contract_path, source_path, realization_path, f_constructor_path]:
+        if not path.exists():
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing {path.relative_to(root)}")
+
+    contract = json.loads(contract_path.read_text(encoding="utf-8"))
+    source = json.loads(source_path.read_text(encoding="utf-8"))
+    realization = json.loads(realization_path.read_text(encoding="utf-8"))
+    f_constructor = json.loads(f_constructor_path.read_text(encoding="utf-8"))
+
+    if contract.get("status") != "input_contract_surface_only":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: source-input realization source contract status changed")
+    if contract.get("would_supply") != "F_physical_realization_source_input_contract_realization_source":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: source-input realization source contract would-supply changed")
+
+    for field in ["available", "inhabited", "source_present", "realization_present", "constructor_present", "witness_present", "theorem_present"]:
+        if contract.get(field) is not False:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: source-input realization source contract {field} became available")
+
+    if source.get("available") is not False or source.get("inhabited") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: source-input realization source became available")
+    if realization.get("available") is not False or realization.get("inhabited") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: source-input realization became available")
+    if f_constructor.get("available") is not False or f_constructor.get("inhabited") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical constructor became available")
+
+    body = json.dumps(contract, sort_keys=True)
+    for token in [
+        "F_physical := F_toy",
+        "does_not_supply_F_physical_realization_source_input_contract_realization_source",
+        "does_not_supply_F_physical",
+        "does_not_construct_F_physical",
+        "does_not_identify_F_toy_with_F_physical",
+        "does_not_prove_physical_time_dilation",
+    ]:
+        if token not in body:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: source-input realization source contract missing {token}")
+_guard_f_physical_realization_source_input_contract_realization_source_input_contract()
