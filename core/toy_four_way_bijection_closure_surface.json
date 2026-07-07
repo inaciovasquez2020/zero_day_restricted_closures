@@ -1,0 +1,47 @@
+{
+  "object": "toy_four_way_bijection_closure_surface",
+  "status": "algebraic_toy_surface_only",
+  "guards": [
+    "0 < V",
+    "V < c",
+    "N(S) > 0"
+  ],
+  "toy_law": {
+    "F_toy": "F_toy(x) := 1 + x",
+    "bridge": "RelativeTimeScale_x(S,t,x) = F_toy(x)"
+  },
+  "coordinates": {
+    "v": "(V,c)",
+    "x": "(0,1)",
+    "R": "(1,2)",
+    "E": "(N(S),2N(S))"
+  },
+  "forward_maps": [
+    "x = (v - V) / (c - V)",
+    "R = 1 + x",
+    "E = R * N(S)"
+  ],
+  "inverse_maps": [
+    "R = E / N(S)",
+    "x = R - 1",
+    "v = V + x * (c - V)"
+  ],
+  "closed_toy_formulae": {
+    "elapsed_from_speed": "E = (1 + (v - V) / (c - V)) * N(S)",
+    "speed_from_elapsed": "v = V + ((E / N(S)) - 1) * (c - V)"
+  },
+  "claims": [
+    "the four toy coordinate intervals are affinely equivalent under the stated guards",
+    "the forward and inverse toy maps recover the toy coordinates exactly",
+    "the toy maps are strictly monotone under the stated guards"
+  ],
+  "non_claims": [
+    "does_not_derive_a_non_toy_relative_time_law",
+    "does_not_identify_F_toy_with_a_physical_time_dilation_law",
+    "does_not_prove_physical_time_dilation",
+    "does_not_prove_relativistic_time_dilation",
+    "does_not_prove_any_empirical_physics_claim"
+  ],
+  "missing_object": "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x",
+  "boundary": "not(toy_four_way_bijection_proves_physical_time_dilation)"
+}
