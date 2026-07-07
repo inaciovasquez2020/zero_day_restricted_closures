@@ -837,6 +837,40 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition witness dependency matrix receipt missing token: {required_restricted_composition_witness_dependency_matrix_receipt_token}")
                 return 1
 
+    restricted_composition_target_constructor_input_receipt_path = ROOT / "artifacts/status/restricted_composition_target_constructor_input_receipt_2026_07_07.json"
+    if restricted_composition_target_constructor_input_receipt_path.exists():
+        restricted_composition_target_constructor_input_receipt_text = restricted_composition_target_constructor_input_receipt_path.read_text(encoding="utf-8")
+        required_restricted_composition_target_constructor_input_receipt_tokens = [
+            "RestrictedCompositionTargetConstructorInputReceipt",
+            "constructor_input_receipt_only",
+            "core/restricted_lift_source_chain_composition_target_surface.json",
+            "RestrictedCompositionTarget",
+            "restricted_zero_day_instance_only",
+            "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "RESTRICTED_COMPOSITION_TARGET_SURFACE_DEFINED_BUT_NO_THEOREM_SUPPLIED",
+            "restricted_composition_constructor",
+            "restricted_composition_constructor : RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "available inputs are already packaged by RestrictedLiftSourceChainCompositionInputContract",
+            "RestrictedCompositionTarget -> ZeroDayClosure",
+            "No restricted-to-unrestricted lift is supplied by this receipt.",
+            "LiftSourceChainCompositionGap",
+            "does not prove ZeroDayClosure",
+            "does not prove unrestricted ZeroDayClosure",
+            "does not discharge LiftSourceChainCompositionGap",
+            "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+            "does not construct RestrictedCompositionTarget",
+            "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+            "does not construct an unrestricted zero-day closure",
+            "does not erase the restricted boundary",
+            "does not prove the restricted-to-unrestricted lift",
+            r"BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+            "Supply a real restricted_composition_constructor field, or keep this as an explicit assumption boundary.",
+        ]
+        for required_restricted_composition_target_constructor_input_receipt_token in required_restricted_composition_target_constructor_input_receipt_tokens:
+            if required_restricted_composition_target_constructor_input_receipt_token not in restricted_composition_target_constructor_input_receipt_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition target constructor input receipt missing token: {required_restricted_composition_target_constructor_input_receipt_token}")
+                return 1
+
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
