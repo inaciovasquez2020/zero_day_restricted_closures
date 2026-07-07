@@ -77,6 +77,7 @@ def read_all():
         yield path, path.read_text(encoding="utf-8", errors="ignore")
 
 def main():
+    _guard_non_toy_structure_source_witness_target()
     _guard_variable_domain_and_guards_witness_target()
     _guard_physical_system_context_witness_target()
     _guard_f_physical_derivation_obligation_uninhabited()
@@ -1496,6 +1497,24 @@ def _guard_variable_domain_and_guards_witness_target() -> None:
     fixture_body = json.dumps(fixture, sort_keys=True)
     if "does_not_identify_F_toy_with_F_physical" not in fixture_body:
         raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: no-identification guard missing from fixture")
+
+def _guard_non_toy_structure_source_witness_target() -> None:
+    import json
+    from pathlib import Path
+    root=Path(__file__).resolve().parents[1]
+    tp=root/"core/non_toy_structure_source_witness_target_surface.json"; rp=root/"core/non_toy_structure_source_witness_next_dependency_receipt_2026_07_07.json"; fp=root/"core/f_physical_equals_f_toy_forbidden_shortcut_fixture_2026_07_07.json"
+    for p in [tp,rp,fp]:
+        if not p.exists(): raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing {p.relative_to(root)}")
+    t=json.loads(tp.read_text()); r=json.loads(rp.read_text()); f=json.loads(fp.read_text())
+    if t.get("status")!="witness_target_surface_uninhabited" or t.get("target")!="non_toy_structure_source_witness" or t.get("rank")!=3: raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: non_toy_structure_source_witness target changed")
+    for k in ["available","inhabited","witness_present","constructor_present","theorem_present"]:
+        if t.get(k) is not False: raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: non_toy_structure_source_witness {k} became available")
+    if t.get("boundary")!="not(physical_time_dilation)": raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: physical_time_dilation boundary changed")
+    n=r.get("next_ranked_missing_input",{})
+    if r.get("status")!="next_dependency_receipt_only" or n.get("rank")!=3 or n.get("name")!="non_toy_structure_source_witness" or n.get("available") is not False: raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: rank-3 receipt changed")
+    body=json.dumps(t,sort_keys=True)+json.dumps(r,sort_keys=True)
+    if "F_physical := F_toy" not in body or "does_not_identify_F_toy_with_F_physical" not in body: raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: shortcut/no-identification guard missing")
+    if f.get("candidate_shortcut")!="F_physical := F_toy" or f.get("expected_verdict")!="rejected": raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: forbidden shortcut fixture changed")
 
 if __name__ == "__main__":
     sys.exit(main())
