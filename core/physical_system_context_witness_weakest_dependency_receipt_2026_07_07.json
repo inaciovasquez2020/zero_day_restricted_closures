@@ -1,0 +1,84 @@
+
+{
+
+  "object": "physical_system_context_witness_weakest_dependency_receipt",
+
+  "date": "2026-07-07",
+
+  "status": "weakest_dependency_receipt_only",
+
+  "base_gap_ranking": "core/f_physical_missing_derivation_input_gap_ranking_receipt_2026_07_07.json",
+
+  "base_obligation": "core/f_physical_derivation_input_witness_obligation_surface.json",
+
+  "target_surface": "core/physical_system_context_witness_target_surface.json",
+
+  "weakest_missing_input": "physical_system_context_witness",
+
+  "rank": 1,
+
+  "available": false,
+
+  "blocks": [
+
+    "F_physical_derivation_input_witness",
+
+    "F_physical_constructor",
+
+    "RelativeTimeScale_x_equals_F_physical_bridge",
+
+    "physical_time_dilation"
+
+  ],
+
+  "dependency_statement": "physical_system_context_witness is the weakest currently ranked missing derivation input for any future non-toy F_physical derivation.",
+
+  "preserved_rejections": [
+
+    "F_physical := F_toy",
+
+    "F_physical(x) := 1 + x",
+
+    "toy_affine_bijection_proves_physical_time_dilation",
+
+    "toy_affine_bijection_proves_relativistic_time_dilation"
+
+  ],
+
+  "claims": [
+
+    "records physical_system_context_witness as the weakest currently ranked missing input",
+
+    "does not supply the witness",
+
+    "does not advance F_physical beyond target-only status"
+
+  ],
+
+  "non_claims": [
+
+    "does_not_supply_physical_system_context_witness",
+
+    "does_not_construct_F_physical",
+
+    "does_not_supply_a_derivation_input_witness",
+
+    "does_not_prove_RelativeTimeScale_x_equals_F_physical",
+
+    "does_not_identify_F_toy_with_F_physical",
+
+    "does_not_prove_physical_time_dilation",
+
+    "does_not_prove_relativistic_time_dilation",
+
+    "does_not_prove_any_empirical_physics_claim"
+
+  ],
+
+  "missing_object": "physical_system_context_witness",
+
+  "upstream_missing_object": "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x",
+
+  "boundary": "not(physical_time_dilation)"
+
+}
