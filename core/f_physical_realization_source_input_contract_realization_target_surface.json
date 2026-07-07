@@ -1,0 +1,68 @@
+{
+  "available": false,
+  "blocked_by": [
+    "F_physical_realization_source_input_contract_surface_only",
+    "source_input_targets_are_target_surfaces_only",
+    "non_toy_source_law_evidence_target_uninhabited",
+    "F_physical_not_equal_F_toy_guard_target_uninhabited",
+    "F_physical_derivation_input_witness_constructor_contract_realization_source_target_uninhabited",
+    "F_physical_constructor_target_uninhabited"
+  ],
+  "boundary": "not(physical_time_dilation)",
+  "constructor_present": false,
+  "does_not_construct": [
+    "F_physical_realization_source_input_contract_realization",
+    "F_physical_derivation_input_witness_constructor_contract_realization_source",
+    "F_physical_derivation_input_witness_constructor_contract_realization",
+    "F_physical_derivation_input_witness_constructor",
+    "F_physical_derivation_input_witness",
+    "F_physical_constructor",
+    "F_physical",
+    "physical_time_dilation",
+    "relativistic_time_dilation"
+  ],
+  "inhabited": false,
+  "missing_object": "F_physical_realization_source_input_contract_realization",
+  "non_claims": [
+    "does_not_realize_F_physical_realization_source_input_contract",
+    "does_not_supply_F_physical_derivation_input_witness_constructor_contract_realization_source",
+    "does_not_supply_F_physical_constructor",
+    "does_not_supply_F_physical",
+    "does_not_construct_F_physical",
+    "does_not_identify_F_toy_with_F_physical",
+    "does_not_prove_F_physical_not_equal_F_toy",
+    "does_not_prove_physical_time_dilation",
+    "does_not_prove_relativistic_time_dilation",
+    "does_not_prove_any_empirical_physics_claim"
+  ],
+  "object": "F_physical_realization_source_input_contract_realization_target_surface",
+  "preserved_rejections": [
+    "F_physical := F_toy",
+    "F_physical(x) := 1 + x",
+    "toy_affine_bijection_proves_physical_time_dilation"
+  ],
+  "realization_present": false,
+  "requires": [
+    "F_physical_realization_source_input_contract",
+    "non_toy_source_law_evidence",
+    "F_physical_not_equal_F_toy_guard",
+    "variable_domain_and_guards_witness",
+    "relative_time_scale_bridge_proof_witness"
+  ],
+  "source_present": false,
+  "status": "realization_target_surface_uninhabited",
+  "target": "F_physical_realization_source_input_contract_realization",
+  "theorem_present": false,
+  "upstream_missing_object": "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x",
+  "witness_present": false,
+  "would_enable": [
+    "F_physical_derivation_input_witness_constructor_contract_realization_source",
+    "F_physical_derivation_input_witness_constructor_contract_realization",
+    "F_physical_derivation_input_witness_constructor",
+    "F_physical_derivation_input_witness",
+    "F_physical_constructor",
+    "F_physical"
+  ],
+  "would_realize": "F_physical_realization_source_input_contract",
+  "would_supply": "F_physical_derivation_input_witness_constructor_contract_realization_source"
+}
