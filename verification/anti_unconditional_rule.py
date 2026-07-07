@@ -871,6 +871,28 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition target constructor input receipt missing token: {required_restricted_composition_target_constructor_input_receipt_token}")
                 return 1
 
+    family_route_path = ROOT / "artifacts/status/urf_restricted_boundary_family_route_receipt_2026_07_07.json"
+    if family_route_path.exists():
+        family_route_text = family_route_path.read_text(encoding="utf-8")
+        required_family_route_tokens = [
+            "classification",
+            "same restricted-boundary family, not same theory",
+            "does not prove same family implies same theory",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_family_route_token in required_family_route_tokens:
+            if required_family_route_token not in family_route_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL family route receipt missing token: {required_family_route_token}")
+                raise SystemExit(1)
+        forbidden_family_route_tokens = [
+            "same_family_implies_same_theory",
+            "same family implies same theory theorem",
+        ]
+        for forbidden_family_route_token in forbidden_family_route_tokens:
+            if forbidden_family_route_token in family_route_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL family route receipt theorem claim: {forbidden_family_route_token}")
+                raise SystemExit(1)
+
     restricted_composition_constructor_allowed_paths = {
         "artifacts/status/restricted_composition_target_constructor_input_receipt_2026_07_07.json",
         "core/restricted_composition_target_constructor_schema_surface.json",
