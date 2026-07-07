@@ -2131,3 +2131,50 @@ def _guard_f_physical_not_equal_f_toy_guard_target() -> None:
         if token not in body:
             raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: guard target missing {token}")
 _guard_f_physical_not_equal_f_toy_guard_target()
+
+
+def _guard_f_physical_realization_source_input_targets_exhaustion() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    receipt_path = root / "core/f_physical_realization_source_input_targets_exhaustion_receipt_2026_07_07.json"
+    source_path = root / "core/f_physical_derivation_input_witness_constructor_contract_realization_source_target_surface.json"
+    f_constructor_path = root / "core/f_physical_constructor_target_surface.json"
+
+    for path in [receipt_path, source_path, f_constructor_path]:
+        if not path.exists():
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing {path.relative_to(root)}")
+
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    source = json.loads(source_path.read_text(encoding="utf-8"))
+    f_constructor = json.loads(f_constructor_path.read_text(encoding="utf-8"))
+
+    if receipt.get("status") != "source_input_target_exhaustion_receipt_only":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: source input exhaustion receipt status changed")
+    if receipt.get("source_input_target_count") != 4:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: source input target count changed")
+    if receipt.get("source_input_targets_exhausted") is not True:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: source input targets exhaustion flag changed")
+    if receipt.get("remaining_missing_object") != "F_physical_derivation_input_witness_constructor_contract_realization_source":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: source input exhaustion remaining object changed")
+
+    if source.get("available") is not False or source.get("inhabited") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: realization source became available")
+    if f_constructor.get("available") is not False or f_constructor.get("inhabited") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical constructor became available")
+
+    body = json.dumps(receipt, sort_keys=True)
+    for token in [
+        "F_physical := F_toy",
+        "does_not_supply_F_physical_derivation_input_witness_constructor_contract_realization_source",
+        "does_not_supply_non_toy_source_law_evidence",
+        "does_not_supply_F_physical_not_equal_F_toy_guard",
+        "does_not_supply_F_physical",
+        "does_not_construct_F_physical",
+        "does_not_identify_F_toy_with_F_physical",
+        "does_not_prove_physical_time_dilation",
+    ]:
+        if token not in body:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: source input exhaustion missing {token}")
+_guard_f_physical_realization_source_input_targets_exhaustion()
