@@ -77,6 +77,7 @@ def read_all():
         yield path, path.read_text(encoding="utf-8", errors="ignore")
 
 def main():
+    _guard_toy_four_way_no_physical_dilation()
     joined = ""
     for path, text in read_all():
         joined += f"\n--- {path.relative_to(ROOT)} ---\n{text}\n"
@@ -1012,6 +1013,60 @@ def main():
 
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
+
+
+def _guard_toy_four_way_no_physical_dilation() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    required = [
+        "core/toy_four_way_bijection_closure_surface.json",
+        "core/toy_four_way_bijection_strict_monotonicity_receipt_2026_07_07.json",
+        "core/toy_four_way_bijection_inverse_recovery_receipt_2026_07_07.json",
+        "core/non_toy_relative_time_law_target_surface.json",
+    ]
+
+    payloads = {}
+    for rel in required:
+        path = root / rel
+        if not path.exists():
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing {rel}")
+        payloads[rel] = json.loads(path.read_text(encoding="utf-8"))
+
+    closure = payloads["core/toy_four_way_bijection_closure_surface.json"]
+    monotone = payloads["core/toy_four_way_bijection_strict_monotonicity_receipt_2026_07_07.json"]
+    inverse = payloads["core/toy_four_way_bijection_inverse_recovery_receipt_2026_07_07.json"]
+    target = payloads["core/non_toy_relative_time_law_target_surface.json"]
+
+    for rel, payload in payloads.items():
+        body = json.dumps(payload, sort_keys=True)
+        if "does_not_prove_physical_time_dilation" not in body and "not(physical_time_dilation)" not in body:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing no-physical-dilation guard in {rel}")
+
+    if closure.get("missing_object") != "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: toy closure missing object changed")
+
+    if monotone.get("status") != "receipt_only":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: monotonicity receipt is not receipt-only")
+
+    if inverse.get("status") != "receipt_only":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: inverse recovery receipt is not receipt-only")
+
+    if target.get("status") != "target_surface_uninhabited":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: non-toy law target status changed")
+
+    if target.get("inhabited") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: non-toy law target became inhabited")
+
+    if target.get("constructor_present") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: non-toy law target constructor appeared")
+
+    if target.get("theorem_present") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: non-toy law target theorem appeared")
+
+    if target.get("boundary") != "not(physical_time_dilation)":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: physical time dilation boundary changed")
 
 if __name__ == "__main__":
     sys.exit(main())

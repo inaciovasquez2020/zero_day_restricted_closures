@@ -1,0 +1,57 @@
+{
+  "object": "toy_four_way_bijection_strict_monotonicity_receipt",
+  "date": "2026-07-07",
+  "status": "receipt_only",
+  "base_surface": "core/toy_four_way_bijection_closure_surface.json",
+  "guards": [
+    "0 < V",
+    "V < c",
+    "N(S) > 0"
+  ],
+  "monotone_maps": [
+    {
+      "map": "v -> x",
+      "formula": "x = (v - V) / (c - V)",
+      "domain": "(V,c)",
+      "codomain": "(0,1)",
+      "slope": "1 / (c - V)",
+      "strictly_increasing_reason": "c - V > 0"
+    },
+    {
+      "map": "x -> R",
+      "formula": "R = 1 + x",
+      "domain": "(0,1)",
+      "codomain": "(1,2)",
+      "slope": "1",
+      "strictly_increasing_reason": "1 > 0"
+    },
+    {
+      "map": "R -> E",
+      "formula": "E = R * N(S)",
+      "domain": "(1,2)",
+      "codomain": "(N(S),2N(S))",
+      "slope": "N(S)",
+      "strictly_increasing_reason": "N(S) > 0"
+    },
+    {
+      "map": "v -> E",
+      "formula": "E = (1 + (v - V) / (c - V)) * N(S)",
+      "domain": "(V,c)",
+      "codomain": "(N(S),2N(S))",
+      "slope": "N(S) / (c - V)",
+      "strictly_increasing_reason": "N(S) > 0 and c - V > 0"
+    }
+  ],
+  "claims": [
+    "the already-merged toy forward coordinate maps are strictly increasing under the stated guards",
+    "the toy forward composite v -> E is strictly increasing under the stated guards"
+  ],
+  "non_claims": [
+    "does_not_derive_a_non_toy_relative_time_law",
+    "does_not_identify_F_toy_with_a_physical_time_dilation_law",
+    "does_not_prove_physical_time_dilation",
+    "does_not_prove_relativistic_time_dilation",
+    "does_not_prove_any_empirical_physics_claim"
+  ],
+  "boundary": "not(physical_time_dilation)"
+}
