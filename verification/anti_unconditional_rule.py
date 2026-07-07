@@ -1905,3 +1905,46 @@ def _guard_f_physical_derivation_input_witness_constructor_target() -> None:
         if token not in body:
             raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: derivation witness constructor missing {token}")
 _guard_f_physical_derivation_input_witness_constructor_target()
+
+
+def _guard_f_physical_derivation_input_witness_constructor_contract() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    contract_path = root / "core/f_physical_derivation_input_witness_constructor_input_contract_surface.json"
+    constructor_path = root / "core/f_physical_derivation_input_witness_constructor_target_surface.json"
+    f_constructor_path = root / "core/f_physical_constructor_target_surface.json"
+
+    for path in [contract_path, constructor_path, f_constructor_path]:
+        if not path.exists():
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing {path.relative_to(root)}")
+
+    contract = json.loads(contract_path.read_text(encoding="utf-8"))
+    constructor = json.loads(constructor_path.read_text(encoding="utf-8"))
+    f_constructor = json.loads(f_constructor_path.read_text(encoding="utf-8"))
+
+    if contract.get("status") != "input_contract_surface_only":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: constructor contract status changed")
+    if contract.get("target_constructor") != "F_physical_derivation_input_witness_constructor":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: constructor contract target changed")
+    for field in ["available", "inhabited", "constructor_present", "witness_present", "theorem_present"]:
+        if contract.get(field) is not False:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: constructor contract {field} became available")
+    if constructor.get("available") is not False or constructor.get("inhabited") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: derivation witness constructor became available")
+    if f_constructor.get("available") is not False or f_constructor.get("inhabited") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical constructor became available")
+
+    body = json.dumps(contract, sort_keys=True)
+    for token in [
+        "F_physical := F_toy",
+        "does_not_supply_F_physical_derivation_input_witness_constructor",
+        "does_not_supply_F_physical",
+        "does_not_construct_F_physical",
+        "does_not_identify_F_toy_with_F_physical",
+        "does_not_prove_physical_time_dilation",
+    ]:
+        if token not in body:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: constructor contract missing {token}")
+_guard_f_physical_derivation_input_witness_constructor_contract()
