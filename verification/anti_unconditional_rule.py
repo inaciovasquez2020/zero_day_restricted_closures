@@ -873,6 +873,7 @@ def main():
 
     restricted_composition_constructor_allowed_paths = {
         "artifacts/status/restricted_composition_target_constructor_input_receipt_2026_07_07.json",
+        "core/restricted_composition_target_constructor_schema_surface.json",
         "verification/anti_unconditional_rule.py",
     }
     restricted_composition_constructor_hits = []
