@@ -920,6 +920,37 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL cross-repo rollup theorem claim: {forbidden_cross_repo_rollup_token}")
                 raise SystemExit(1)
 
+    dfm_mkc_sidfh_external_evidence_pin_path = ROOT / "artifacts/status/dfm_mkc_sidfh_external_evidence_pin_receipt_2026_07_07.json"
+    if dfm_mkc_sidfh_external_evidence_pin_path.exists():
+        dfm_mkc_sidfh_external_evidence_pin_text = dfm_mkc_sidfh_external_evidence_pin_path.read_text(encoding="utf-8")
+        required_dfm_mkc_sidfh_external_evidence_pin_tokens = [
+            "external_evidence_pin_receipt_only",
+            "\"head\": \"1293134\"",
+            "SIDFH_REPOSITORY_ROUTE_RECEIPT_OK",
+            "MotionBandShadow(V,c,v) := V < v \\u2227 v < c",
+            "supports the prior cross-repo restricted-boundary status rollup as external evidence only",
+            "does not prove same-family classification implies same theory",
+            "does not add a constructor surface",
+            "does not construct RestrictedCompositionTarget",
+            "does not discharge LiftSourceChainCompositionGap",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_dfm_mkc_sidfh_external_evidence_pin_token in required_dfm_mkc_sidfh_external_evidence_pin_tokens:
+            if required_dfm_mkc_sidfh_external_evidence_pin_token not in dfm_mkc_sidfh_external_evidence_pin_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL dfm-mkc SIDFH external evidence pin missing token: {required_dfm_mkc_sidfh_external_evidence_pin_token}")
+                raise SystemExit(1)
+        forbidden_dfm_mkc_sidfh_external_evidence_pin_tokens = [
+            "same_family_implies_same_theory",
+            "\"classification\": \"same theory\"",
+            "\"status\": \"theorem\"",
+            "constructs RestrictedCompositionTarget",
+            "discharges LiftSourceChainCompositionGap",
+        ]
+        for forbidden_dfm_mkc_sidfh_external_evidence_pin_token in forbidden_dfm_mkc_sidfh_external_evidence_pin_tokens:
+            if forbidden_dfm_mkc_sidfh_external_evidence_pin_token in dfm_mkc_sidfh_external_evidence_pin_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL dfm-mkc SIDFH external evidence pin theorem claim: {forbidden_dfm_mkc_sidfh_external_evidence_pin_token}")
+                raise SystemExit(1)
+
     restricted_composition_constructor_allowed_paths = {
         "artifacts/status/restricted_composition_target_constructor_input_receipt_2026_07_07.json",
         "core/restricted_composition_target_constructor_schema_surface.json",
