@@ -871,6 +871,26 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL restricted composition target constructor input receipt missing token: {required_restricted_composition_target_constructor_input_receipt_token}")
                 return 1
 
+    restricted_composition_constructor_allowed_paths = {
+        "artifacts/status/restricted_composition_target_constructor_input_receipt_2026_07_07.json",
+        "verification/anti_unconditional_rule.py",
+    }
+    restricted_composition_constructor_hits = []
+    for restricted_composition_constructor_root in ("core", "artifacts", "verification"):
+        for restricted_composition_constructor_path in (ROOT / restricted_composition_constructor_root).rglob("*"):
+            if restricted_composition_constructor_path.is_file():
+                restricted_composition_constructor_text = restricted_composition_constructor_path.read_text(encoding="utf-8", errors="ignore")
+                if "restricted_composition_constructor" in restricted_composition_constructor_text:
+                    restricted_composition_constructor_hits.append(str(restricted_composition_constructor_path.relative_to(ROOT)))
+    restricted_composition_constructor_outside_guarded_receipt = sorted(
+        set(restricted_composition_constructor_hits) - restricted_composition_constructor_allowed_paths
+    )
+    if restricted_composition_constructor_outside_guarded_receipt:
+        print("ANTI_UNCONDITIONAL_RULE_FAIL restricted_composition_constructor outside guarded receipt:")
+        for restricted_composition_constructor_unexpected_path in restricted_composition_constructor_outside_guarded_receipt:
+            print(restricted_composition_constructor_unexpected_path)
+        return 1
+
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
