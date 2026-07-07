@@ -1767,3 +1767,48 @@ def _guard_f_physical_ranked_missing_input_targets_exhaustion() -> None:
     if fixture.get("candidate_shortcut") != "F_physical := F_toy" or fixture.get("expected_verdict") != "rejected":
         raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: forbidden shortcut fixture changed")
 _guard_f_physical_ranked_missing_input_targets_exhaustion()
+
+
+def _guard_f_physical_derivation_input_witness_target() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    target_path = root / "core/f_physical_derivation_input_witness_target_surface.json"
+    exhaustion_path = root / "core/f_physical_ranked_missing_input_targets_exhaustion_receipt_2026_07_07.json"
+    fixture_path = root / "core/f_physical_equals_f_toy_forbidden_shortcut_fixture_2026_07_07.json"
+
+    for path in [target_path, exhaustion_path, fixture_path]:
+        if not path.exists():
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing {path.relative_to(root)}")
+
+    target = json.loads(target_path.read_text(encoding="utf-8"))
+    exhaustion = json.loads(exhaustion_path.read_text(encoding="utf-8"))
+    fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
+
+    if target.get("status") != "witness_target_surface_uninhabited":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F physical witness target status changed")
+    if target.get("target") != "F_physical_derivation_input_witness":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F physical witness target name changed")
+    for field in ["available", "inhabited", "witness_present", "constructor_present", "theorem_present"]:
+        if target.get(field) is not False:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: F physical witness {field} became available")
+    if target.get("boundary") != "not(physical_time_dilation)":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: physical_time_dilation boundary changed")
+    if exhaustion.get("remaining_missing_object") != "F_physical_derivation_input_witness":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: exhaustion remaining object changed")
+
+    body = json.dumps(target, sort_keys=True) + json.dumps(exhaustion, sort_keys=True)
+    for token in [
+        "F_physical := F_toy",
+        "does_not_supply_F_physical_derivation_input_witness",
+        "does_not_construct_F_physical",
+        "does_not_identify_F_toy_with_F_physical",
+        "does_not_prove_physical_time_dilation",
+    ]:
+        if token not in body:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing {token}")
+
+    if fixture.get("candidate_shortcut") != "F_physical := F_toy" or fixture.get("expected_verdict") != "rejected":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: forbidden shortcut fixture changed")
+_guard_f_physical_derivation_input_witness_target()
