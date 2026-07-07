@@ -1643,3 +1643,31 @@ def _verify_restricted_composition_target_definition_surface():
 
 
 _verify_restricted_composition_target_definition_surface()
+
+
+def _guard_derivation_evidence_for_f_physical_witness_target() -> None:
+    import json
+    from pathlib import Path
+    root=Path(__file__).resolve().parents[1]
+    paths=[root/"core/derivation_evidence_for_F_physical_witness_target_surface.json",root/"core/derivation_evidence_for_F_physical_witness_next_dependency_receipt_2026_07_07.json",root/"core/f_physical_missing_derivation_input_gap_ranking_receipt_2026_07_07.json",root/"core/f_physical_equals_f_toy_forbidden_shortcut_fixture_2026_07_07.json"]
+    for path in paths:
+        if not path.exists():
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing {path.relative_to(root)}")
+    t=json.loads(paths[0].read_text(encoding="utf-8")); r=json.loads(paths[1].read_text(encoding="utf-8")); g=json.loads(paths[2].read_text(encoding="utf-8")); f=json.loads(paths[3].read_text(encoding="utf-8"))
+    ranked=g.get("ranked_gaps_weakest_first",[])
+    if len(ranked)<4 or ranked[3].get("rank")!=4 or ranked[3].get("gap")!="derivation_evidence_for_F_physical_witness":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: rank-4 derivation evidence gap changed")
+    if t.get("status")!="witness_target_surface_uninhabited" or t.get("target")!="derivation_evidence_for_F_physical_witness" or t.get("rank")!=4:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: rank-4 target changed")
+    for field in ["available","inhabited","witness_present","constructor_present","theorem_present"]:
+        if t.get(field) is not False:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: rank-4 {field} became available")
+    nxt=r.get("next_ranked_missing_input",{})
+    if r.get("status")!="next_dependency_receipt_only" or nxt.get("rank")!=4 or nxt.get("name")!="derivation_evidence_for_F_physical_witness" or nxt.get("available") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: rank-4 receipt changed")
+    body=json.dumps(t,sort_keys=True)+json.dumps(r,sort_keys=True)
+    if "F_physical := F_toy" not in body or "does_not_identify_F_toy_with_F_physical" not in body:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: rank-4 shortcut/no-identification guard missing")
+    if f.get("candidate_shortcut")!="F_physical := F_toy" or f.get("expected_verdict")!="rejected":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: forbidden shortcut fixture changed")
+_guard_derivation_evidence_for_f_physical_witness_target()
