@@ -77,6 +77,7 @@ def read_all():
         yield path, path.read_text(encoding="utf-8", errors="ignore")
 
 def main():
+    _guard_non_toy_law_dependency_contract_boundary()
     _guard_toy_four_way_no_physical_dilation()
     joined = ""
     for path, text in read_all():
@@ -1067,6 +1068,84 @@ def _guard_toy_four_way_no_physical_dilation() -> None:
 
     if target.get("boundary") != "not(physical_time_dilation)":
         raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: physical time dilation boundary changed")
+
+
+def _guard_non_toy_law_dependency_contract_boundary() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    required = [
+        "core/non_toy_relative_time_law_target_surface.json",
+        "core/non_toy_relative_time_law_dependency_matrix_receipt_2026_07_07.json",
+        "core/non_toy_relative_time_law_constructor_input_contract_surface.json",
+        "core/affine_toy_bijection_physics_boundary_receipt_2026_07_07.json",
+    ]
+
+    payloads = {}
+    for rel in required:
+        path = root / rel
+        if not path.exists():
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing {rel}")
+        payloads[rel] = json.loads(path.read_text(encoding="utf-8"))
+
+    target = payloads["core/non_toy_relative_time_law_target_surface.json"]
+    matrix = payloads["core/non_toy_relative_time_law_dependency_matrix_receipt_2026_07_07.json"]
+    contract = payloads["core/non_toy_relative_time_law_constructor_input_contract_surface.json"]
+    boundary = payloads["core/affine_toy_bijection_physics_boundary_receipt_2026_07_07.json"]
+
+    for rel, payload in payloads.items():
+        body = json.dumps(payload, sort_keys=True)
+        if "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x" not in body:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing non-toy missing object in {rel}")
+        if "does_not_prove_physical_time_dilation" not in body and "not(physical_time_dilation)" not in body:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing physical-time-dilation boundary in {rel}")
+
+    if target.get("inhabited") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical target became inhabited")
+
+    if target.get("constructor_present") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical constructor appeared")
+
+    if target.get("theorem_present") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical theorem appeared")
+
+    if matrix.get("status") != "dependency_matrix_receipt_only":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: non-toy dependency matrix is not receipt-only")
+
+    if contract.get("status") != "constructor_input_contract_surface_only":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical constructor input contract is not surface-only")
+
+    missing_inputs = [
+        item.get("name")
+        for item in contract.get("required_inputs", [])
+        if item.get("name") != "toy_physics_boundary_proof" and item.get("available") is not True
+    ]
+
+    if contract.get("inhabited") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical constructor input contract became inhabited")
+
+    if contract.get("constructor_present") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical constructor input contract exposes constructor")
+
+    if contract.get("theorem_present") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical constructor input contract exposes theorem")
+
+    if target.get("inhabited") is True and missing_inputs:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: inhabited F_physical without derivation inputs")
+
+    if boundary.get("status") != "boundary_receipt_only":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: affine toy physics boundary is not receipt-only")
+
+    boundary_body = json.dumps(boundary, sort_keys=True)
+    if "empirical time dilation" not in boundary_body:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: empirical boundary separation missing")
+
+    if "relativistic time dilation" not in boundary_body:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: relativistic boundary separation missing")
+
+    if boundary.get("boundary") != "not(physical_time_dilation)":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: physical_time_dilation boundary changed")
 
 if __name__ == "__main__":
     sys.exit(main())

@@ -1,0 +1,56 @@
+{
+  "object": "non_toy_relative_time_law_constructor_input_contract_surface",
+  "status": "constructor_input_contract_surface_only",
+  "target": "F_physical",
+  "inhabited": false,
+  "constructor_present": false,
+  "theorem_present": false,
+  "required_inputs": [
+    {
+      "name": "physical_system_context",
+      "description": "A non-toy specification of the physical system S and parameters t,x.",
+      "available": false
+    },
+    {
+      "name": "variable_domain_and_guards",
+      "description": "Guards sufficient to define the non-toy law without importing the toy affine closure as a physical claim.",
+      "available": false
+    },
+    {
+      "name": "non_toy_structure_source",
+      "description": "A physical, geometric, empirical, or independently justified source from which F_physical is derived.",
+      "available": false
+    },
+    {
+      "name": "derivation_evidence_for_F_physical",
+      "description": "A derivation of F_physical from the non-toy structure source.",
+      "available": false
+    },
+    {
+      "name": "relative_time_scale_bridge_proof",
+      "description": "A proof that RelativeTimeScale_x(S,t,x) equals F_physical(x) under the non-toy hypotheses.",
+      "available": false
+    },
+    {
+      "name": "toy_physics_boundary_proof",
+      "description": "A boundary proof separating toy affine bijection closure from empirical or relativistic claims.",
+      "available": true
+    }
+  ],
+  "forbidden_shortcuts": [
+    "must_not_set_F_physical_equal_to_F_toy_without_derivation",
+    "must_not_use_affine_bijection_as_physical_time_dilation",
+    "must_not_inhabit_F_physical_without_all_required_derivation_inputs",
+    "must_not_claim_relativistic_time_dilation_from_toy_closure"
+  ],
+  "non_claims": [
+    "does_not_construct_F_physical",
+    "does_not_prove_RelativeTimeScale_x_equals_F_physical",
+    "does_not_identify_F_toy_with_F_physical",
+    "does_not_prove_physical_time_dilation",
+    "does_not_prove_relativistic_time_dilation",
+    "does_not_prove_any_empirical_physics_claim"
+  ],
+  "missing_object": "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x",
+  "boundary": "not(physical_time_dilation)"
+}
