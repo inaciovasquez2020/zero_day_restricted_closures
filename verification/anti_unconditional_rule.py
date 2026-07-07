@@ -951,6 +951,44 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL dfm-mkc SIDFH external evidence pin theorem claim: {forbidden_dfm_mkc_sidfh_external_evidence_pin_token}")
                 raise SystemExit(1)
 
+    chronos_sidfh_tach_speed_external_evidence_pin_path = ROOT / "artifacts/status/chronos_sidfh_tach_speed_external_evidence_pin_receipt_2026_07_07.json"
+    if chronos_sidfh_tach_speed_external_evidence_pin_path.exists():
+        chronos_sidfh_tach_speed_external_evidence_pin_text = chronos_sidfh_tach_speed_external_evidence_pin_path.read_text(encoding="utf-8")
+        required_chronos_sidfh_tach_speed_external_evidence_pin_tokens = [
+            "external_evidence_pin_receipt_only",
+            "\"head\": \"b2ff64b1\"",
+            "SIDFH_TACH_SPEED_INPUT_SURFACE_OK",
+            "SIDFH_TACH_SPEED_EXTERNAL_TIME_REFERENCE_RECEIPT_OK",
+            "SIDFHTachSpeedInputSurface",
+            "MotionBandShadow(V,c,v) := V < v \\u2227 v < c",
+            "RelativeTimeScale(S,t) := elapsed_time(S,t) / natural_cycle_time(S)",
+            "supports the prior cross-repo restricted-boundary status rollup as external evidence only",
+            "does not prove physical time dilation",
+            "does not prove v_min from SIDFHTachSpeedInputSurface",
+            "does not prove same-family classification implies same theory",
+            "does not add a constructor surface",
+            "does not construct RestrictedCompositionTarget",
+            "does not discharge LiftSourceChainCompositionGap",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+            "BOUNDARY := \\u00ac chronos_derives_RelativeTimeScale_physical_time_dilation",
+        ]
+        for required_chronos_sidfh_tach_speed_external_evidence_pin_token in required_chronos_sidfh_tach_speed_external_evidence_pin_tokens:
+            if required_chronos_sidfh_tach_speed_external_evidence_pin_token not in chronos_sidfh_tach_speed_external_evidence_pin_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL Chronos SIDFH tach-speed external evidence pin missing token: {required_chronos_sidfh_tach_speed_external_evidence_pin_token}")
+                raise SystemExit(1)
+        forbidden_chronos_sidfh_tach_speed_external_evidence_pin_tokens = [
+            "same_family_implies_same_theory",
+            "\"classification\": \"same theory\"",
+            "\"status\": \"theorem\"",
+            "constructs RestrictedCompositionTarget",
+            "discharges LiftSourceChainCompositionGap",
+            "\"chronos_derives_RelativeTimeScale_physical_time_dilation\": true",
+        ]
+        for forbidden_chronos_sidfh_tach_speed_external_evidence_pin_token in forbidden_chronos_sidfh_tach_speed_external_evidence_pin_tokens:
+            if forbidden_chronos_sidfh_tach_speed_external_evidence_pin_token in chronos_sidfh_tach_speed_external_evidence_pin_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL Chronos SIDFH tach-speed external evidence pin theorem claim: {forbidden_chronos_sidfh_tach_speed_external_evidence_pin_token}")
+                raise SystemExit(1)
+
     restricted_composition_constructor_allowed_paths = {
         "artifacts/status/restricted_composition_target_constructor_input_receipt_2026_07_07.json",
         "core/restricted_composition_target_constructor_schema_surface.json",
