@@ -77,6 +77,7 @@ def read_all():
         yield path, path.read_text(encoding="utf-8", errors="ignore")
 
 def main():
+    _guard_f_physical_derivation_obligation_uninhabited()
     _guard_non_toy_law_dependency_contract_boundary()
     _guard_toy_four_way_no_physical_dilation()
     joined = ""
@@ -1146,6 +1147,93 @@ def _guard_non_toy_law_dependency_contract_boundary() -> None:
 
     if boundary.get("boundary") != "not(physical_time_dilation)":
         raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: physical_time_dilation boundary changed")
+
+
+def _guard_f_physical_derivation_obligation_uninhabited() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    required = [
+        "core/non_toy_relative_time_law_target_surface.json",
+        "core/non_toy_relative_time_law_constructor_input_contract_surface.json",
+        "core/f_physical_derivation_input_witness_obligation_surface.json",
+        "core/f_physical_missing_derivation_input_gap_ranking_receipt_2026_07_07.json",
+        "core/f_physical_equals_f_toy_forbidden_shortcut_fixture_2026_07_07.json",
+    ]
+
+    payloads = {}
+    for rel in required:
+        path = root / rel
+        if not path.exists():
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing {rel}")
+        payloads[rel] = json.loads(path.read_text(encoding="utf-8"))
+
+    target = payloads["core/non_toy_relative_time_law_target_surface.json"]
+    contract = payloads["core/non_toy_relative_time_law_constructor_input_contract_surface.json"]
+    obligation = payloads["core/f_physical_derivation_input_witness_obligation_surface.json"]
+    ranking = payloads["core/f_physical_missing_derivation_input_gap_ranking_receipt_2026_07_07.json"]
+    fixture = payloads["core/f_physical_equals_f_toy_forbidden_shortcut_fixture_2026_07_07.json"]
+
+    for rel, payload in payloads.items():
+        body = json.dumps(payload, sort_keys=True)
+        if "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x" not in body:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing non-toy missing object in {rel}")
+        if "does_not_prove_physical_time_dilation" not in body and "not(physical_time_dilation)" not in body:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: missing physical-time-dilation boundary in {rel}")
+
+    for name, payload in {
+        "target": target,
+        "contract": contract,
+        "obligation": obligation,
+    }.items():
+        if payload.get("inhabited") is not False:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: {name} became inhabited")
+        if payload.get("constructor_present") is not False:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: {name} exposes constructor")
+        if payload.get("theorem_present") is not False:
+            raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: {name} exposes theorem")
+
+    if obligation.get("status") != "witness_obligation_surface_uninhabited":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical derivation obligation status changed")
+
+    if obligation.get("witness_present") is not False:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical derivation witness appeared")
+
+    missing_inputs = [
+        item.get("name")
+        for item in obligation.get("required_witness_inputs", [])
+        if item.get("available") is not True
+    ]
+
+    if len(missing_inputs) != 5:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical derivation inputs unexpectedly available")
+
+    if obligation.get("inhabited") is True and missing_inputs:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: inhabited F_physical obligation without derivation inputs")
+
+    if ranking.get("status") != "gap_ranking_receipt_only":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical gap ranking is not receipt-only")
+
+    ranks = [item.get("rank") for item in ranking.get("ranked_gaps_weakest_first", [])]
+    if ranks != [1, 2, 3, 4, 5]:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical gap ranking changed")
+
+    if fixture.get("status") != "forbidden_shortcut_regression_fixture":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical := F_toy fixture status changed")
+
+    if fixture.get("candidate_shortcut") != "F_physical := F_toy":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical := F_toy fixture target changed")
+
+    if fixture.get("expected_verdict") != "rejected":
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: F_physical := F_toy shortcut not rejected")
+
+    fixture_body = json.dumps(fixture, sort_keys=True)
+    if "does_not_identify_F_toy_with_F_physical" not in fixture_body:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: fixture no-identification guard missing")
+
+    if "toy affine bijection does not prove physical time dilation" not in fixture_body:
+        raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: fixture physical boundary rejection missing")
 
 if __name__ == "__main__":
     sys.exit(main())
