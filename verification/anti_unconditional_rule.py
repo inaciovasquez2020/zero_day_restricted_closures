@@ -1015,3 +1015,63 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
+
+# URF_CORE_SHADOW_TIME_EXTERNAL_EVIDENCE_PIN_RECEIPT_2026_07_07_GUARD
+def _verify_urf_core_shadow_time_external_evidence_pin_receipt_2026_07_07():
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    receipt = root / "artifacts/status/urf_core_shadow_time_external_evidence_pin_receipt_2026_07_07.json"
+
+    if not receipt.exists():
+        raise SystemExit(f"MISSING_OBJECT := {receipt.relative_to(root)}")
+
+    raw = receipt.read_text(encoding="utf-8")
+    data = json.loads(raw)
+    joined = raw + "\n" + json.dumps(data, ensure_ascii=False, sort_keys=True)
+
+    required_tokens = [
+        "URF_CORE_SHADOW_TIME_EXTERNAL_EVIDENCE_PIN_RECEIPT_2026_07_07",
+        "external_evidence_pin_receipt_only",
+        '"head": "2021284c"',
+        "SHADOW_OF_INFINITY_MOTION_RELATIVE_TIME_BOUNDARY_OK",
+        "tools/verify_shadow_of_infinity_motion_relative_time_boundary.py",
+        "MotionBandShadow(V,c,v) := V < v ∧ v < c",
+        "RelativeTimeScale(S,t) := elapsed_time(S,t) / natural_cycle_time(S)",
+        "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        "BOUNDARY := ¬ universal_physical_minimum_nonzero_speed_proved",
+        "BOUNDARY := ¬ RelativeTimeScale_proves_physical_time_dilation",
+        "does not prove ZeroDayClosure",
+        "does not prove unrestricted ZeroDayClosure",
+        "does not prove physical time dilation",
+        "does not prove a universal physical minimum nonzero speed",
+        "does not prove same-family classification implies same theory",
+        "does not add a constructor surface",
+        "does not construct RestrictedCompositionTarget",
+        "does not discharge LiftSourceChainCompositionGap",
+    ]
+
+    for token in required_tokens:
+        if token not in joined:
+            raise SystemExit(f"MISSING_OBJECT := token {token!r}")
+
+    forbidden_tokens = [
+        '"status": "theorem"',
+        '"classification": "same theory"',
+        "same_family_implies_same_theory := true",
+        "physical_time_dilation := true",
+        "universal_physical_minimum_nonzero_speed_proved := true",
+        "unrestricted_ZeroDayClosure := true",
+        "constructs RestrictedCompositionTarget",
+        "discharges LiftSourceChainCompositionGap",
+        "RestrictedCompositionTargetIntro",
+        "restricted-to-unrestricted lift proved",
+    ]
+
+    for token in forbidden_tokens:
+        if token in joined:
+            raise SystemExit(f"BOUNDARY := forbidden promotion present: {token}")
+
+
+_verify_urf_core_shadow_time_external_evidence_pin_receipt_2026_07_07()

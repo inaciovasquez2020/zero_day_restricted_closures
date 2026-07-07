@@ -1,0 +1,38 @@
+{
+  "id": "URF_CORE_SHADOW_TIME_EXTERNAL_EVIDENCE_PIN_RECEIPT_2026_07_07",
+  "date": "2026-07-07",
+  "status": "external_evidence_pin_receipt_only",
+  "local_repo": "zero_day_restricted_closures",
+  "external_repo": {
+    "name": "urf-core",
+    "head": "2021284c",
+    "branch": "main",
+    "worktree_status": "clean",
+    "validation": [
+      "SHADOW_OF_INFINITY_MOTION_RELATIVE_TIME_BOUNDARY_OK"
+    ],
+    "verifier": "tools/verify_shadow_of_infinity_motion_relative_time_boundary.py"
+  },
+  "pinned_route_objects": [
+    "MotionBandShadow(V,c,v) := V < v ∧ v < c",
+    "RelativeTimeScale(S,t) := elapsed_time(S,t) / natural_cycle_time(S)"
+  ],
+  "classification": "external evidence pin only",
+  "relationship_to_zero_day": "supports the prior cross-repo restricted-boundary status rollup as external evidence only",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "external_boundaries": [
+    "BOUNDARY := \u00ac universal_physical_minimum_nonzero_speed_proved",
+    "BOUNDARY := \u00ac RelativeTimeScale_proves_physical_time_dilation"
+  ],
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove physical time dilation",
+    "does not prove a universal physical minimum nonzero speed",
+    "does not prove same-family classification implies same theory",
+    "does not add a constructor surface",
+    "does not construct RestrictedCompositionTarget",
+    "does not discharge LiftSourceChainCompositionGap"
+  ],
+  "next_weakest_point": "Add an anti-unconditional verifier guard requiring this urf-core external evidence pin to remain status-only."
+}
