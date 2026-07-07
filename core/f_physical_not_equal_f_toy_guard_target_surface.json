@@ -1,0 +1,66 @@
+{
+  "available": false,
+  "blocked_by": [
+    "F_physical_unconstructed",
+    "F_physical_constructor_target_uninhabited",
+    "non_toy_source_law_evidence_target_uninhabited",
+    "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x_missing"
+  ],
+  "boundary": "not(physical_time_dilation)",
+  "constructor_present": false,
+  "does_not_construct": [
+    "F_physical_not_equal_F_toy_guard",
+    "non_toy_source_law_evidence",
+    "F_physical_derivation_input_witness_constructor_contract_realization_source",
+    "F_physical_derivation_input_witness_constructor_contract_realization",
+    "F_physical_derivation_input_witness_constructor",
+    "F_physical_derivation_input_witness",
+    "F_physical_constructor",
+    "F_physical",
+    "physical_time_dilation",
+    "relativistic_time_dilation"
+  ],
+  "evidence_present": false,
+  "guard_present": false,
+  "inhabited": false,
+  "missing_object": "F_physical_not_equal_F_toy_guard",
+  "non_claims": [
+    "does_not_supply_F_physical_not_equal_F_toy_guard",
+    "does_not_supply_non_toy_source_law_evidence",
+    "does_not_supply_derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x",
+    "does_not_supply_F_physical_constructor",
+    "does_not_supply_F_physical",
+    "does_not_construct_F_physical",
+    "does_not_identify_F_toy_with_F_physical",
+    "does_not_prove_F_physical_not_equal_F_toy",
+    "does_not_prove_physical_time_dilation",
+    "does_not_prove_relativistic_time_dilation",
+    "does_not_prove_any_empirical_physics_claim"
+  ],
+  "object": "F_physical_not_equal_F_toy_guard_target_surface",
+  "preserved_rejections": [
+    "F_physical := F_toy",
+    "F_physical(x) := 1 + x",
+    "toy_affine_bijection_proves_physical_time_dilation"
+  ],
+  "source_present": false,
+  "status": "guard_target_surface_uninhabited",
+  "target": "F_physical_not_equal_F_toy_guard",
+  "theorem_present": false,
+  "upstream_missing_object": "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x",
+  "witness_present": false,
+  "would_guard_against": [
+    "F_physical := F_toy",
+    "F_physical(x) := 1 + x",
+    "toy_affine_bijection_as_physical_derivation"
+  ],
+  "would_support": [
+    "non_toy_source_law_evidence",
+    "F_physical_derivation_input_witness_constructor_contract_realization_source",
+    "F_physical_derivation_input_witness_constructor_contract_realization",
+    "F_physical_derivation_input_witness_constructor",
+    "F_physical_derivation_input_witness",
+    "F_physical_constructor",
+    "F_physical"
+  ]
+}
