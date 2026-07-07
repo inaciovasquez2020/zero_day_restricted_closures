@@ -1,0 +1,55 @@
+{
+  "id": "URF_CROSS_REPO_RESTRICTED_BOUNDARY_STATUS_ROLLUP_2026_07_07",
+  "date": "2026-07-07",
+  "status": "cross_repo_status_rollup_only",
+  "local_repo": {
+    "name": "zero_day_restricted_closures",
+    "head": "2a4eac3",
+    "validated": [
+      "ANTI_UNCONDITIONAL_RULE_OK"
+    ],
+    "merged_receipt": "artifacts/status/urf_restricted_boundary_family_route_receipt_2026_07_07.json",
+    "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure"
+  },
+  "sidfh_route": {
+    "primary_repo": "dfm-mkc-cosmology",
+    "route_receipt": "artifacts/status/sidfh_repository_route_receipt_2026_07_07.json",
+    "classification": "SIDFH route source only",
+    "boundary": "BOUNDARY := \u00ac current_work_proves_universal_physical_minimum_nonzero_speed"
+  },
+  "chronos_route": {
+    "repo": "chronos-urf-rr",
+    "head": "b2ff64b1",
+    "validated": [
+      "SIDFH_TACH_SPEED_INPUT_SURFACE_OK",
+      "SIDFH_TACH_SPEED_EXTERNAL_TIME_REFERENCE_RECEIPT_OK"
+    ],
+    "objects": [
+      "SIDFHTachSpeedInputSurface",
+      "SIDFH tach-speed external time reference receipt"
+    ],
+    "boundary": "BOUNDARY := \u00ac chronos_derives_RelativeTimeScale_physical_time_dilation"
+  },
+  "urf_core_route": {
+    "objects": [
+      "MotionBandShadow",
+      "RelativeTimeScale"
+    ],
+    "classification": "canonical object route source only"
+  },
+  "rollup_classification": "zero_day, SIDFH, chronos, and urf-core are synchronized as restricted-boundary status routes only",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove SIDFH",
+    "does not prove SIDFH is physically real",
+    "does not prove physical time dilation",
+    "does not prove a universal physical minimum nonzero speed",
+    "does not prove same family implies same theory",
+    "does not add a constructor surface",
+    "does not construct RestrictedCompositionTarget",
+    "does not discharge LiftSourceChainCompositionGap"
+  ],
+  "next_weakest_point": "A verifier-guarded cross-repo synchronization receipt can check that this rollup remains status-only."
+}

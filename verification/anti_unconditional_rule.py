@@ -893,6 +893,33 @@ def main():
                 print(f"ANTI_UNCONDITIONAL_RULE_FAIL family route receipt theorem claim: {forbidden_family_route_token}")
                 raise SystemExit(1)
 
+    cross_repo_rollup_path = ROOT / "artifacts/status/urf_cross_repo_restricted_boundary_status_rollup_2026_07_07.json"
+    if cross_repo_rollup_path.exists():
+        cross_repo_rollup_text = cross_repo_rollup_path.read_text(encoding="utf-8")
+        required_cross_repo_rollup_tokens = [
+            "cross_repo_status_rollup_only",
+            "zero_day, SIDFH, chronos, and urf-core are synchronized as restricted-boundary status routes only",
+            "does not prove same family implies same theory",
+            "does not add a constructor surface",
+            "does not construct RestrictedCompositionTarget",
+            "does not discharge LiftSourceChainCompositionGap",
+            "BOUNDARY := \\u00ac unrestricted ZeroDayClosure",
+        ]
+        for required_cross_repo_rollup_token in required_cross_repo_rollup_tokens:
+            if required_cross_repo_rollup_token not in cross_repo_rollup_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL cross-repo rollup missing token: {required_cross_repo_rollup_token}")
+                raise SystemExit(1)
+        forbidden_cross_repo_rollup_tokens = [
+            "same_family_implies_same_theory",
+            "proves physical time dilation",
+            "proves SIDFH is physically real",
+            "proves unrestricted ZeroDayClosure",
+        ]
+        for forbidden_cross_repo_rollup_token in forbidden_cross_repo_rollup_tokens:
+            if forbidden_cross_repo_rollup_token in cross_repo_rollup_text:
+                print(f"ANTI_UNCONDITIONAL_RULE_FAIL cross-repo rollup theorem claim: {forbidden_cross_repo_rollup_token}")
+                raise SystemExit(1)
+
     restricted_composition_constructor_allowed_paths = {
         "artifacts/status/restricted_composition_target_constructor_input_receipt_2026_07_07.json",
         "core/restricted_composition_target_constructor_schema_surface.json",
