@@ -1,0 +1,60 @@
+{
+  "object": "non_toy_relative_time_law_dependency_matrix_receipt",
+  "date": "2026-07-07",
+  "status": "dependency_matrix_receipt_only",
+  "base_target": "core/non_toy_relative_time_law_target_surface.json",
+  "target": "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x",
+  "dependency_matrix": [
+    {
+      "dependency": "F_physical_symbol",
+      "required_for": "non_toy_relative_time_law",
+      "status": "named_target_only",
+      "available": false
+    },
+    {
+      "dependency": "physical_hypotheses_for_S_t_x",
+      "required_for": "F_physical_derivation",
+      "status": "missing",
+      "available": false
+    },
+    {
+      "dependency": "non_toy_structure_source",
+      "required_for": "F_physical_derivation",
+      "status": "missing",
+      "available": false
+    },
+    {
+      "dependency": "derivation_inputs_for_F_physical",
+      "required_for": "F_physical_constructor",
+      "status": "missing",
+      "available": false
+    },
+    {
+      "dependency": "RelativeTimeScale_x_equals_F_physical_bridge",
+      "required_for": "physical_relative_time_scale_claim",
+      "status": "unproved_target",
+      "available": false
+    },
+    {
+      "dependency": "toy_affine_bijection_to_physical_dilation_bridge",
+      "required_for": "physical_time_dilation",
+      "status": "forbidden_boundary",
+      "available": false
+    }
+  ],
+  "claims": [
+    "records the currently missing dependencies for any future non-toy relative time law",
+    "keeps the non-toy law target uninhabited",
+    "keeps the toy affine bijection separated from physical time dilation"
+  ],
+  "non_claims": [
+    "does_not_construct_F_physical",
+    "does_not_prove_RelativeTimeScale_x_equals_F_physical",
+    "does_not_identify_F_toy_with_F_physical",
+    "does_not_prove_physical_time_dilation",
+    "does_not_prove_relativistic_time_dilation",
+    "does_not_prove_any_empirical_physics_claim"
+  ],
+  "missing_object": "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x",
+  "boundary": "not(physical_time_dilation)"
+}

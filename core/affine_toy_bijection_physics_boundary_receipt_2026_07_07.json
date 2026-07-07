@@ -1,0 +1,41 @@
+{
+  "object": "affine_toy_bijection_physics_boundary_receipt",
+  "date": "2026-07-07",
+  "status": "boundary_receipt_only",
+  "base_surfaces": [
+    "core/toy_four_way_bijection_closure_surface.json",
+    "core/toy_four_way_bijection_strict_monotonicity_receipt_2026_07_07.json",
+    "core/toy_four_way_bijection_inverse_recovery_receipt_2026_07_07.json",
+    "core/non_toy_relative_time_law_target_surface.json"
+  ],
+  "separation": {
+    "toy_affine_content": [
+      "interval equivalence",
+      "strict monotonicity",
+      "inverse coordinate recovery",
+      "toy formula E = (1 + x)N(S)"
+    ],
+    "excluded_physical_content": [
+      "empirical time dilation",
+      "relativistic time dilation",
+      "physical derivation of F_physical",
+      "identification of F_toy with F_physical",
+      "measurement law for elapsed physical time"
+    ]
+  },
+  "claims": [
+    "the toy four-way bijection is an affine coordinate closure only",
+    "strict monotonicity and inverse recovery remain toy-coordinate claims only",
+    "non-toy physical law derivation remains a missing object"
+  ],
+  "non_claims": [
+    "does_not_construct_F_physical",
+    "does_not_prove_RelativeTimeScale_x_equals_F_physical",
+    "does_not_identify_F_toy_with_F_physical",
+    "does_not_prove_physical_time_dilation",
+    "does_not_prove_relativistic_time_dilation",
+    "does_not_prove_any_empirical_physics_claim"
+  ],
+  "missing_object": "derived_non_toy_law_replacing_F_toy_x_eq_1_plus_x",
+  "boundary": "not(physical_time_dilation)"
+}
