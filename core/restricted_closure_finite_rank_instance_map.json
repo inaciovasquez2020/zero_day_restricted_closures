@@ -1,0 +1,34 @@
+{
+  "surface": "RestrictedClosureFiniteRankInstanceMap",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "SCHEMA_INSTANCE_MAP_ONLY",
+  "depends_on": [
+    "GeneralFiniteRankTerminationSchema",
+    "RestrictedClosureSurface"
+  ],
+  "schema": "GeneralFiniteRankTerminationSchema",
+  "instance_target": "RestrictedClosureSurface",
+  "mapped_fields": {
+    "State": "ZeroDayBoundarySurface.State",
+    "Initial": "ZeroDayBoundarySurface.Initial",
+    "Terminal": "ZeroDayBoundarySurface.Terminal",
+    "AdmissibleStep": "ZeroDayBoundarySurface.AdmissibleStep"
+  },
+  "unsupplied_schema_inputs": [
+    "finite_state_space",
+    "rank_function_State_to_Nat",
+    "rank_decreases_on_every_admissible_step",
+    "terminal_iff_no_outgoing_admissible_step"
+  ],
+  "instance_status": "PARTIAL_INSTANCE_MAP_RANK_UNSUPPLIED",
+  "non_claims": [
+    "does not prove finite_state_space",
+    "does not define rank : State -> Nat",
+    "does not prove rank decreases on every admissible step",
+    "does not prove terminal iff no outgoing admissible step",
+    "does not prove GeneralFiniteRankTerminationSchema for RestrictedClosureSurface",
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "next_weakest_point": "Supply finite_state_space or rank_function_State_to_Nat for the restricted closure vocabulary."
+}
