@@ -19,6 +19,8 @@ rows = payload.get("transitions")
 if not isinstance(rows, list) or not rows:
     raise SystemExit("MISSING_OBJECT := nonempty bounded transition rows")
 
+seen_sources = set()
+
 for i, row in enumerate(rows):
     if not isinstance(row, dict):
         raise SystemExit(f"MISSING_OBJECT := transition row {i} object")
@@ -28,5 +30,10 @@ for i, row in enumerate(rows):
         raise SystemExit(f"MISSING_OBJECT := transition row {i} bounded from Fin 256")
     if not isinstance(dst, int) or not 0 <= dst < 256:
         raise SystemExit(f"MISSING_OBJECT := transition row {i} bounded to Fin 256")
+    seen_sources.add(src)
+
+missing_sources = [i for i in range(256) if i not in seen_sources]
+if missing_sources:
+    raise SystemExit("MISSING_OBJECT := transition rows covering every source in Fin 256")
 
 print("RESTRICTED_BOUNDED_TRANSITION_WITNESS_TEST_OK")
