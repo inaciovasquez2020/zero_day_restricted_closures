@@ -1,0 +1,59 @@
+{
+  "surface": "VerifiedExecutionContextSchemaCandidateSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "CANDIDATE_EXECUTION_CONTEXT_SCHEMA_SURFACE_ONLY",
+  "target_edge": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "schema_title": "VerifiedExecutionContext",
+  "schema_required_fields": [
+    "target_length",
+    "is_positive",
+    "source_chain",
+    "input_contract",
+    "computed_target_element",
+    "terminal_composition_witness",
+    "global_invariant_witness",
+    "realization_witness",
+    "target_object",
+    "execution_guard"
+  ],
+  "candidate_field_mapping": {
+    "target_object.terminal_object": "candidate TerminalComposite(C,T) carrier",
+    "target_object.composition_proof": "candidate composition proof field",
+    "target_object.invariant_proof": "candidate RestrictedBoundaryInvariant(T) field",
+    "target_object.realization_proof": "candidate TargetRealizesRestrictedLiftSourceChainComposition(C,T) field",
+    "target_object.restricted_instance_pin": "candidate restricted_zero_day_instance_only field",
+    "execution_guard.forbidden_lift_assertion": "candidate promotion-refutation guard"
+  },
+  "candidate_execution_guards": [
+    "REFUTE_PROMOTION",
+    "restricted-domain-only",
+    "no unrestricted lift",
+    "no ZeroDayClosure promotion"
+  ],
+  "positive_claim": "records a candidate exchange schema for later field-by-field restricted-edge obligation checking",
+  "schema_status": "SCHEMA_SURFACE_ONLY_NOT_A_CONSTRUCTOR",
+  "weakest_point": "field-by-field obligation discharge from actual contract inputs to RestrictedCompositionTarget fields",
+  "missing_object": "actual inhabitant of RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "forbidden_status_lines": [
+    "STATUS := VERIFICATION_COMPLETE",
+    "WEAKEST_POINT := None",
+    "MISSING_OBJECT := None",
+    "Terminate the formal proof generation lifecycle"
+  ],
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not prove that the schema fields satisfy RestrictedCompositionTarget",
+    "does not prove field-by-field obligation discharge",
+    "does not terminate the proof generation lifecycle",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift",
+    "does not add SNOLAB or external empirical evidence"
+  ],
+  "next_weakest_point": "Build a field-by-field obligation matrix mapping actual input-contract fields to the required RestrictedCompositionTarget fields."
+}
