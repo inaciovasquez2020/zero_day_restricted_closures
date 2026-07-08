@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+import json
+from pathlib import Path
+
+path = Path("core/restricted_bounded_transition_relation_witness.json")
+
+if not path.exists():
+    raise SystemExit("MISSING_OBJECT := core/restricted_bounded_transition_relation_witness.json")
+
+payload = json.loads(path.read_text())
+
+if payload.get("surface") != "RestrictedBoundedTransitionRelationWitness":
+    raise SystemExit("MISSING_OBJECT := RestrictedBoundedTransitionRelationWitness surface")
+
+if payload.get("state_model") != "Fin 256":
+    raise SystemExit("MISSING_OBJECT := state_model Fin 256")
+
+rows = payload.get("transitions")
+if not isinstance(rows, list) or not rows:
+    raise SystemExit("MISSING_OBJECT := nonempty bounded transition rows")
+
+for i, row in enumerate(rows):
+    if not isinstance(row, dict):
+        raise SystemExit(f"MISSING_OBJECT := transition row {i} object")
+    src = row.get("from")
+    dst = row.get("to")
+    if not isinstance(src, int) or not 0 <= src < 256:
+        raise SystemExit(f"MISSING_OBJECT := transition row {i} bounded from Fin 256")
+    if not isinstance(dst, int) or not 0 <= dst < 256:
+        raise SystemExit(f"MISSING_OBJECT := transition row {i} bounded to Fin 256")
+
+print("RESTRICTED_BOUNDED_TRANSITION_WITNESS_TEST_OK")
