@@ -1,0 +1,31 @@
+{
+  "surface": "RestrictedTargetConstructorTransitionBoundarySurface",
+  "status": "CONSTRUCTOR_TRANSITION_BOUNDARY_ONLY",
+  "transition": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "constructor_realization": {
+    "status": "ABSENT"
+  },
+  "restricted_composition_target": {
+    "status": "UNCONSTRUCTED"
+  },
+  "constructor_obligations": [
+    {
+      "field": "terminal_composite.executable_payload",
+      "requirement": "accepted executable terminal-composite candidate input"
+    },
+    {
+      "field": "RestrictedBoundaryInvariant(T)",
+      "requirement": "future supplied invariant payload"
+    },
+    {
+      "field": "TargetRealizesRestrictedLiftSourceChainComposition(C,T)",
+      "requirement": "future supplied realization payload"
+    }
+  ],
+  "non_claims": [
+    "does_not_construct_restricted_composition_target",
+    "does_not_supply_constructor_realization",
+    "does_not_construct_zero_day_closure",
+    "does_not_lift_restricted_to_unrestricted"
+  ]
+}
