@@ -1292,5 +1292,11 @@
     "does not construct RestrictedCompositionTarget",
     "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
     "does not erase the restricted boundary"
-  ]
+  ],
+  "restricted_transition_property": {
+    "property": "bounded_successor_semantics_over_StateModel_Fin_256",
+    "scope": "restricted_zero_day_instance_only",
+    "status": "PROPERTY_WITNESS_SUPPLIED",
+    "non_claim": "does not construct RestrictedCompositionTarget"
+  }
 }
