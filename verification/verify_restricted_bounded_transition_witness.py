@@ -32,6 +32,7 @@ if not isinstance(bridges, list):
 required_bridges = {
     ("restricted_transition_property", "TargetRealizesRestrictedLiftSourceChainComposition(C,T)"),
     ("restricted_transition_property", "RestrictedBoundaryInvariant(T)"),
+    ("restricted_transition_property", "TerminalComposite(C,T)"),
     ("scope", "restricted_zero_day_instance_only"),
 }
 
