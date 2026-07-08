@@ -1606,6 +1606,17 @@ def verify_restricted_target_extraction_field_inventory_guard():
         "restricted_zero_day_instance_only erased",
     }
 
+    required_guard_fixture = "guard fixture: unrestricted ZeroDayClosure constructed"
+    fixture_hits = [
+        value
+        for value in data.get("blocked_promotions", [])
+        if isinstance(value, str) and required_guard_fixture in value
+    ]
+    if fixture_hits:
+        raise SystemExit(
+            "RESTRICTED_TARGET_EXTRACTION_FIELD_INVENTORY_GUARD_FAILED := live surface contains forbidden guard fixture"
+        )
+
     def walk(value):
         if isinstance(value, dict):
             for child in value.values():
