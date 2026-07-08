@@ -1,0 +1,36 @@
+{
+  "surface": "TerminalCompositeAcceptanceBlockerInventorySurface",
+  "status": "BLOCKER_INVENTORY_ONLY",
+  "target_missing_object": "accepted executable terminal-composite witness candidate",
+  "ranked_blockers": [
+    {
+      "rank": 1,
+      "missing_object": "TerminalComposite(C,T) supplied",
+      "reason": "well_formed_candidate_fixture_names_the_field_but_does_not_supply_its_content"
+    },
+    {
+      "rank": 2,
+      "missing_object": "terminal_composite_content_executable_payload",
+      "reason": "candidate_has_no_executable_payload_for_terminal_composite_content"
+    },
+    {
+      "rank": 3,
+      "missing_object": "source_field_bridge_constructed",
+      "reason": "no bridge maps available restricted source fields into terminal composite content"
+    },
+    {
+      "rank": 4,
+      "missing_object": "accepted_candidate_registry_entry",
+      "reason": "accepted_candidates_remains_empty"
+    }
+  ],
+  "accepted_candidates": [],
+  "non_claims": [
+    "does_not_accept_any_candidate",
+    "does_not_supply_terminal_composite",
+    "does_not_construct_source_field_bridge",
+    "does_not_construct_restricted_composition_target",
+    "does_not_construct_zero_day_closure",
+    "does_not_lift_restricted_to_unrestricted"
+  ]
+}
