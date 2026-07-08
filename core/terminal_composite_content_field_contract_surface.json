@@ -1,0 +1,30 @@
+{
+  "surface": "TerminalCompositeContentFieldContractSurface",
+  "status": "CONTENT_FIELD_CONTRACT_ONLY",
+  "target_missing_object": "TerminalComposite(C,T) supplied",
+  "required_fields": [
+    "terminal_composite",
+    "terminal_composite.scope",
+    "terminal_composite.source_fields",
+    "terminal_composite.executable_payload"
+  ],
+  "executable_payload_contract": {
+    "required_key": "executable_payload",
+    "required_status": "present_non_null",
+    "accepted": false
+  },
+  "source_field_bridge_construction": {
+    "status": "DECLARED_NOT_CONSTRUCTED",
+    "from": "restricted source fields",
+    "to": "terminal_composite.executable_payload"
+  },
+  "accepted_candidates": [],
+  "non_claims": [
+    "does_not_accept_any_candidate",
+    "does_not_supply_terminal_composite",
+    "does_not_construct_source_field_bridge",
+    "does_not_construct_restricted_composition_target",
+    "does_not_construct_zero_day_closure",
+    "does_not_lift_restricted_to_unrestricted"
+  ]
+}
