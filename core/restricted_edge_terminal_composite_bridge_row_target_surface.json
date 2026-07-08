@@ -1,0 +1,37 @@
+{
+  "surface": "RestrictedEdgeTerminalCompositeBridgeRowTargetSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "SOURCE_FIELD_BRIDGE_ROW_TARGET_SURFACE_ONLY",
+  "parent_bridge_target": "RestrictedEdgeSourceFieldBridgeTargetSurface",
+  "target_edge": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "row_index": 1,
+  "target_field": "TerminalComposite(C,T)",
+  "candidate_source_fields": [
+    "coverage_source",
+    "restricted_closure_surface"
+  ],
+  "row_target_shape": {
+    "input": "coverage_source or restricted_closure_surface",
+    "output": "TerminalComposite(C,T)",
+    "scope": "restricted_zero_day_instance_only"
+  },
+  "row_status": "ROW_TARGET_ONLY_NOT_SUPPLIED",
+  "positive_claim": "names the first bounded source-field bridge row target for TerminalComposite(C,T)",
+  "missing_object": "actual row witness mapping available source data to TerminalComposite(C,T)",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not construct the source-field bridge",
+    "does not construct the TerminalComposite(C,T) row witness",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not prove field-by-field obligation discharge",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift",
+    "does not add SNOLAB or external empirical evidence"
+  ],
+  "next_weakest_point": "Inspect whether coverage_source or restricted_closure_surface can supply a restricted terminal composite row witness."
+}
