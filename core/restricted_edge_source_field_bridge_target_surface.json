@@ -1,0 +1,63 @@
+{
+  "surface": "RestrictedEdgeSourceFieldBridgeTargetSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "SOURCE_FIELD_BRIDGE_TARGET_SURFACE_ONLY",
+  "target_edge": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "bridge_target_role": "names the missing source-field bridge needed before any restricted-edge witness can be discharged",
+  "depends_on_surfaces": [
+    "RestrictedEdgeSourceFieldGapSurface",
+    "RestrictedEdgeSourceFieldAbsenceReceipt",
+    "RestrictedEdgeFieldObligationMatrixSurface",
+    "RestrictedCompositionTargetDefinitionSurface"
+  ],
+  "bridge_target_shape": {
+    "input": "available contract inputs",
+    "output": "field data sufficient for RestrictedCompositionTarget",
+    "required_field_outputs": [
+      "TerminalComposite(C,T)",
+      "RestrictedBoundaryInvariant(T)",
+      "TargetRealizesRestrictedLiftSourceChainComposition(C,T)",
+      "restricted_zero_day_instance_only"
+    ]
+  },
+  "required_bridge_rows": [
+    {
+      "source_field": "coverage_source or restricted_closure_surface",
+      "target_field": "TerminalComposite(C,T)",
+      "bridge_status": "BRIDGE_TARGET_ONLY_NOT_SUPPLIED"
+    },
+    {
+      "source_field": "no_escape_boundary or restricted_instance or restricted_closure_surface",
+      "target_field": "RestrictedBoundaryInvariant(T)",
+      "bridge_status": "BRIDGE_TARGET_ONLY_NOT_SUPPLIED"
+    },
+    {
+      "source_field": "coverage_source plus domain_erasure_source plus lift_admissibility_source plus no_escape_boundary",
+      "target_field": "TargetRealizesRestrictedLiftSourceChainComposition(C,T)",
+      "bridge_status": "BRIDGE_TARGET_ONLY_NOT_SUPPLIED"
+    },
+    {
+      "source_field": "restricted_instance",
+      "target_field": "restricted_zero_day_instance_only",
+      "bridge_status": "BRIDGE_TARGET_ONLY_NOT_SUPPLIED"
+    }
+  ],
+  "positive_claim": "records the missing bridge target needed to map existing contract inputs to required RestrictedCompositionTarget field data",
+  "bridge_status": "BRIDGE_TARGET_ONLY_NOT_CONSTRUCTED",
+  "missing_object": "actual source-field bridge supplying all required target-field data",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not construct the source-field bridge",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not prove field-by-field obligation discharge",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift",
+    "does not add SNOLAB or external empirical evidence"
+  ],
+  "next_weakest_point": "Supply a bounded source-field bridge witness for these four rows, or keep the bridge target as an explicit missing object."
+}
