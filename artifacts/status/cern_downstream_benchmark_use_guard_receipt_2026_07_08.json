@@ -1,0 +1,42 @@
+{
+  "receipt": "CERNDownstreamBenchmarkUseGuardReceipt",
+  "classification": "EXTERNAL_EMPIRICAL_BENCHMARK_USE_GUARD_ONLY",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "parent_receipts": [
+    "CERNOpenDataExternalEvidenceReceipt",
+    "CERNDatasetProjectInvariantMapReceipt"
+  ],
+  "source_receipts": [
+    "artifacts/status/cern_open_data_external_evidence_receipt_2026_07_08.json",
+    "artifacts/status/cern_dataset_project_invariant_map_receipt_2026_07_08.json"
+  ],
+  "guard_role": "blocks any downstream CERN benchmark surface from being interpreted as theorem, constructor, closure, or restricted-to-unrestricted lift evidence",
+  "allowed_use": [
+    "external empirical benchmark metadata",
+    "dataset provenance pin",
+    "bounded anomaly-surface input candidate"
+  ],
+  "forbidden_use": [
+    "theorem proof evidence",
+    "ZeroDayClosure proof",
+    "unrestricted ZeroDayClosure proof",
+    "RestrictedCompositionTarget construction",
+    "RestrictedCompositionTarget -> ZeroDayClosure construction",
+    "LiftSourceChainCompositionGap discharge",
+    "restricted-to-unrestricted lift proof"
+  ],
+  "integration_status": "GUARD_ONLY_NOT_A_BENCHMARK_SURFACE",
+  "non_claims": [
+    "does not add a CERN benchmark surface",
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not prove the restricted-to-unrestricted lift",
+    "does not use CERN data as proof evidence",
+    "does not add a theorem rule",
+    "does not add a closure constructor"
+  ],
+  "next_weakest_point": "Add a bounded CERN benchmark surface only after this guard is verified and kept isolated from closure paths."
+}
