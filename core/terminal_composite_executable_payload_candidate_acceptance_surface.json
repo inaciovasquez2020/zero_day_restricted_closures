@@ -1,0 +1,30 @@
+{
+  "surface": "TerminalCompositeExecutablePayloadCandidateAcceptanceSurface",
+  "status": "ACCEPTED_CANDIDATE_FIXTURE_ONLY",
+  "accepted_candidate": {
+    "kind": "executable_terminal_composite_witness_candidate",
+    "terminal_composite": {
+      "scope": "restricted_only",
+      "source_fields": [
+        "RestrictedCompositionTarget.source_fields.TerminalComposite(C,T)",
+        "RestrictedCompositionTarget.source_fields.RestrictedBoundaryInvariant(T)",
+        "RestrictedCompositionTarget.source_fields.TargetRealizesRestrictedLiftSourceChainComposition(C,T)"
+      ],
+      "executable_payload": {
+        "payload_kind": "restricted_terminal_composite_payload_fixture",
+        "bridge_inputs_present": true,
+        "executes": true
+      }
+    },
+    "claims": []
+  },
+  "accepted_candidates": [
+    "restricted_terminal_composite_payload_fixture"
+  ],
+  "non_claims": [
+    "does_not_construct_restricted_composition_target",
+    "does_not_construct_zero_day_closure",
+    "does_not_lift_restricted_to_unrestricted",
+    "does_not_claim_unrestricted_zero_day_closure"
+  ]
+}
