@@ -1,0 +1,20 @@
+{
+  "surface": "IntendedUnrestrictedStateProductFormEquivalenceAssemblySurface",
+  "scope": "equivalence_assembly_target_only",
+  "target_theorem": "IntendedUnrestrictedState ≃ Fin 256 × Payload",
+  "depends_on": [
+    "toProductForm : IntendedUnrestrictedState -> Fin 256 × Payload",
+    "fromProductForm : Fin 256 × Payload -> IntendedUnrestrictedState",
+    "fromProductForm(toProductForm(x)) = x",
+    "toProductForm(fromProductForm(y)) = y"
+  ],
+  "status": "EQUIVALENCE_ASSEMBLY_TARGET_NOT_PROVED",
+  "downstream_use": "transport ProductFormRestrictedLiftClosure across equivalence",
+  "non_claims": [
+    "does not prove IntendedUnrestrictedState ≃ Fin 256 × Payload",
+    "does not transport ProductFormRestrictedLiftClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not erase product-form boundary"
+  ],
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure outside product-form model"
+}
