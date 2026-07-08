@@ -1,0 +1,28 @@
+{
+  "surface": "ProductFormRestrictedLiftClosure",
+  "scope": "product_form_only",
+  "state_model": "UnrestrictedStateModel := Fin 256 × Payload",
+  "restricted_state_model": "StateModel := Fin 256",
+  "transition": {
+    "restricted": "tau(s) := min(s + 1, 255)",
+    "product_form": "UnrestrictedStep(x) := (tau(x.1), x.2)"
+  },
+  "closed_state": "ClosedState(x) := (255, x.2)",
+  "closure_predicate": "ZeroDayClosureState(x) := exists n <= 255, UnrestrictedStep^[n](x) = ClosedState(x)",
+  "rank": "255 - x.1",
+  "theorem": "forall x : Fin 256 × Payload, ZeroDayClosureState(x)",
+  "proof_obligations": [
+    "tau(255) = 255",
+    "s < 255 -> tau(s) = s + 1",
+    "tau^[k](s) = min(s + k, 255)",
+    "UnrestrictedStep^[k](x) = (tau^[k](x.1), x.2)",
+    "UnrestrictedStep^[255 - x.1](x) = ClosedState(x)"
+  ],
+  "non_claims": [
+    "does not prove unrestricted ZeroDayClosure outside product-form model",
+    "does not prove every intended unrestricted state has product form",
+    "does not erase restricted boundary",
+    "does not prove IntendedUnrestrictedState ≃ Fin 256 × Payload"
+  ],
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure outside product-form model"
+}
