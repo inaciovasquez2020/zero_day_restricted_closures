@@ -1,0 +1,21 @@
+{
+  "surface": "RestrictedBoundedTransitionRelationWitness",
+  "state_model": "Fin 256",
+  "scope": "restricted_zero_day_instance_only",
+  "status": "WITNESS_DATA_SUPPLIED",
+  "transitions": [
+    {
+      "from": 0,
+      "to": 1,
+      "kind": "initial_to_terminal_minimal_row"
+    }
+  ],
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove finite-state termination",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not erase the restricted boundary"
+  ]
+}
