@@ -1,0 +1,9 @@
+{
+  "fixture": "RestrictedEdgeTerminalCompositeCandidateAcceptedForbiddenFixture",
+  "expected_verdict": "rejected",
+  "candidate_verifier": {
+    "verifier_status": "EXECUTABLE_CANDIDATE_VERIFIER_ACCEPTED",
+    "accepted_candidate_status": "ACCEPTED_CANDIDATE"
+  },
+  "forbidden_value": "terminal-composite witness candidate accepted"
+}

@@ -5,6 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SURFACE = ROOT / "core/restricted_edge_terminal_composite_executable_candidate_verifier_surface.json"
+FORBIDDEN_FIXTURE = ROOT / "artifacts/fixtures/restricted_edge_terminal_composite_candidate_accepted_forbidden_fixture.json"
 
 FORBIDDEN_VALUES = {
     "INPUT_CONTRACT_INHABITED",
@@ -50,6 +51,22 @@ def main() -> int:
 
     if data.get("preserved_parent_status") != "INPUT_CONTRACT_RECORDED_NOT_INHABITED":
         raise SystemExit("TERMINAL_COMPOSITE_CANDIDATE_VERIFIER_FAILED := parent input contract not preserved")
+
+    if not FORBIDDEN_FIXTURE.exists():
+        raise SystemExit("MISSING_OBJECT := artifacts/fixtures/restricted_edge_terminal_composite_candidate_accepted_forbidden_fixture.json")
+
+    fixture = json.loads(FORBIDDEN_FIXTURE.read_text())
+    if fixture.get("expected_verdict") != "rejected":
+        raise SystemExit("TERMINAL_COMPOSITE_CANDIDATE_VERIFIER_FAILED := forbidden fixture expected_verdict changed")
+
+    rejected_fixture = False
+    for value in walk(fixture):
+        if value in FORBIDDEN_VALUES:
+            rejected_fixture = True
+            break
+
+    if not rejected_fixture:
+        raise SystemExit("TERMINAL_COMPOSITE_CANDIDATE_VERIFIER_FAILED := forbidden accepted-candidate fixture was not rejected")
 
     for value in walk(data):
         if value in FORBIDDEN_VALUES:
