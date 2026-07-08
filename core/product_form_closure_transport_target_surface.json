@@ -1,0 +1,19 @@
+{
+  "surface": "ProductFormClosureTransportTargetSurface",
+  "scope": "transport_target_only",
+  "source_theorem": "ProductFormRestrictedLiftClosure",
+  "target_theorem": "IntendedUnrestrictedStateClosure",
+  "transport_statement": "ProductFormRestrictedLiftClosure -> IntendedUnrestrictedStateClosure",
+  "depends_on": [
+    "IntendedUnrestrictedState ≃ Fin 256 × Payload",
+    "ProductFormRestrictedLiftClosure"
+  ],
+  "status": "TRANSPORT_TARGET_NOT_PROVED",
+  "non_claims": [
+    "does not prove IntendedUnrestrictedStateClosure",
+    "does not prove ProductFormRestrictedLiftClosure -> IntendedUnrestrictedStateClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not erase product-form boundary"
+  ],
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure outside transported intended-state model"
+}
