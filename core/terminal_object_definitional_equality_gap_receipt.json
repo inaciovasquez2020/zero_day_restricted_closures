@@ -1,0 +1,39 @@
+{
+  "surface": "TerminalObjectDefinitionalEqualityGapReceipt",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "DEFINITIONAL_EQUALITY_GAP_RECEIPT_ONLY",
+  "target_field": "terminal_object",
+  "parent_target": "TerminalComposite(C,T)",
+  "depends_on": [
+    "TerminalObjectBoundaryTerminalSourceTargetSurface",
+    "TerminalObjectBoundaryTerminalEqualityTargetSurface",
+    "RestrictedClosureSurface"
+  ],
+  "observed_source": {
+    "source": "restricted_closure_surface",
+    "observed_reference": "boundary.Terminal",
+    "source_status": "REFERENCE_PRESENT"
+  },
+  "equality_gap": {
+    "left": "boundary.Terminal",
+    "right": "terminal_object",
+    "status": "DEFINITIONAL_EQUALITY_NOT_SUPPLIED"
+  },
+  "terminal_composite_status": "NOT_INHABITED",
+  "preserved_missing_fields": [
+    "restricted_scope_guard"
+  ],
+  "positive_claim": "records that boundary.Terminal is referenced but no definitional equality to terminal_object is supplied",
+  "missing_object": "definitional equality or proof that boundary.Terminal = terminal_object",
+  "non_claims": [
+    "does not prove boundary.Terminal = terminal_object",
+    "does not construct terminal_object",
+    "does not construct TerminalComposite(C,T)",
+    "does not prove restricted_closure_surface satisfies TerminalComposite(C,T)",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "next_weakest_point": "Either define terminal_object as boundary.Terminal by definition, or keep the equality gap explicit."
+}
