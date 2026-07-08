@@ -1,0 +1,35 @@
+{
+  "surface": "TerminalObjectBoundaryTerminalEqualityTargetSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "EQUALITY_TARGET_SURFACE_ONLY",
+  "target_field": "terminal_object",
+  "parent_target": "TerminalComposite(C,T)",
+  "depends_on": [
+    "TerminalObjectBoundaryTerminalSourceTargetSurface",
+    "TerminalObjectBridgeTargetSurface",
+    "TerminalCompositeCompleteFieldTypeSurface"
+  ],
+  "equality_target": {
+    "left": "boundary.Terminal",
+    "right": "terminal_object",
+    "shape": "boundary.Terminal = terminal_object",
+    "status": "EQUALITY_TARGET_ONLY_NOT_PROVED"
+  },
+  "terminal_composite_status": "NOT_INHABITED",
+  "preserved_missing_fields": [
+    "restricted_scope_guard"
+  ],
+  "positive_claim": "names the bounded equality target needed to bridge boundary.Terminal to terminal_object",
+  "missing_object": "actual proof or definitional equality showing boundary.Terminal = terminal_object",
+  "non_claims": [
+    "does not prove boundary.Terminal = terminal_object",
+    "does not construct terminal_object",
+    "does not construct TerminalComposite(C,T)",
+    "does not prove restricted_closure_surface satisfies TerminalComposite(C,T)",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "next_weakest_point": "Supply proof or definitional equality for boundary.Terminal = terminal_object, or keep this equality target explicit."
+}
