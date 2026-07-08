@@ -1,0 +1,21 @@
+{
+  "surface": "TerminalCompositeCandidateAcceptanceCriteriaSurface",
+  "status": "ACCEPTANCE_CRITERIA_ONLY",
+  "acceptance_criteria": [
+    "candidate_kind_must_be_executable_terminal_composite_witness_candidate",
+    "terminal_composite_field_must_be_non_null",
+    "terminal_composite_field_must_be_restricted_only",
+    "candidate_must_not_claim_restricted_composition_target",
+    "candidate_must_not_claim_zero_day_closure",
+    "candidate_must_not_claim_restricted_to_unrestricted_lift"
+  ],
+  "accepted_candidates": [],
+  "non_claims": [
+    "does_not_accept_any_candidate",
+    "does_not_supply_terminal_composite",
+    "does_not_construct_source_field_bridge",
+    "does_not_construct_restricted_composition_target",
+    "does_not_construct_zero_day_closure",
+    "does_not_lift_restricted_to_unrestricted"
+  ]
+}
