@@ -1,0 +1,36 @@
+{
+  "surface": "RestrictedEdgeTerminalCompositeWitnessCandidateInputContractSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "TERMINAL_COMPOSITE_WITNESS_CANDIDATE_INPUT_CONTRACT_ONLY",
+  "parent_surface": "RestrictedEdgeTerminalCompositeWitnessShapeRefinementSurface",
+  "target_edge": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "refined_target_field": "TerminalComposite(C,T)",
+  "preserved_parent_status": "WITNESS_SHAPE_REFINED_NOT_CONSTRUCTED",
+  "candidate_input_contract": {
+    "input_source": "coverage_source or restricted_closure_surface",
+    "required_scope": "restricted-only terminal composite content",
+    "candidate_output_target": "TerminalComposite(C,T)",
+    "contract_status": "INPUT_CONTRACT_RECORDED_NOT_INHABITED"
+  },
+  "positive_claim": "records only the input contract required before any TerminalComposite(C,T) witness candidate can be attempted",
+  "missing_object": "inhabited executable witness candidate from coverage_source or restricted_closure_surface to TerminalComposite(C,T)",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not construct the source-field bridge",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not supply TerminalComposite(C,T)",
+    "does not construct a terminal-composite witness",
+    "does not inhabit a terminal-composite witness candidate",
+    "does not change WITNESS_SHAPE_REFINED_NOT_CONSTRUCTED",
+    "does not prove field-by-field obligation discharge",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift",
+    "does not add SNOLAB or external empirical evidence"
+  ],
+  "next_weakest_point": "Supply an executable candidate verifier that checks whether a proposed restricted-only terminal-composite witness satisfies this input contract."
+}
