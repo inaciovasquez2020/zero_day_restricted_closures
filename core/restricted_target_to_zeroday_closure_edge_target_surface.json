@@ -1,0 +1,30 @@
+{
+  "surface": "RestrictedTargetToZeroDayClosureEdgeTargetSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "DOWNSTREAM_EDGE_TARGET_SURFACE_ONLY",
+  "upstream_constructor_audit": "RestrictedCompositionTargetConstructorBoundaryAudit",
+  "upstream_constructed_scope": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "target_edge": "RestrictedCompositionTarget -> ZeroDayClosure",
+  "edge_role": "names the still-blocked downstream edge after the restricted target constructor witness",
+  "edge_status": "EDGE_TARGET_ONLY_NOT_CONSTRUCTED",
+  "required_source": "actual restricted target to ZeroDayClosure theorem or witness, still absent",
+  "blocked_promotions": [
+    "unrestricted ZeroDayClosure",
+    "restricted-to-unrestricted lift",
+    "unconditional ZeroDayClosure",
+    "ZeroDayClosure without preserving restricted boundary"
+  ],
+  "positive_claim": "records the next bounded downstream edge target after the restricted composition target constructor audit",
+  "missing_object": "actual witness or theorem for RestrictedCompositionTarget -> ZeroDayClosure",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not construct an unrestricted zero-day closure",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift",
+    "does not add SNOLAB or external empirical evidence"
+  ],
+  "next_weakest_point": "Inventory the obligations required for a restricted-target-to-ZeroDayClosure edge while keeping the edge unconstructed."
+}
