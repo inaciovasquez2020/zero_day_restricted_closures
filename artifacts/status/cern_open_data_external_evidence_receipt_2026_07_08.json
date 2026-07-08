@@ -1,0 +1,31 @@
+{
+  "receipt": "CERNOpenDataExternalEvidenceReceipt",
+  "classification": "EXTERNAL_EMPIRICAL_EVIDENCE_ONLY",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "source": {
+    "provider": "CERN Open Data Portal",
+    "collaboration": "CMS collaboration",
+    "record": "https://opendata.cern.ch/record/14",
+    "dataset": "/Mu/Run2010B-Apr21ReReco-v1/AOD",
+    "doi": "10.7483/OPENDATA.CMS.B8MR.C4A2",
+    "dataset_type": "Collision CMS 7TeV pp CERN-LHC",
+    "format": "AOD",
+    "recorded": "2010",
+    "published": "2014"
+  },
+  "provenance_status": "SPECIFIC_CERN_RECORD_AND_DOI_NAMED",
+  "project_role": "external empirical evidence receipt for future bounded detector-data benchmark or anomaly-surface work",
+  "integration_status": "ISOLATED_FROM_THEOREM_AND_CLOSURE_PATHS",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not prove the restricted-to-unrestricted lift",
+    "does not add a theorem rule",
+    "does not add a closure constructor",
+    "does not use CERN data as proof evidence"
+  ],
+  "next_weakest_point": "Add a bounded dataset-to-project invariant map before any use of CERN data in a verifier surface."
+}
