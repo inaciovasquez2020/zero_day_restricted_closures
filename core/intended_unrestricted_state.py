@@ -34,3 +34,12 @@ def intended_step(state: IntendedUnrestrictedState) -> IntendedUnrestrictedState
         encoded=(state.encoded + 1) % 256,
         payload=state.payload,
     )
+
+
+def intended_closed_state(state: IntendedUnrestrictedState) -> IntendedUnrestrictedState:
+    if not isinstance(state, IntendedUnrestrictedState):
+        raise TypeError("state must be IntendedUnrestrictedState")
+    return IntendedUnrestrictedState(
+        encoded=0,
+        payload=state.payload,
+    )
