@@ -1,0 +1,30 @@
+{
+  "surface": "RestrictedBoundedTransitionRelationTargetSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "BOUNDED_TRANSITION_RELATION_TARGET_SURFACE_ONLY",
+  "depends_on_surfaces": [
+    "RestrictedInstanceFiniteStateSpaceWitness",
+    "RestrictedFiniteStateTransitionTargetSurface"
+  ],
+  "state_model": "StateModel := Fin 256",
+  "target_role": "names the exact missing bounded transition relation evidence over the restricted finite state model",
+  "transition_relation_shape": {
+    "domain": "StateModel",
+    "codomain": "StateModel",
+    "relation": "StateModel -> StateModel -> Prop",
+    "scope": "restricted_zero_day_instance_only"
+  },
+  "transition_relation_status": "TARGET_ONLY_NOT_SUPPLIED",
+  "missing_object": "actual bounded transition relation or successor data over StateModel := Fin 256",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove finite-state termination",
+    "does not construct successor data",
+    "does not construct the transition relation",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not erase the restricted boundary"
+  ],
+  "next_weakest_point": "Supply actual relation rows or successor data over StateModel := Fin 256."
+}
