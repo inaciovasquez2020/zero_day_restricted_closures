@@ -12,3 +12,9 @@ class IntendedUnrestrictedState:
             raise TypeError("encoded must be int")
         if not 0 <= self.encoded < 256:
             raise ValueError("encoded must satisfy 0 <= encoded < 256")
+
+
+def to_product_form(state: IntendedUnrestrictedState) -> tuple[int, Any]:
+    if not isinstance(state, IntendedUnrestrictedState):
+        raise TypeError("state must be IntendedUnrestrictedState")
+    return (state.encoded, state.payload)
