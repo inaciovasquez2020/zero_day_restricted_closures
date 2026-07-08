@@ -1,0 +1,74 @@
+{
+  "surface": "RestrictedEdgeSourceFieldGapSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "SOURCE_FIELD_GAP_SURFACE_ONLY",
+  "target_edge": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "available_contract_inputs": [
+    "coverage_source",
+    "domain_erasure_source",
+    "lift_admissibility_source",
+    "no_escape_boundary",
+    "restricted_instance",
+    "restricted_closure_surface"
+  ],
+  "required_target_fields": [
+    "TerminalComposite(C,T)",
+    "RestrictedBoundaryInvariant(T)",
+    "TargetRealizesRestrictedLiftSourceChainComposition(C,T)",
+    "restricted_zero_day_instance_only"
+  ],
+  "observed_gap": "available contract inputs do not yet name direct field sources for all RestrictedCompositionTarget obligations",
+  "field_source_gaps": [
+    {
+      "target_field": "TerminalComposite(C,T)",
+      "available_source_status": "DIRECT_SOURCE_NOT_IDENTIFIED",
+      "candidate_inputs_to_inspect": [
+        "coverage_source",
+        "restricted_closure_surface"
+      ]
+    },
+    {
+      "target_field": "RestrictedBoundaryInvariant(T)",
+      "available_source_status": "DIRECT_SOURCE_NOT_IDENTIFIED",
+      "candidate_inputs_to_inspect": [
+        "no_escape_boundary",
+        "restricted_instance",
+        "restricted_closure_surface"
+      ]
+    },
+    {
+      "target_field": "TargetRealizesRestrictedLiftSourceChainComposition(C,T)",
+      "available_source_status": "DIRECT_SOURCE_NOT_IDENTIFIED",
+      "candidate_inputs_to_inspect": [
+        "coverage_source",
+        "domain_erasure_source",
+        "lift_admissibility_source",
+        "no_escape_boundary"
+      ]
+    },
+    {
+      "target_field": "restricted_zero_day_instance_only",
+      "available_source_status": "DIRECT_SOURCE_NOT_IDENTIFIED",
+      "candidate_inputs_to_inspect": [
+        "restricted_instance"
+      ]
+    }
+  ],
+  "positive_claim": "records the remaining source-field gaps before any restricted-edge witness can be discharged",
+  "gap_status": "SOURCE_FIELD_GAPS_IDENTIFIED_NOT_DISCHARGED",
+  "missing_object": "actual source-field evidence connecting contract inputs to each RestrictedCompositionTarget field",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not prove field-by-field obligation discharge",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift",
+    "does not add SNOLAB or external empirical evidence"
+  ],
+  "next_weakest_point": "Inspect the candidate input surfaces and identify whether any already supply the required target-field data."
+}
