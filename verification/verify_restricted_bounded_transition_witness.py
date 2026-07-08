@@ -15,6 +15,16 @@ if payload.get("surface") != "RestrictedBoundedTransitionRelationWitness":
 if payload.get("state_model") != "Fin 256":
     raise SystemExit("MISSING_OBJECT := state_model Fin 256")
 
+prop = payload.get("restricted_transition_property")
+if not isinstance(prop, dict):
+    raise SystemExit("MISSING_OBJECT := restricted_transition_property field")
+if prop.get("property") != "bounded_successor_semantics_over_StateModel_Fin_256":
+    raise SystemExit("MISSING_OBJECT := restricted transition property name")
+if prop.get("scope") != "restricted_zero_day_instance_only":
+    raise SystemExit("MISSING_OBJECT := restricted transition property scope")
+if prop.get("status") != "PROPERTY_WITNESS_SUPPLIED":
+    raise SystemExit("MISSING_OBJECT := restricted transition property witness status")
+
 rows = payload.get("transitions")
 if not isinstance(rows, list) or not rows:
     raise SystemExit("MISSING_OBJECT := nonempty bounded transition rows")
