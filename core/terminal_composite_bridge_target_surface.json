@@ -1,0 +1,35 @@
+{
+  "surface": "TerminalCompositeBridgeTargetSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "BRIDGE_TARGET_SURFACE_ONLY",
+  "target_field": "TerminalComposite(C,T)",
+  "depends_on": [
+    "TerminalCompositeCompleteFieldTypeSurface",
+    "TerminalCompositeSourceSatisfactionAbsenceReceipt"
+  ],
+  "bridge_targets": [
+    {
+      "target_field": "terminal_object",
+      "required_bridge": "source-field bridge or source extension supplying restricted terminal object data",
+      "status": "BRIDGE_TARGET_ONLY_NOT_SUPPLIED"
+    },
+    {
+      "target_field": "restricted_scope_guard",
+      "required_bridge": "source-field bridge or source extension proving terminal composite remains restricted_zero_day_instance_only",
+      "status": "BRIDGE_TARGET_ONLY_NOT_SUPPLIED"
+    }
+  ],
+  "terminal_composite_status": "NOT_INHABITED",
+  "positive_claim": "names the two missing bridge targets required before TerminalComposite(C,T) can be inhabited",
+  "missing_object": "actual bridge witness or source extension for terminal_object and restricted_scope_guard",
+  "non_claims": [
+    "does not construct TerminalComposite(C,T)",
+    "does not prove coverage_source satisfies TerminalComposite(C,T)",
+    "does not prove restricted_closure_surface satisfies TerminalComposite(C,T)",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "next_weakest_point": "Supply bounded evidence for terminal_object or restricted_scope_guard one field at a time."
+}
