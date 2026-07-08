@@ -1,0 +1,22 @@
+{
+  "surface": "TerminalCompositeSourceFieldBridgeContractSurface",
+  "status": "SOURCE_FIELD_BRIDGE_CONTRACT_ONLY",
+  "target_missing_object": "source-field bridge constructed",
+  "bridge": {
+    "from": [
+      "RestrictedCompositionTarget.source_fields.TerminalComposite(C,T)",
+      "RestrictedCompositionTarget.source_fields.RestrictedBoundaryInvariant(T)",
+      "RestrictedCompositionTarget.source_fields.TargetRealizesRestrictedLiftSourceChainComposition(C,T)"
+    ],
+    "to": "terminal_composite.executable_payload",
+    "mapping_status": "DECLARED_NOT_ACCEPTED"
+  },
+  "accepted_candidates": [],
+  "non_claims": [
+    "does_not_accept_any_candidate",
+    "does_not_supply_terminal_composite",
+    "does_not_construct_restricted_composition_target",
+    "does_not_construct_zero_day_closure",
+    "does_not_lift_restricted_to_unrestricted"
+  ]
+}
