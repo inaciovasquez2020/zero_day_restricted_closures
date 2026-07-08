@@ -1,0 +1,37 @@
+{
+  "surface": "RestrictedEdgeTerminalCompositeExecutableCandidateVerifierSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "TERMINAL_COMPOSITE_EXECUTABLE_CANDIDATE_VERIFIER_SURFACE_ONLY",
+  "parent_surface": "RestrictedEdgeTerminalCompositeWitnessCandidateInputContractSurface",
+  "target_edge": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "refined_target_field": "TerminalComposite(C,T)",
+  "preserved_parent_status": "INPUT_CONTRACT_RECORDED_NOT_INHABITED",
+  "candidate_verifier": {
+    "input_contract": "coverage_source or restricted_closure_surface -> restricted-only terminal composite content",
+    "candidate_output_target": "TerminalComposite(C,T)",
+    "verifier_status": "EXECUTABLE_CANDIDATE_VERIFIER_RECORDED_NOT_RUN_ON_INHABITANT",
+    "accepted_candidate_status": "NO_ACCEPTED_CANDIDATE"
+  },
+  "positive_claim": "records only the executable verifier surface for a future TerminalComposite(C,T) witness candidate without accepting or inhabiting a candidate",
+  "missing_object": "accepted executable terminal-composite witness candidate satisfying the input contract",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not construct the source-field bridge",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not supply TerminalComposite(C,T)",
+    "does not construct a terminal-composite witness",
+    "does not inhabit a terminal-composite witness candidate",
+    "does not accept a terminal-composite witness candidate",
+    "does not change INPUT_CONTRACT_RECORDED_NOT_INHABITED",
+    "does not prove field-by-field obligation discharge",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift",
+    "does not add SNOLAB or external empirical evidence"
+  ],
+  "next_weakest_point": "Implement the candidate verifier as an executable script that rejects non-inhabited TerminalComposite(C,T) witness candidates before any acceptance claim."
+}
