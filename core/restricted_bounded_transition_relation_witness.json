@@ -1320,6 +1320,13 @@
       "bridge_status": "FIELD_BRIDGE_WITNESS_SUPPLIED",
       "scope": "restricted_zero_day_instance_only",
       "non_claim": "does not construct RestrictedCompositionTarget"
+    },
+    {
+      "source_field": "restricted_transition_property",
+      "target_field": "TerminalComposite(C,T)",
+      "bridge_status": "FIELD_BRIDGE_WITNESS_SUPPLIED",
+      "scope": "restricted_zero_day_instance_only",
+      "non_claim": "does not construct RestrictedCompositionTarget"
     }
   ]
 }
