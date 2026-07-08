@@ -1,0 +1,25 @@
+{
+  "surface": "GeneralFiniteRankTerminationSchema",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "GENERAL_TERMINATION_SCHEMA_ONLY",
+  "theorem_shape": "finite State + rank : State -> Nat + strictly decreasing AdmissibleStep + terminal iff no outgoing step -> every maximal path terminates",
+  "required_inputs": [
+    "finite_state_space",
+    "initial_state",
+    "terminal_state",
+    "admissible_step_relation",
+    "rank_function_State_to_Nat",
+    "rank_decreases_on_every_admissible_step",
+    "terminal_iff_no_outgoing_admissible_step"
+  ],
+  "schema_status": "THEOREM_SCHEMA_NOT_PROVED",
+  "non_claims": [
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove universal creation",
+    "does not prove universal finality",
+    "does not construct TerminalComposite(C,T)",
+    "does not construct RestrictedCompositionTarget",
+    "does not prove the theorem for all possible state spaces"
+  ],
+  "next_weakest_point": "Add a verifier that checks concrete finite instances satisfy this schema."
+}
