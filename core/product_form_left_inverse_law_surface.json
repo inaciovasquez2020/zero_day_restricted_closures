@@ -1,0 +1,20 @@
+{
+  "surface": "ProductFormLeftInverseLawSurface",
+  "scope": "inverse_law_target_only",
+  "source_surface": "IntendedUnrestrictedStateProductFormEquivalenceSurface",
+  "law": "fromProductForm(toProductForm(x)) = x",
+  "status": "LAW_TARGET_NOT_PROVED",
+  "depends_on": [
+    "toProductForm : IntendedUnrestrictedState -> Fin 256 × Payload",
+    "fromProductForm : Fin 256 × Payload -> IntendedUnrestrictedState"
+  ],
+  "downstream_use": "left inverse law for IntendedUnrestrictedState ≃ Fin 256 × Payload",
+  "non_claims": [
+    "does not prove fromProductForm(toProductForm(x)) = x",
+    "does not prove toProductForm(fromProductForm(y)) = y",
+    "does not prove IntendedUnrestrictedState ≃ Fin 256 × Payload",
+    "does not transport ProductFormRestrictedLiftClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure outside product-form model"
+}
