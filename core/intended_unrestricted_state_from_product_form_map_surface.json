@@ -1,0 +1,20 @@
+{
+  "surface": "IntendedUnrestrictedStateFromProductFormMapSurface",
+  "scope": "map_target_only",
+  "source_surface": "IntendedUnrestrictedStateProductFormEquivalenceSurface",
+  "map": "fromProductForm : Fin 256 × Payload -> IntendedUnrestrictedState",
+  "status": "MAP_TARGET_NOT_CONSTRUCTED",
+  "required_inputs": [
+    "encoded_coordinate : Fin 256",
+    "payload_coordinate : Payload"
+  ],
+  "downstream_law": "toProductForm(fromProductForm(y)) = y",
+  "non_claims": [
+    "does not construct fromProductForm",
+    "does not construct toProductForm",
+    "does not prove IntendedUnrestrictedState ≃ Fin 256 × Payload",
+    "does not transport ProductFormRestrictedLiftClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure outside product-form model"
+}
