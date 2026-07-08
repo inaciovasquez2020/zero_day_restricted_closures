@@ -1,0 +1,40 @@
+{
+  "surface": "RestrictedEdgeTerminalCompositeBridgeSourceTargetSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "TERMINAL_COMPOSITE_BRIDGE_SOURCE_TARGET_SURFACE_ONLY",
+  "parent_row_target": "RestrictedEdgeTerminalCompositeBridgeRowTargetSurface",
+  "parent_absence_receipt": "RestrictedEdgeTerminalCompositeRowAbsenceReceipt",
+  "target_edge": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "row_index": 1,
+  "target_field": "TerminalComposite(C,T)",
+  "observed_absence": [
+    "coverage_source does not directly supply TerminalComposite(C,T)",
+    "restricted_closure_surface does not directly supply TerminalComposite(C,T)"
+  ],
+  "bridge_source_target_role": "names the missing bounded source needed before any TerminalComposite(C,T) row witness can be supplied",
+  "required_bridge_source_shape": {
+    "input": "coverage_source plus restricted_closure_surface plus restricted_zero_day_instance_only scope",
+    "output": "source data sufficient to supply TerminalComposite(C,T)",
+    "scope": "restricted_zero_day_instance_only"
+  },
+  "bridge_source_status": "BRIDGE_SOURCE_TARGET_ONLY_NOT_SUPPLIED",
+  "positive_claim": "records the missing bounded bridge-source target for the TerminalComposite(C,T) row",
+  "missing_object": "actual bounded bridge-source evidence sufficient for TerminalComposite(C,T)",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not construct the source-field bridge",
+    "does not construct the TerminalComposite(C,T) row witness",
+    "does not construct TerminalComposite(C,T)",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not prove field-by-field obligation discharge",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift",
+    "does not add SNOLAB or external empirical evidence"
+  ],
+  "next_weakest_point": "Supply bounded bridge-source evidence for TerminalComposite(C,T), or keep the first row witness absent."
+}
