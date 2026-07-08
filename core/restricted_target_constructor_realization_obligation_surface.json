@@ -1,0 +1,35 @@
+{
+  "surface": "RestrictedTargetConstructorRealizationObligationSurface",
+  "status": "REALIZATION_OBLIGATION_ONLY",
+  "constructor_realization": {
+    "status": "ABSENT"
+  },
+  "restricted_composition_target": {
+    "status": "UNCONSTRUCTED"
+  },
+  "required_constructor_input_contracts": [
+    "TerminalComposite executable payload candidate acceptance surface",
+    "Restricted target constructor input field contract surface",
+    "Restricted target constructor transition boundary surface"
+  ],
+  "realization_obligations": [
+    {
+      "obligation": "construct RestrictedCompositionTarget from validated restricted inputs",
+      "status": "UNDISCHARGED"
+    },
+    {
+      "obligation": "supply executable RestrictedBoundaryInvariant(T) payload",
+      "status": "UNDISCHARGED"
+    },
+    {
+      "obligation": "supply executable TargetRealizesRestrictedLiftSourceChainComposition(C,T) payload",
+      "status": "UNDISCHARGED"
+    }
+  ],
+  "non_claims": [
+    "does_not_construct_restricted_composition_target",
+    "does_not_supply_constructor_realization",
+    "does_not_construct_zero_day_closure",
+    "does_not_lift_restricted_to_unrestricted"
+  ]
+}
