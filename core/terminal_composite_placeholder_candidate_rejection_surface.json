@@ -1,0 +1,17 @@
+{
+  "surface": "TerminalCompositePlaceholderCandidateRejectionSurface",
+  "status": "NEGATIVE_FIXTURE_ONLY",
+  "candidate": {
+    "kind": "placeholder",
+    "terminal_composite": null
+  },
+  "expected_result": "REJECTED",
+  "non_claims": [
+    "does_not_supply_terminal_composite",
+    "does_not_inhabit_executable_terminal_composite_witness_candidate",
+    "does_not_construct_source_field_bridge",
+    "does_not_construct_restricted_composition_target",
+    "does_not_construct_zero_day_closure",
+    "does_not_lift_restricted_to_unrestricted"
+  ]
+}
