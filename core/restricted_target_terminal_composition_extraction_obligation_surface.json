@@ -1,0 +1,31 @@
+{
+  "surface": "RestrictedTargetTerminalCompositionExtractionObligationSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "DOWNSTREAM_EDGE_OBLIGATION_REFINEMENT_ONLY",
+  "parent_inventory": "RestrictedTargetToZeroDayClosureObligationInventorySurface",
+  "target_edge": "RestrictedCompositionTarget -> ZeroDayClosure",
+  "refined_obligation": "extract terminal composition closure content from RestrictedCompositionTarget",
+  "obligation_status": "REFINED_OBLIGATION_NOT_DISCHARGED",
+  "source_object": "RestrictedCompositionTarget",
+  "target_content": "terminal composition closure content needed for a restricted-only ZeroDayClosure edge",
+  "positive_claim": "refines the first downstream edge obligation without constructing the RestrictedCompositionTarget -> ZeroDayClosure edge",
+  "missing_object": "actual extraction witness from RestrictedCompositionTarget to terminal composition closure content",
+  "blocked_promotions": [
+    "ZeroDayClosure",
+    "unrestricted ZeroDayClosure",
+    "restricted-to-unrestricted lift",
+    "unconditional closure from terminal composition content"
+  ],
+  "non_claims": [
+    "does not extract terminal composition closure content",
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not construct an unrestricted zero-day closure",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift",
+    "does not add SNOLAB or external empirical evidence"
+  ],
+  "next_weakest_point": "Identify the exact fields of RestrictedCompositionTarget needed before any extraction witness can be attempted."
+}
