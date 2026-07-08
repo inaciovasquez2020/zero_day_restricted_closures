@@ -1,0 +1,27 @@
+{
+  "surface": "TerminalCompositeDefinitionSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "DEFINITION_SURFACE_ONLY",
+  "target_field": "TerminalComposite(C,T)",
+  "definition_status": "NOT_INHABITED",
+  "role": "defines the field vocabulary required before any TerminalComposite(C,T) row witness can be supplied",
+  "depends_on": [
+    "RestrictedCompositionTargetDefinitionSurface",
+    "RestrictedEdgeTerminalCompositeBridgeSourceTargetSurface"
+  ],
+  "required_future_fields": [
+    "C",
+    "T",
+    "terminal_object",
+    "restricted_scope_guard"
+  ],
+  "non_claims": [
+    "does not construct TerminalComposite(C,T)",
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not prove field-by-field obligation discharge"
+  ],
+  "next_weakest_point": "After this definition surface is guarded, inspect whether coverage_source or restricted_closure_surface can satisfy the defined TerminalComposite(C,T) fields."
+}
