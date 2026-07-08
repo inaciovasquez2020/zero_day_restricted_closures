@@ -1,0 +1,24 @@
+{
+  "surface": "IntendedUnrestrictedStateProductFormEquivalenceSurface",
+  "scope": "equivalence_target_only",
+  "source": "IntendedUnrestrictedState",
+  "target": "Fin 256 × Payload",
+  "target_theorem": "IntendedUnrestrictedState ≃ Fin 256 × Payload",
+  "downstream_use": "transport ProductFormRestrictedLiftClosure across equivalence",
+  "status": "EQUIVALENCE_TARGET_NOT_PROVED",
+  "required_maps": [
+    "toProductForm : IntendedUnrestrictedState -> Fin 256 × Payload",
+    "fromProductForm : Fin 256 × Payload -> IntendedUnrestrictedState"
+  ],
+  "required_laws": [
+    "fromProductForm(toProductForm(x)) = x",
+    "toProductForm(fromProductForm(y)) = y"
+  ],
+  "non_claims": [
+    "does not prove IntendedUnrestrictedState ≃ Fin 256 × Payload",
+    "does not transport ProductFormRestrictedLiftClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not erase product-form boundary"
+  ],
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure outside product-form model"
+}
