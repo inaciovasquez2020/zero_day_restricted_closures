@@ -1,0 +1,45 @@
+{
+  "surface": "RestrictedTargetToZeroDayClosureObligationInventorySurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "DOWNSTREAM_EDGE_OBLIGATION_INVENTORY_ONLY",
+  "parent_edge_target": "RestrictedTargetToZeroDayClosureEdgeTargetSurface",
+  "target_edge": "RestrictedCompositionTarget -> ZeroDayClosure",
+  "edge_status": "EDGE_NOT_CONSTRUCTED",
+  "inventory_role": "records the obligations required before any restricted target to ZeroDayClosure edge can be attempted",
+  "required_obligations": [
+    {
+      "obligation": "extract terminal composition closure content from RestrictedCompositionTarget",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "obligation": "show RestrictedBoundaryInvariant(T) is sufficient for restricted closure use only",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "obligation": "show TargetRealizesRestrictedLiftSourceChainComposition(C,T) supports only the restricted target edge",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "obligation": "preserve restricted_zero_day_instance_only without erasing the restricted boundary",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "obligation": "block any promotion from restricted ZeroDayClosure to unrestricted ZeroDayClosure",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    }
+  ],
+  "positive_claim": "records a bounded obligation inventory for the still-blocked RestrictedCompositionTarget -> ZeroDayClosure edge",
+  "inventory_status": "OBLIGATION_INVENTORY_RECORDED_NOT_DISCHARGED",
+  "missing_object": "actual theorem or witness for RestrictedCompositionTarget -> ZeroDayClosure",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not construct an unrestricted zero-day closure",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift",
+    "does not add SNOLAB or external empirical evidence"
+  ],
+  "next_weakest_point": "Discharge or refine each listed obligation before attempting any RestrictedCompositionTarget -> ZeroDayClosure edge."
+}
