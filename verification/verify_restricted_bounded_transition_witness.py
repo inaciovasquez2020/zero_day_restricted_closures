@@ -30,6 +30,10 @@ for i, row in enumerate(rows):
         raise SystemExit(f"MISSING_OBJECT := transition row {i} bounded from Fin 256")
     if not isinstance(dst, int) or not 0 <= dst < 256:
         raise SystemExit(f"MISSING_OBJECT := transition row {i} bounded to Fin 256")
+    if row.get("kind") != "bounded_successor_row":
+        raise SystemExit(f"MISSING_OBJECT := transition row {i} bounded_successor_row kind")
+    if dst != min(src + 1, 255):
+        raise SystemExit(f"MISSING_OBJECT := transition row {i} bounded successor semantics")
     seen_sources.add(src)
 
 missing_sources = [i for i in range(256) if i not in seen_sources]
