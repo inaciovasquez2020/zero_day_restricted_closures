@@ -1598,6 +1598,14 @@ def verify_restricted_target_extraction_field_inventory_guard():
         "unrestricted closure constructed",
     }
 
+    forbidden_promotion_substrings = {
+        "unrestricted ZeroDayClosure constructed",
+        "unrestricted closure constructed",
+        "restricted-to-unrestricted lift proved",
+        "restricted boundary erased",
+        "restricted_zero_day_instance_only erased",
+    }
+
     def walk(value):
         if isinstance(value, dict):
             for child in value.values():
@@ -1613,6 +1621,11 @@ def verify_restricted_target_extraction_field_inventory_guard():
             raise SystemExit(
                 f"RESTRICTED_TARGET_EXTRACTION_FIELD_INVENTORY_GUARD_FAILED := forbidden promotion value {value!r}"
             )
+        for forbidden in forbidden_promotion_substrings:
+            if forbidden in value:
+                raise SystemExit(
+                    f"RESTRICTED_TARGET_EXTRACTION_FIELD_INVENTORY_GUARD_FAILED := forbidden promotion substring {forbidden!r}"
+                )
 
     print("RESTRICTED_TARGET_EXTRACTION_FIELD_INVENTORY_GUARD_OK")
 
