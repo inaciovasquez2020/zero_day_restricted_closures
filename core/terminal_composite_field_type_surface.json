@@ -1,0 +1,26 @@
+{
+  "surface": "TerminalCompositeFieldTypeSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "FIELD_TYPE_SURFACE_ONLY",
+  "target_field": "TerminalComposite(C,T)",
+  "depends_on": [
+    "TerminalCompositeDefinitionSurface"
+  ],
+  "field_types": {
+    "C": "RestrictedLiftSourceChainCompositionInputContract",
+    "T": "RestrictedCompositionTarget",
+    "terminal_object": "TYPE_NOT_YET_SPECIFIED",
+    "restricted_scope_guard": "TYPE_NOT_YET_SPECIFIED"
+  },
+  "status": "FIELD_TYPES_PARTIAL_NOT_INHABITED",
+  "non_claims": [
+    "does not construct TerminalComposite(C,T)",
+    "does not prove coverage_source satisfies TerminalComposite(C,T)",
+    "does not prove restricted_closure_surface satisfies TerminalComposite(C,T)",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "next_weakest_point": "Specify terminal_object and restricted_scope_guard types before any source satisfaction check."
+}
