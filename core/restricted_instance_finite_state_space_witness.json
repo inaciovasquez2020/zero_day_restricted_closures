@@ -1,0 +1,28 @@
+{
+  "surface": "RestrictedInstanceFiniteStateSpaceWitness",
+  "target": "ZeroDayBoundarySurface.fields.State",
+  "scope": "restricted_zero_day_instance_only",
+  "status": "INSTANCE_WITNESS_SUPPLIED",
+  "state_model": {
+    "name": "StateModel",
+    "definition": "Fin 256",
+    "cardinality_bound": 256
+  },
+  "field_map": {
+    "Initial": "0 : Fin 256",
+    "Terminal": "1 : Fin 256",
+    "AdmissibleStep": "restricted local transition relation over StateModel"
+  },
+  "claims": [
+    "supplies a bounded finite state-space witness for this restricted instance only",
+    "does not redefine abstract ZeroDayBoundarySurface.State"
+  ],
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not assert global finiteness for all zero-day instances",
+    "does not construct RestrictedCompositionTarget",
+    "does not relax anti-unconditional rules",
+    "BOUNDARY := ¬ unrestricted ZeroDayClosure"
+  ]
+}
