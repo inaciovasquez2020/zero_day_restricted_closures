@@ -1,0 +1,45 @@
+{
+  "surface": "TerminalCompositeSourceSatisfactionAbsenceReceipt",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "SOURCE_SATISFACTION_ABSENCE_RECEIPT_ONLY",
+  "target_field": "TerminalComposite(C,T)",
+  "depends_on": [
+    "TerminalCompositeCompleteFieldTypeSurface",
+    "RestrictedCoverageSource",
+    "RestrictedClosureSurface"
+  ],
+  "inspected_sources": [
+    {
+      "source": "coverage_source",
+      "source_surface": "RestrictedCoverageSource",
+      "satisfaction_status": "ABSENT",
+      "missing_fields": [
+        "T",
+        "terminal_object",
+        "restricted_scope_guard"
+      ]
+    },
+    {
+      "source": "restricted_closure_surface",
+      "source_surface": "RestrictedClosureSurface",
+      "satisfaction_status": "ABSENT",
+      "missing_fields": [
+        "terminal_object",
+        "restricted_scope_guard"
+      ]
+    }
+  ],
+  "positive_claim": "records that inspected source surfaces do not satisfy the specified TerminalComposite(C,T) field types",
+  "absence_status": "TERMINAL_COMPOSITE_SOURCE_SATISFACTION_ABSENT",
+  "missing_object": "source-field bridge or source extension supplying the missing TerminalComposite(C,T) fields",
+  "non_claims": [
+    "does not construct TerminalComposite(C,T)",
+    "does not prove coverage_source satisfies TerminalComposite(C,T)",
+    "does not prove restricted_closure_surface satisfies TerminalComposite(C,T)",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "next_weakest_point": "Add a bounded source-field bridge or source extension for terminal_object and restricted_scope_guard without marking TerminalComposite(C,T) inhabited."
+}
