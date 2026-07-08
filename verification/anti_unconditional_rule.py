@@ -1016,6 +1016,7 @@ def main():
             print(restricted_composition_constructor_unexpected_path)
         return 1
 
+    verify_restricted_target_extraction_field_inventory_guard()
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
@@ -1515,6 +1516,105 @@ def _guard_non_toy_structure_source_witness_target() -> None:
     body=json.dumps(t,sort_keys=True)+json.dumps(r,sort_keys=True)
     if "F_physical := F_toy" not in body or "does_not_identify_F_toy_with_F_physical" not in body: raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: shortcut/no-identification guard missing")
     if f.get("candidate_shortcut")!="F_physical := F_toy" or f.get("expected_verdict")!="rejected": raise SystemExit("ANTI_UNCONDITIONAL_RULE_FAIL: forbidden shortcut fixture changed")
+
+
+def verify_restricted_target_extraction_field_inventory_guard():
+    import json
+    from pathlib import Path
+
+    surface_path = Path("core/restricted_target_extraction_field_inventory_surface.json")
+    if not surface_path.exists():
+        raise SystemExit("MISSING_OBJECT := core/restricted_target_extraction_field_inventory_surface.json")
+
+    data = json.loads(surface_path.read_text())
+
+    required_pairs = {
+        "surface": "RestrictedTargetExtractionFieldInventorySurface",
+        "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        "classification": "DOWNSTREAM_EDGE_FIELD_INVENTORY_ONLY",
+        "target_edge": "RestrictedCompositionTarget -> ZeroDayClosure",
+        "inventory_status": "FIELDS_IDENTIFIED_NOT_USED",
+        "missing_object": "actual extraction witness using the listed RestrictedCompositionTarget fields",
+    }
+
+    for key, expected in required_pairs.items():
+        actual = data.get(key)
+        if actual != expected:
+            raise SystemExit(
+                f"RESTRICTED_TARGET_EXTRACTION_FIELD_INVENTORY_GUARD_FAILED := {key} expected {expected!r} got {actual!r}"
+            )
+
+    expected_field_statuses = {
+        "TerminalComposite(C,T)": "FIELD_NEEDED_NOT_EXTRACTED",
+        "RestrictedBoundaryInvariant(T)": "FIELD_NEEDED_NOT_APPLIED",
+        "TargetRealizesRestrictedLiftSourceChainComposition(C,T)": "FIELD_NEEDED_NOT_APPLIED",
+        "restricted_zero_day_instance_only": "FIELD_NEEDED_NOT_APPLIED",
+    }
+
+    required_fields = data.get("required_fields")
+    if not isinstance(required_fields, list):
+        raise SystemExit("RESTRICTED_TARGET_EXTRACTION_FIELD_INVENTORY_GUARD_FAILED := required_fields must be a list")
+
+    seen = {}
+    for row in required_fields:
+        if not isinstance(row, dict):
+            raise SystemExit("RESTRICTED_TARGET_EXTRACTION_FIELD_INVENTORY_GUARD_FAILED := required field row must be an object")
+        field = row.get("field")
+        status = row.get("status")
+        if field in expected_field_statuses:
+            seen[field] = status
+            if status != expected_field_statuses[field]:
+                raise SystemExit(
+                    f"RESTRICTED_TARGET_EXTRACTION_FIELD_INVENTORY_GUARD_FAILED := {field} status {status!r}"
+                )
+
+    missing_fields = sorted(set(expected_field_statuses) - set(seen))
+    if missing_fields:
+        raise SystemExit(
+            f"RESTRICTED_TARGET_EXTRACTION_FIELD_INVENTORY_GUARD_FAILED := missing fields {missing_fields!r}"
+        )
+
+    required_non_claims = {
+        "does not extract terminal composition closure content",
+        "does not prove ZeroDayClosure",
+        "does not prove unrestricted ZeroDayClosure",
+        "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+        "does not construct an unrestricted zero-day closure",
+        "does not prove the restricted-to-unrestricted lift",
+        "does not add SNOLAB or external empirical evidence",
+    }
+
+    non_claims = set(data.get("non_claims", []))
+    missing_non_claims = sorted(required_non_claims - non_claims)
+    if missing_non_claims:
+        raise SystemExit(
+            f"RESTRICTED_TARGET_EXTRACTION_FIELD_INVENTORY_GUARD_FAILED := missing non_claims {missing_non_claims!r}"
+        )
+
+    forbidden_exact_values = {
+        "RestrictedCompositionTarget -> ZeroDayClosure constructed",
+        "terminal composition closure content extracted",
+        "restricted-to-unrestricted lift proved",
+        "unrestricted closure constructed",
+    }
+
+    def walk(value):
+        if isinstance(value, dict):
+            for child in value.values():
+                yield from walk(child)
+        elif isinstance(value, list):
+            for child in value:
+                yield from walk(child)
+        elif isinstance(value, str):
+            yield value
+
+    for value in walk(data):
+        if value in forbidden_exact_values:
+            raise SystemExit(
+                f"RESTRICTED_TARGET_EXTRACTION_FIELD_INVENTORY_GUARD_FAILED := forbidden promotion value {value!r}"
+            )
+
+    print("RESTRICTED_TARGET_EXTRACTION_FIELD_INVENTORY_GUARD_OK")
 
 if __name__ == "__main__":
     sys.exit(main())
