@@ -1018,6 +1018,7 @@ def main():
 
     verify_restricted_target_extraction_field_inventory_guard()
     verify_restricted_edge_terminal_composite_source_field_refinement_surface()
+    verify_restricted_edge_terminal_composite_witness_shape_refinement_surface()
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
@@ -1735,6 +1736,105 @@ def verify_restricted_edge_terminal_composite_source_field_refinement_surface():
             )
 
     print("RESTRICTED_EDGE_TERMINAL_COMPOSITE_SOURCE_FIELD_REFINEMENT_GUARD_OK")
+
+
+def verify_restricted_edge_terminal_composite_witness_shape_refinement_surface():
+    import json
+    from pathlib import Path
+
+    surface_path = Path("core/restricted_edge_terminal_composite_witness_shape_refinement_surface.json")
+    if not surface_path.exists():
+        raise SystemExit("MISSING_OBJECT := core/restricted_edge_terminal_composite_witness_shape_refinement_surface.json")
+
+    data = json.loads(surface_path.read_text())
+
+    required_pairs = {
+        "surface": "RestrictedEdgeTerminalCompositeWitnessShapeRefinementSurface",
+        "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        "classification": "TERMINAL_COMPOSITE_WITNESS_SHAPE_REFINEMENT_ONLY",
+        "parent_surface": "RestrictedEdgeTerminalCompositeSourceFieldRefinementSurface",
+        "target_edge": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+        "refined_target_field": "TerminalComposite(C,T)",
+        "missing_object": "actual terminal-composite witness from coverage_source or restricted_closure_surface to TerminalComposite(C,T)",
+    }
+
+    for key, expected in required_pairs.items():
+        actual = data.get(key)
+        if actual != expected:
+            raise SystemExit(
+                f"RESTRICTED_EDGE_TERMINAL_COMPOSITE_WITNESS_SHAPE_REFINEMENT_GUARD_FAILED := {key} expected {expected!r} got {actual!r}"
+            )
+
+    witness_shape = data.get("witness_shape")
+    if not isinstance(witness_shape, dict):
+        raise SystemExit("RESTRICTED_EDGE_TERMINAL_COMPOSITE_WITNESS_SHAPE_REFINEMENT_GUARD_FAILED := witness_shape must be an object")
+
+    required_shape_pairs = {
+        "input_source": "coverage_source or restricted_closure_surface",
+        "output_target": "TerminalComposite(C,T)",
+        "required_scope": "restricted-only terminal composite content",
+        "status": "WITNESS_SHAPE_REFINED_NOT_CONSTRUCTED",
+    }
+
+    for key, expected in required_shape_pairs.items():
+        actual = witness_shape.get(key)
+        if actual != expected:
+            raise SystemExit(
+                f"RESTRICTED_EDGE_TERMINAL_COMPOSITE_WITNESS_SHAPE_REFINEMENT_GUARD_FAILED := witness_shape.{key} expected {expected!r} got {actual!r}"
+            )
+
+    required_non_claims = {
+        "does not prove ZeroDayClosure",
+        "does not prove unrestricted ZeroDayClosure",
+        "does not discharge LiftSourceChainCompositionGap",
+        "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+        "does not construct the restricted edge",
+        "does not construct the source-field bridge",
+        "does not construct RestrictedCompositionTarget",
+        "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+        "does not supply TerminalComposite(C,T)",
+        "does not construct a terminal-composite witness",
+        "does not prove field-by-field obligation discharge",
+        "does not erase the restricted boundary",
+        "does not prove the restricted-to-unrestricted lift",
+        "does not add SNOLAB or external empirical evidence",
+    }
+
+    non_claims = set(data.get("non_claims", []))
+    missing_non_claims = sorted(required_non_claims - non_claims)
+    if missing_non_claims:
+        raise SystemExit(
+            f"RESTRICTED_EDGE_TERMINAL_COMPOSITE_WITNESS_SHAPE_REFINEMENT_GUARD_FAILED := missing non_claims {missing_non_claims!r}"
+        )
+
+    forbidden_exact_values = {
+        "TerminalComposite(C,T) supplied",
+        "terminal-composite witness constructed",
+        "source-field bridge constructed",
+        "RestrictedCompositionTarget constructed",
+        "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget constructed",
+        "RestrictedCompositionTarget -> ZeroDayClosure constructed",
+        "unrestricted ZeroDayClosure constructed",
+        "restricted-to-unrestricted lift proved",
+    }
+
+    def walk(value):
+        if isinstance(value, dict):
+            for child in value.values():
+                yield from walk(child)
+        elif isinstance(value, list):
+            for child in value:
+                yield from walk(child)
+        elif isinstance(value, str):
+            yield value
+
+    for value in walk(data):
+        if value in forbidden_exact_values:
+            raise SystemExit(
+                f"RESTRICTED_EDGE_TERMINAL_COMPOSITE_WITNESS_SHAPE_REFINEMENT_GUARD_FAILED := forbidden value {value!r}"
+            )
+
+    print("RESTRICTED_EDGE_TERMINAL_COMPOSITE_WITNESS_SHAPE_REFINEMENT_GUARD_OK")
 
 if __name__ == "__main__":
     sys.exit(main())
