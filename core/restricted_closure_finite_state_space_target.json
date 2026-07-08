@@ -1,0 +1,30 @@
+{
+  "surface": "RestrictedClosureFiniteStateSpaceTarget",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "FINITE_STATE_SPACE_TARGET_ONLY",
+  "depends_on": [
+    "GeneralFiniteRankTerminationSchema",
+    "RestrictedClosureFiniteRankInstanceMap"
+  ],
+  "target": "finite_state_space",
+  "state_field": "ZeroDayBoundarySurface.State",
+  "target_shape": "Finite ZeroDayBoundarySurface.State",
+  "target_status": "FINITE_STATE_SPACE_TARGET_NOT_PROVED",
+  "preserved_unsupplied_schema_inputs": [
+    "rank_function_State_to_Nat",
+    "rank_decreases_on_every_admissible_step",
+    "terminal_iff_no_outgoing_admissible_step"
+  ],
+  "positive_claim": "names the finite-state-space target required to instantiate the general finite-rank termination schema against restricted closure vocabulary",
+  "missing_object": "proof or bounded witness that ZeroDayBoundarySurface.State is finite",
+  "non_claims": [
+    "does not prove finite_state_space",
+    "does not define rank : State -> Nat",
+    "does not prove rank decreases on every admissible step",
+    "does not prove terminal iff no outgoing admissible step",
+    "does not prove GeneralFiniteRankTerminationSchema for RestrictedClosureSurface",
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "next_weakest_point": "Supply a bounded finite-state-space witness for ZeroDayBoundarySurface.State, or keep this target explicit."
+}
