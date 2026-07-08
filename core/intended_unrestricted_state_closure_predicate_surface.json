@@ -1,0 +1,21 @@
+{
+  "surface": "IntendedUnrestrictedStateClosurePredicateSurface",
+  "scope": "predicate_target_only",
+  "predicate": "IntendedUnrestrictedStateClosure",
+  "definition_target": "forall x : IntendedUnrestrictedState, exists n <= 255, IntendedStep^[n](x) = IntendedClosedState(x)",
+  "depends_on": [
+    "IntendedUnrestrictedState",
+    "IntendedStep : IntendedUnrestrictedState -> IntendedUnrestrictedState",
+    "IntendedClosedState : IntendedUnrestrictedState -> IntendedUnrestrictedState"
+  ],
+  "status": "PREDICATE_TARGET_NOT_DEFINED",
+  "downstream_use": "target predicate for ProductFormRestrictedLiftClosure transport",
+  "non_claims": [
+    "does not define IntendedStep",
+    "does not define IntendedClosedState",
+    "does not prove IntendedUnrestrictedStateClosure",
+    "does not transport ProductFormRestrictedLiftClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure outside transported intended-state model"
+}
