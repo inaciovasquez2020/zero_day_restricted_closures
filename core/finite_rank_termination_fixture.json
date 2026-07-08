@@ -1,0 +1,25 @@
+{
+  "surface": "FiniteRankTerminationFixture",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "FINITE_TERMINATION_MATH_FIXTURE",
+  "state_space": ["Initial", "Middle", "Terminal"],
+  "initial": "Initial",
+  "terminal": "Terminal",
+  "admissible_steps": [
+    ["Initial", "Middle"],
+    ["Middle", "Terminal"]
+  ],
+  "rank": {
+    "Initial": 2,
+    "Middle": 1,
+    "Terminal": 0
+  },
+  "terminality_rule": "Terminal has no outgoing admissible step",
+  "claim": "for this finite fixture, every admissible step strictly decreases rank and every path from Initial reaches Terminal",
+  "non_claims": [
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove universal creation",
+    "does not prove universal finality",
+    "does not prove the theorem for all possible state spaces"
+  ]
+}
