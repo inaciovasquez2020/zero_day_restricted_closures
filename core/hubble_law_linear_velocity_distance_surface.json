@@ -1,0 +1,24 @@
+{
+  "surface": "HubbleLawLinearVelocityDistanceSurface",
+  "status": "TOY_FIXED_SAMPLE_VERIFIER_ONLY",
+  "law": "v = H0 * d",
+  "H0": "70",
+  "units": {
+    "H0": "km/s/Mpc",
+    "d": "Mpc",
+    "v": "km/s"
+  },
+  "fixed_samples": [
+    {"d": "0", "v": "0"},
+    {"d": "1", "v": "70"},
+    {"d": "10", "v": "700"},
+    {"d": "42", "v": "2940"}
+  ],
+  "non_claims": [
+    "does_not_claim_cosmology_closure",
+    "does_not_claim_real_observational_fit",
+    "does_not_claim_unrestricted_zero_day_closure",
+    "does_not_supply_terminal_composite_witness_candidate",
+    "does_not_construct_restricted_composition_target"
+  ]
+}
