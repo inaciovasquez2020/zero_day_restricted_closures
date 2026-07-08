@@ -1,0 +1,32 @@
+{
+  "surface": "RestrictedTargetConstructorInputFieldContractSurface",
+  "status": "CONSTRUCTOR_INPUT_FIELD_CONTRACT_ONLY",
+  "target_missing_object": "RestrictedCompositionTarget constructor",
+  "required_inputs": [
+    "accepted executable terminal-composite witness candidate",
+    "RestrictedBoundaryInvariant(T) payload placeholder",
+    "TargetRealizesRestrictedLiftSourceChainComposition(C,T) payload placeholder"
+  ],
+  "available_inputs": [
+    "restricted_terminal_composite_payload_fixture"
+  ],
+  "placeholder_inputs": [
+    {
+      "field": "RestrictedBoundaryInvariant(T)",
+      "status": "PLACEHOLDER_ONLY_NOT_SUPPLIED"
+    },
+    {
+      "field": "TargetRealizesRestrictedLiftSourceChainComposition(C,T)",
+      "status": "PLACEHOLDER_ONLY_NOT_SUPPLIED"
+    }
+  ],
+  "restricted_composition_target": {
+    "status": "UNCONSTRUCTED"
+  },
+  "non_claims": [
+    "does_not_construct_restricted_composition_target",
+    "does_not_construct_zero_day_closure",
+    "does_not_lift_restricted_to_unrestricted",
+    "does_not_claim_unrestricted_zero_day_closure"
+  ]
+}
