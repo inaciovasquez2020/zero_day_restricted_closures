@@ -1,0 +1,37 @@
+{
+  "surface": "RestrictedTargetConstructionBlockerInventorySurface",
+  "status": "BLOCKER_INVENTORY_ONLY",
+  "target_missing_object": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "required_inputs": [
+    "accepted executable terminal-composite witness candidate"
+  ],
+  "available_inputs": [
+    "restricted_terminal_composite_payload_fixture"
+  ],
+  "ranked_blockers": [
+    {
+      "rank": 1,
+      "missing_object": "RestrictedCompositionTarget constructor",
+      "reason": "accepted terminal-composite candidate exists, but no constructor maps input contract fields into RestrictedCompositionTarget"
+    },
+    {
+      "rank": 2,
+      "missing_object": "RestrictedBoundaryInvariant(T) payload",
+      "reason": "target field is named in source-field bridge contract but not supplied as an executable target payload"
+    },
+    {
+      "rank": 3,
+      "missing_object": "TargetRealizesRestrictedLiftSourceChainComposition(C,T) payload",
+      "reason": "target realization field is named but not supplied as an executable target payload"
+    }
+  ],
+  "restricted_composition_target": {
+    "status": "UNCONSTRUCTED"
+  },
+  "non_claims": [
+    "does_not_construct_restricted_composition_target",
+    "does_not_construct_zero_day_closure",
+    "does_not_lift_restricted_to_unrestricted",
+    "does_not_claim_unrestricted_zero_day_closure"
+  ]
+}
