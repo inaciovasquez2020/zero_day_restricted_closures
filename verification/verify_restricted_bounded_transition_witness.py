@@ -25,6 +25,18 @@ if prop.get("scope") != "restricted_zero_day_instance_only":
 if prop.get("status") != "PROPERTY_WITNESS_SUPPLIED":
     raise SystemExit("MISSING_OBJECT := restricted transition property witness status")
 
+bridge = payload.get("target_field_bridge")
+if not isinstance(bridge, dict):
+    raise SystemExit("MISSING_OBJECT := target_field_bridge")
+if bridge.get("source_field") != "restricted_transition_property":
+    raise SystemExit("MISSING_OBJECT := target_field_bridge source_field")
+if bridge.get("target_field") != "TargetRealizesRestrictedLiftSourceChainComposition(C,T)":
+    raise SystemExit("MISSING_OBJECT := target_field_bridge target_field")
+if bridge.get("bridge_status") != "FIELD_BRIDGE_WITNESS_SUPPLIED":
+    raise SystemExit("MISSING_OBJECT := target_field_bridge witness status")
+if bridge.get("scope") != "restricted_zero_day_instance_only":
+    raise SystemExit("MISSING_OBJECT := target_field_bridge scope")
+
 rows = payload.get("transitions")
 if not isinstance(rows, list) or not rows:
     raise SystemExit("MISSING_OBJECT := nonempty bounded transition rows")
