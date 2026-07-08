@@ -25,3 +25,12 @@ def from_product_form(product: tuple[int, Any]) -> IntendedUnrestrictedState:
         raise TypeError("product must be a pair")
     encoded, payload = product
     return IntendedUnrestrictedState(encoded=encoded, payload=payload)
+
+
+def intended_step(state: IntendedUnrestrictedState) -> IntendedUnrestrictedState:
+    if not isinstance(state, IntendedUnrestrictedState):
+        raise TypeError("state must be IntendedUnrestrictedState")
+    return IntendedUnrestrictedState(
+        encoded=(state.encoded + 1) % 256,
+        payload=state.payload,
+    )
