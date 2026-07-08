@@ -1,0 +1,35 @@
+{
+  "surface": "TerminalObjectBoundaryTerminalSourceTargetSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "TERMINAL_OBJECT_SOURCE_TARGET_SURFACE_ONLY",
+  "target_field": "terminal_object",
+  "parent_target": "TerminalComposite(C,T)",
+  "depends_on": [
+    "TerminalObjectBridgeTargetSurface",
+    "RestrictedClosureSurface"
+  ],
+  "candidate_source": {
+    "source": "restricted_closure_surface",
+    "field_path": "fields.closure_from_boundary",
+    "observed_reference": "boundary.Terminal",
+    "source_status": "CANDIDATE_SOURCE_IDENTIFIED_NOT_BRIDGED"
+  },
+  "source_target_shape": "restricted_closure_surface.fields.closure_from_boundary boundary.Terminal reference -> terminal_object",
+  "bridge_status": "SOURCE_TARGET_ONLY_NOT_SUPPLIED",
+  "terminal_composite_status": "NOT_INHABITED",
+  "preserved_missing_fields": [
+    "restricted_scope_guard"
+  ],
+  "positive_claim": "records boundary.Terminal as the candidate source target for terminal_object without constructing the bridge",
+  "missing_object": "actual bounded bridge from boundary.Terminal reference to terminal_object",
+  "non_claims": [
+    "does not construct terminal_object",
+    "does not construct TerminalComposite(C,T)",
+    "does not prove restricted_closure_surface satisfies TerminalComposite(C,T)",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "next_weakest_point": "Supply the actual bounded bridge from boundary.Terminal reference to terminal_object, or keep this source target explicit."
+}
