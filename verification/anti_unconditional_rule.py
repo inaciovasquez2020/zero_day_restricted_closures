@@ -1020,6 +1020,7 @@ def main():
     verify_restricted_edge_terminal_composite_source_field_refinement_surface()
     verify_restricted_edge_terminal_composite_witness_shape_refinement_surface()
     verify_restricted_edge_terminal_composite_witness_candidate_input_contract_surface()
+    verify_restricted_edge_terminal_composite_executable_candidate_verifier_surface()
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
@@ -1941,6 +1942,114 @@ def verify_restricted_edge_terminal_composite_witness_candidate_input_contract_s
             )
 
     print("RESTRICTED_EDGE_TERMINAL_COMPOSITE_WITNESS_CANDIDATE_INPUT_CONTRACT_GUARD_OK")
+
+
+def verify_restricted_edge_terminal_composite_executable_candidate_verifier_surface():
+    import json
+    from pathlib import Path
+
+    surface_path = Path("core/restricted_edge_terminal_composite_executable_candidate_verifier_surface.json")
+    if not surface_path.exists():
+        raise SystemExit("MISSING_OBJECT := core/restricted_edge_terminal_composite_executable_candidate_verifier_surface.json")
+
+    data = json.loads(surface_path.read_text())
+
+    required_pairs = {
+        "surface": "RestrictedEdgeTerminalCompositeExecutableCandidateVerifierSurface",
+        "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        "classification": "TERMINAL_COMPOSITE_EXECUTABLE_CANDIDATE_VERIFIER_SURFACE_ONLY",
+        "parent_surface": "RestrictedEdgeTerminalCompositeWitnessCandidateInputContractSurface",
+        "target_edge": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+        "refined_target_field": "TerminalComposite(C,T)",
+        "preserved_parent_status": "INPUT_CONTRACT_RECORDED_NOT_INHABITED",
+        "missing_object": "accepted executable terminal-composite witness candidate satisfying the input contract",
+    }
+
+    for key, expected in required_pairs.items():
+        actual = data.get(key)
+        if actual != expected:
+            raise SystemExit(
+                f"RESTRICTED_EDGE_TERMINAL_COMPOSITE_EXECUTABLE_CANDIDATE_VERIFIER_GUARD_FAILED := {key} expected {expected!r} got {actual!r}"
+            )
+
+    verifier = data.get("candidate_verifier")
+    if not isinstance(verifier, dict):
+        raise SystemExit("RESTRICTED_EDGE_TERMINAL_COMPOSITE_EXECUTABLE_CANDIDATE_VERIFIER_GUARD_FAILED := candidate_verifier must be an object")
+
+    required_verifier_pairs = {
+        "input_contract": "coverage_source or restricted_closure_surface -> restricted-only terminal composite content",
+        "candidate_output_target": "TerminalComposite(C,T)",
+        "verifier_status": "EXECUTABLE_CANDIDATE_VERIFIER_RECORDED_NOT_RUN_ON_INHABITANT",
+        "accepted_candidate_status": "NO_ACCEPTED_CANDIDATE",
+    }
+
+    for key, expected in required_verifier_pairs.items():
+        actual = verifier.get(key)
+        if actual != expected:
+            raise SystemExit(
+                f"RESTRICTED_EDGE_TERMINAL_COMPOSITE_EXECUTABLE_CANDIDATE_VERIFIER_GUARD_FAILED := candidate_verifier.{key} expected {expected!r} got {actual!r}"
+            )
+
+    required_non_claims = {
+        "does not prove ZeroDayClosure",
+        "does not prove unrestricted ZeroDayClosure",
+        "does not discharge LiftSourceChainCompositionGap",
+        "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+        "does not construct the restricted edge",
+        "does not construct the source-field bridge",
+        "does not construct RestrictedCompositionTarget",
+        "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+        "does not supply TerminalComposite(C,T)",
+        "does not construct a terminal-composite witness",
+        "does not inhabit a terminal-composite witness candidate",
+        "does not accept a terminal-composite witness candidate",
+        "does not change INPUT_CONTRACT_RECORDED_NOT_INHABITED",
+        "does not prove field-by-field obligation discharge",
+        "does not erase the restricted boundary",
+        "does not prove the restricted-to-unrestricted lift",
+        "does not add SNOLAB or external empirical evidence",
+    }
+
+    non_claims = set(data.get("non_claims", []))
+    missing_non_claims = sorted(required_non_claims - non_claims)
+    if missing_non_claims:
+        raise SystemExit(
+            f"RESTRICTED_EDGE_TERMINAL_COMPOSITE_EXECUTABLE_CANDIDATE_VERIFIER_GUARD_FAILED := missing non_claims {missing_non_claims!r}"
+        )
+
+    forbidden_exact_values = {
+        "INPUT_CONTRACT_INHABITED",
+        "EXECUTABLE_CANDIDATE_VERIFIER_ACCEPTED",
+        "ACCEPTED_CANDIDATE",
+        "TerminalComposite(C,T) supplied",
+        "terminal-composite witness constructed",
+        "terminal-composite witness candidate inhabited",
+        "terminal-composite witness candidate accepted",
+        "source-field bridge constructed",
+        "RestrictedCompositionTarget constructed",
+        "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget constructed",
+        "RestrictedCompositionTarget -> ZeroDayClosure constructed",
+        "unrestricted ZeroDayClosure constructed",
+        "restricted-to-unrestricted lift proved",
+    }
+
+    def walk(value):
+        if isinstance(value, dict):
+            for child in value.values():
+                yield from walk(child)
+        elif isinstance(value, list):
+            for child in value:
+                yield from walk(child)
+        elif isinstance(value, str):
+            yield value
+
+    for value in walk(data):
+        if value in forbidden_exact_values:
+            raise SystemExit(
+                f"RESTRICTED_EDGE_TERMINAL_COMPOSITE_EXECUTABLE_CANDIDATE_VERIFIER_GUARD_FAILED := forbidden value {value!r}"
+            )
+
+    print("RESTRICTED_EDGE_TERMINAL_COMPOSITE_EXECUTABLE_CANDIDATE_VERIFIER_GUARD_OK")
 
 if __name__ == "__main__":
     sys.exit(main())
