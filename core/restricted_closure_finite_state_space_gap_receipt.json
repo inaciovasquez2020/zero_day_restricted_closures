@@ -1,0 +1,29 @@
+{
+  "surface": "RestrictedClosureFiniteStateSpaceGapReceipt",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "FINITE_STATE_SPACE_GAP_RECEIPT_ONLY",
+  "depends_on": [
+    "RestrictedClosureFiniteStateSpaceTarget",
+    "RestrictedClosureFiniteRankInstanceMap",
+    "GeneralFiniteRankTerminationSchema"
+  ],
+  "target": "finite_state_space",
+  "state_field": "ZeroDayBoundarySurface.State",
+  "observed_status": "FINITE_STATE_SPACE_WITNESS_NOT_FOUND",
+  "missing_object": "proof or bounded witness that ZeroDayBoundarySurface.State is finite",
+  "preserved_unsupplied_schema_inputs": [
+    "rank_function_State_to_Nat",
+    "rank_decreases_on_every_admissible_step",
+    "terminal_iff_no_outgoing_admissible_step"
+  ],
+  "non_claims": [
+    "does not prove finite_state_space",
+    "does not define rank : State -> Nat",
+    "does not prove rank decreases on every admissible step",
+    "does not prove terminal iff no outgoing admissible step",
+    "does not prove GeneralFiniteRankTerminationSchema for RestrictedClosureSurface",
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "next_weakest_point": "Supply a bounded finite-state-space witness for ZeroDayBoundarySurface.State, or keep this gap explicit."
+}
