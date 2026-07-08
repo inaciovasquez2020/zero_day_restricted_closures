@@ -1,0 +1,43 @@
+{
+  "surface": "RestrictedEdgeTerminalCompositeBridgeSourceAbsenceReceipt",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "TERMINAL_COMPOSITE_BRIDGE_SOURCE_ABSENCE_RECEIPT_ONLY",
+  "parent_bridge_source_target": "RestrictedEdgeTerminalCompositeBridgeSourceTargetSurface",
+  "target_edge": "RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+  "row_index": 1,
+  "target_field": "TerminalComposite(C,T)",
+  "scanned_terms": [
+    "TerminalComposite",
+    "terminal composite",
+    "terminal_restricted_composite",
+    "RestrictedClosureSurface",
+    "restricted_closure_surface",
+    "coverage_source"
+  ],
+  "observed_bridge_source_absence": [
+    "TerminalComposite appears only in target, matrix, candidate schema, bridge target, and receipt surfaces",
+    "restricted_coverage_source remains conditional_only with source type UnrestrictedZeroDayInstance -> RestrictedClosureSurface",
+    "RestrictedLiftSourceChainCompositionInputContract packages coverage_source and restricted_closure_surface but does not supply TerminalComposite(C,T)",
+    "RestrictedEdgeTerminalCompositeBridgeSourceTargetSurface remains BRIDGE_SOURCE_TARGET_ONLY_NOT_SUPPLIED"
+  ],
+  "absence_status": "TERMINAL_COMPOSITE_BRIDGE_SOURCE_EVIDENCE_ABSENT_NOT_DISCHARGED",
+  "positive_claim": "records that current scanned repository surfaces do not yet supply bounded bridge-source evidence for TerminalComposite(C,T)",
+  "missing_object": "bounded bridge-source evidence sufficient to supply TerminalComposite(C,T)",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not construct the source-field bridge",
+    "does not construct the TerminalComposite(C,T) row witness",
+    "does not construct TerminalComposite(C,T)",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not prove field-by-field obligation discharge",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift",
+    "does not add SNOLAB or external empirical evidence"
+  ],
+  "next_weakest_point": "Introduce a bounded abstract TerminalComposite(C,T) bridge-source input contract, or keep the first row witness absent."
+}
