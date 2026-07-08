@@ -1,0 +1,42 @@
+{
+  "surface": "RestrictedFiniteStateTransitionTargetSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "FINITE_STATE_TRANSITION_TARGET_SURFACE_ONLY",
+  "depends_on_surfaces": [
+    "RestrictedInstanceFiniteStateSpaceWitness",
+    "RestrictedEdgeSourceFieldBridgeTargetSurface",
+    "RestrictedEdgeFieldObligationMatrixSurface"
+  ],
+  "finite_state_witness": {
+    "state_model": "StateModel := Fin 256",
+    "scope": "restricted_zero_day_instance_only",
+    "role": "bounded finite state-space witness only"
+  },
+  "target_role": "names the missing bounded transition evidence needed before any finite-state termination or restricted-edge discharge can use the finite state-space witness",
+  "transition_target_shape": {
+    "input": "restricted finite state-space witness plus restricted instance scope",
+    "output": "bounded transition relation or successor data over StateModel := Fin 256",
+    "scope": "restricted_zero_day_instance_only"
+  },
+  "transition_status": "TRANSITION_TARGET_ONLY_NOT_SUPPLIED",
+  "positive_claim": "records the next bounded transition target over the restricted finite state-space witness",
+  "missing_object": "actual bounded transition relation or successor data over StateModel := Fin 256",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not discharge LiftSourceChainCompositionGap",
+    "does not construct RestrictedLiftSourceChainCompositionInputContract -> RestrictedCompositionTarget",
+    "does not construct the restricted edge",
+    "does not construct the source-field bridge",
+    "does not construct TerminalComposite(C,T)",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not prove finite-state termination",
+    "does not prove field-by-field obligation discharge",
+    "does not redefine ZeroDayBoundarySurface.State",
+    "does not erase the restricted boundary",
+    "does not prove the restricted-to-unrestricted lift",
+    "does not add SNOLAB or external empirical evidence"
+  ],
+  "next_weakest_point": "Supply bounded transition relation evidence over StateModel := Fin 256, or keep transition data as an explicit missing object."
+}
