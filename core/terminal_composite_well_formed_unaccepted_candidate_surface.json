@@ -1,0 +1,23 @@
+{
+  "surface": "TerminalCompositeWellFormedUnacceptedCandidateSurface",
+  "status": "WELL_FORMED_FIXTURE_NOT_ACCEPTED",
+  "candidate": {
+    "kind": "executable_terminal_composite_witness_candidate",
+    "terminal_composite": {
+      "scope": "restricted_only",
+      "source_fields": [
+        "TerminalComposite(C,T)"
+      ]
+    },
+    "claims": []
+  },
+  "expected_result": "WELL_FORMED_BUT_UNACCEPTED",
+  "non_claims": [
+    "does_not_accept_candidate",
+    "does_not_supply_terminal_composite",
+    "does_not_construct_source_field_bridge",
+    "does_not_construct_restricted_composition_target",
+    "does_not_construct_zero_day_closure",
+    "does_not_lift_restricted_to_unrestricted"
+  ]
+}
