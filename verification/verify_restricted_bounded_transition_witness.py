@@ -25,17 +25,28 @@ if prop.get("scope") != "restricted_zero_day_instance_only":
 if prop.get("status") != "PROPERTY_WITNESS_SUPPLIED":
     raise SystemExit("MISSING_OBJECT := restricted transition property witness status")
 
-bridge = payload.get("target_field_bridge")
-if not isinstance(bridge, dict):
-    raise SystemExit("MISSING_OBJECT := target_field_bridge")
-if bridge.get("source_field") != "restricted_transition_property":
-    raise SystemExit("MISSING_OBJECT := target_field_bridge source_field")
-if bridge.get("target_field") != "TargetRealizesRestrictedLiftSourceChainComposition(C,T)":
-    raise SystemExit("MISSING_OBJECT := target_field_bridge target_field")
-if bridge.get("bridge_status") != "FIELD_BRIDGE_WITNESS_SUPPLIED":
-    raise SystemExit("MISSING_OBJECT := target_field_bridge witness status")
-if bridge.get("scope") != "restricted_zero_day_instance_only":
-    raise SystemExit("MISSING_OBJECT := target_field_bridge scope")
+bridges = payload.get("target_field_bridges")
+if not isinstance(bridges, list):
+    raise SystemExit("MISSING_OBJECT := target_field_bridges")
+
+required_bridges = {
+    ("restricted_transition_property", "TargetRealizesRestrictedLiftSourceChainComposition(C,T)"),
+    ("scope", "restricted_zero_day_instance_only"),
+}
+
+seen_bridges = set()
+for bridge in bridges:
+    if not isinstance(bridge, dict):
+        raise SystemExit("MISSING_OBJECT := target_field_bridge object")
+    if bridge.get("bridge_status") != "FIELD_BRIDGE_WITNESS_SUPPLIED":
+        raise SystemExit("MISSING_OBJECT := target_field_bridge witness status")
+    if bridge.get("scope") != "restricted_zero_day_instance_only":
+        raise SystemExit("MISSING_OBJECT := target_field_bridge scope")
+    seen_bridges.add((bridge.get("source_field"), bridge.get("target_field")))
+
+missing_bridges = sorted(required_bridges - seen_bridges)
+if missing_bridges:
+    raise SystemExit("MISSING_OBJECT := required target field bridge")
 
 rows = payload.get("transitions")
 if not isinstance(rows, list) or not rows:
