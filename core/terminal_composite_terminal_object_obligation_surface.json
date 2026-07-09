@@ -1,0 +1,20 @@
+{
+  "surface": "TerminalCompositeTerminalObjectObligationSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "TERMINAL_OBJECT_OBLIGATION_ONLY",
+  "target_field": "TerminalComposite(C,T).terminal_object",
+  "depends_on": [
+    "TerminalCompositeCompleteFieldTypeSurface",
+    "RestrictedCompositionTargetDefinitionSurface",
+    "restricted_closure_surface.boundary.Terminal"
+  ],
+  "obligation": "Construct the restricted terminal object carried by the bounded target field vocabulary.",
+  "status": "OBLIGATION_SPECIFIED_NOT_DISCHARGED",
+  "non_claims": [
+    "does not construct TerminalComposite(C,T)",
+    "does not construct RestrictedCompositionTarget",
+    "does not prove RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "next_weakest_point": "Discharge terminal_object before restricted_scope_guard."
+}
