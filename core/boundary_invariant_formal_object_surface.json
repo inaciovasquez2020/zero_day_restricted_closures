@@ -1,0 +1,19 @@
+{
+  "surface": "BoundaryInvariantFormalObjectSurface",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "FORMAL_OBJECT_SURFACE_ONLY",
+  "formal_object": "BoundaryInvariant",
+  "role": "shared invariant object required to compare OriginBoundary and EndBoundary without identifying them",
+  "depends_on": [
+    "ZeroDayBoundaryUniversalPropertySurface",
+    "OriginBoundaryFormalObjectSurface",
+    "EndBoundaryFormalObjectSurface"
+  ],
+  "status": "FORMAL_OBJECT_NAMED_NOT_CONSTRUCTED",
+  "non_claims": [
+    "does not construct ZeroDayBoundary",
+    "does not prove OriginBoundary = EndBoundary",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove global closure"
+  ]
+}
