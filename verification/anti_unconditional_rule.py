@@ -1026,6 +1026,7 @@ def main():
     verify_zero_day_boundary_accepted_construction_witness_candidate_surface()
     verify_zero_day_boundary_construction_witness_acceptance_obligation_surface()
     verify_zero_day_boundary_accepted_construction_witness_execution_receipt()
+    verify_zero_day_boundary_accepted_construction_witness_input_field_inventory_surface()
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
@@ -1953,6 +1954,51 @@ def verify_restricted_edge_terminal_composite_witness_candidate_input_contract_s
 
 
 
+
+
+
+def verify_zero_day_boundary_accepted_construction_witness_input_field_inventory_surface():
+    import json
+
+    target = ROOT / "core" / "zero_day_boundary_accepted_construction_witness_input_field_inventory_surface.json"
+    if not target.exists():
+        raise SystemExit(
+            "ZERO_DAY_BOUNDARY_ACCEPTED_CONSTRUCTION_WITNESS_INPUT_FIELD_INVENTORY_GUARD_FAILED := missing surface"
+        )
+
+    data = json.loads(target.read_text(encoding="utf-8"))
+
+    required = {
+        "surface": "ZeroDayBoundaryAcceptedConstructionWitnessInputFieldInventorySurface",
+        "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        "classification": "INPUT_FIELD_INVENTORY_ONLY",
+        "target": "ZeroDayBoundaryUniversalPropertyConstructionObligation",
+        "candidate": "ZeroDayBoundaryAcceptedConstructionWitnessCandidateSurface",
+        "status": "FIELD_INVENTORY_SPECIFIED_NOT_REALIZED",
+    }
+
+    for key, value in required.items():
+        if data.get(key) != value:
+            raise SystemExit(
+                f"ZERO_DAY_BOUNDARY_ACCEPTED_CONSTRUCTION_WITNESS_INPUT_FIELD_INVENTORY_GUARD_FAILED := {key} mismatch"
+            )
+
+    required_inputs = {
+        "weak_universal_property_data_for_ZeroDayBoundary",
+        "terminal_composite_data",
+        "boundary_invariant_data",
+        "verifier_execution_binding",
+    }
+
+    actual_inputs = set(data.get("required_inputs", []))
+    missing_inputs = sorted(required_inputs - actual_inputs)
+    if missing_inputs:
+        raise SystemExit(
+            "ZERO_DAY_BOUNDARY_ACCEPTED_CONSTRUCTION_WITNESS_INPUT_FIELD_INVENTORY_GUARD_FAILED := missing required_inputs "
+            + ",".join(missing_inputs)
+        )
+
+    print("ZERO_DAY_BOUNDARY_ACCEPTED_CONSTRUCTION_WITNESS_INPUT_FIELD_INVENTORY_GUARD_OK")
 
 def verify_zero_day_boundary_accepted_construction_witness_execution_receipt():
     import json
