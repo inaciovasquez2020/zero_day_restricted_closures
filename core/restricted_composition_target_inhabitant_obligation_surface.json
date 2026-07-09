@@ -1,0 +1,16 @@
+{
+  "surface": "RestrictedCompositionTargetInhabitantObligationSurface",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "RESTRICTED_COMPOSITION_TARGET_INHABITANT_OBLIGATION_ONLY",
+  "target": "RestrictedCompositionTarget",
+  "requires_input": "TerminalComposite(C,T)",
+  "depends_on": [
+    "TerminalCompositeBoundedInhabitantSurface",
+    "RestrictedCompositionTargetDefinitionSurface"
+  ],
+  "status": "OBLIGATION_SPECIFIED_NOT_DISCHARGED",
+  "non_claims": [
+    "does not prove RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ]
+}
