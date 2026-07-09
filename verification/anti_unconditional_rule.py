@@ -1024,6 +1024,7 @@ def main():
     verify_zero_day_boundary_construction_discharge_verifier_surface()
     verify_zero_day_boundary_executable_discharge_verifier_surface()
     verify_zero_day_boundary_accepted_construction_witness_candidate_surface()
+    verify_zero_day_boundary_construction_witness_acceptance_obligation_surface()
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
@@ -1949,6 +1950,54 @@ def verify_restricted_edge_terminal_composite_witness_candidate_input_contract_s
 
 
 
+
+
+def verify_zero_day_boundary_construction_witness_acceptance_obligation_surface():
+    import json
+    from pathlib import Path
+
+    surface_path = Path("core/zero_day_boundary_construction_witness_acceptance_obligation_surface.json")
+    if not surface_path.exists():
+        raise SystemExit("MISSING_OBJECT := core/zero_day_boundary_construction_witness_acceptance_obligation_surface.json")
+
+    data = json.loads(surface_path.read_text())
+
+    required_pairs = {
+        "surface": "ZeroDayBoundaryConstructionWitnessAcceptanceObligationSurface",
+        "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        "classification": "ACCEPTANCE_OBLIGATION_SURFACE_ONLY",
+        "target": "ZeroDayBoundaryUniversalPropertyConstructionObligation",
+        "candidate": "ZeroDayBoundaryAcceptedConstructionWitnessCandidateSurface",
+        "verifier": "ZeroDayBoundaryExecutableDischargeVerifierSurface",
+        "acceptance_obligation": "run executable discharge verifier on accepted weak_universal_property_data_for_ZeroDayBoundary",
+        "status": "ACCEPTANCE_OBLIGATION_SPECIFIED_NOT_DISCHARGED",
+    }
+
+    for key, expected in required_pairs.items():
+        actual = data.get(key)
+        if actual != expected:
+            raise SystemExit(
+                f"ZERO_DAY_BOUNDARY_CONSTRUCTION_WITNESS_ACCEPTANCE_OBLIGATION_GUARD_FAILED := {key} expected {expected!r} got {actual!r}"
+            )
+
+    required_non_claims = {
+        "does not construct ZeroDayBoundary",
+        "does not discharge the universal property construction obligation",
+        "does not accept a construction witness",
+        "does not prove OriginBoundary = EndBoundary",
+        "does not prove unrestricted ZeroDayClosure",
+        "does not prove global closure",
+    }
+
+    non_claims = set(data.get("non_claims", []))
+    missing_non_claims = sorted(required_non_claims - non_claims)
+    if missing_non_claims:
+        raise SystemExit(
+            "ZERO_DAY_BOUNDARY_CONSTRUCTION_WITNESS_ACCEPTANCE_OBLIGATION_GUARD_FAILED := missing non_claims "
+            + ",".join(missing_non_claims)
+        )
+
+    print("ZERO_DAY_BOUNDARY_CONSTRUCTION_WITNESS_ACCEPTANCE_OBLIGATION_GUARD_OK")
 
 def verify_zero_day_boundary_accepted_construction_witness_candidate_surface():
     import json
