@@ -1,0 +1,18 @@
+{
+  "surface": "EndBoundaryFormalObjectSurface",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "FORMAL_OBJECT_SURFACE_ONLY",
+  "formal_object": "EndBoundary",
+  "role": "end-side boundary object required by ZeroDayBoundaryUniversalPropertySurface",
+  "depends_on": [
+    "ZeroDayBoundaryUniversalPropertySurface",
+    "OriginBoundaryFormalObjectSurface"
+  ],
+  "status": "FORMAL_OBJECT_NAMED_NOT_CONSTRUCTED",
+  "non_claims": [
+    "does not construct ZeroDayBoundary",
+    "does not prove OriginBoundary = EndBoundary",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove global closure"
+  ]
+}
