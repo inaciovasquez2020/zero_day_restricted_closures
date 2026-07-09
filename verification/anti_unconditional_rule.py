@@ -1021,6 +1021,7 @@ def main():
     verify_restricted_edge_terminal_composite_witness_shape_refinement_surface()
     verify_restricted_edge_terminal_composite_witness_candidate_input_contract_surface()
     verify_restricted_edge_terminal_composite_executable_candidate_verifier_surface()
+    verify_zero_day_boundary_construction_discharge_verifier_surface()
     print("ANTI_UNCONDITIONAL_RULE_OK")
     return 0
 
@@ -1943,6 +1944,50 @@ def verify_restricted_edge_terminal_composite_witness_candidate_input_contract_s
 
     print("RESTRICTED_EDGE_TERMINAL_COMPOSITE_WITNESS_CANDIDATE_INPUT_CONTRACT_GUARD_OK")
 
+
+
+def verify_zero_day_boundary_construction_discharge_verifier_surface():
+    import json
+    from pathlib import Path
+
+    surface_path = Path("core/zero_day_boundary_construction_discharge_verifier_surface.json")
+    if not surface_path.exists():
+        raise SystemExit("MISSING_OBJECT := core/zero_day_boundary_construction_discharge_verifier_surface.json")
+
+    data = json.loads(surface_path.read_text())
+
+    required_pairs = {
+        "surface": "ZeroDayBoundaryConstructionDischargeVerifierSurface",
+        "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        "classification": "VERIFIER_SURFACE_ONLY",
+        "target": "ZeroDayBoundaryUniversalPropertyConstructionObligation",
+        "verifies_input_contract": "ZeroDayBoundaryConstructionDischargeInputContractSurface",
+        "status": "VERIFIER_SURFACE_SPECIFIED_NOT_EXECUTABLE",
+    }
+
+    for key, expected in required_pairs.items():
+        actual = data.get(key)
+        if actual != expected:
+            raise SystemExit(
+                f"ZERO_DAY_BOUNDARY_CONSTRUCTION_DISCHARGE_VERIFIER_GUARD_FAILED := {key} expected {expected!r} got {actual!r}"
+            )
+
+    required_non_claims = {
+        "does not construct ZeroDayBoundary",
+        "does not discharge the universal property construction obligation",
+        "does not prove unrestricted ZeroDayClosure",
+        "does not prove global closure",
+    }
+
+    non_claims = set(data.get("non_claims", []))
+    missing_non_claims = sorted(required_non_claims - non_claims)
+    if missing_non_claims:
+        raise SystemExit(
+            "ZERO_DAY_BOUNDARY_CONSTRUCTION_DISCHARGE_VERIFIER_GUARD_FAILED := missing non_claims "
+            + ",".join(missing_non_claims)
+        )
+
+    print("ZERO_DAY_BOUNDARY_CONSTRUCTION_DISCHARGE_VERIFIER_GUARD_OK")
 
 def verify_restricted_edge_terminal_composite_executable_candidate_verifier_surface():
     import json
