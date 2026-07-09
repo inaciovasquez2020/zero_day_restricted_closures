@@ -1,0 +1,21 @@
+{
+  "receipt": "RestrictedZeroDayClosureFinalBoundaryReceipt",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "RESTRICTED_SOLVE_RECEIPT_WITH_UNRESTRICTED_BOUNDARY",
+  "covered_surfaces": [
+    "TerminalCompositeBoundedInhabitantSurface",
+    "RestrictedCompositionTargetInhabitantObligationSurface",
+    "RestrictedTargetToZeroDayClosureExtractionTheoremSurface"
+  ],
+  "restricted_chain": [
+    "TerminalComposite(C,T)",
+    "RestrictedCompositionTarget",
+    "RestrictedCompositionTarget -> ZeroDayClosure"
+  ],
+  "status": "RESTRICTED_CHAIN_RECORDED_BOUNDARY_PRESERVED",
+  "non_claims": [
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove global closure",
+    "does not remove the restricted-only scope"
+  ]
+}
