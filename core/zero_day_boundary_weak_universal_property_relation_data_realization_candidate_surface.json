@@ -1,0 +1,23 @@
+{
+  "surface": "ZeroDayBoundaryWeakUniversalPropertyRelationDataRealizationCandidateSurface",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "RELATION_DATA_REALIZATION_CANDIDATE_SURFACE_ONLY",
+  "target": "weak_universal_property_relation_data",
+  "source": "ZeroDayBoundaryWeakUniversalPropertyDataRealizationCandidateSurface",
+  "candidate_fields": [
+    "relation_domain",
+    "relation_codomain",
+    "relation_preservation_condition",
+    "relation_composition_condition"
+  ],
+  "status": "CANDIDATE_RELATION_DATA_SPECIFIED_NOT_REALIZED",
+  "non_claims": [
+    "does not construct ZeroDayBoundary",
+    "does not discharge the universal property construction obligation",
+    "does not provide an accepted construction witness",
+    "does not execute the verifier on an accepted witness",
+    "does not prove OriginBoundary = EndBoundary",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove global closure"
+  ]
+}
