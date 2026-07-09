@@ -1,0 +1,21 @@
+{
+  "surface": "EndBoundaryInvariantMapSurface",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "FORMAL_MAP_SURFACE_ONLY",
+  "formal_map": "end_boundary_invariant_map",
+  "map_shape": "EndBoundary -> BoundaryInvariant",
+  "role": "end-side comparison map required by ZeroDayBoundaryUniversalPropertySurface",
+  "depends_on": [
+    "ZeroDayBoundaryUniversalPropertySurface",
+    "EndBoundaryFormalObjectSurface",
+    "BoundaryInvariantFormalObjectSurface",
+    "OriginBoundaryInvariantMapSurface"
+  ],
+  "status": "FORMAL_MAP_NAMED_NOT_CONSTRUCTED",
+  "non_claims": [
+    "does not construct ZeroDayBoundary",
+    "does not prove OriginBoundary = EndBoundary",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove global closure"
+  ]
+}
