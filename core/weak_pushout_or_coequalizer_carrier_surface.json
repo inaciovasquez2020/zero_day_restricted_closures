@@ -1,0 +1,22 @@
+{
+  "surface": "WeakPushoutOrCoequalizerCarrierSurface",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "CARRIER_SURFACE_ONLY",
+  "formal_object": "weak_pushout_or_coequalizer_carrier",
+  "carrier_role": "candidate carrier for the ZeroDayBoundary universal-property construction",
+  "depends_on": [
+    "ZeroDayBoundaryUniversalPropertySurface",
+    "OriginBoundaryFormalObjectSurface",
+    "EndBoundaryFormalObjectSurface",
+    "BoundaryInvariantFormalObjectSurface",
+    "OriginBoundaryInvariantMapSurface",
+    "EndBoundaryInvariantMapSurface"
+  ],
+  "status": "CARRIER_NAMED_NOT_CONSTRUCTED",
+  "non_claims": [
+    "does not construct ZeroDayBoundary",
+    "does not prove OriginBoundary = EndBoundary",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove global closure"
+  ]
+}
