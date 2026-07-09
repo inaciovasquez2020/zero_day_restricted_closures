@@ -1,0 +1,24 @@
+{
+  "surface": "ZeroDayBoundaryUniversalPropertySurface",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "UNIVERSAL_PROPERTY_SURFACE_ONLY",
+  "intended_object": "ZeroDayBoundary",
+  "informal_role": "unifies origin boundary and end boundary by universal property, not by unrestricted closure",
+  "requires_future_objects": [
+    "OriginBoundary",
+    "EndBoundary",
+    "BoundaryInvariant",
+    "origin_boundary_invariant_map",
+    "end_boundary_invariant_map",
+    "weak_pushout_or_coequalizer_carrier"
+  ],
+  "forbidden_claims": [
+    "OriginBoundary = EndBoundary",
+    "unrestricted ZeroDayClosure",
+    "global closure",
+    "physical Big Bang theorem",
+    "end of universe theorem"
+  ],
+  "status": "UNIVERSAL_PROPERTY_TARGET_SPECIFIED_NOT_CONSTRUCTED",
+  "next_weakest_point": "Define OriginBoundary as a formal object."
+}
