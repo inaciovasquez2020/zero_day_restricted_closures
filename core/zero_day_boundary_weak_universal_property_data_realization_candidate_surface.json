@@ -1,0 +1,23 @@
+{
+  "surface": "ZeroDayBoundaryWeakUniversalPropertyDataRealizationCandidateSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "DATA_REALIZATION_CANDIDATE_SURFACE_ONLY",
+  "target": "weak_universal_property_data_for_ZeroDayBoundary",
+  "source": "ZeroDayBoundaryAcceptedConstructionWitnessInputFieldInventorySurface",
+  "candidate_fields": [
+    "weak_universal_property_relation_data",
+    "terminal_composite_data",
+    "boundary_invariant_data",
+    "verifier_execution_binding"
+  ],
+  "status": "CANDIDATE_DATA_REALIZATION_SPECIFIED_NOT_REALIZED",
+  "non_claims": [
+    "does not construct ZeroDayBoundary",
+    "does not discharge the universal property construction obligation",
+    "does not provide an accepted construction witness",
+    "does not execute the verifier on an accepted witness",
+    "does not prove OriginBoundary = EndBoundary",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove global closure"
+  ]
+}

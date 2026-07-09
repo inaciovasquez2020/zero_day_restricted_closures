@@ -1,0 +1,22 @@
+{
+  "surface": "ZeroDayBoundaryAcceptedConstructionWitnessInputFieldInventorySurface",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "INPUT_FIELD_INVENTORY_ONLY",
+  "target": "ZeroDayBoundaryUniversalPropertyConstructionObligation",
+  "candidate": "ZeroDayBoundaryAcceptedConstructionWitnessCandidateSurface",
+  "required_inputs": [
+    "weak_universal_property_data_for_ZeroDayBoundary",
+    "terminal_composite_data",
+    "boundary_invariant_data",
+    "verifier_execution_binding"
+  ],
+  "status": "FIELD_INVENTORY_SPECIFIED_NOT_REALIZED",
+  "non_claims": [
+    "does not construct ZeroDayBoundary",
+    "does not discharge the universal property construction obligation",
+    "does not provide an accepted construction witness",
+    "does not prove OriginBoundary = EndBoundary",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove global closure"
+  ]
+}
