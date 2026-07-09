@@ -1,0 +1,17 @@
+{
+  "surface": "ZeroDayBoundaryAcceptedConstructionWitnessCandidateSurface",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "WITNESS_CANDIDATE_SURFACE_ONLY",
+  "target": "ZeroDayBoundaryUniversalPropertyConstructionObligation",
+  "candidate_shape": "weak_universal_property_data_for_ZeroDayBoundary",
+  "verifier": "ZeroDayBoundaryExecutableDischargeVerifierSurface",
+  "status": "WITNESS_CANDIDATE_SPECIFIED_NOT_ACCEPTED",
+  "non_claims": [
+    "does not construct ZeroDayBoundary",
+    "does not discharge the universal property construction obligation",
+    "does not provide an accepted construction witness",
+    "does not prove OriginBoundary = EndBoundary",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove global closure"
+  ]
+}
