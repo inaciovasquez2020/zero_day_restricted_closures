@@ -1,0 +1,22 @@
+{
+  "surface": "RestrictedTargetToZeroDayClosureExtractionTheoremSurface",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "RESTRICTED_TARGET_TO_ZERO_DAY_CLOSURE_EXTRACTION_THEOREM_SURFACE_ONLY",
+  "theorem_shape": "RestrictedCompositionTarget -> ZeroDayClosure",
+  "scope": "restricted_only",
+  "depends_on": [
+    "RestrictedCompositionTargetInhabitantObligationSurface",
+    "RestrictedCompositionTargetDefinitionSurface"
+  ],
+  "status": "EXTRACTION_THEOREM_SURFACE_SPECIFIED_NOT_UNRESTRICTED_CLOSURE",
+  "forbidden_claims": [
+    "unrestricted ZeroDayClosure",
+    "global ZeroDayClosure",
+    "unrestricted closure"
+  ],
+  "non_claims": [
+    "does not prove unrestricted ZeroDayClosure",
+    "does not remove restricted boundary",
+    "does not prove global closure"
+  ]
+}
