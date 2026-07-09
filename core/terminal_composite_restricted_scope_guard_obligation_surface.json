@@ -1,0 +1,20 @@
+{
+  "surface": "TerminalCompositeRestrictedScopeGuardObligationSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "RESTRICTED_SCOPE_GUARD_OBLIGATION_ONLY",
+  "target_field": "TerminalComposite(C,T).restricted_scope_guard",
+  "depends_on": [
+    "TerminalCompositeCompleteFieldTypeSurface",
+    "TerminalCompositeTerminalObjectObligationSurface",
+    "restricted_closure_surface.boundary.Restricted"
+  ],
+  "obligation": "Construct the restricted scope guard carried by the bounded terminal composite field vocabulary.",
+  "status": "OBLIGATION_SPECIFIED_NOT_DISCHARGED",
+  "non_claims": [
+    "does not construct TerminalComposite(C,T)",
+    "does not construct RestrictedCompositionTarget",
+    "does not prove RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "next_weakest_point": "Discharge TerminalComposite(C,T) only after terminal_object and restricted_scope_guard are both available."
+}
