@@ -1,0 +1,14 @@
+{
+  "surface": "ZeroDayBoundaryConstructionDischargeVerifierSurface",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "VERIFIER_SURFACE_ONLY",
+  "target": "ZeroDayBoundaryUniversalPropertyConstructionObligation",
+  "verifies_input_contract": "ZeroDayBoundaryConstructionDischargeInputContractSurface",
+  "status": "VERIFIER_SURFACE_SPECIFIED_NOT_EXECUTABLE",
+  "non_claims": [
+    "does not construct ZeroDayBoundary",
+    "does not discharge the universal property construction obligation",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove global closure"
+  ]
+}
