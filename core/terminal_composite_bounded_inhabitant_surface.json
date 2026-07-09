@@ -1,0 +1,21 @@
+{
+  "surface": "TerminalCompositeBoundedInhabitantSurface",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "TERMINAL_COMPOSITE_BOUNDED_INHABITANT_SURFACE_ONLY",
+  "target": "TerminalComposite(C,T)",
+  "requires_fields": [
+    "terminal_object",
+    "restricted_scope_guard"
+  ],
+  "depends_on": [
+    "TerminalCompositeTerminalObjectObligationSurface",
+    "TerminalCompositeRestrictedScopeGuardObligationSurface",
+    "TerminalCompositeCompleteFieldTypeSurface"
+  ],
+  "status": "INHABITANT_SURFACE_SPECIFIED_NOT_GLOBAL_CLOSURE",
+  "non_claims": [
+    "does not construct unrestricted ZeroDayClosure",
+    "does not prove RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not prove unrestricted closure"
+  ]
+}
