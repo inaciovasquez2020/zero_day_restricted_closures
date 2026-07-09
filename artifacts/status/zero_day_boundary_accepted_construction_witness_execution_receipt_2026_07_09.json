@@ -1,0 +1,19 @@
+{
+  "receipt": "ZeroDayBoundaryAcceptedConstructionWitnessExecutionReceipt",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "EXECUTION_RECEIPT_SURFACE_ONLY",
+  "target": "ZeroDayBoundaryUniversalPropertyConstructionObligation",
+  "acceptance_obligation": "ZeroDayBoundaryConstructionWitnessAcceptanceObligationSurface",
+  "candidate": "ZeroDayBoundaryAcceptedConstructionWitnessCandidateSurface",
+  "verifier": "ZeroDayBoundaryExecutableDischargeVerifierSurface",
+  "status": "EXECUTION_RECEIPT_RECORDED_NOT_EXECUTED",
+  "non_claims": [
+    "does not construct ZeroDayBoundary",
+    "does not discharge the universal property construction obligation",
+    "does not execute the verifier on an accepted witness",
+    "does not accept a construction witness",
+    "does not prove OriginBoundary = EndBoundary",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove global closure"
+  ]
+}
