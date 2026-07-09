@@ -1,0 +1,17 @@
+{
+  "surface": "ZeroDayBoundaryExecutableDischargeVerifierSurface",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "EXECUTABLE_VERIFIER_SURFACE_ONLY",
+  "target": "ZeroDayBoundaryUniversalPropertyConstructionObligation",
+  "verifies": "ZeroDayBoundaryConstructionDischargeInputContractSurface",
+  "parent_surface": "ZeroDayBoundaryConstructionDischargeVerifierSurface",
+  "status": "EXECUTABLE_VERIFIER_SPECIFIED_NOT_RUN_ON_ACCEPTED_WITNESS",
+  "non_claims": [
+    "does not construct ZeroDayBoundary",
+    "does not discharge the universal property construction obligation",
+    "does not provide an accepted construction witness",
+    "does not prove OriginBoundary = EndBoundary",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove global closure"
+  ]
+}
