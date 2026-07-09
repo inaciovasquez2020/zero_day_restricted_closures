@@ -1,0 +1,27 @@
+{
+  "surface": "ZeroDayBoundaryConstructionDischargeInputContractSurface",
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure",
+  "classification": "INPUT_CONTRACT_SURFACE_ONLY",
+  "target": "ZeroDayBoundaryUniversalPropertyConstructionObligation",
+  "input_contract": {
+    "carrier": "weak_pushout_or_coequalizer_carrier",
+    "origin_map": "origin_boundary_invariant_map",
+    "end_map": "end_boundary_invariant_map",
+    "required_property": "weak_universal_property_data_for_ZeroDayBoundary"
+  },
+  "depends_on": [
+    "ZeroDayBoundaryUniversalPropertySurface",
+    "ZeroDayBoundaryUniversalPropertyConstructionObligationSurface",
+    "WeakPushoutOrCoequalizerCarrierSurface",
+    "OriginBoundaryInvariantMapSurface",
+    "EndBoundaryInvariantMapSurface"
+  ],
+  "status": "INPUT_CONTRACT_SPECIFIED_NOT_DISCHARGED",
+  "non_claims": [
+    "does not construct ZeroDayBoundary",
+    "does not discharge the universal property construction obligation",
+    "does not prove OriginBoundary = EndBoundary",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not prove global closure"
+  ]
+}
