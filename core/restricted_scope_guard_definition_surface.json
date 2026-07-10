@@ -1,0 +1,19 @@
+{
+  "surface": "RestrictedScopeGuardDefinitionSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "RESTRICTED_SCOPE_GUARD_DEFINITION_SURFACE_ONLY",
+  "target_field": "restricted_scope_guard",
+  "scope": "restricted_zero_day_instance_only",
+  "role": "defines the bounded guard required before any TerminalComposite(C,T) witness can be considered",
+  "guard_status": "DEFINITION_ONLY_NOT_INHABITED",
+  "positive_claim": "records that restricted scope must remain explicit and cannot promote to unrestricted closure",
+  "non_claims": [
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not construct TerminalComposite(C,T)",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not erase the restricted boundary"
+  ],
+  "next_weakest_point": "Supply bounded evidence that candidate TerminalComposite(C,T) data satisfies restricted_scope_guard."
+}
