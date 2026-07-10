@@ -1,0 +1,21 @@
+{
+  "surface": "TerminalObjectBoundaryTerminalDefinitionSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "BOUNDED_DEFINITION_SURFACE_ONLY",
+  "target_field": "terminal_object",
+  "definition_candidate": {
+    "terminal_object": "boundary.Terminal",
+    "scope": "restricted_zero_day_instance_only"
+  },
+  "status": "DEFINITION_CANDIDATE_ONLY",
+  "positive_claim": "records a bounded candidate identification of terminal_object with boundary.Terminal",
+  "non_claims": [
+    "does not prove unrestricted ZeroDayClosure",
+    "does not construct ZeroDayClosure",
+    "does not construct TerminalComposite(C,T)",
+    "does not construct RestrictedCompositionTarget",
+    "does not construct RestrictedCompositionTarget -> ZeroDayClosure",
+    "does not erase the restricted boundary"
+  ],
+  "next_weakest_point": "Require verification that the bounded definition is compatible with restricted_scope_guard."
+}
