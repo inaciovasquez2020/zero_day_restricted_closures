@@ -1,0 +1,14 @@
+{
+  "status": "WITNESS_SURFACE_ONLY",
+  "object": "restricted_terminal_composite_evidence_witness",
+  "terminal_object": "boundary.Terminal",
+  "scope_guard": "restricted_zero_day_instance_only",
+  "target": "TerminalComposite(C,T)",
+  "claim": "EVIDENCE_NOT_CLOSURE",
+  "non_claims": [
+    "does_not_inhabit_ZeroDayClosure",
+    "does_not_construct_RestrictedCompositionTarget_to_ZeroDayClosure",
+    "does_not_prove_unrestricted_ZeroDayClosure"
+  ],
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure"
+}
