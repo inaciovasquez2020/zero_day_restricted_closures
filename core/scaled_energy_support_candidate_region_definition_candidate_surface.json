@@ -1,0 +1,156 @@
+{
+  "surface": "ScaledEnergySupportCandidateRegionDefinitionCandidateSurface",
+  "boundary": "BOUNDARY := not (region accepted or atlas supplied or boundedness verified or metric supplied or connection supplied or physical detector support realized)",
+  "classification": "BOUNDED_SUPPORT_REGION_DEFINITION_CANDIDATE_ONLY",
+  "dependency_surface": "ScaledEnergySupportCandidateCovariantGeometryInputSurface",
+  "target_support": "SupportCandidateB0",
+  "ambient_coordinate_candidate": {
+    "chart_symbol": "ChartCandidateB0",
+    "coordinate_tuple": "x_candidate := (x_candidate^0,x_candidate^1,x_candidate^2,x_candidate^3)",
+    "coordinate_roles": {
+      "x_candidate^0": "temporal coordinate candidate",
+      "x_candidate^1": "first spatial coordinate candidate",
+      "x_candidate^2": "second spatial coordinate candidate",
+      "x_candidate^3": "third spatial coordinate candidate"
+    },
+    "spatial_dimension": 3,
+    "spacetime_dimension": 4,
+    "chart_status": "CHART_NOT_SUPPLIED"
+  },
+  "candidate_parameters": {
+    "temporal_lower_bound": "t_minus",
+    "temporal_upper_bound": "t_plus",
+    "spatial_half_widths": [
+      "L_1",
+      "L_2",
+      "L_3"
+    ],
+    "temporal_coordinate_unit": "UNIT_NOT_SUPPLIED",
+    "spatial_coordinate_unit": "UNIT_NOT_SUPPLIED",
+    "parameter_values_status": "PARAMETER_VALUES_NOT_SUPPLIED"
+  },
+  "candidate_region_definition": {
+    "symbol": "SupportCandidateB0",
+    "set_builder": "SupportCandidateB0 := {x_candidate in ChartCandidateB0 | t_minus <= x_candidate^0 <= t_plus and -L_1 <= x_candidate^1 <= L_1 and -L_2 <= x_candidate^2 <= L_2 and -L_3 <= x_candidate^3 <= L_3}",
+    "shape": "closed coordinate hyperrectangle candidate",
+    "boundary_components": [
+      "x_candidate^0 = t_minus",
+      "x_candidate^0 = t_plus",
+      "x_candidate^1 = -L_1",
+      "x_candidate^1 = L_1",
+      "x_candidate^2 = -L_2",
+      "x_candidate^2 = L_2",
+      "x_candidate^3 = -L_3",
+      "x_candidate^3 = L_3"
+    ],
+    "boundary_component_count": 8,
+    "definition_status": "SYMBOLIC_REGION_CANDIDATE_DEFINED_ONLY"
+  },
+  "parameter_obligations": [
+    {
+      "parameter": "t_minus,t_plus",
+      "obligation": "t_minus < t_plus",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "parameter": "L_1",
+      "obligation": "L_1 > 0",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "parameter": "L_2",
+      "obligation": "L_2 > 0",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "parameter": "L_3",
+      "obligation": "L_3 > 0",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "parameter": "coordinate_units",
+      "obligation": "temporal and spatial coordinate units are declared explicitly",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    }
+  ],
+  "realization_obligations": [
+    {
+      "field": "chart_realization",
+      "obligation": "ChartCandidateB0 is defined on a spacetime manifold and covers the proposed support region",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "field": "coordinate_parameter_values",
+      "obligation": "finite numerical or symbolic values satisfying all parameter inequalities are supplied",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "field": "nonempty_region_evidence",
+      "obligation": "the declared coordinate inequalities admit at least one point",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "field": "boundedness_evidence",
+      "obligation": "boundedness is established in the declared coordinate topology",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "field": "boundary_realization",
+      "obligation": "the eight declared coordinate faces realize the candidate region boundary",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "field": "detector_support_realization",
+      "obligation": "the candidate region is physically realized as detector support",
+      "status": "OBLIGATION_NOT_DISCHARGED"
+    }
+  ],
+  "region_status": "REGION_CANDIDATE_NOT_ACCEPTED",
+  "nonempty_status": "NONEMPTY_NOT_VERIFIED",
+  "boundedness_status": "BOUNDEDNESS_NOT_VERIFIED",
+  "boundary_status": "BOUNDARY_NOT_VERIFIED",
+  "atlas_status": "ATLAS_NOT_SUPPLIED",
+  "metric_status": "METRIC_NOT_SUPPLIED",
+  "connection_status": "CONNECTION_NOT_SUPPLIED",
+  "physical_realization_status": "PHYSICAL_DETECTOR_SUPPORT_NOT_REALIZED",
+  "blocked_promotions": [
+    "region candidate -> accepted SupportCandidateB0",
+    "region candidate -> nonempty region verified",
+    "region candidate -> boundedness verified",
+    "region candidate -> boundary verified",
+    "region candidate -> atlas supplied",
+    "region candidate -> metric supplied",
+    "region candidate -> connection supplied",
+    "region candidate -> detector support realized",
+    "region candidate -> covariant conservation verified",
+    "region candidate -> Killing condition verified",
+    "region candidate -> current conservation verified",
+    "region candidate -> DInputCandidateB0 accepted",
+    "region candidate -> empirical confirmation",
+    "region candidate -> ZeroDayClosure",
+    "unrestricted ZeroDayClosure"
+  ],
+  "non_claims": [
+    "does not supply ChartCandidateB0",
+    "does not supply coordinate parameter values",
+    "does not prove t_minus < t_plus",
+    "does not prove L_1 > 0",
+    "does not prove L_2 > 0",
+    "does not prove L_3 > 0",
+    "does not declare coordinate units",
+    "does not prove the region is nonempty",
+    "does not prove the region is bounded",
+    "does not prove the boundary realization",
+    "does not define a spacetime manifold",
+    "does not supply an atlas",
+    "does not supply a metric",
+    "does not supply a connection",
+    "does not realize physical detector support",
+    "does not verify covariant current conservation",
+    "does not accept DInputCandidateB0",
+    "does not supply empirical evidence",
+    "does not establish E = m c^3 as an energy law",
+    "does not prove ZeroDayClosure"
+  ],
+  "next_weakest_point": "Supply one bounded coordinate-chart candidate for ChartCandidateB0 without supplying or verifying metric data."
+}
