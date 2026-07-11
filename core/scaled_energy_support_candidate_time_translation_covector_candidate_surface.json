@@ -1,0 +1,94 @@
+{
+  "surface": "ScaledEnergySupportCandidateTimeTranslationCovectorCandidateSurface",
+  "classification": "BOUNDED_TIME_TRANSLATION_COVECTOR_CANDIDATE_ONLY",
+  "dependency_region_surface": "ScaledEnergySupportCandidateRegionDefinitionCandidateSurface",
+  "dependency_metric_connection_surface": "ScaledEnergySupportCandidateMinkowskiMetricConnectionInstanceSurface",
+  "dependency_geometry_contract_surface": "ScaledEnergySupportCandidateCovariantGeometryInputSurface",
+  "target_support": "SupportCandidateB0",
+  "coordinate_scope": {
+    "chart_symbol": "ChartCandidateB0",
+    "chart_domain": "R^4",
+    "basis_order": [
+      "x_candidate^0",
+      "x_candidate^1",
+      "x_candidate^2",
+      "x_candidate^3"
+    ],
+    "temporal_bounds": [
+      0.0,
+      1e-09
+    ],
+    "temporal_unit": "s",
+    "spatial_bounds": [
+      [
+        -0.001,
+        0.001
+      ],
+      [
+        -0.001,
+        0.001
+      ],
+      [
+        -0.001,
+        0.001
+      ]
+    ],
+    "spatial_unit": "m",
+    "scope_status": "EXISTING_BOUNDED_REGION_REFERENCED"
+  },
+  "covector_candidate": {
+    "symbol": "tau_candidate_nu",
+    "variance": "covariant rank-one tensor",
+    "components": [
+      -1,
+      0,
+      0,
+      0
+    ],
+    "component_rule": "tau_candidate_nu = (-1,0,0,0) in ChartCandidateB0 on SupportCandidateB0",
+    "component_status": "EXACT_CANDIDATE_COMPONENTS_SUPPLIED"
+  },
+  "metric_dual_candidate": {
+    "symbol": "tau_candidate^mu",
+    "definition": "tau_candidate^mu := g_candidate_inverse^{mu nu} * tau_candidate_nu",
+    "components": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "component_status": "COMPONENT_CHECK_VERIFIED"
+  },
+  "norm_candidate": {
+    "definition": "g_candidate_inverse^{mu nu} * tau_candidate_mu * tau_candidate_nu",
+    "value": -1,
+    "signature": "(-,+,+,+)",
+    "classification": "UNIT_TIMELIKE_COVECTOR_CANDIDATE",
+    "component_status": "COMPONENT_CHECK_VERIFIED"
+  },
+  "derivative_boundary": {
+    "candidate_expression": "nabla_candidate_mu tau_candidate_nu",
+    "verification_status": "COVARIANT_DERIVATIVE_NOT_VERIFIED"
+  },
+  "killing_boundary": {
+    "candidate_equation": "nabla_candidate_(mu tau_candidate_nu) = 0",
+    "evidence_status": "KILLING_EVIDENCE_NOT_VERIFIED",
+    "theorem_status": "KILLING_THEOREM_NOT_CONSTRUCTED"
+  },
+  "candidate_status": "TIME_TRANSLATION_COVECTOR_CANDIDATE_COMPONENTS_VERIFIED",
+  "contract_inhabitation_status": "FULL_GEOMETRY_INPUT_CONTRACT_NOT_INHABITED",
+  "blocked_promotions": [
+    "covector candidate -> accepted SupportCandidateB0",
+    "covector candidate -> full geometry contract inhabited",
+    "covector candidate -> covariant derivative verified",
+    "covector candidate -> Killing evidence verified",
+    "covector candidate -> stress-energy symmetry verified",
+    "covector candidate -> covariant stress-energy conservation verified",
+    "covector candidate -> detector support realized",
+    "covector candidate -> current conservation verified",
+    "covector candidate -> DInputCandidateB0 accepted",
+    "covector candidate -> empirical confirmation",
+    "covector candidate -> ZeroDayClosure",
+    "unrestricted ZeroDayClosure"
+  ]
+}
