@@ -1,0 +1,101 @@
+{
+  "surface": "VasquezBoundedClosureEquationSurface",
+  "classification": "BOUNDED_VERIFICATION_GAP_METRIC_SURFACE_ONLY",
+  "scope": "finite_directed_dependency_graph_only",
+  "graph_contract": {
+    "graph": "B = (V,E)",
+    "finite": true,
+    "admissible_paths": "SimplePaths_B(S,T)",
+    "profile_length": "|V|-1",
+    "empty_path_convention": {
+      "source_equals_target": "the zero-edge path has the all-zero profile",
+      "no_admissible_path": "Omega_B(S,T) = +infinity and Phi_B(S,T) = +infinity"
+    }
+  },
+  "edge_cost": {
+    "formula": "Delta_B(e) = 32*m_proof(e) + 16*m_witness(e) + 8*m_invariant(e) + 4*m_verifier(e) + 2*m_evidence(e) + m_guard(e)",
+    "indicator_domain": "m_x(e) in {0,1}",
+    "bits": [
+      {
+        "name": "m_proof",
+        "weight": 32,
+        "zero_condition": "a theorem proof is supplied without axiom, opaque, sorry, or admit"
+      },
+      {
+        "name": "m_witness",
+        "weight": 16,
+        "zero_condition": "an explicit executable construction witness is supplied"
+      },
+      {
+        "name": "m_invariant",
+        "weight": 8,
+        "zero_condition": "the bounded domain, composition law, and boundary invariant are preserved"
+      },
+      {
+        "name": "m_verifier",
+        "weight": 4,
+        "zero_condition": "the targeted build, verifier, and test pass"
+      },
+      {
+        "name": "m_evidence",
+        "weight": 2,
+        "zero_condition": "every required external input is pinned, reproducible, and correctly typed"
+      },
+      {
+        "name": "m_guard",
+        "weight": 1,
+        "zero_condition": "the anti-unconditional rule rejects every stronger unsupported claim"
+      }
+    ],
+    "priority_order": [
+      "proof",
+      "witness",
+      "invariant",
+      "verifier",
+      "evidence",
+      "guard"
+    ]
+  },
+  "objectives": {
+    "Omega_B": "min over pi in SimplePaths_B(S,T) of max over e in pi of Delta_B(e)",
+    "P_B": "pad to |V|-1 coordinates the descending sort of (Delta_B(e) : e in pi)",
+    "Phi_B": "lexicographic minimum of P_B(pi) over pi in SimplePaths_B(S,T)",
+    "pi_B_phi": "the deterministically tie-broken path attaining Phi_B(S,T)",
+    "e_B_phi": "the deterministically tie-broken maximum-cost edge on pi_B_phi"
+  },
+  "deterministic_tie_break": {
+    "path_rule": "lexicographic order on the sequence of stable edge identifiers",
+    "edge_rule": "lexicographic order on stable edge identifiers among equal-cost edges"
+  },
+  "closure_condition": "VerifiedClosure_B(S,T) iff Omega_B(S,T) = 0",
+  "next_step_rule": {
+    "target": "e_B_phi",
+    "operation": "change exactly the highest nonzero bit of Delta_B(e_B_phi) from 1 to 0",
+    "frame_condition": "all other edge costs remain unchanged and no higher bit is introduced",
+    "acceptance": "retain the modification iff Phi'_B(S,T) is lexicographically smaller than Phi_B(S,T)"
+  },
+  "monotonicity_lemma": {
+    "name": "VasquezSortedProfileSingleDecrease",
+    "statement": "If one entry x of a finite cost profile is replaced by y with 0 <= y < x and every other entry is unchanged, then the descending-sorted padded profile strictly decreases lexicographically.",
+    "proof_status": "FINITE_ORDER_ARGUMENT_RECORDED_NOT_PROOF_ASSISTANT_FORMALIZED",
+    "argument": [
+      "All multiplicities above x are unchanged.",
+      "The multiplicity of x decreases by one.",
+      "At the first profile coordinate affected by that lost occurrence of x, the new value is strictly below x.",
+      "Therefore the new descending-sorted padded profile is lexicographically smaller."
+    ]
+  },
+  "boundary": {
+    "definition": "BOUNDARY_B(S,T) := not Reach_B(VerifiedClosureNode_B(S,T), UnrestrictedClosureNode(S,T))",
+    "status": "NO_BOUNDED_TO_UNRESTRICTED_BRIDGE_SUPPLIED",
+    "no_overclaim_guard": "global importance and global novelty are not established"
+  },
+  "blocked_promotions": [
+    "bounded metric surface -> unrestricted ZeroDayClosure",
+    "bounded verified closure -> unrestricted closure",
+    "recorded finite-order argument -> proof-assistant theorem",
+    "repository dependency graph -> universal mathematical dependency graph",
+    "Vasquez bounded-closure equation -> most important formula ever known",
+    "Vasquez bounded-closure equation -> global novelty established"
+  ]
+}
