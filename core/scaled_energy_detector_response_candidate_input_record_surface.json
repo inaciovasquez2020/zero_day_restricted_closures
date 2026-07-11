@@ -1,0 +1,112 @@
+{
+  "surface": "ScaledEnergyDetectorResponseCandidateInputRecordSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "BOUNDED_DETECTOR_RESPONSE_CANDIDATE_INPUT_RECORD_ONLY",
+  "dependency_surface": "ScaledEnergyDetectorResponseFunctionalInputContractSurface",
+  "bounded_scope": {
+    "domain": "ScaledEnergyObservableDomainB",
+    "species_set": "Sigma_B := {A, B}",
+    "closed_world": true,
+    "additional_species_allowed": false
+  },
+  "candidate_record": {
+    "record_symbol": "DInputCandidateB0",
+    "fields": [
+      {
+        "field": "detector_identifier",
+        "candidate_value": "DetectorCandidateB0",
+        "status": "CANDIDATE_UNVERIFIED"
+      },
+      {
+        "field": "detector_support",
+        "candidate_value": "SupportCandidateB0 subset ScaledEnergyObservableDomainB",
+        "obligation": "SupportCandidateB0 is finite and detector-supported",
+        "status": "CANDIDATE_UNVERIFIED"
+      },
+      {
+        "field": "admissible_input_current",
+        "candidate_value": "J_E_candidate^mu",
+        "obligation": "partial_mu J_E_candidate^mu = 0 on SupportCandidateB0",
+        "status": "CANDIDATE_UNVERIFIED"
+      },
+      {
+        "field": "scaled_input_current",
+        "candidate_value": "J_scaled_candidate^mu := c * J_E_candidate^mu",
+        "obligation": "c != 0",
+        "status": "CANDIDATE_UNVERIFIED"
+      },
+      {
+        "field": "response_codomain",
+        "candidate_value": "DetectorOutputCandidateB := {y_D in R | abs(y_D) <= M_D}",
+        "obligation": "M_D > 0",
+        "status": "CANDIDATE_UNVERIFIED"
+      },
+      {
+        "field": "response_output_unit",
+        "candidate_value": "detector_count",
+        "dimensional_interpretation": "dimensionless bounded count candidate",
+        "status": "CANDIDATE_UNVERIFIED"
+      },
+      {
+        "field": "response_functional",
+        "candidate_value": "R_D_candidate",
+        "candidate_signature": "R_D_candidate : (SupportCandidateB0, J_E_candidate^mu, J_scaled_candidate^mu) -> DetectorOutputCandidateB",
+        "status": "CANDIDATE_UNVERIFIED"
+      },
+      {
+        "field": "calibration_rule",
+        "candidate_value": "readout_D := k_D * y_D + b_D",
+        "obligation": "k_D and b_D require independent calibration inputs",
+        "status": "CANDIDATE_UNVERIFIED"
+      },
+      {
+        "field": "finite_output_rule",
+        "candidate_value": "forall admitted_input, abs(R_D_candidate(admitted_input)) <= M_D",
+        "status": "CANDIDATE_UNVERIFIED"
+      },
+      {
+        "field": "constant_rescaling_distinction_predicate",
+        "candidate_value": "DistinctFromConstantRescaling_D := exists admitted_input, R_D_candidate(admitted_input) != k_D * integral_SupportCandidateB0(J_scaled_candidate^0)",
+        "status": "CANDIDATE_UNVERIFIED"
+      }
+    ]
+  },
+  "record_status": "CANDIDATE_RECORD_NOT_ACCEPTED",
+  "contract_inhabitation_status": "INPUT_CONTRACT_NOT_INHABITED",
+  "detector_status": "DETECTOR_NOT_CONSTRUCTED",
+  "functional_status": "FUNCTIONAL_NOT_CONSTRUCTED",
+  "verification_status": "CANDIDATE_NOT_VERIFIED",
+  "empirical_status": "NO_EMPIRICAL_EVIDENCE_SUPPLIED",
+  "blocked_promotions": [
+    "ScaledEnergyDetectorResponseCandidateInputRecordSurface -> accepted input record",
+    "ScaledEnergyDetectorResponseCandidateInputRecordSurface -> input contract inhabitation",
+    "ScaledEnergyDetectorResponseCandidateInputRecordSurface -> detector construction",
+    "ScaledEnergyDetectorResponseCandidateInputRecordSurface -> response-functional construction",
+    "ScaledEnergyDetectorResponseCandidateInputRecordSurface -> detector verification",
+    "ScaledEnergyDetectorResponseCandidateInputRecordSurface -> empirical confirmation",
+    "ScaledEnergyDetectorResponseCandidateInputRecordSurface -> ScaledEnergyObservableMap",
+    "ScaledEnergyDetectorResponseCandidateInputRecordSurface -> alpha_A != alpha_B",
+    "ScaledEnergyDetectorResponseCandidateInputRecordSurface -> ZeroDayClosure",
+    "unrestricted ZeroDayClosure",
+    "restricted-to-unrestricted lift"
+  ],
+  "non_claims": [
+    "does not accept DInputCandidateB0",
+    "does not inhabit the detector-response input contract",
+    "does not construct DetectorCandidateB0",
+    "does not construct R_D_candidate",
+    "does not verify local conservation",
+    "does not verify finite detector support",
+    "does not verify M_D > 0",
+    "does not calibrate k_D or b_D",
+    "does not verify the finite-output rule",
+    "does not verify DistinctFromConstantRescaling_D",
+    "does not supply detector measurements",
+    "does not establish empirical confirmation",
+    "does not establish alpha_A != alpha_B",
+    "does not construct ScaledEnergyObservableMap",
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "next_weakest_point": "Define one acceptance-obligation surface for DInputCandidateB0 without accepting or verifying the record."
+}
