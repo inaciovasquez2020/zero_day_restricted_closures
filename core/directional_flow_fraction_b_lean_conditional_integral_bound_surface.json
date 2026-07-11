@@ -1,0 +1,46 @@
+{
+  "surface": "DirectionalFlowFractionBLeanConditionalIntegralBoundSurface",
+  "classification": "PROOF_ASSISTANT_ENCODED_BOUNDED_CONDITIONAL_INTEGRAL_BOUND_ONLY",
+  "dependency_theorem_surface": "DirectionalFlowFractionBConditionalBoundTheoremSurface",
+  "bounded_region": "SupportCandidateB0",
+  "proof_assistant": {
+    "name": "Lean 4",
+    "library": "Mathlib",
+    "file": "lean/Chronos/Frontier/DirectionalFlowFractionBConditionalIntegralBound.lean",
+    "theorem": "Chronos.Frontier.directionalFlowFractionB_conditionalIntegralBound",
+    "validation_status": "LEAN_COMPILATION_VERIFIED"
+  },
+  "assumptions": [
+    "B is measurable and bounded",
+    "c > 0",
+    "u(t,x) is Lebesgue integrable on B",
+    "u(t,x) >= 0 almost everywhere on B",
+    "S(t,x) is Bochner integrable on B",
+    "norm(S(t,x)) <= c u(t,x) almost everywhere on B",
+    "E_B(t) > 0"
+  ],
+  "encoded_statement": {
+    "first_inequality": "norm(integral_B S(t,x) d^3x) <= integral_B norm(S(t,x)) d^3x",
+    "second_inequality": "integral_B norm(S(t,x)) d^3x <= c integral_B u(t,x) d^3x",
+    "status": "LEAN_THEOREM_INHABITED"
+  },
+  "assumption_change_status": "UNCHANGED",
+  "physical_claim_status": "NONE_ADDED",
+  "interpretation_boundary": {
+    "is_detector_realization": false,
+    "is_empirical_confirmation": false,
+    "is_e_equals_m_c_cubed_claim": false,
+    "is_alternative_energy_law": false,
+    "is_zero_day_closure": false
+  },
+  "novelty_status": "GLOBAL_NOVELTY_NOT_ESTABLISHED",
+  "blocked_promotions": [
+    "Lean conditional integral bound -> unconditional directional-flow theorem",
+    "Lean conditional integral bound -> detector realization",
+    "Lean conditional integral bound -> empirical confirmation",
+    "Lean conditional integral bound -> E equals m c cubed",
+    "Lean conditional integral bound -> ZeroDayClosure",
+    "global novelty established",
+    "unrestricted ZeroDayClosure"
+  ]
+}

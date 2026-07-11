@@ -8203,3 +8203,196 @@ def verify_directional_flow_fraction_b_conditional_bound_theorem_guard() -> None
 
 
 verify_directional_flow_fraction_b_conditional_bound_theorem_guard()
+
+def verify_directional_flow_fraction_b_lean_conditional_integral_bound_guard() -> None:
+    import json
+    import re
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+
+    source_path = (
+        root
+        / "core"
+        / (
+            "directional_flow_fraction_b_"
+            "conditional_bound_theorem_surface.json"
+        )
+    )
+    surface_path = (
+        root
+        / "core"
+        / (
+            "directional_flow_fraction_b_"
+            "lean_conditional_integral_bound_surface.json"
+        )
+    )
+    lean_path = (
+        root
+        / "lean"
+        / "Chronos"
+        / "Frontier"
+        / (
+            "DirectionalFlowFractionB"
+            "ConditionalIntegralBound.lean"
+        )
+    )
+
+    for path in (source_path, surface_path, lean_path):
+        if not path.exists():
+            raise SystemExit(
+                f"MISSING_OBJECT := {path.relative_to(root)}"
+            )
+
+    source = json.loads(source_path.read_text(encoding="utf-8"))
+    surface = json.loads(surface_path.read_text(encoding="utf-8"))
+    lean_text = lean_path.read_text(encoding="utf-8")
+
+    assumptions = [
+        "B is measurable and bounded",
+        "c > 0",
+        "u(t,x) is Lebesgue integrable on B",
+        "u(t,x) >= 0 almost everywhere on B",
+        "S(t,x) is Bochner integrable on B",
+        (
+            "norm(S(t,x)) <= c u(t,x) "
+            "almost everywhere on B"
+        ),
+        "E_B(t) > 0",
+    ]
+
+    if source.get("assumptions") != assumptions:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_LEAN_"
+            "CONDITIONAL_INTEGRAL_BOUND_GUARD_FAILED := "
+            "source assumptions changed"
+        )
+
+    if surface.get("assumptions") != assumptions:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_LEAN_"
+            "CONDITIONAL_INTEGRAL_BOUND_GUARD_FAILED := "
+            "Lean assumptions changed"
+        )
+
+    required_values = {
+        "surface": (
+            "DirectionalFlowFractionB"
+            "LeanConditionalIntegralBoundSurface"
+        ),
+        "classification": (
+            "PROOF_ASSISTANT_ENCODED_BOUNDED_"
+            "CONDITIONAL_INTEGRAL_BOUND_ONLY"
+        ),
+        "dependency_theorem_surface": (
+            "DirectionalFlowFractionB"
+            "ConditionalBoundTheoremSurface"
+        ),
+        "bounded_region": "SupportCandidateB0",
+        "assumption_change_status": "UNCHANGED",
+        "physical_claim_status": "NONE_ADDED",
+        "novelty_status": "GLOBAL_NOVELTY_NOT_ESTABLISHED",
+    }
+
+    for key, expected in required_values.items():
+        if surface.get(key) != expected:
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_FRACTION_B_LEAN_"
+                "CONDITIONAL_INTEGRAL_BOUND_GUARD_FAILED := "
+                f"{key} changed"
+            )
+
+    required_lean_fragments = (
+        "import Mathlib",
+        (
+            "theorem "
+            "directionalFlowFractionB_"
+            "conditionalIntegralBound"
+        ),
+        "[MeasurableSpace α]",
+        "[Bornology α]",
+        "_hB_measurable : MeasurableSet B",
+        "_hB_bounded : Bornology.IsBounded B",
+        "_hc : 0 < c",
+        "hu : IntegrableOn u B μ",
+        "_hu_nonnegative : 0 ≤ᵐ[μ.restrict B] u",
+        "hS : IntegrableOn S B μ",
+        "∀ᵐ x ∂μ.restrict B, ‖S x‖ ≤ c * u x",
+        "_hEB_positive : 0 < ∫ x in B, u x ∂μ",
+        "norm_integral_le_integral_norm S",
+        "integral_mono_ae hS.norm hcu hflux",
+        "integral_const_mul c u",
+    )
+
+    for fragment in required_lean_fragments:
+        if fragment not in lean_text:
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_FRACTION_B_LEAN_"
+                "CONDITIONAL_INTEGRAL_BOUND_GUARD_FAILED := "
+                f"missing Lean fragment {fragment!r}"
+            )
+
+    forbidden = re.compile(r"\b(axiom|opaque|sorry|admit)\b")
+    match = forbidden.search(lean_text)
+
+    if match:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_LEAN_"
+            "CONDITIONAL_INTEGRAL_BOUND_GUARD_FAILED := "
+            f"forbidden proof token {match.group(1)!r}"
+        )
+
+    expected_boundary = {
+        "is_detector_realization": False,
+        "is_empirical_confirmation": False,
+        "is_e_equals_m_c_cubed_claim": False,
+        "is_alternative_energy_law": False,
+        "is_zero_day_closure": False,
+    }
+
+    if surface.get("interpretation_boundary") != expected_boundary:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_LEAN_"
+            "CONDITIONAL_INTEGRAL_BOUND_GUARD_FAILED := "
+            "interpretation boundary changed"
+        )
+
+    required_blocked = {
+        (
+            "Lean conditional integral bound -> "
+            "unconditional directional-flow theorem"
+        ),
+        (
+            "Lean conditional integral bound -> "
+            "detector realization"
+        ),
+        (
+            "Lean conditional integral bound -> "
+            "empirical confirmation"
+        ),
+        (
+            "Lean conditional integral bound -> "
+            "E equals m c cubed"
+        ),
+        (
+            "Lean conditional integral bound -> "
+            "ZeroDayClosure"
+        ),
+        "global novelty established",
+        "unrestricted ZeroDayClosure",
+    }
+
+    if set(surface.get("blocked_promotions", [])) != required_blocked:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_LEAN_"
+            "CONDITIONAL_INTEGRAL_BOUND_GUARD_FAILED := "
+            "blocked promotions changed"
+        )
+
+    print(
+        "DIRECTIONAL_FLOW_FRACTION_B_"
+        "LEAN_CONDITIONAL_INTEGRAL_BOUND_GUARD_OK"
+    )
+
+
+verify_directional_flow_fraction_b_lean_conditional_integral_bound_guard()
