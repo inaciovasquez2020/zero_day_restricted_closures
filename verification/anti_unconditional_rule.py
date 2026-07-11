@@ -6104,3 +6104,356 @@ def verify_scaled_energy_support_candidate_time_translation_covector_candidate_g
 
 
 verify_scaled_energy_support_candidate_time_translation_covector_candidate_guard()
+
+def verify_scaled_energy_support_candidate_time_translation_killing_evidence_guard() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+
+    metric_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_"
+            "minkowski_metric_connection_instance_surface.json"
+        )
+    )
+    covector_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_"
+            "time_translation_covector_candidate_surface.json"
+        )
+    )
+    evidence_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_"
+            "time_translation_killing_evidence_surface.json"
+        )
+    )
+
+    for path in (metric_path, covector_path, evidence_path):
+        if not path.exists():
+            raise SystemExit(
+                f"MISSING_OBJECT := {path.relative_to(root)}"
+            )
+
+    metric = json.loads(metric_path.read_text(encoding="utf-8"))
+    covector = json.loads(covector_path.read_text(encoding="utf-8"))
+    evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+
+    def contains_value(value, target):
+        if value == target:
+            return True
+
+        if isinstance(value, dict):
+            return any(
+                contains_value(child, target)
+                for child in value.values()
+            )
+
+        if isinstance(value, list):
+            return any(
+                contains_value(child, target)
+                for child in value
+            )
+
+        return False
+
+    expected_top_level = {
+        "surface": (
+            "ScaledEnergySupportCandidate"
+            "TimeTranslationKillingEvidenceSurface"
+        ),
+        "classification": (
+            "BOUNDED_TIME_TRANSLATION_KILLING_EVIDENCE_ONLY"
+        ),
+        "dependency_metric_connection_surface": (
+            "ScaledEnergySupportCandidate"
+            "MinkowskiMetricConnectionInstanceSurface"
+        ),
+        "dependency_time_translation_surface": (
+            "ScaledEnergySupportCandidate"
+            "TimeTranslationCovectorCandidateSurface"
+        ),
+        "target_support": "SupportCandidateB0",
+        "dimension": 4,
+        "scope_status": (
+            "BOUNDED_MINKOWSKI_TIME_TRANSLATION_"
+            "KILLING_EDGE_INHABITED"
+        ),
+    }
+
+    for key, expected in expected_top_level.items():
+        actual = evidence.get(key)
+
+        if actual != expected:
+            raise SystemExit(
+                "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+                "EVIDENCE_GUARD_FAILED := "
+                f"{key!r} expected {expected!r} got {actual!r}"
+            )
+
+    if metric.get("surface") != (
+        "ScaledEnergySupportCandidate"
+        "MinkowskiMetricConnectionInstanceSurface"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := metric dependency changed"
+        )
+
+    if metric.get("target_support") != "SupportCandidateB0":
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := metric support changed"
+        )
+
+    if covector.get("surface") != (
+        "ScaledEnergySupportCandidate"
+        "TimeTranslationCovectorCandidateSurface"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := covector dependency changed"
+        )
+
+    if covector.get("target_support") != "SupportCandidateB0":
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := covector support changed"
+        )
+
+    expected_metric = [
+        [-1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1],
+    ]
+    expected_covector = [-1, 0, 0, 0]
+    expected_vector = [1, 0, 0, 0]
+
+    if not contains_value(metric, expected_metric):
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := Minkowski metric missing"
+        )
+
+    if not contains_value(covector, expected_covector):
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := time covector missing"
+        )
+
+    if not contains_value(covector, expected_vector):
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := metric-dual vector missing"
+        )
+
+    translation = evidence.get("time_translation", {})
+
+    if translation.get("covector_components") != expected_covector:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := evidence covector changed"
+        )
+
+    if translation.get("vector_components") != expected_vector:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := evidence vector changed"
+        )
+
+    norm = sum(
+        expected_covector[index] * expected_vector[index]
+        for index in range(4)
+    )
+
+    if norm != -1:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := timelike norm is not -1"
+        )
+
+    covariant_derivatives = {}
+    checked_covariant_components = 0
+
+    for mu in range(4):
+        for nu in range(4):
+            partial_mu_tau_nu = 0
+            connection_contraction = sum(
+                0 * expected_covector[rho]
+                for rho in range(4)
+            )
+
+            component = (
+                partial_mu_tau_nu
+                - connection_contraction
+            )
+
+            if component != 0:
+                raise SystemExit(
+                    "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+                    "EVIDENCE_GUARD_FAILED := "
+                    f"nabla_tau failed at ({mu},{nu})"
+                )
+
+            covariant_derivatives[(mu, nu)] = component
+            checked_covariant_components += 1
+
+    if checked_covariant_components != 16:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := "
+            "expected 16 covariant-derivative checks"
+        )
+
+    checked_killing_components = 0
+
+    for mu in range(4):
+        for nu in range(4):
+            symmetrized_numerator = (
+                covariant_derivatives[(mu, nu)]
+                + covariant_derivatives[(nu, mu)]
+            )
+
+            if symmetrized_numerator != 0:
+                raise SystemExit(
+                    "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+                    "EVIDENCE_GUARD_FAILED := "
+                    f"Killing equation failed at ({mu},{nu})"
+                )
+
+            checked_killing_components += 1
+
+    if checked_killing_components != 16:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := "
+            "expected 16 Killing-equation checks"
+        )
+
+    expected_covariant_certificate = {
+        "equation": (
+            "nabla_mu tau_candidate_nu = "
+            "partial_mu tau_candidate_nu "
+            "- Gamma_candidate^rho_mu_nu tau_candidate_rho"
+        ),
+        "component_rule": (
+            "nabla_mu tau_candidate_nu = 0 "
+            "for all mu,nu in {0,1,2,3}"
+        ),
+        "component_check_count": 16,
+        "verification_status": (
+            "COVARIANT_DERIVATIVE_COMPONENTS_VERIFIED"
+        ),
+    }
+
+    if evidence.get("covariant_derivative") != (
+        expected_covariant_certificate
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := "
+            "covariant-derivative certificate changed"
+        )
+
+    expected_killing_certificate = {
+        "equation": (
+            "nabla_(mu tau_candidate_nu) = "
+            "(nabla_mu tau_candidate_nu "
+            "+ nabla_nu tau_candidate_mu) / 2 = 0"
+        ),
+        "ordered_component_check_count": 16,
+        "verification_status": (
+            "KILLING_EVIDENCE_VERIFIED_ON_SUPPORT_CANDIDATE_B0"
+        ),
+    }
+
+    if evidence.get("killing_equation") != (
+        expected_killing_certificate
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := Killing certificate changed"
+        )
+
+    expected_edge = {
+        "source": (
+            "bounded Minkowski metric connection instance "
+            "+ bounded time translation covector candidate"
+        ),
+        "target": (
+            "KillingEvidence("
+            "SupportCandidateB0,tau_candidate)"
+        ),
+        "status": "INHABITED_BY_COMPONENT_VERIFICATION",
+    }
+
+    if evidence.get("inhabited_edge") != expected_edge:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := inhabited edge changed"
+        )
+
+    required_blocked = {
+        "Killing evidence -> stress-energy candidate supplied",
+        "Killing evidence -> stress-energy symmetry verified",
+        (
+            "Killing evidence -> "
+            "covariant stress-energy conservation verified"
+        ),
+        "Killing evidence -> finite-support stress-energy verified",
+        "Killing evidence -> detector support realized",
+        "Killing evidence -> current conservation verified",
+        "Killing evidence -> DInputCandidateB0 accepted",
+        (
+            "Killing evidence -> "
+            "restricted composition target accepted"
+        ),
+        "Killing evidence -> empirical confirmation",
+        "Killing evidence -> ZeroDayClosure",
+        "unrestricted ZeroDayClosure",
+    }
+
+    if set(evidence.get("blocked_promotions", [])) != required_blocked:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+            "EVIDENCE_GUARD_FAILED := blocked promotions changed"
+        )
+
+    encoded = json.dumps(evidence, sort_keys=True)
+
+    forbidden_tokens = (
+        "STRESS_ENERGY_SYMMETRY_VERIFIED",
+        "COVARIANT_STRESS_ENERGY_CONSERVATION_VERIFIED",
+        "FINITE_SUPPORT_STRESS_ENERGY_VERIFIED",
+        "PHYSICAL_DETECTOR_SUPPORT_REALIZED",
+        "CURRENT_CONSERVATION_VERIFIED",
+        '"acceptance_status": "CANDIDATE_ACCEPTED"',
+        "RESTRICTED_COMPOSITION_TARGET_ACCEPTED",
+        "EMPIRICALLY_CONFIRMED",
+        "E_EQUALS_M_C_CUBED_VERIFIED",
+        '"zero_day_closure_status": "CONSTRUCTED"',
+    )
+
+    for token in forbidden_tokens:
+        if token in encoded:
+            raise SystemExit(
+                "SCALED_ENERGY_TIME_TRANSLATION_KILLING_"
+                "EVIDENCE_GUARD_FAILED := "
+                f"forbidden promotion {token!r}"
+            )
+
+    print(
+        "SCALED_ENERGY_SUPPORT_CANDIDATE_"
+        "TIME_TRANSLATION_KILLING_EVIDENCE_GUARD_OK"
+    )
+
+
+verify_scaled_energy_support_candidate_time_translation_killing_evidence_guard()

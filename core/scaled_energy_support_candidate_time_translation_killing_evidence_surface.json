@@ -1,0 +1,66 @@
+{
+  "surface": "ScaledEnergySupportCandidateTimeTranslationKillingEvidenceSurface",
+  "classification": "BOUNDED_TIME_TRANSLATION_KILLING_EVIDENCE_ONLY",
+  "dependency_metric_connection_surface": "ScaledEnergySupportCandidateMinkowskiMetricConnectionInstanceSurface",
+  "dependency_time_translation_surface": "ScaledEnergySupportCandidateTimeTranslationCovectorCandidateSurface",
+  "target_support": "SupportCandidateB0",
+  "dimension": 4,
+  "coordinate_basis_order": [
+    "x_candidate^0",
+    "x_candidate^1",
+    "x_candidate^2",
+    "x_candidate^3"
+  ],
+  "time_translation": {
+    "covector_symbol": "tau_candidate_nu",
+    "covector_components": [
+      -1,
+      0,
+      0,
+      0
+    ],
+    "vector_symbol": "tau_candidate^mu",
+    "vector_components": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "coordinate_dependence": "constant on SupportCandidateB0",
+    "partial_derivative_rule": "partial_mu tau_candidate_nu = 0 for all mu,nu in {0,1,2,3}"
+  },
+  "connection_input": {
+    "symbol": "Gamma_candidate^rho_mu_nu",
+    "component_rule": "Gamma_candidate^rho_mu_nu = 0 for all rho,mu,nu in {0,1,2,3}"
+  },
+  "covariant_derivative": {
+    "equation": "nabla_mu tau_candidate_nu = partial_mu tau_candidate_nu - Gamma_candidate^rho_mu_nu tau_candidate_rho",
+    "component_rule": "nabla_mu tau_candidate_nu = 0 for all mu,nu in {0,1,2,3}",
+    "component_check_count": 16,
+    "verification_status": "COVARIANT_DERIVATIVE_COMPONENTS_VERIFIED"
+  },
+  "killing_equation": {
+    "equation": "nabla_(mu tau_candidate_nu) = (nabla_mu tau_candidate_nu + nabla_nu tau_candidate_mu) / 2 = 0",
+    "ordered_component_check_count": 16,
+    "verification_status": "KILLING_EVIDENCE_VERIFIED_ON_SUPPORT_CANDIDATE_B0"
+  },
+  "inhabited_edge": {
+    "source": "bounded Minkowski metric connection instance + bounded time translation covector candidate",
+    "target": "KillingEvidence(SupportCandidateB0,tau_candidate)",
+    "status": "INHABITED_BY_COMPONENT_VERIFICATION"
+  },
+  "scope_status": "BOUNDED_MINKOWSKI_TIME_TRANSLATION_KILLING_EDGE_INHABITED",
+  "blocked_promotions": [
+    "Killing evidence -> stress-energy candidate supplied",
+    "Killing evidence -> stress-energy symmetry verified",
+    "Killing evidence -> covariant stress-energy conservation verified",
+    "Killing evidence -> finite-support stress-energy verified",
+    "Killing evidence -> detector support realized",
+    "Killing evidence -> current conservation verified",
+    "Killing evidence -> DInputCandidateB0 accepted",
+    "Killing evidence -> restricted composition target accepted",
+    "Killing evidence -> empirical confirmation",
+    "Killing evidence -> ZeroDayClosure",
+    "unrestricted ZeroDayClosure"
+  ]
+}
