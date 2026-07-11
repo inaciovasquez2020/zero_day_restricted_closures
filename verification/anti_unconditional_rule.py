@@ -4928,9 +4928,9 @@ def verify_scaled_energy_support_candidate_region_definition_candidate_guard() -
         ),
         "target_support": "SupportCandidateB0",
         "region_status": "REGION_CANDIDATE_NOT_ACCEPTED",
-        "nonempty_status": "NONEMPTY_NOT_VERIFIED",
-        "boundedness_status": "BOUNDEDNESS_NOT_VERIFIED",
-        "boundary_status": "BOUNDARY_NOT_VERIFIED",
+        "nonempty_status": "NONEMPTY_VERIFIED",
+        "boundedness_status": "BOUNDEDNESS_VERIFIED",
+        "boundary_status": "BOUNDARY_VERIFIED",
         "atlas_status": "ATLAS_NOT_SUPPLIED",
         "metric_status": "METRIC_NOT_SUPPLIED",
         "connection_status": "CONNECTION_NOT_SUPPLIED",
@@ -4943,11 +4943,9 @@ def verify_scaled_energy_support_candidate_region_definition_candidate_guard() -
         actual = surface.get(key)
         if actual != expected:
             raise SystemExit(
-                "SCALED_ENERGY_SUPPORT_REGION_CANDIDATE_GUARD_FAILED := "
+                "SCALED_ENERGY_STANDARD_R4_HYPERRECTANGLE_GUARD_FAILED := "
                 f"{key!r} expected {expected!r} got {actual!r}"
             )
-
-    ambient = surface.get("ambient_coordinate_candidate", {})
 
     expected_ambient = {
         "chart_symbol": "ChartCandidateB0",
@@ -4963,82 +4961,70 @@ def verify_scaled_energy_support_candidate_region_definition_candidate_guard() -
         },
         "spatial_dimension": 3,
         "spacetime_dimension": 4,
-        "chart_status": "CHART_NOT_SUPPLIED",
+        "chart_domain": "R^4",
+        "chart_map": "standard identity coordinate chart",
+        "chart_status": "STANDARD_R4_CHART_SUPPLIED",
     }
 
-    if ambient != expected_ambient:
+    if surface.get("ambient_coordinate_candidate") != expected_ambient:
         raise SystemExit(
-            "SCALED_ENERGY_SUPPORT_REGION_CANDIDATE_GUARD_FAILED := "
-            "ambient coordinate candidate changed"
+            "SCALED_ENERGY_STANDARD_R4_HYPERRECTANGLE_GUARD_FAILED := "
+            "ambient coordinate instance changed"
         )
 
-    parameters = surface.get("candidate_parameters", {})
-
     expected_parameters = {
-        "temporal_lower_bound": "t_minus",
-        "temporal_upper_bound": "t_plus",
-        "spatial_half_widths": ["L_1", "L_2", "L_3"],
-        "temporal_coordinate_unit": "UNIT_NOT_SUPPLIED",
-        "spatial_coordinate_unit": "UNIT_NOT_SUPPLIED",
-        "parameter_values_status": "PARAMETER_VALUES_NOT_SUPPLIED",
+        "temporal_lower_bound": 0.0,
+        "temporal_upper_bound": 1.0e-9,
+        "spatial_half_widths": [0.001, 0.001, 0.001],
+        "temporal_coordinate_unit": "s",
+        "spatial_coordinate_unit": "m",
+        "parameter_values_status": "PARAMETER_VALUES_SUPPLIED",
     }
 
-    if parameters != expected_parameters:
+    if surface.get("candidate_parameters") != expected_parameters:
         raise SystemExit(
-            "SCALED_ENERGY_SUPPORT_REGION_CANDIDATE_GUARD_FAILED := "
-            "candidate parameter contract changed"
+            "SCALED_ENERGY_STANDARD_R4_HYPERRECTANGLE_GUARD_FAILED := "
+            "coordinate parameter instance changed"
         )
 
     region = surface.get("candidate_region_definition", {})
 
     expected_boundaries = [
-        "x_candidate^0 = t_minus",
-        "x_candidate^0 = t_plus",
-        "x_candidate^1 = -L_1",
-        "x_candidate^1 = L_1",
-        "x_candidate^2 = -L_2",
-        "x_candidate^2 = L_2",
-        "x_candidate^3 = -L_3",
-        "x_candidate^3 = L_3",
+        "x_candidate^0 = 0 s",
+        "x_candidate^0 = 1e-9 s",
+        "x_candidate^1 = -0.001 m",
+        "x_candidate^1 = 0.001 m",
+        "x_candidate^2 = -0.001 m",
+        "x_candidate^2 = 0.001 m",
+        "x_candidate^3 = -0.001 m",
+        "x_candidate^3 = 0.001 m",
     ]
 
-    if region.get("symbol") != "SupportCandidateB0":
-        raise SystemExit(
-            "SCALED_ENERGY_SUPPORT_REGION_CANDIDATE_GUARD_FAILED := "
-            "unexpected region symbol"
-        )
+    expected_region_fields = {
+        "symbol": "SupportCandidateB0",
+        "shape": "closed coordinate hyperrectangle candidate",
+        "set_definition": (
+            "0 s <= x_candidate^0 <= 1e-9 s; "
+            "-0.001 m <= x_candidate^i <= 0.001 m "
+            "for i in {1,2,3}"
+        ),
+        "boundary_components": expected_boundaries,
+        "boundary_component_count": 8,
+        "definition_status": (
+            "EXPLICIT_COORDINATE_REGION_INSTANCE_DEFINED"
+        ),
+    }
 
-    if region.get("shape") != (
-        "closed coordinate hyperrectangle candidate"
-    ):
-        raise SystemExit(
-            "SCALED_ENERGY_SUPPORT_REGION_CANDIDATE_GUARD_FAILED := "
-            "unexpected region shape"
-        )
-
-    if region.get("boundary_components") != expected_boundaries:
-        raise SystemExit(
-            "SCALED_ENERGY_SUPPORT_REGION_CANDIDATE_GUARD_FAILED := "
-            "boundary-component inventory changed"
-        )
-
-    if region.get("boundary_component_count") != 8:
-        raise SystemExit(
-            "SCALED_ENERGY_SUPPORT_REGION_CANDIDATE_GUARD_FAILED := "
-            "expected eight coordinate boundary faces"
-        )
-
-    if region.get("definition_status") != (
-        "SYMBOLIC_REGION_CANDIDATE_DEFINED_ONLY"
-    ):
-        raise SystemExit(
-            "SCALED_ENERGY_SUPPORT_REGION_CANDIDATE_GUARD_FAILED := "
-            "region definition was promoted"
-        )
+    for key, expected in expected_region_fields.items():
+        if region.get(key) != expected:
+            raise SystemExit(
+                "SCALED_ENERGY_STANDARD_R4_HYPERRECTANGLE_GUARD_FAILED := "
+                f"region field {key!r} changed"
+            )
 
     parameter_obligations = surface.get("parameter_obligations", [])
 
-    expected_parameters_inventory = [
+    expected_parameter_inventory = [
         "t_minus,t_plus",
         "L_1",
         "L_2",
@@ -5047,56 +5033,99 @@ def verify_scaled_energy_support_candidate_region_definition_candidate_guard() -
     ]
 
     if [
-        entry.get("parameter")
-        for entry in parameter_obligations
-    ] != expected_parameters_inventory:
+        entry.get("parameter") for entry in parameter_obligations
+    ] != expected_parameter_inventory:
         raise SystemExit(
-            "SCALED_ENERGY_SUPPORT_REGION_CANDIDATE_GUARD_FAILED := "
-            "parameter-obligation inventory changed"
+            "SCALED_ENERGY_STANDARD_R4_HYPERRECTANGLE_GUARD_FAILED := "
+            "parameter inventory changed"
         )
+
+    for entry in parameter_obligations:
+        if entry.get("status") != "OBLIGATION_DISCHARGED":
+            raise SystemExit(
+                "SCALED_ENERGY_STANDARD_R4_HYPERRECTANGLE_GUARD_FAILED := "
+                f"undischarged parameter {entry.get('parameter')!r}"
+            )
+        if not entry.get("evidence"):
+            raise SystemExit(
+                "SCALED_ENERGY_STANDARD_R4_HYPERRECTANGLE_GUARD_FAILED := "
+                f"missing parameter evidence {entry.get('parameter')!r}"
+            )
+
+    expected_realization_status = {
+        "chart_realization": "OBLIGATION_DISCHARGED",
+        "coordinate_parameter_values": "OBLIGATION_DISCHARGED",
+        "nonempty_region_evidence": "OBLIGATION_DISCHARGED",
+        "boundedness_evidence": "OBLIGATION_DISCHARGED",
+        "boundary_realization": "OBLIGATION_DISCHARGED",
+        "detector_support_realization": "OBLIGATION_NOT_DISCHARGED",
+    }
 
     realization_obligations = surface.get(
         "realization_obligations",
         [],
     )
 
-    expected_realization_inventory = [
-        "chart_realization",
-        "coordinate_parameter_values",
-        "nonempty_region_evidence",
-        "boundedness_evidence",
-        "boundary_realization",
-        "detector_support_realization",
-    ]
-
-    if [
-        entry.get("field")
+    actual_realization_status = {
+        entry.get("field"): entry.get("status")
         for entry in realization_obligations
-    ] != expected_realization_inventory:
+    }
+
+    if actual_realization_status != expected_realization_status:
         raise SystemExit(
-            "SCALED_ENERGY_SUPPORT_REGION_CANDIDATE_GUARD_FAILED := "
-            "realization-obligation inventory changed"
+            "SCALED_ENERGY_STANDARD_R4_HYPERRECTANGLE_GUARD_FAILED := "
+            "realization status changed"
         )
 
-    for entry in parameter_obligations + realization_obligations:
-        if entry.get("status") != "OBLIGATION_NOT_DISCHARGED":
+    for entry in realization_obligations:
+        field = entry.get("field")
+        if (
+            field != "detector_support_realization"
+            and not entry.get("evidence")
+        ):
             raise SystemExit(
-                "SCALED_ENERGY_SUPPORT_REGION_CANDIDATE_GUARD_FAILED := "
-                "region obligation was discharged"
+                "SCALED_ENERGY_STANDARD_R4_HYPERRECTANGLE_GUARD_FAILED := "
+                f"missing realization evidence {field!r}"
             )
 
-        obligation = entry.get("obligation")
-        if not isinstance(obligation, str) or not obligation:
-            raise SystemExit(
-                "SCALED_ENERGY_SUPPORT_REGION_CANDIDATE_GUARD_FAILED := "
-                "region obligation text missing"
-            )
+    expected_evidence = {
+        "nonempty_witness": {
+            "point": [5.0e-10, 0.0, 0.0, 0.0],
+            "coordinate_units": ["s", "m", "m", "m"],
+            "membership_check": (
+                "0 <= 5e-10 <= 1e-9 and "
+                "-0.001 <= 0 <= 0.001 in each spatial coordinate"
+            ),
+            "status": "VERIFIED",
+        },
+        "boundedness_certificate": {
+            "temporal_interval": "[0,1e-9] s",
+            "spatial_intervals": [
+                "[-0.001,0.001] m",
+                "[-0.001,0.001] m",
+                "[-0.001,0.001] m",
+            ],
+            "reason": (
+                "finite Cartesian product of bounded closed intervals"
+            ),
+            "status": "VERIFIED",
+        },
+        "boundary_certificate": {
+            "expected_coordinate_faces": 8,
+            "verified_coordinate_faces": 8,
+            "reason": "two endpoint faces for each of four coordinates",
+            "status": "VERIFIED",
+        },
+    }
+
+    if surface.get("verification_evidence") != expected_evidence:
+        raise SystemExit(
+            "SCALED_ENERGY_STANDARD_R4_HYPERRECTANGLE_GUARD_FAILED := "
+            "verification evidence changed"
+        )
 
     required_blocked = {
         "region candidate -> accepted SupportCandidateB0",
-        "region candidate -> nonempty region verified",
-        "region candidate -> boundedness verified",
-        "region candidate -> boundary verified",
         "region candidate -> atlas supplied",
         "region candidate -> metric supplied",
         "region candidate -> connection supplied",
@@ -5112,38 +5141,36 @@ def verify_scaled_energy_support_candidate_region_definition_candidate_guard() -
 
     if set(surface.get("blocked_promotions", [])) != required_blocked:
         raise SystemExit(
-            "SCALED_ENERGY_SUPPORT_REGION_CANDIDATE_GUARD_FAILED := "
+            "SCALED_ENERGY_STANDARD_R4_HYPERRECTANGLE_GUARD_FAILED := "
             "blocked-promotion set changed"
         )
 
     encoded = json.dumps(surface, sort_keys=True)
 
     forbidden_tokens = (
-        '"chart_status": "CHART_SUPPLIED"',
-        '"parameter_values_status": "PARAMETER_VALUES_SUPPLIED"',
         '"region_status": "REGION_CANDIDATE_ACCEPTED"',
-        '"nonempty_status": "NONEMPTY_VERIFIED"',
-        '"boundedness_status": "BOUNDEDNESS_VERIFIED"',
-        '"boundary_status": "BOUNDARY_VERIFIED"',
         '"atlas_status": "ATLAS_SUPPLIED"',
         '"metric_status": "METRIC_SUPPLIED"',
         '"connection_status": "CONNECTION_SUPPLIED"',
-        '"physical_realization_status": "PHYSICAL_DETECTOR_SUPPORT_REALIZED"',
-        '"status": "OBLIGATION_DISCHARGED"',
+        '"physical_realization_status": '
+        '"PHYSICAL_DETECTOR_SUPPORT_REALIZED"',
         '"acceptance_status": "CANDIDATE_ACCEPTED"',
+        '"current_conservation_status": "VERIFIED"',
+        '"empirical_status": "CONFIRMED"',
+        '"energy_law_status": "E_EQUALS_M_C_CUBED_VERIFIED"',
         '"zero_day_closure_status": "CONSTRUCTED"',
     )
 
     for token in forbidden_tokens:
         if token in encoded:
             raise SystemExit(
-                "SCALED_ENERGY_SUPPORT_REGION_CANDIDATE_GUARD_FAILED := "
+                "SCALED_ENERGY_STANDARD_R4_HYPERRECTANGLE_GUARD_FAILED := "
                 f"forbidden promotion {token!r}"
             )
 
     print(
         "SCALED_ENERGY_SUPPORT_CANDIDATE_"
-        "REGION_DEFINITION_CANDIDATE_GUARD_OK"
+        "STANDARD_R4_HYPERRECTANGLE_INSTANCE_GUARD_OK"
     )
 
 
