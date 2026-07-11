@@ -1,13 +1,13 @@
 {
-  "surface": "TrueEnergyNonUniversalCouplingSpecializationHypothesisSurface",
+  "surface": "ScaledEnergyNonUniversalCouplingSpecializationHypothesisSurface",
   "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
   "classification": "UNVERIFIED_SPECIALIZATION_HYPOTHESIS_ONLY",
-  "depends_on_surface": "TrueEnergyObservableMapBoundedDomainSurface",
-  "bounded_domain": "TrueEnergyObservableDomainB",
+  "depends_on_surface": "ScaledEnergyObservableMapBoundedDomainSurface",
+  "bounded_domain": "ScaledEnergyObservableDomainB",
   "allowed_species_set": "Sigma_B := {A, B}",
   "hypothesis": {
     "expression": "alpha_A != alpha_B",
-    "meaning": "species A and species B have distinct true-energy coupling coefficients",
+    "meaning": "species A and species B have distinct scaled-energy coupling coefficients",
     "status": "UNVERIFIED_HYPOTHESIS_ONLY",
     "available": false,
     "verified": false,
@@ -22,13 +22,13 @@
   "required_future_evidence": [
     "bounded detector response distinguishing alpha_A from alpha_B",
     "controlled systematic-error model",
-    "independent replication within TrueEnergyObservableDomainB"
+    "independent replication within ScaledEnergyObservableDomainB"
   ],
   "blocked_promotions": [
     "alpha_A != alpha_B established",
-    "nonuniversal true-energy coupling verified",
+    "nonuniversal scaled-energy coupling verified",
     "equivalence-principle violation established",
-    "TrueEnergyObservableMap -> ZeroDayClosure",
+    "ScaledEnergyObservableMap -> ZeroDayClosure",
     "unrestricted ZeroDayClosure"
   ],
   "non_claims": [
@@ -39,7 +39,7 @@
     "does not supply detector evidence",
     "does not prove ZeroDayClosure",
     "does not prove unrestricted ZeroDayClosure",
-    "does not construct TrueEnergyObservableMap -> ZeroDayClosure"
+    "does not construct ScaledEnergyObservableMap -> ZeroDayClosure"
   ],
   "next_weakest_point": "Specify a bounded evidence contract capable of testing alpha_A != alpha_B while retaining hypothesis-only status."
 }
