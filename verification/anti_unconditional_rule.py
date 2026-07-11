@@ -7674,3 +7674,532 @@ def verify_directional_flow_observables_b_guard() -> None:
 
 
 verify_directional_flow_observables_b_guard()
+
+def verify_directional_flow_fraction_b_conditional_bound_theorem_guard() -> None:
+    import json
+    import math
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+
+    region_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_"
+            "region_definition_candidate_surface.json"
+        )
+    )
+    fraction_path = (
+        root
+        / "core"
+        / "directional_flow_fraction_b_surface.json"
+    )
+    theorem_path = (
+        root
+        / "core"
+        / (
+            "directional_flow_fraction_b_"
+            "conditional_bound_theorem_surface.json"
+        )
+    )
+
+    for path in (region_path, fraction_path, theorem_path):
+        if not path.exists():
+            raise SystemExit(
+                f"MISSING_OBJECT := {path.relative_to(root)}"
+            )
+
+    region = json.loads(
+        region_path.read_text(encoding="utf-8")
+    )
+    fraction = json.loads(
+        fraction_path.read_text(encoding="utf-8")
+    )
+    theorem = json.loads(
+        theorem_path.read_text(encoding="utf-8")
+    )
+
+    expected_top_level = {
+        "surface": (
+            "DirectionalFlowFractionB"
+            "ConditionalBoundTheoremSurface"
+        ),
+        "classification": (
+            "BOUNDED_CONDITIONAL_INTEGRAL_NORM_"
+            "THEOREM_SURFACE_ONLY"
+        ),
+        "dependency_fraction_surface": (
+            "DirectionalFlowFractionBSurface"
+        ),
+        "dependency_region_surface": (
+            "ScaledEnergySupportCandidate"
+            "RegionDefinitionCandidateSurface"
+        ),
+        "bounded_region": "SupportCandidateB0",
+        "time_parameter": "t",
+        "novelty_status": (
+            "GLOBAL_NOVELTY_NOT_ESTABLISHED"
+        ),
+    }
+
+    for key, expected in expected_top_level.items():
+        actual = theorem.get(key)
+
+        if actual != expected:
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+                "BOUND_THEOREM_GUARD_FAILED := "
+                f"{key!r} expected {expected!r} got {actual!r}"
+            )
+
+    if region.get("surface") != (
+        "ScaledEnergySupportCandidate"
+        "RegionDefinitionCandidateSurface"
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "region dependency changed"
+        )
+
+    if region.get("target_support") != "SupportCandidateB0":
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "region target changed"
+        )
+
+    if fraction.get("surface") != (
+        "DirectionalFlowFractionBSurface"
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "fraction dependency changed"
+        )
+
+    if fraction.get("bounded_region") != "SupportCandidateB0":
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "fraction bounded region changed"
+        )
+
+    expected_definitions = {
+        "bounded_energy": {
+            "symbol": "E_B(t)",
+            "formula": (
+                "E_B(t) := integral_B u(t,x) d^3x"
+            ),
+        },
+        "bounded_directional_flow": {
+            "symbol": "Q_B(t)",
+            "formula": (
+                "Q_B(t) := integral_B S(t,x) d^3x"
+            ),
+        },
+        "directional_flow_fraction": {
+            "symbol": "chi_B(t)",
+            "formula": (
+                "chi_B(t) := "
+                "norm(Q_B(t)) / (c E_B(t))"
+            ),
+        },
+    }
+
+    if theorem.get("definitions") != expected_definitions:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "observable definitions changed"
+        )
+
+    expected_assumptions = {
+        "B is measurable and bounded",
+        "c > 0",
+        "u(t,x) is Lebesgue integrable on B",
+        "u(t,x) >= 0 almost everywhere on B",
+        "S(t,x) is Bochner integrable on B",
+        (
+            "norm(S(t,x)) <= c u(t,x) "
+            "almost everywhere on B"
+        ),
+        "E_B(t) > 0",
+    }
+
+    if set(theorem.get("assumptions", [])) != (
+        expected_assumptions
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "assumption set changed"
+        )
+
+    expected_statement = {
+        "name": (
+            "directional_flow_fraction_b_"
+            "conditional_integral_bound"
+        ),
+        "first_inequality": (
+            "norm(integral_B S(t,x) d^3x) "
+            "<= integral_B norm(S(t,x)) d^3x"
+        ),
+        "second_inequality": (
+            "integral_B norm(S(t,x)) d^3x "
+            "<= c E_B(t)"
+        ),
+        "combined_inequality": (
+            "norm(Q_B(t)) "
+            "<= integral_B norm(S(t,x)) d^3x "
+            "<= c E_B(t)"
+        ),
+        "fraction_conclusion": "0 <= chi_B(t) <= 1",
+        "status": (
+            "CONDITIONAL_THEOREM_STATEMENT_INHABITED"
+        ),
+    }
+
+    if theorem.get("theorem_statement") != expected_statement:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "theorem statement changed"
+        )
+
+    reduction = theorem.get("proof_reduction", [])
+
+    if len(reduction) != 4:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "expected four proof-reduction steps"
+        )
+
+    expected_outputs = [
+        (
+            "norm(integral_B S(t,x) d^3x) "
+            "<= integral_B norm(S(t,x)) d^3x"
+        ),
+        (
+            "integral_B norm(S(t,x)) d^3x "
+            "<= integral_B c u(t,x) d^3x"
+        ),
+        (
+            "integral_B c u(t,x) d^3x "
+            "= c integral_B u(t,x) d^3x "
+            "= c E_B(t)"
+        ),
+        "0 <= chi_B(t) <= 1",
+    ]
+
+    for index, expected_output in enumerate(
+        expected_outputs,
+        start=1,
+    ):
+        step = reduction[index - 1]
+
+        if step.get("step") != index:
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+                "BOUND_THEOREM_GUARD_FAILED := "
+                f"reduction step {index} index changed"
+            )
+
+        if step.get("output") != expected_output:
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+                "BOUND_THEOREM_GUARD_FAILED := "
+                f"reduction step {index} output changed"
+            )
+
+    expected_scope = {
+        "theorem_kind": (
+            "conditional bounded theorem surface"
+        ),
+        "continuous_integral_statement": True,
+        "proof_assistant_encoding": "NOT_SUPPLIED",
+        "repository_executable_role": (
+            "dependency, statement, reduction, "
+            "and finite-fixture verification"
+        ),
+    }
+
+    if theorem.get("proof_scope") != expected_scope:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "proof scope changed"
+        )
+
+    def vector_norm(vector):
+        return math.sqrt(
+            sum(component * component for component in vector)
+        )
+
+    def vector_sum(vectors):
+        return [
+            sum(vector[index] for vector in vectors)
+            for index in range(3)
+        ]
+
+    def verify_fixture(
+        c_value,
+        energies,
+        fluxes,
+    ):
+        if c_value <= 0:
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+                "BOUND_THEOREM_GUARD_FAILED := "
+                "fixture c is not positive"
+            )
+
+        if len(energies) != len(fluxes):
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+                "BOUND_THEOREM_GUARD_FAILED := "
+                "fixture lengths differ"
+            )
+
+        if any(energy < 0 for energy in energies):
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+                "BOUND_THEOREM_GUARD_FAILED := "
+                "fixture contains negative energy"
+            )
+
+        for energy, flux in zip(energies, fluxes):
+            if (
+                vector_norm(flux)
+                > c_value * energy + 1.0e-12
+            ):
+                raise SystemExit(
+                    "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+                    "BOUND_THEOREM_GUARD_FAILED := "
+                    "fixture violates pointwise flux bound"
+                )
+
+        total_energy = sum(energies)
+
+        if total_energy <= 0:
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+                "BOUND_THEOREM_GUARD_FAILED := "
+                "fixture energy is not positive"
+            )
+
+        total_flow = vector_sum(fluxes)
+        total_flow_norm = vector_norm(total_flow)
+        integrated_norm = sum(
+            vector_norm(flux) for flux in fluxes
+        )
+        upper_bound = c_value * total_energy
+
+        if total_flow_norm > integrated_norm + 1.0e-12:
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+                "BOUND_THEOREM_GUARD_FAILED := "
+                "first fixture inequality failed"
+            )
+
+        if integrated_norm > upper_bound + 1.0e-12:
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+                "BOUND_THEOREM_GUARD_FAILED := "
+                "second fixture inequality failed"
+            )
+
+        fraction_value = total_flow_norm / upper_bound
+
+        if (
+            fraction_value < -1.0e-12
+            or fraction_value > 1.0 + 1.0e-12
+        ):
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+                "BOUND_THEOREM_GUARD_FAILED := "
+                "fraction fixture bound failed"
+            )
+
+        return {
+            "total_energy": total_energy,
+            "total_flow_norm": total_flow_norm,
+            "integrated_norm": integrated_norm,
+            "upper_bound": upper_bound,
+            "fraction": fraction_value,
+        }
+
+    fixtures = theorem.get("executable_fixtures", [])
+
+    if len(fixtures) != 3:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "expected three executable fixtures"
+        )
+
+    by_name = {
+        fixture.get("name"): fixture
+        for fixture in fixtures
+    }
+
+    expected_names = {
+        "strict_interior_fraction_fixture",
+        "collimated_saturation_fixture",
+        "counterpropagating_cancellation_fixture",
+    }
+
+    if set(by_name) != expected_names:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "fixture names changed"
+        )
+
+    interior = by_name[
+        "strict_interior_fraction_fixture"
+    ]
+    interior_result = verify_fixture(
+        interior["c"],
+        interior["energy_cells"],
+        interior["flux_cells"],
+    )
+
+    if not (
+        0.0
+        < interior_result["fraction"]
+        < 1.0
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "strict-interior fixture is not interior"
+        )
+
+    collimated = by_name[
+        "collimated_saturation_fixture"
+    ]
+    collimated_result = verify_fixture(
+        collimated["c"],
+        collimated["energy_cells"],
+        collimated["flux_cells"],
+    )
+
+    if not math.isclose(
+        collimated_result["fraction"],
+        collimated["expected_fraction"],
+        rel_tol=1.0e-12,
+        abs_tol=1.0e-12,
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "collimated saturation fixture failed"
+        )
+
+    counterpropagating = by_name[
+        "counterpropagating_cancellation_fixture"
+    ]
+    counterpropagating_result = verify_fixture(
+        counterpropagating["c"],
+        counterpropagating["energy_cells"],
+        counterpropagating["flux_cells"],
+    )
+
+    if not math.isclose(
+        counterpropagating_result["fraction"],
+        counterpropagating["expected_fraction"],
+        rel_tol=1.0e-12,
+        abs_tol=1.0e-12,
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "counterpropagating fixture failed"
+        )
+
+    expected_interpretation = {
+        "is_standard_integral_norm_application": True,
+        "is_alternative_energy_law": False,
+        "is_detector_model": False,
+        "is_empirical_result": False,
+        "is_e_equals_m_c_cubed_claim": False,
+        "is_zero_day_closure": False,
+    }
+
+    if theorem.get("interpretation_boundary") != (
+        expected_interpretation
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "interpretation boundary changed"
+        )
+
+    required_blocked = {
+        (
+            "conditional integral bound -> "
+            "unconditional directional-flow theorem"
+        ),
+        (
+            "conditional integral bound -> "
+            "detector realization"
+        ),
+        (
+            "conditional integral bound -> "
+            "empirical confirmation"
+        ),
+        (
+            "conditional integral bound -> "
+            "E equals m c cubed"
+        ),
+        (
+            "conditional integral bound -> "
+            "ZeroDayClosure"
+        ),
+        "global novelty established",
+        "unrestricted ZeroDayClosure",
+    }
+
+    if set(theorem.get("blocked_promotions", [])) != (
+        required_blocked
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+            "BOUND_THEOREM_GUARD_FAILED := "
+            "blocked promotions changed"
+        )
+
+    encoded = json.dumps(theorem, sort_keys=True)
+
+    forbidden_fragments = (
+        '"proof_assistant_encoding": "VERIFIED"',
+        '"is_alternative_energy_law": true',
+        '"is_detector_model": true',
+        '"is_empirical_result": true',
+        '"is_e_equals_m_c_cubed_claim": true',
+        '"is_zero_day_closure": true',
+        '"novelty_status": "GLOBAL_NOVELTY_ESTABLISHED"',
+        '"detector_realization_status": "REALIZED"',
+        '"empirical_confirmation_status": "CONFIRMED"',
+        '"e_equals_m_c_cubed_status": "VERIFIED"',
+        '"zero_day_closure_status": "CONSTRUCTED"',
+    )
+
+    for fragment in forbidden_fragments:
+        if fragment in encoded:
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_FRACTION_B_CONDITIONAL_"
+                "BOUND_THEOREM_GUARD_FAILED := "
+                f"forbidden promotion {fragment!r}"
+            )
+
+    print(
+        "DIRECTIONAL_FLOW_FRACTION_B_"
+        "CONDITIONAL_BOUND_THEOREM_GUARD_OK"
+    )
+
+
+verify_directional_flow_fraction_b_conditional_bound_theorem_guard()
