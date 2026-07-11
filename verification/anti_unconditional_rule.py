@@ -4315,6 +4315,179 @@ def verify_scaled_energy_vector_flux_detector_numerical_test() -> None:
 
 verify_scaled_energy_vector_flux_detector_numerical_test()
 
+def verify_scaled_energy_detector_response_finite_support_candidate() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    candidate_path = (
+        root
+        / "core"
+        / "scaled_energy_detector_response_candidate_input_record_surface.json"
+    )
+    obligation_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_detector_response_candidate_input_"
+            "acceptance_obligation_surface.json"
+        )
+    )
+
+    for path in (candidate_path, obligation_path):
+        if not path.exists():
+            raise SystemExit(
+                "MISSING_OBJECT := "
+                f"{path.relative_to(root)}"
+            )
+
+    candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+    acceptance = json.loads(obligation_path.read_text(encoding="utf-8"))
+
+    fields = candidate.get("candidate_record", {}).get("fields", [])
+    support_fields = [
+        entry for entry in fields
+        if entry.get("field") == "detector_support"
+    ]
+
+    if len(support_fields) != 1:
+        raise SystemExit(
+            "SCALED_ENERGY_FINITE_SUPPORT_CANDIDATE_VERIFIER_FAILED := "
+            "expected exactly one detector_support candidate field"
+        )
+
+    support = support_fields[0]
+
+    expected_candidate_value = (
+        "SupportCandidateB0 subset ScaledEnergyObservableDomainB"
+    )
+    expected_candidate_obligation = (
+        "SupportCandidateB0 is finite and detector-supported"
+    )
+
+    if support.get("candidate_value") != expected_candidate_value:
+        raise SystemExit(
+            "SCALED_ENERGY_FINITE_SUPPORT_CANDIDATE_VERIFIER_FAILED := "
+            "detector-support candidate shape changed"
+        )
+
+    if support.get("obligation") != expected_candidate_obligation:
+        raise SystemExit(
+            "SCALED_ENERGY_FINITE_SUPPORT_CANDIDATE_VERIFIER_FAILED := "
+            "detector-support candidate obligation changed"
+        )
+
+    if support.get("status") != "CANDIDATE_UNVERIFIED":
+        raise SystemExit(
+            "SCALED_ENERGY_FINITE_SUPPORT_CANDIDATE_VERIFIER_FAILED := "
+            "detector-support candidate was promoted"
+        )
+
+    left, separator, right = expected_candidate_value.partition(" subset ")
+
+    if separator != " subset ":
+        raise SystemExit(
+            "SCALED_ENERGY_FINITE_SUPPORT_CANDIDATE_VERIFIER_FAILED := "
+            "missing declared subset relation"
+        )
+
+    if left != "SupportCandidateB0":
+        raise SystemExit(
+            "SCALED_ENERGY_FINITE_SUPPORT_CANDIDATE_VERIFIER_FAILED := "
+            "unexpected support symbol"
+        )
+
+    if right != "ScaledEnergyObservableDomainB":
+        raise SystemExit(
+            "SCALED_ENERGY_FINITE_SUPPORT_CANDIDATE_VERIFIER_FAILED := "
+            "unexpected bounded domain"
+        )
+
+    obligations = acceptance.get("obligations", [])
+    support_obligations = [
+        entry for entry in obligations
+        if entry.get("field") == "detector_support"
+    ]
+
+    if len(support_obligations) != 1:
+        raise SystemExit(
+            "SCALED_ENERGY_FINITE_SUPPORT_CANDIDATE_VERIFIER_FAILED := "
+            "expected exactly one detector-support acceptance obligation"
+        )
+
+    support_obligation = support_obligations[0]
+
+    expected_acceptance_obligation = (
+        "SupportCandidateB0 is finite and contained in "
+        "ScaledEnergyObservableDomainB"
+    )
+
+    if support_obligation.get("obligation") != (
+        expected_acceptance_obligation
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_FINITE_SUPPORT_CANDIDATE_VERIFIER_FAILED := "
+            "finite-support acceptance obligation changed"
+        )
+
+    if support_obligation.get("discharge_status") != (
+        "OBLIGATION_NOT_DISCHARGED"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_FINITE_SUPPORT_CANDIDATE_VERIFIER_FAILED := "
+            "finite-support obligation was discharged"
+        )
+
+    if acceptance.get("discharged_obligation_count") != 0:
+        raise SystemExit(
+            "SCALED_ENERGY_FINITE_SUPPORT_CANDIDATE_VERIFIER_FAILED := "
+            "acceptance surface records a discharged obligation"
+        )
+
+    if acceptance.get("acceptance_status") != "CANDIDATE_NOT_ACCEPTED":
+        raise SystemExit(
+            "SCALED_ENERGY_FINITE_SUPPORT_CANDIDATE_VERIFIER_FAILED := "
+            "candidate was accepted"
+        )
+
+    evaluation = {
+        "support_symbol": left,
+        "declared_relation": separator.strip(),
+        "bounded_domain": right,
+        "shape_evaluable": True,
+        "finiteness_evidence_present": False,
+        "containment_evidence_present": False,
+        "discharge_status": "OBLIGATION_NOT_DISCHARGED",
+        "evaluation_status": (
+            "DECLARED_SUPPORT_SHAPE_EVALUATED_WITHOUT_DISCHARGE"
+        ),
+    }
+
+    if evaluation != {
+        "support_symbol": "SupportCandidateB0",
+        "declared_relation": "subset",
+        "bounded_domain": "ScaledEnergyObservableDomainB",
+        "shape_evaluable": True,
+        "finiteness_evidence_present": False,
+        "containment_evidence_present": False,
+        "discharge_status": "OBLIGATION_NOT_DISCHARGED",
+        "evaluation_status": (
+            "DECLARED_SUPPORT_SHAPE_EVALUATED_WITHOUT_DISCHARGE"
+        ),
+    }:
+        raise SystemExit(
+            "SCALED_ENERGY_FINITE_SUPPORT_CANDIDATE_VERIFIER_FAILED := "
+            "unexpected candidate evaluation"
+        )
+
+    print(
+        "SCALED_ENERGY_DETECTOR_RESPONSE_"
+        "FINITE_SUPPORT_CANDIDATE_VERIFIER_OK"
+    )
+
+
+verify_scaled_energy_detector_response_finite_support_candidate()
+
 def verify_scaled_energy_coupling_branch_exclusivity_guard() -> None:
     import json
     from pathlib import Path
