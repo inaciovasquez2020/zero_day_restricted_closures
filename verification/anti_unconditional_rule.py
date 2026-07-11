@@ -3202,3 +3202,147 @@ def _guard_f_physical_realization_source_input_contract_realization_source_input
         if token not in body:
             raise SystemExit(f"ANTI_UNCONDITIONAL_RULE_FAIL: source-input realization source contract missing {token}")
 _guard_f_physical_realization_source_input_contract_realization_source_input_contract()
+
+
+def verify_true_energy_observable_map_zero_day_edge_rejection_guard() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    surface_path = root / "core/true_energy_observable_map_bounded_domain_surface.json"
+
+    if not surface_path.exists():
+        raise SystemExit(
+            "MISSING_OBJECT := core/true_energy_observable_map_bounded_domain_surface.json"
+        )
+
+    surface = json.loads(surface_path.read_text(encoding="utf-8"))
+    forbidden_edge = "TrueEnergyObservableMap -> ZeroDayClosure"
+
+    required_pairs = {
+        "surface": "TrueEnergyObservableMapBoundedDomainSurface",
+        "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        "classification": "RESTRICTED_OBSERVABLE_MAP_BOUNDED_DOMAIN_ONLY",
+        "map_status": "DOMAIN_AND_SPECIES_INSTANTIATED_MAP_NOT_CONSTRUCTED",
+    }
+
+    for key, expected in required_pairs.items():
+        actual = surface.get(key)
+        if actual != expected:
+            raise SystemExit(
+                "TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
+                f"{key} expected {expected!r} got {actual!r}"
+            )
+
+    blocked_promotions = surface.get("blocked_promotions")
+    if not isinstance(blocked_promotions, list):
+        raise SystemExit(
+            "TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
+            "blocked_promotions must be a list"
+        )
+
+    if forbidden_edge not in blocked_promotions:
+        raise SystemExit(
+            "TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
+            "missing blocked TrueEnergyObservableMap -> ZeroDayClosure promotion"
+        )
+
+    required_non_claim = (
+        "does not construct TrueEnergyObservableMap -> ZeroDayClosure"
+    )
+    non_claims = surface.get("non_claims")
+    if not isinstance(non_claims, list) or required_non_claim not in non_claims:
+        raise SystemExit(
+            "TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
+            "missing explicit downstream-edge non-claim"
+        )
+
+    forbidden_positive_phrases = {
+        "TrueEnergyObservableMap -> ZeroDayClosure constructed",
+        "TrueEnergyObservableMap -> ZeroDayClosure proved",
+        "TrueEnergyObservableMap -> ZeroDayClosure discharged",
+        "TrueEnergyObservableMap implies ZeroDayClosure",
+        "TrueEnergyObservableMap supplies ZeroDayClosure",
+    }
+
+    edge_keys = {
+        "target_edge",
+        "constructed_edge",
+        "proved_edge",
+        "theorem",
+        "rule",
+        "implication",
+    }
+
+    status_keys = {
+        "status",
+        "edge_status",
+        "theorem_status",
+        "construction_status",
+        "proof_status",
+        "availability",
+    }
+
+    positive_statuses = {
+        "CONSTRUCTED",
+        "PROVED",
+        "DISCHARGED",
+        "AVAILABLE",
+        "SUPPLIED",
+        "ACCEPTED",
+        "THEOREM_PRESENT",
+        "WITNESS_PRESENT",
+    }
+
+    def walk(value):
+        if isinstance(value, dict):
+            yield value
+            for child in value.values():
+                yield from walk(child)
+        elif isinstance(value, list):
+            for child in value:
+                yield from walk(child)
+
+    for path in sorted((root / "core").glob("*.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        body = json.dumps(data, sort_keys=True)
+
+        for phrase in forbidden_positive_phrases:
+            if phrase in body:
+                raise SystemExit(
+                    "TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
+                    f"{path.relative_to(root)} contains forbidden claim {phrase!r}"
+                )
+
+        for node in walk(data):
+            if not any(node.get(key) == forbidden_edge for key in edge_keys):
+                continue
+
+            for key in status_keys:
+                value = node.get(key)
+                if isinstance(value, str) and value.upper() in positive_statuses:
+                    raise SystemExit(
+                        "TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
+                        f"{path.relative_to(root)} promotes forbidden edge with "
+                        f"{key}={value!r}"
+                    )
+
+            for key in (
+                "constructed",
+                "proved",
+                "discharged",
+                "available",
+                "theorem_present",
+                "witness_present",
+            ):
+                if node.get(key) is True:
+                    raise SystemExit(
+                        "TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
+                        f"{path.relative_to(root)} promotes forbidden edge with "
+                        f"{key}=True"
+                    )
+
+    print("TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_OK")
+
+
+verify_true_energy_observable_map_zero_day_edge_rejection_guard()
