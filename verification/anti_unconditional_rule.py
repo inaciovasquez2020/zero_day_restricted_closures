@@ -3348,6 +3348,72 @@ def verify_scaled_energy_observable_map_zero_day_edge_rejection_guard() -> None:
 verify_scaled_energy_observable_map_zero_day_edge_rejection_guard()
 
 
+
+def verify_scaled_energy_dimensional_interpretation_guard() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    surface_path = (
+        root / "core/scaled_energy_observable_map_bounded_domain_surface.json"
+    )
+
+    if not surface_path.exists():
+        raise SystemExit(
+            "MISSING_OBJECT := "
+            "core/scaled_energy_observable_map_bounded_domain_surface.json"
+        )
+
+    surface = json.loads(surface_path.read_text(encoding="utf-8"))
+    interpretation = surface.get("dimensional_interpretation")
+
+    expected = {
+        "input_quantity": "J_E^mu",
+        "scaled_quantity": "J_scaled^mu := c * J_E^mu",
+        "dimension_rule": "[J_scaled^mu] = [c] * [J_E^mu]",
+        "speed_dimension": "[c] = L * T^-1",
+        "energy_quantity_status": "NOT_A_DISTINCT_ENERGY_QUANTITY",
+        "observable_interpretation": (
+            "fixed-unit rescaling of the supplied energy current"
+        ),
+        "invertibility_condition": "c != 0",
+        "inverse_map_shape": "J_E^mu := J_scaled^mu / c",
+        "independent_physical_content_status": (
+            "NO_NEW_INDEPENDENT_PHYSICAL_CONTENT_FROM_CONSTANT_RESCALING_ALONE"
+        ),
+        "detector_requirement": (
+            "a dimensionally specified detector response functional beyond "
+            "constant rescaling"
+        ),
+        "status": "DIMENSIONAL_INTERPRETATION_ONLY",
+    }
+
+    if interpretation != expected:
+        raise SystemExit(
+            "SCALED_ENERGY_DIMENSIONAL_INTERPRETATION_GUARD_FAILED := "
+            f"expected {expected!r} got {interpretation!r}"
+        )
+
+    body = json.dumps(surface, sort_keys=True)
+    forbidden_claims = {
+        '"energy_quantity_status": "DISTINCT_ENERGY_QUANTITY"',
+        '"independent_physical_content_status": '
+        '"NEW_PHYSICAL_CONTENT_ESTABLISHED"',
+        '"status": "EMPIRICALLY_VERIFIED"',
+    }
+
+    for claim in forbidden_claims:
+        if claim in body:
+            raise SystemExit(
+                "SCALED_ENERGY_DIMENSIONAL_INTERPRETATION_GUARD_FAILED := "
+                f"forbidden promotion {claim!r}"
+            )
+
+    print("SCALED_ENERGY_DIMENSIONAL_INTERPRETATION_GUARD_OK")
+
+
+verify_scaled_energy_dimensional_interpretation_guard()
+
 def verify_scaled_energy_coupling_branch_exclusivity_guard() -> None:
     import json
     from pathlib import Path

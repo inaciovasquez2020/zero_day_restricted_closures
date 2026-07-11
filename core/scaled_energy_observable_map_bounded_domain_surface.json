@@ -47,5 +47,18 @@
     "does not construct ScaledEnergyObservableMap -> ZeroDayClosure",
     "does not erase the restricted boundary"
   ],
-  "next_weakest_point": "Require local-conservation preservation for the bounded observable map without constructing any ZeroDayClosure edge."
+  "next_weakest_point": "Require local-conservation preservation for the bounded observable map without constructing any ZeroDayClosure edge.",
+  "dimensional_interpretation": {
+    "input_quantity": "J_E^mu",
+    "scaled_quantity": "J_scaled^mu := c * J_E^mu",
+    "dimension_rule": "[J_scaled^mu] = [c] * [J_E^mu]",
+    "speed_dimension": "[c] = L * T^-1",
+    "energy_quantity_status": "NOT_A_DISTINCT_ENERGY_QUANTITY",
+    "observable_interpretation": "fixed-unit rescaling of the supplied energy current",
+    "invertibility_condition": "c != 0",
+    "inverse_map_shape": "J_E^mu := J_scaled^mu / c",
+    "independent_physical_content_status": "NO_NEW_INDEPENDENT_PHYSICAL_CONTENT_FROM_CONSTANT_RESCALING_ALONE",
+    "detector_requirement": "a dimensionally specified detector response functional beyond constant rescaling",
+    "status": "DIMENSIONAL_INTERPRETATION_ONLY"
+  }
 }
