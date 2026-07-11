@@ -5149,6 +5149,181 @@ def verify_scaled_energy_support_candidate_region_definition_candidate_guard() -
 
 verify_scaled_energy_support_candidate_region_definition_candidate_guard()
 
+
+def verify_scaled_energy_closed_translation_invariant_detector_solution_input_contract_guard() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    surface_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_closed_translation_invariant_detector_"
+            "solution_input_contract_surface.json"
+        )
+    )
+
+    if not surface_path.exists():
+        raise SystemExit(
+            "MISSING_OBJECT := "
+            "core/scaled_energy_closed_translation_invariant_detector_"
+            "solution_input_contract_surface.json"
+        )
+
+    surface = json.loads(surface_path.read_text(encoding="utf-8"))
+
+    expected_top_level = {
+        "surface": (
+            "ScaledEnergyClosedTranslationInvariantDetector"
+            "SolutionInputContractSurface"
+        ),
+        "classification": (
+            "RESTRICTED_UNCONDITIONAL_CURRENT_THEOREM_INPUT_CONTRACT_ONLY"
+        ),
+        "solution_type_symbol": (
+            "ClosedTranslationInvariantDetectorSolutionB0"
+        ),
+        "required_solution_field_count": 11,
+        "supplied_solution_field_count": 0,
+        "contract_status": "SOLUTION_INPUT_CONTRACT_NOT_INHABITED",
+        "inhabitant_status": "NO_SOLUTION_INHABITANT_CONSTRUCTED",
+    }
+
+    for key, expected in expected_top_level.items():
+        actual = surface.get(key)
+        if actual != expected:
+            raise SystemExit(
+                "SCALED_ENERGY_RESTRICTED_SOLUTION_CONTRACT_GUARD_FAILED := "
+                f"{key!r} expected {expected!r} got {actual!r}"
+            )
+
+    logical_scope = surface.get("logical_scope", {})
+
+    expected_scope = {
+        "target_quantification": (
+            "forall s : ClosedTranslationInvariantDetectorSolutionB0"
+        ),
+        "target_conclusion": "nabla_mu J_E_s^mu = 0",
+        "meaning": (
+            "unconditional only after an inhabitant supplies every "
+            "restricted solution-field premise"
+        ),
+        "global_unconditional_status": (
+            "MODEL_INDEPENDENT_UNCONDITIONAL_THEOREM_BLOCKED"
+        ),
+    }
+
+    if logical_scope != expected_scope:
+        raise SystemExit(
+            "SCALED_ENERGY_RESTRICTED_SOLUTION_CONTRACT_GUARD_FAILED := "
+            "logical scope changed"
+        )
+
+    fields = surface.get("required_solution_fields", [])
+
+    expected_field_names = [
+        "accepted_support_region",
+        "covariant_geometry",
+        "total_action",
+        "translation_invariance",
+        "equations_of_motion_solution",
+        "total_stress_energy_inventory",
+        "stress_energy_symmetry",
+        "covariant_stress_energy_conservation",
+        "time_translation_covector",
+        "killing_evidence",
+        "boundary_flux_closure",
+    ]
+
+    if [entry.get("field") for entry in fields] != expected_field_names:
+        raise SystemExit(
+            "SCALED_ENERGY_RESTRICTED_SOLUTION_CONTRACT_GUARD_FAILED := "
+            "required solution-field inventory changed"
+        )
+
+    for entry in fields:
+        if entry.get("status") != "REQUIRED_NOT_SUPPLIED":
+            raise SystemExit(
+                "SCALED_ENERGY_RESTRICTED_SOLUTION_CONTRACT_GUARD_FAILED := "
+                f"promoted solution field {entry.get('field')!r}"
+            )
+
+        for key in ("symbol", "requirement"):
+            value = entry.get(key)
+            if not isinstance(value, str) or not value:
+                raise SystemExit(
+                    "SCALED_ENERGY_RESTRICTED_SOLUTION_CONTRACT_GUARD_FAILED "
+                    f":= missing {key!r} for {entry.get('field')!r}"
+                )
+
+    theorem_target = surface.get("restricted_theorem_target", {})
+
+    if theorem_target != {
+        "statement": (
+            "forall s : ClosedTranslationInvariantDetectorSolutionB0, "
+            "nabla_mu J_E_s^mu = 0"
+        ),
+        "proof_route": (
+            "rewrite the current divergence by the covariant product rule, "
+            "then use stress-energy symmetry, covariant conservation, and "
+            "the Killing equation"
+        ),
+        "construction_status": "THEOREM_TARGET_NOT_CONSTRUCTED",
+        "verification_status": "THEOREM_TARGET_NOT_VERIFIED",
+    }:
+        raise SystemExit(
+            "SCALED_ENERGY_RESTRICTED_SOLUTION_CONTRACT_GUARD_FAILED := "
+            "restricted theorem target changed"
+        )
+
+    dimensional_boundary = surface.get("dimensional_boundary", {})
+
+    if dimensional_boundary != {
+        "energy_unit": "[E] = M L^2 T^-2",
+        "scaled_quantity_unit": "[cE] = [m c^3] = M L^3 T^-3",
+        "energy_law_status": (
+            "E_EQUALS_M_C_CUBED_REJECTED_AS_ENERGY_LAW"
+        ),
+        "observable_status": (
+            "cE may denote a non-energy scaled or vector-flux observable"
+        ),
+    }:
+        raise SystemExit(
+            "SCALED_ENERGY_RESTRICTED_SOLUTION_CONTRACT_GUARD_FAILED := "
+            "dimensional boundary changed"
+        )
+
+    encoded = json.dumps(surface, sort_keys=True)
+
+    forbidden_tokens = (
+        '"status": "REQUIRED_SUPPLIED"',
+        '"supplied_solution_field_count": 11',
+        '"contract_status": "SOLUTION_INPUT_CONTRACT_INHABITED"',
+        '"inhabitant_status": "SOLUTION_INHABITANT_CONSTRUCTED"',
+        '"construction_status": "THEOREM_TARGET_CONSTRUCTED"',
+        '"verification_status": "THEOREM_TARGET_VERIFIED"',
+        '"global_unconditional_status": '
+        '"MODEL_INDEPENDENT_UNCONDITIONAL_THEOREM_PROVED"',
+        '"energy_law_status": "E_EQUALS_M_C_CUBED_VERIFIED"',
+        '"zero_day_closure_status": "CONSTRUCTED"',
+    )
+
+    for token in forbidden_tokens:
+        if token in encoded:
+            raise SystemExit(
+                "SCALED_ENERGY_RESTRICTED_SOLUTION_CONTRACT_GUARD_FAILED := "
+                f"forbidden promotion {token!r}"
+            )
+
+    print(
+        "SCALED_ENERGY_CLOSED_TRANSLATION_INVARIANT_"
+        "DETECTOR_SOLUTION_INPUT_CONTRACT_GUARD_OK"
+    )
+
+
+verify_scaled_energy_closed_translation_invariant_detector_solution_input_contract_guard()
+
 def verify_scaled_energy_coupling_branch_exclusivity_guard() -> None:
     import json
     from pathlib import Path
