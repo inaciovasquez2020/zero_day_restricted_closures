@@ -25,9 +25,12 @@
       },
       {
         "field": "admissible_input_current",
-        "candidate_value": "J_E_candidate^mu",
-        "obligation": "partial_mu J_E_candidate^mu = 0 on SupportCandidateB0",
-        "status": "CANDIDATE_UNVERIFIED"
+        "candidate_value": "J_E_candidate^mu := T_total_candidate^{mu nu} * tau_nu",
+        "obligation": "partial_mu T_total_candidate^{mu nu} = 0 and partial_mu tau_nu = 0 on SupportCandidateB0",
+        "status": "CANDIDATE_UNVERIFIED",
+        "derivation_shape": "partial_mu J_E_candidate^mu = (partial_mu T_total_candidate^{mu nu}) * tau_nu + T_total_candidate^{mu nu} * partial_mu tau_nu = 0",
+        "stress_energy_scope": "T_total_candidate includes field and detector contributions",
+        "frame_scope": "tau_nu is a constant inertial laboratory time-translation covector"
       },
       {
         "field": "scaled_input_current",

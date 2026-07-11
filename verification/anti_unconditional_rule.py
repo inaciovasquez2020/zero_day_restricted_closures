@@ -4488,6 +4488,153 @@ def verify_scaled_energy_detector_response_finite_support_candidate() -> None:
 
 verify_scaled_energy_detector_response_finite_support_candidate()
 
+
+def verify_scaled_energy_energy_current_conservation_formulation_guard() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    candidate_path = (
+        root
+        / "core"
+        / "scaled_energy_detector_response_candidate_input_record_surface.json"
+    )
+    acceptance_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_detector_response_candidate_input_"
+            "acceptance_obligation_surface.json"
+        )
+    )
+
+    candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
+    acceptance = json.loads(acceptance_path.read_text(encoding="utf-8"))
+
+    candidate_fields = candidate.get("candidate_record", {}).get("fields", [])
+    current_fields = [
+        entry
+        for entry in candidate_fields
+        if entry.get("field") == "admissible_input_current"
+    ]
+
+    if len(current_fields) != 1:
+        raise SystemExit(
+            "SCALED_ENERGY_CURRENT_CONSERVATION_FORMULATION_FAILED := "
+            "expected one admissible_input_current candidate field"
+        )
+
+    current_field = current_fields[0]
+
+    expected_candidate = {
+        "field": "admissible_input_current",
+        "candidate_value": (
+            "J_E_candidate^mu := "
+            "T_total_candidate^{mu nu} * tau_nu"
+        ),
+        "obligation": (
+            "partial_mu T_total_candidate^{mu nu} = 0 and "
+            "partial_mu tau_nu = 0 on SupportCandidateB0"
+        ),
+        "derivation_shape": (
+            "partial_mu J_E_candidate^mu = "
+            "(partial_mu T_total_candidate^{mu nu}) * tau_nu + "
+            "T_total_candidate^{mu nu} * partial_mu tau_nu = 0"
+        ),
+        "stress_energy_scope": (
+            "T_total_candidate includes field and detector contributions"
+        ),
+        "frame_scope": (
+            "tau_nu is a constant inertial laboratory "
+            "time-translation covector"
+        ),
+        "status": "CANDIDATE_UNVERIFIED",
+    }
+
+    if current_field != expected_candidate:
+        raise SystemExit(
+            "SCALED_ENERGY_CURRENT_CONSERVATION_FORMULATION_FAILED := "
+            f"candidate field expected {expected_candidate!r} "
+            f"got {current_field!r}"
+        )
+
+    acceptance_obligations = acceptance.get("obligations", [])
+    current_obligations = [
+        entry
+        for entry in acceptance_obligations
+        if entry.get("field") == "admissible_input_current"
+    ]
+
+    if len(current_obligations) != 1:
+        raise SystemExit(
+            "SCALED_ENERGY_CURRENT_CONSERVATION_FORMULATION_FAILED := "
+            "expected one admissible_input_current acceptance obligation"
+        )
+
+    expected_acceptance = {
+        "field": "admissible_input_current",
+        "obligation": (
+            "T_total_candidate includes field and detector contributions; "
+            "partial_mu T_total_candidate^{mu nu} = 0 and "
+            "partial_mu tau_nu = 0 throughout SupportCandidateB0, "
+            "implying partial_mu J_E_candidate^mu = 0 for "
+            "J_E_candidate^mu := T_total_candidate^{mu nu} * tau_nu"
+        ),
+        "derivation_status": (
+            "DERIVATION_DECLARED_EVIDENCE_NOT_SUPPLIED"
+        ),
+        "discharge_status": "OBLIGATION_NOT_DISCHARGED",
+    }
+
+    if current_obligations[0] != expected_acceptance:
+        raise SystemExit(
+            "SCALED_ENERGY_CURRENT_CONSERVATION_FORMULATION_FAILED := "
+            f"acceptance obligation expected {expected_acceptance!r} "
+            f"got {current_obligations[0]!r}"
+        )
+
+    if acceptance.get("discharged_obligation_count") != 0:
+        raise SystemExit(
+            "SCALED_ENERGY_CURRENT_CONSERVATION_FORMULATION_FAILED := "
+            "an acceptance obligation was discharged"
+        )
+
+    if acceptance.get("acceptance_status") != "CANDIDATE_NOT_ACCEPTED":
+        raise SystemExit(
+            "SCALED_ENERGY_CURRENT_CONSERVATION_FORMULATION_FAILED := "
+            "candidate was accepted"
+        )
+
+    encoded = json.dumps(
+        {
+            "candidate": current_field,
+            "acceptance": current_obligations[0],
+        },
+        sort_keys=True,
+    )
+
+    forbidden_tokens = (
+        '"status": "CANDIDATE_VERIFIED"',
+        '"derivation_status": "DERIVATION_VERIFIED"',
+        '"discharge_status": "OBLIGATION_DISCHARGED"',
+        '"stress_energy_scope": "FIELD_ONLY"',
+        '"acceptance_status": "CANDIDATE_ACCEPTED"',
+    )
+
+    for token in forbidden_tokens:
+        if token in encoded:
+            raise SystemExit(
+                "SCALED_ENERGY_CURRENT_CONSERVATION_FORMULATION_FAILED := "
+                f"forbidden promotion {token!r}"
+            )
+
+    print(
+        "SCALED_ENERGY_CURRENT_CONSERVATION_FORMULATION_GUARD_OK"
+    )
+
+
+verify_scaled_energy_energy_current_conservation_formulation_guard()
+
 def verify_scaled_energy_coupling_branch_exclusivity_guard() -> None:
     import json
     from pathlib import Path
