@@ -1,0 +1,45 @@
+{
+  "surface": "TrueEnergyNonUniversalCouplingSpecializationHypothesisSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "UNVERIFIED_SPECIALIZATION_HYPOTHESIS_ONLY",
+  "depends_on_surface": "TrueEnergyObservableMapBoundedDomainSurface",
+  "bounded_domain": "TrueEnergyObservableDomainB",
+  "allowed_species_set": "Sigma_B := {A, B}",
+  "hypothesis": {
+    "expression": "alpha_A != alpha_B",
+    "meaning": "species A and species B have distinct true-energy coupling coefficients",
+    "status": "UNVERIFIED_HYPOTHESIS_ONLY",
+    "available": false,
+    "verified": false,
+    "proved": false,
+    "empirically_supported": false
+  },
+  "coupling_universality_status": "NOT_SUPPLIED",
+  "nonuniversal_specialization_status": "UNVERIFIED_HYPOTHESIS_ONLY",
+  "coupling_universality_active": false,
+  "nonuniversal_specialization_active": false,
+  "alpha_A_not_equal_alpha_B_active": false,
+  "required_future_evidence": [
+    "bounded detector response distinguishing alpha_A from alpha_B",
+    "controlled systematic-error model",
+    "independent replication within TrueEnergyObservableDomainB"
+  ],
+  "blocked_promotions": [
+    "alpha_A != alpha_B established",
+    "nonuniversal true-energy coupling verified",
+    "equivalence-principle violation established",
+    "TrueEnergyObservableMap -> ZeroDayClosure",
+    "unrestricted ZeroDayClosure"
+  ],
+  "non_claims": [
+    "does not establish alpha_A != alpha_B",
+    "does not activate the nonuniversal coupling branch",
+    "does not refute coupling universality",
+    "does not establish an equivalence-principle violation",
+    "does not supply detector evidence",
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure",
+    "does not construct TrueEnergyObservableMap -> ZeroDayClosure"
+  ],
+  "next_weakest_point": "Specify a bounded evidence contract capable of testing alpha_A != alpha_B while retaining hypothesis-only status."
+}
