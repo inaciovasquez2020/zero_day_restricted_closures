@@ -3414,6 +3414,216 @@ def verify_scaled_energy_dimensional_interpretation_guard() -> None:
 
 verify_scaled_energy_dimensional_interpretation_guard()
 
+
+def verify_scaled_energy_detector_response_input_contract_guard() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    surface_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_detector_response_functional_"
+            "input_contract_surface.json"
+        )
+    )
+
+    if not surface_path.exists():
+        raise SystemExit(
+            "MISSING_OBJECT := "
+            "core/scaled_energy_detector_response_functional_"
+            "input_contract_surface.json"
+        )
+
+    actual = json.loads(surface_path.read_text(encoding="utf-8"))
+
+    expected = {
+        "surface": (
+            "ScaledEnergyDetectorResponseFunctionalInputContractSurface"
+        ),
+        "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        "classification": (
+            "BOUNDED_DETECTOR_RESPONSE_FUNCTIONAL_INPUT_CONTRACT_ONLY"
+        ),
+        "dependency_surface": (
+            "ScaledEnergyObservableMapBoundedDomainSurface"
+        ),
+        "bounded_scope": {
+            "domain": "ScaledEnergyObservableDomainB",
+            "spacetime_region": (
+                "finite detector-supported laboratory region"
+            ),
+            "species_set": "Sigma_B := {A, B}",
+            "closed_world": True,
+            "additional_species_allowed": False,
+        },
+        "functional_shape": {
+            "symbol": "R_D",
+            "signature": (
+                "R_D : "
+                "(DetectorSupportB, J_E^mu, J_scaled^mu) "
+                "-> DetectorOutputB"
+            ),
+            "scaled_current_relation": "J_scaled^mu := c * J_E^mu",
+            "output_symbol": "y_D",
+            "construction_status": "FUNCTIONAL_NOT_CONSTRUCTED",
+            "verification_status": "FUNCTIONAL_NOT_VERIFIED",
+        },
+        "required_input_fields": [
+            {
+                "field": "detector_identifier",
+                "requirement": "bounded opaque detector label",
+                "status": "REQUIRED_NOT_SUPPLIED",
+            },
+            {
+                "field": "detector_support",
+                "requirement": (
+                    "finite support contained in "
+                    "ScaledEnergyObservableDomainB"
+                ),
+                "status": "REQUIRED_NOT_SUPPLIED",
+            },
+            {
+                "field": "admissible_input_current",
+                "requirement": (
+                    "J_E^mu with local conservation supplied explicitly"
+                ),
+                "status": "REQUIRED_NOT_SUPPLIED",
+            },
+            {
+                "field": "scaled_input_current",
+                "requirement": "J_scaled^mu := c * J_E^mu",
+                "status": "REQUIRED_NOT_SUPPLIED",
+            },
+            {
+                "field": "response_codomain",
+                "requirement": (
+                    "dimensionally declared bounded detector-output space"
+                ),
+                "status": "REQUIRED_NOT_SUPPLIED",
+            },
+            {
+                "field": "response_output_unit",
+                "requirement": (
+                    "explicit physical unit for y_D independent of notation"
+                ),
+                "status": "REQUIRED_NOT_SUPPLIED",
+            },
+            {
+                "field": "response_functional",
+                "requirement": (
+                    "total bounded-domain map from declared inputs to y_D"
+                ),
+                "status": "REQUIRED_NOT_SUPPLIED",
+            },
+            {
+                "field": "calibration_rule",
+                "requirement": (
+                    "explicit conversion from functional output to "
+                    "detector readout"
+                ),
+                "status": "REQUIRED_NOT_SUPPLIED",
+            },
+            {
+                "field": "finite_output_rule",
+                "requirement": (
+                    "finite output for every admitted bounded-domain input"
+                ),
+                "status": "REQUIRED_NOT_SUPPLIED",
+            },
+            {
+                "field": "constant_rescaling_distinction_predicate",
+                "requirement": (
+                    "declared predicate distinguishing response structure "
+                    "from constant rescaling alone"
+                ),
+                "status": "REQUIRED_NOT_SUPPLIED",
+            },
+        ],
+        "contract_status": "INPUT_CONTRACT_FIELDS_SPECIFIED_NOT_INHABITED",
+        "blocked_promotions": [
+            (
+                "ScaledEnergyDetectorResponseFunctionalInputContractSurface "
+                "-> detector construction"
+            ),
+            (
+                "ScaledEnergyDetectorResponseFunctionalInputContractSurface "
+                "-> detector verification"
+            ),
+            (
+                "ScaledEnergyDetectorResponseFunctionalInputContractSurface "
+                "-> empirical confirmation"
+            ),
+            (
+                "ScaledEnergyDetectorResponseFunctionalInputContractSurface "
+                "-> ScaledEnergyObservableMap"
+            ),
+            (
+                "ScaledEnergyDetectorResponseFunctionalInputContractSurface "
+                "-> alpha_A != alpha_B"
+            ),
+            (
+                "ScaledEnergyDetectorResponseFunctionalInputContractSurface "
+                "-> ZeroDayClosure"
+            ),
+            "unrestricted ZeroDayClosure",
+            "restricted-to-unrestricted lift",
+        ],
+        "non_claims": [
+            "does not construct a detector",
+            "does not construct R_D",
+            "does not verify R_D",
+            "does not inhabit the input contract",
+            "does not supply detector data",
+            "does not establish a calibration rule",
+            "does not establish a nontrivial detector response",
+            "does not distinguish species A from species B",
+            "does not establish alpha_A != alpha_B",
+            "does not construct ScaledEnergyObservableMap",
+            "does not prove ZeroDayClosure",
+            "does not prove unrestricted ZeroDayClosure",
+        ],
+        "next_weakest_point": (
+            "Supply one bounded candidate input record while preserving "
+            "unverified detector and empirical status."
+        ),
+    }
+
+    if actual != expected:
+        raise SystemExit(
+            "SCALED_ENERGY_DETECTOR_RESPONSE_INPUT_CONTRACT_GUARD_FAILED "
+            f":= expected {expected!r} got {actual!r}"
+        )
+
+    encoded = json.dumps(actual, sort_keys=True)
+
+    forbidden_tokens = (
+        '"contract_status": "INPUT_CONTRACT_INHABITED"',
+        '"construction_status": "FUNCTIONAL_CONSTRUCTED"',
+        '"verification_status": "FUNCTIONAL_VERIFIED"',
+        '"status": "REQUIRED_SUPPLIED"',
+        '"detector_status": "DETECTOR_CONSTRUCTED"',
+        '"detector_status": "DETECTOR_VERIFIED"',
+        '"empirical_status": "CONFIRMED"',
+        '"map_status": "CONSTRUCTED"',
+        '"zero_day_closure_status": "CONSTRUCTED"',
+    )
+
+    for token in forbidden_tokens:
+        if token in encoded:
+            raise SystemExit(
+                "SCALED_ENERGY_DETECTOR_RESPONSE_INPUT_CONTRACT_GUARD_FAILED "
+                f":= forbidden promotion {token!r}"
+            )
+
+    print(
+        "SCALED_ENERGY_DETECTOR_RESPONSE_INPUT_CONTRACT_GUARD_OK"
+    )
+
+
+verify_scaled_energy_detector_response_input_contract_guard()
+
 def verify_scaled_energy_coupling_branch_exclusivity_guard() -> None:
     import json
     from pathlib import Path
