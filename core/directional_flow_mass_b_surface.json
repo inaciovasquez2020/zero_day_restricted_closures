@@ -1,0 +1,58 @@
+{
+  "surface": "DirectionalFlowMassBSurface",
+  "object": "DirectionalFlowMassB",
+  "classification": "BOUNDED_MODEL_OBSERVABLE_ALGEBRAIC_DEFINITION_ONLY",
+  "dependency_fraction_surface": "DirectionalFlowFractionBSurface",
+  "bounded_region": "SupportCandidateB0",
+  "definition": {
+    "symbol": "m_flow,B(t)",
+    "primary_formula": "m_flow,B(t) := ||Q_B(t)|| / c^3",
+    "fraction_formula": "m_flow,B(t) = chi_B(t) E_B(t) / c^2",
+    "fraction_formula_assumptions": [
+      "c > 0",
+      "E_B(t) > 0",
+      "chi_B(t) = ||Q_B(t)|| / (c E_B(t))"
+    ],
+    "identity_status": "ALGEBRAIC_IDENTITY_REDUCTION_RECORDED"
+  },
+  "collimated_limit": {
+    "assumptions": [
+      "chi_B(t) = 1",
+      "E_B(t) > 0"
+    ],
+    "derived_relations": [
+      "m_flow,B(t) = E_B(t) / c^2",
+      "m_flow,B(t) c^3 = c E_B(t)"
+    ],
+    "status": "COLLIMATED_MASS_LIMIT_SCHEMA_RECORDED_AND_EXECUTABLE_FIXTURE_VERIFIED"
+  },
+  "counterpropagating_limit": {
+    "assumptions": [
+      "chi_B(t) = 0",
+      "E_B(t) > 0"
+    ],
+    "derived_relations": [
+      "m_flow,B(t) = 0"
+    ],
+    "status": "COUNTERPROPAGATING_MASS_LIMIT_SCHEMA_RECORDED_AND_EXECUTABLE_FIXTURE_VERIFIED"
+  },
+  "interpretation_boundary": {
+    "description": "model quantity measuring coherent net directional energy transport",
+    "is_rest_mass": false,
+    "is_invariant_mass": false,
+    "is_alternative_energy_law": false,
+    "is_empirically_calibrated": false
+  },
+  "novelty_status": "GLOBAL_NOVELTY_NOT_ESTABLISHED",
+  "blocked_promotions": [
+    "DirectionalFlowMassB -> rest mass",
+    "DirectionalFlowMassB -> invariant mass",
+    "DirectionalFlowMassB -> new fundamental law",
+    "DirectionalFlowMassB -> detector realization",
+    "DirectionalFlowMassB -> empirical confirmation",
+    "DirectionalFlowMassB -> E equals m c cubed",
+    "DirectionalFlowMassB -> ZeroDayClosure",
+    "global novelty established",
+    "unrestricted ZeroDayClosure"
+  ]
+}

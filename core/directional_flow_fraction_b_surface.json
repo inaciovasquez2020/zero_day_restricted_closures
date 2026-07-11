@@ -1,0 +1,110 @@
+{
+  "surface": "DirectionalFlowFractionBSurface",
+  "object": "DirectionalFlowFractionB",
+  "classification": "BOUNDED_MODEL_OBSERVABLE_CONDITIONAL_DEFINITION_ONLY",
+  "dependency_region_surface": "ScaledEnergySupportCandidateRegionDefinitionCandidateSurface",
+  "bounded_region": "SupportCandidateB0",
+  "observable_role": "fraction of bounded total energy participating in coherent net directional transport",
+  "observable_inputs": {
+    "speed_constant": {
+      "symbol": "c",
+      "assumption": "c > 0"
+    },
+    "energy_density": {
+      "symbol": "u(t,x)",
+      "assumptions": [
+        "u(t,x) >= 0 on B",
+        "u(t,x) is integrable on B"
+      ]
+    },
+    "energy_flux": {
+      "symbol": "S(t,x)",
+      "assumptions": [
+        "S(t,x) is integrable on B",
+        "||S(t,x)|| <= c u(t,x) almost everywhere on B"
+      ]
+    }
+  },
+  "bounded_integrals": {
+    "energy": {
+      "symbol": "E_B(t)",
+      "definition": "E_B(t) := integral_B u(t,x) d^3x"
+    },
+    "directional_flow": {
+      "symbol": "Q_B(t)",
+      "definition": "Q_B(t) := integral_B S(t,x) d^3x"
+    }
+  },
+  "definition": {
+    "symbol": "chi_B(t)",
+    "formula": "chi_B(t) := ||Q_B(t)|| / (c E_B(t))",
+    "domain_assumption": "E_B(t) > 0"
+  },
+  "conditional_bound": {
+    "assumptions": [
+      "c > 0",
+      "E_B(t) > 0",
+      "u(t,x) >= 0 on B",
+      "||S(t,x)|| <= c u(t,x) almost everywhere on B"
+    ],
+    "reduction": [
+      "0 <= ||Q_B(t)||",
+      "||Q_B(t)|| <= integral_B ||S(t,x)|| d^3x",
+      "integral_B ||S(t,x)|| d^3x <= c integral_B u(t,x) d^3x",
+      "||Q_B(t)|| <= c E_B(t)",
+      "0 <= chi_B(t) <= 1"
+    ],
+    "status": "CONDITIONAL_BOUND_REDUCTION_RECORDED",
+    "formal_theorem_status": "NOT_FORMALLY_PROVED"
+  },
+  "collimated_limit": {
+    "assumptions": [
+      "n_hat is a fixed unit vector",
+      "S(t,x) = c u(t,x) n_hat on B",
+      "E_B(t) > 0"
+    ],
+    "derived_relations": [
+      "Q_B(t) = c E_B(t) n_hat",
+      "||Q_B(t)|| = c E_B(t)",
+      "chi_B(t) = 1"
+    ],
+    "status": "COLLIMATED_LIMIT_SCHEMA_RECORDED_AND_EXECUTABLE_FIXTURE_VERIFIED"
+  },
+  "counterpropagating_limit": {
+    "assumptions": [
+      "n_hat is a fixed unit vector",
+      "u_plus(t,x) >= 0",
+      "u_minus(t,x) >= 0",
+      "u(t,x) = u_plus(t,x) + u_minus(t,x)",
+      "S(t,x) = c (u_plus(t,x) - u_minus(t,x)) n_hat",
+      "integral_B u_plus(t,x) d^3x = integral_B u_minus(t,x) d^3x > 0"
+    ],
+    "derived_relations": [
+      "Q_B(t) = 0",
+      "E_B(t) > 0",
+      "chi_B(t) = 0"
+    ],
+    "status": "COUNTERPROPAGATING_LIMIT_SCHEMA_RECORDED_AND_EXECUTABLE_FIXTURE_VERIFIED"
+  },
+  "interpretation_boundary": {
+    "is_alternative_energy_law": false,
+    "is_energy_conservation_theorem": false,
+    "is_killing_current_identity_restatement": false,
+    "description": "bounded model observable for coherent net directional transport only"
+  },
+  "novelty_status": "GLOBAL_NOVELTY_NOT_ESTABLISHED",
+  "verification_scope": {
+    "continuous_general_bound": "CONDITIONAL_REDUCTION_ONLY",
+    "finite_discrete_fixtures": "EXECUTABLE_FIXTURES_VERIFIED"
+  },
+  "blocked_promotions": [
+    "DirectionalFlowFractionB -> unconditional theorem",
+    "DirectionalFlowFractionB -> new fundamental law",
+    "DirectionalFlowFractionB -> detector realization",
+    "DirectionalFlowFractionB -> empirical confirmation",
+    "DirectionalFlowFractionB -> E equals m c cubed",
+    "DirectionalFlowFractionB -> ZeroDayClosure",
+    "global novelty established",
+    "unrestricted ZeroDayClosure"
+  ]
+}
