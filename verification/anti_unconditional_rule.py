@@ -3624,6 +3624,216 @@ def verify_scaled_energy_detector_response_input_contract_guard() -> None:
 
 verify_scaled_energy_detector_response_input_contract_guard()
 
+
+def verify_scaled_energy_detector_response_candidate_input_record_guard() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    surface_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_detector_response_"
+            "candidate_input_record_surface.json"
+        )
+    )
+
+    if not surface_path.exists():
+        raise SystemExit(
+            "MISSING_OBJECT := "
+            "core/scaled_energy_detector_response_"
+            "candidate_input_record_surface.json"
+        )
+
+    surface = json.loads(surface_path.read_text(encoding="utf-8"))
+
+    expected_top_level = {
+        "surface": (
+            "ScaledEnergyDetectorResponseCandidateInputRecordSurface"
+        ),
+        "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        "classification": (
+            "BOUNDED_DETECTOR_RESPONSE_CANDIDATE_INPUT_RECORD_ONLY"
+        ),
+        "dependency_surface": (
+            "ScaledEnergyDetectorResponseFunctionalInputContractSurface"
+        ),
+        "record_status": "CANDIDATE_RECORD_NOT_ACCEPTED",
+        "contract_inhabitation_status": "INPUT_CONTRACT_NOT_INHABITED",
+        "detector_status": "DETECTOR_NOT_CONSTRUCTED",
+        "functional_status": "FUNCTIONAL_NOT_CONSTRUCTED",
+        "verification_status": "CANDIDATE_NOT_VERIFIED",
+        "empirical_status": "NO_EMPIRICAL_EVIDENCE_SUPPLIED",
+    }
+
+    for key, expected in expected_top_level.items():
+        actual = surface.get(key)
+        if actual != expected:
+            raise SystemExit(
+                "SCALED_ENERGY_DETECTOR_RESPONSE_"
+                "CANDIDATE_INPUT_RECORD_GUARD_FAILED := "
+                f"{key!r} expected {expected!r} got {actual!r}"
+            )
+
+    scope = surface.get("bounded_scope")
+    expected_scope = {
+        "domain": "ScaledEnergyObservableDomainB",
+        "species_set": "Sigma_B := {A, B}",
+        "closed_world": True,
+        "additional_species_allowed": False,
+    }
+
+    if scope != expected_scope:
+        raise SystemExit(
+            "SCALED_ENERGY_DETECTOR_RESPONSE_"
+            "CANDIDATE_INPUT_RECORD_GUARD_FAILED := "
+            f"bounded scope expected {expected_scope!r} got {scope!r}"
+        )
+
+    record = surface.get("candidate_record")
+    if not isinstance(record, dict):
+        raise SystemExit(
+            "SCALED_ENERGY_DETECTOR_RESPONSE_"
+            "CANDIDATE_INPUT_RECORD_GUARD_FAILED := "
+            "candidate_record missing"
+        )
+
+    if record.get("record_symbol") != "DInputCandidateB0":
+        raise SystemExit(
+            "SCALED_ENERGY_DETECTOR_RESPONSE_"
+            "CANDIDATE_INPUT_RECORD_GUARD_FAILED := "
+            "unexpected record symbol"
+        )
+
+    fields = record.get("fields")
+    if not isinstance(fields, list):
+        raise SystemExit(
+            "SCALED_ENERGY_DETECTOR_RESPONSE_"
+            "CANDIDATE_INPUT_RECORD_GUARD_FAILED := fields missing"
+        )
+
+    expected_field_names = [
+        "detector_identifier",
+        "detector_support",
+        "admissible_input_current",
+        "scaled_input_current",
+        "response_codomain",
+        "response_output_unit",
+        "response_functional",
+        "calibration_rule",
+        "finite_output_rule",
+        "constant_rescaling_distinction_predicate",
+    ]
+
+    actual_field_names = [field.get("field") for field in fields]
+
+    if actual_field_names != expected_field_names:
+        raise SystemExit(
+            "SCALED_ENERGY_DETECTOR_RESPONSE_"
+            "CANDIDATE_INPUT_RECORD_GUARD_FAILED := "
+            f"expected fields {expected_field_names!r} "
+            f"got {actual_field_names!r}"
+        )
+
+    for field in fields:
+        if field.get("status") != "CANDIDATE_UNVERIFIED":
+            raise SystemExit(
+                "SCALED_ENERGY_DETECTOR_RESPONSE_"
+                "CANDIDATE_INPUT_RECORD_GUARD_FAILED := "
+                f"promoted field {field.get('field')!r}"
+            )
+
+        candidate_value = field.get("candidate_value")
+        if not isinstance(candidate_value, str) or not candidate_value:
+            raise SystemExit(
+                "SCALED_ENERGY_DETECTOR_RESPONSE_"
+                "CANDIDATE_INPUT_RECORD_GUARD_FAILED := "
+                f"missing candidate value for {field.get('field')!r}"
+            )
+
+    required_blocked_promotions = {
+        (
+            "ScaledEnergyDetectorResponseCandidateInputRecordSurface "
+            "-> accepted input record"
+        ),
+        (
+            "ScaledEnergyDetectorResponseCandidateInputRecordSurface "
+            "-> input contract inhabitation"
+        ),
+        (
+            "ScaledEnergyDetectorResponseCandidateInputRecordSurface "
+            "-> detector construction"
+        ),
+        (
+            "ScaledEnergyDetectorResponseCandidateInputRecordSurface "
+            "-> response-functional construction"
+        ),
+        (
+            "ScaledEnergyDetectorResponseCandidateInputRecordSurface "
+            "-> detector verification"
+        ),
+        (
+            "ScaledEnergyDetectorResponseCandidateInputRecordSurface "
+            "-> empirical confirmation"
+        ),
+        (
+            "ScaledEnergyDetectorResponseCandidateInputRecordSurface "
+            "-> ScaledEnergyObservableMap"
+        ),
+        (
+            "ScaledEnergyDetectorResponseCandidateInputRecordSurface "
+            "-> alpha_A != alpha_B"
+        ),
+        (
+            "ScaledEnergyDetectorResponseCandidateInputRecordSurface "
+            "-> ZeroDayClosure"
+        ),
+        "unrestricted ZeroDayClosure",
+        "restricted-to-unrestricted lift",
+    }
+
+    actual_blocked_promotions = set(
+        surface.get("blocked_promotions", [])
+    )
+
+    if actual_blocked_promotions != required_blocked_promotions:
+        raise SystemExit(
+            "SCALED_ENERGY_DETECTOR_RESPONSE_"
+            "CANDIDATE_INPUT_RECORD_GUARD_FAILED := "
+            "blocked-promotion set changed"
+        )
+
+    encoded = json.dumps(surface, sort_keys=True)
+
+    forbidden_tokens = (
+        '"record_status": "CANDIDATE_RECORD_ACCEPTED"',
+        '"contract_inhabitation_status": "INPUT_CONTRACT_INHABITED"',
+        '"detector_status": "DETECTOR_CONSTRUCTED"',
+        '"functional_status": "FUNCTIONAL_CONSTRUCTED"',
+        '"verification_status": "CANDIDATE_VERIFIED"',
+        '"empirical_status": "EMPIRICALLY_CONFIRMED"',
+        '"status": "CANDIDATE_VERIFIED"',
+        '"map_status": "CONSTRUCTED"',
+        '"zero_day_closure_status": "CONSTRUCTED"',
+    )
+
+    for token in forbidden_tokens:
+        if token in encoded:
+            raise SystemExit(
+                "SCALED_ENERGY_DETECTOR_RESPONSE_"
+                "CANDIDATE_INPUT_RECORD_GUARD_FAILED := "
+                f"forbidden promotion {token!r}"
+            )
+
+    print(
+        "SCALED_ENERGY_DETECTOR_RESPONSE_"
+        "CANDIDATE_INPUT_RECORD_GUARD_OK"
+    )
+
+
+verify_scaled_energy_detector_response_candidate_input_record_guard()
+
 def verify_scaled_energy_coupling_branch_exclusivity_guard() -> None:
     import json
     from pathlib import Path
