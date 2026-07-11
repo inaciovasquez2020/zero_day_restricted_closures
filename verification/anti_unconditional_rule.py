@@ -6457,3 +6457,634 @@ def verify_scaled_energy_support_candidate_time_translation_killing_evidence_gua
 
 
 verify_scaled_energy_support_candidate_time_translation_killing_evidence_guard()
+
+def verify_scaled_energy_support_candidate_compact_support_stress_energy_candidate_guard() -> None:
+    import json
+    import math
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+
+    region_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_"
+            "region_definition_candidate_surface.json"
+        )
+    )
+    metric_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_"
+            "minkowski_metric_connection_instance_surface.json"
+        )
+    )
+    killing_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_"
+            "time_translation_killing_evidence_surface.json"
+        )
+    )
+    candidate_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_"
+            "compact_support_stress_energy_candidate_surface.json"
+        )
+    )
+
+    for path in (
+        region_path,
+        metric_path,
+        killing_path,
+        candidate_path,
+    ):
+        if not path.exists():
+            raise SystemExit(
+                f"MISSING_OBJECT := {path.relative_to(root)}"
+            )
+
+    region = json.loads(region_path.read_text(encoding="utf-8"))
+    metric = json.loads(metric_path.read_text(encoding="utf-8"))
+    killing = json.loads(killing_path.read_text(encoding="utf-8"))
+    candidate = json.loads(
+        candidate_path.read_text(encoding="utf-8")
+    )
+
+    expected_top_level = {
+        "surface": (
+            "ScaledEnergySupportCandidate"
+            "CompactSupportStressEnergyCandidateSurface"
+        ),
+        "classification": (
+            "BOUNDED_COMPACT_SUPPORT_STRESS_ENERGY_CANDIDATE_ONLY"
+        ),
+        "dependency_region_surface": (
+            "ScaledEnergySupportCandidate"
+            "RegionDefinitionCandidateSurface"
+        ),
+        "dependency_metric_connection_surface": (
+            "ScaledEnergySupportCandidate"
+            "MinkowskiMetricConnectionInstanceSurface"
+        ),
+        "dependency_killing_evidence_surface": (
+            "ScaledEnergySupportCandidate"
+            "TimeTranslationKillingEvidenceSurface"
+        ),
+        "target_support": "SupportCandidateB0",
+        "scope_status": (
+            "BOUNDED_NONZERO_SYMMETRIC_COMPACT_SUPPORT_"
+            "STRESS_ENERGY_CANDIDATE_INHABITED"
+        ),
+    }
+
+    for key, expected in expected_top_level.items():
+        actual = candidate.get(key)
+
+        if actual != expected:
+            raise SystemExit(
+                "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+                "CANDIDATE_GUARD_FAILED := "
+                f"{key!r} expected {expected!r} got {actual!r}"
+            )
+
+    if region.get("surface") != (
+        "ScaledEnergySupportCandidate"
+        "RegionDefinitionCandidateSurface"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := region dependency changed"
+        )
+
+    if region.get("target_support") != "SupportCandidateB0":
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := region support changed"
+        )
+
+    if region.get("nonempty_status") != "NONEMPTY_VERIFIED":
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := region nonempty evidence missing"
+        )
+
+    if region.get("boundedness_status") != "BOUNDEDNESS_VERIFIED":
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := region boundedness missing"
+        )
+
+    region_parameters = region.get("candidate_parameters", {})
+
+    expected_region_parameters = {
+        "temporal_lower_bound": 0.0,
+        "temporal_upper_bound": 1.0e-9,
+        "spatial_half_widths": [0.001, 0.001, 0.001],
+        "temporal_coordinate_unit": "s",
+        "spatial_coordinate_unit": "m",
+        "parameter_values_status": "PARAMETER_VALUES_SUPPLIED",
+    }
+
+    if region_parameters != expected_region_parameters:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := region parameters changed"
+        )
+
+    if metric.get("surface") != (
+        "ScaledEnergySupportCandidate"
+        "MinkowskiMetricConnectionInstanceSurface"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := metric dependency changed"
+        )
+
+    if metric.get("target_support") != "SupportCandidateB0":
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := metric support changed"
+        )
+
+    expected_metric = [
+        [-1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1],
+    ]
+
+    if metric.get("metric_tensor", {}).get("components") != (
+        expected_metric
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := Minkowski metric changed"
+        )
+
+    if metric.get("connection_coefficients", {}).get(
+        "component_status"
+    ) != "ZERO_COMPONENTS_SUPPLIED":
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := zero connection missing"
+        )
+
+    if killing.get("surface") != (
+        "ScaledEnergySupportCandidate"
+        "TimeTranslationKillingEvidenceSurface"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := Killing dependency changed"
+        )
+
+    if killing.get("target_support") != "SupportCandidateB0":
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := Killing support changed"
+        )
+
+    if killing.get("scope_status") != (
+        "BOUNDED_MINKOWSKI_TIME_TRANSLATION_"
+        "KILLING_EDGE_INHABITED"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := Killing edge not inhabited"
+        )
+
+    expected_time_flow = {
+        "symbol": "u_candidate^mu",
+        "components": [1, 0, 0, 0],
+        "source": "tau_candidate metric dual",
+        "status": "EXISTING_KILLING_TIME_FLOW_REFERENCED",
+    }
+
+    if candidate.get("time_flow_input") != expected_time_flow:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := time-flow input changed"
+        )
+
+    support_semantics = candidate.get("support_semantics", {})
+
+    if support_semantics != {
+        "interpretation": (
+            "support relative to the existing bounded "
+            "SupportCandidateB0 coordinate region"
+        ),
+        "global_zero_extension": "NOT_SUPPLIED",
+        "distributional_boundary_analysis": "NOT_SUPPLIED",
+    }:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := support semantics changed"
+        )
+
+    bump = candidate.get("spatial_bump_candidate", {})
+    factor = bump.get("one_dimensional_factor", {})
+
+    expected_half_widths = [0.0005, 0.0005, 0.0005]
+
+    if bump.get("spatial_half_widths_m") != expected_half_widths:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := bump widths changed"
+        )
+
+    if bump.get("time_dependence") != (
+        "independent of x_candidate^0 on SupportCandidateB0"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := time independence missing"
+        )
+
+    if factor.get("origin_value") != 1.0:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := bump origin value changed"
+        )
+
+    if factor.get("support_closure") != "[-1,1]":
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := bump support changed"
+        )
+
+    def phi(value):
+        if abs(value) >= 1.0:
+            return 0.0
+
+        return math.exp(
+            1.0 - 1.0 / (1.0 - value * value)
+        )
+
+    if phi(0.0) != 1.0:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := phi origin check failed"
+        )
+
+    if phi(1.0) != 0.0 or phi(-1.0) != 0.0:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := phi boundary check failed"
+        )
+
+    if phi(1.25) != 0.0 or phi(-1.25) != 0.0:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := phi exterior check failed"
+        )
+
+    if not 0.0 < phi(0.5) < 1.0:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := phi interior check failed"
+        )
+
+    energy_density = candidate.get(
+        "energy_density_candidate",
+        {},
+    )
+
+    if energy_density.get("rho0_value") != 1.0:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := rho0 changed"
+        )
+
+    if energy_density.get("empirical_calibration") != "NOT_SUPPLIED":
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := empirical calibration promoted"
+        )
+
+    def beta(x_one, x_two, x_three):
+        coordinates = (x_one, x_two, x_three)
+
+        return math.prod(
+            phi(coordinate / half_width)
+            for coordinate, half_width in zip(
+                coordinates,
+                expected_half_widths,
+            )
+        )
+
+    rho0 = energy_density["rho0_value"]
+
+    def rho(x_one, x_two, x_three):
+        return rho0 * beta(x_one, x_two, x_three)
+
+    time_flow = expected_time_flow["components"]
+
+    def stress_energy(x_one, x_two, x_three):
+        density = rho(x_one, x_two, x_three)
+
+        return [
+            [
+                density
+                * time_flow[mu]
+                * time_flow[nu]
+                for nu in range(4)
+            ]
+            for mu in range(4)
+        ]
+
+    origin_tensor = stress_energy(0.0, 0.0, 0.0)
+
+    expected_origin_tensor = [
+        [1.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0],
+        [0.0, 0.0, 0.0, 0.0],
+    ]
+
+    if origin_tensor != expected_origin_tensor:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := nonzero tensor witness failed"
+        )
+
+    witness = candidate.get("nonzero_witness", {})
+
+    if witness != {
+        "point": [5.0e-10, 0.0, 0.0, 0.0],
+        "beta_value": 1.0,
+        "rho_value": 1.0,
+        "tensor_component": "T_candidate^{00}",
+        "tensor_component_value": 1.0,
+        "verification_status": (
+            "NONZERO_WITNESS_COMPONENT_CHECK_VERIFIED"
+        ),
+    }:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := nonzero witness changed"
+        )
+
+    checked_symmetry_components = 0
+
+    sample_points = (
+        (0.0, 0.0, 0.0),
+        (0.00025, 0.0, 0.0),
+        (0.0005, 0.0, 0.0),
+        (0.00075, 0.0, 0.0),
+    )
+
+    for point in sample_points:
+        tensor = stress_energy(*point)
+
+        for mu in range(4):
+            for nu in range(4):
+                if tensor[mu][nu] != tensor[nu][mu]:
+                    raise SystemExit(
+                        "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+                        "CANDIDATE_GUARD_FAILED := "
+                        f"symmetry failed at {point} ({mu},{nu})"
+                    )
+
+                if point == sample_points[0]:
+                    checked_symmetry_components += 1
+
+    if checked_symmetry_components != 16:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := "
+            "expected 16 ordered symmetry checks"
+        )
+
+    expected_symmetry = {
+        "equation": (
+            "T_candidate^{mu nu} = T_candidate^{nu mu}"
+        ),
+        "ordered_component_check_count": 16,
+        "verification_status": (
+            "CANDIDATE_SYMMETRY_COMPONENT_CHECK_VERIFIED"
+        ),
+    }
+
+    if candidate.get("symmetry_certificate") != expected_symmetry:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := symmetry certificate changed"
+        )
+
+    region_time_bounds = [
+        region_parameters["temporal_lower_bound"],
+        region_parameters["temporal_upper_bound"],
+    ]
+    region_spatial_half_widths = region_parameters[
+        "spatial_half_widths"
+    ]
+
+    candidate_time_bounds = [0.0, 1.0e-9]
+    candidate_spatial_bounds = [
+        [-half_width, half_width]
+        for half_width in expected_half_widths
+    ]
+    region_spatial_bounds = [
+        [-half_width, half_width]
+        for half_width in region_spatial_half_widths
+    ]
+
+    subset_checks = 0
+
+    if candidate_time_bounds[0] < region_time_bounds[0]:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := temporal lower support escaped"
+        )
+    subset_checks += 1
+
+    if candidate_time_bounds[1] > region_time_bounds[1]:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := temporal upper support escaped"
+        )
+    subset_checks += 1
+
+    for candidate_bounds, region_bounds in zip(
+        candidate_spatial_bounds,
+        region_spatial_bounds,
+    ):
+        if candidate_bounds[0] < region_bounds[0]:
+            raise SystemExit(
+                "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+                "CANDIDATE_GUARD_FAILED := spatial lower support escaped"
+            )
+        subset_checks += 1
+
+        if candidate_bounds[1] > region_bounds[1]:
+            raise SystemExit(
+                "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+                "CANDIDATE_GUARD_FAILED := spatial upper support escaped"
+            )
+        subset_checks += 1
+
+    if subset_checks != 8:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := expected 8 support checks"
+        )
+
+    expected_support_certificate = {
+        "temporal_support_s": candidate_time_bounds,
+        "spatial_support_closure_m": candidate_spatial_bounds,
+        "containing_region_temporal_bounds_s": region_time_bounds,
+        "containing_region_spatial_bounds_m": (
+            region_spatial_bounds
+        ),
+        "subset_check_count": 8,
+        "verification_status": (
+            "RELATIVE_COMPACT_SUPPORT_BOUNDS_CHECK_VERIFIED"
+        ),
+    }
+
+    if candidate.get(
+        "relative_compact_support_certificate"
+    ) != expected_support_certificate:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := support certificate changed"
+        )
+
+    expected_component_matrix = [
+        ["rho_candidate", 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+    ]
+
+    stress_candidate = candidate.get(
+        "stress_energy_candidate",
+        {},
+    )
+
+    if stress_candidate.get("component_matrix") != (
+        expected_component_matrix
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := tensor components changed"
+        )
+
+    expected_edge = {
+        "source": (
+            "bounded Killing time flow "
+            "+ bounded support region"
+        ),
+        "target": (
+            "NonzeroSymmetricCompactSupportStressEnergyCandidate("
+            "SupportCandidateB0)"
+        ),
+        "status": "INHABITED_BY_COMPONENT_AND_SUPPORT_CHECKS",
+    }
+
+    if candidate.get("inhabited_edge") != expected_edge:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := inhabited edge changed"
+        )
+
+    if candidate.get("conservation_boundary") != {
+        "candidate_equation": (
+            "nabla_mu T_candidate^{mu nu} = 0"
+        ),
+        "verification_status": "NOT_VERIFIED",
+    }:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := conservation was promoted"
+        )
+
+    if candidate.get("current_boundary") != {
+        "candidate_definition": (
+            "J_E_candidate^mu = "
+            "T_candidate^{mu nu} tau_candidate_nu"
+        ),
+        "verification_status": "NOT_VERIFIED",
+    }:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := current was promoted"
+        )
+
+    if candidate.get("acceptance_boundary") != {
+        "d_input_candidate_status": "NOT_ACCEPTED",
+        "restricted_composition_status": "NOT_CONNECTED",
+    }:
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := acceptance was promoted"
+        )
+
+    required_blocked = {
+        (
+            "stress-energy candidate -> "
+            "covariant stress-energy conservation verified"
+        ),
+        (
+            "stress-energy candidate -> "
+            "global distributional conservation verified"
+        ),
+        (
+            "stress-energy candidate -> "
+            "scaled-energy current conservation verified"
+        ),
+        "stress-energy candidate -> detector support realized",
+        "stress-energy candidate -> DInputCandidateB0 accepted",
+        (
+            "stress-energy candidate -> "
+            "restricted composition target accepted"
+        ),
+        "stress-energy candidate -> empirical confirmation",
+        "stress-energy candidate -> E equals m c cubed verified",
+        "stress-energy candidate -> ZeroDayClosure",
+        "unrestricted ZeroDayClosure",
+    }
+
+    if set(candidate.get("blocked_promotions", [])) != (
+        required_blocked
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+            "CANDIDATE_GUARD_FAILED := blocked promotions changed"
+        )
+
+    encoded = json.dumps(candidate, sort_keys=True)
+
+    forbidden_tokens = (
+        "COVARIANT_STRESS_ENERGY_CONSERVATION_VERIFIED",
+        "GLOBAL_DISTRIBUTIONAL_CONSERVATION_VERIFIED",
+        "CURRENT_CONSERVATION_VERIFIED",
+        "PHYSICAL_DETECTOR_SUPPORT_REALIZED",
+        '"d_input_candidate_status": "ACCEPTED"',
+        '"restricted_composition_status": "CONNECTED"',
+        "EMPIRICALLY_CONFIRMED",
+        "E_EQUALS_M_C_CUBED_VERIFIED",
+        '"zero_day_closure_status": "CONSTRUCTED"',
+    )
+
+    for token in forbidden_tokens:
+        if token in encoded:
+            raise SystemExit(
+                "SCALED_ENERGY_COMPACT_SUPPORT_STRESS_ENERGY_"
+                "CANDIDATE_GUARD_FAILED := "
+                f"forbidden promotion {token!r}"
+            )
+
+    print(
+        "SCALED_ENERGY_SUPPORT_CANDIDATE_"
+        "COMPACT_SUPPORT_STRESS_ENERGY_CANDIDATE_GUARD_OK"
+    )
+
+
+verify_scaled_energy_support_candidate_compact_support_stress_energy_candidate_guard()

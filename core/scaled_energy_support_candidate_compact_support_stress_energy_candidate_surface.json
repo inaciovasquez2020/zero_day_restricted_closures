@@ -1,0 +1,188 @@
+{
+  "surface": "ScaledEnergySupportCandidateCompactSupportStressEnergyCandidateSurface",
+  "classification": "BOUNDED_COMPACT_SUPPORT_STRESS_ENERGY_CANDIDATE_ONLY",
+  "dependency_region_surface": "ScaledEnergySupportCandidateRegionDefinitionCandidateSurface",
+  "dependency_metric_connection_surface": "ScaledEnergySupportCandidateMinkowskiMetricConnectionInstanceSurface",
+  "dependency_killing_evidence_surface": "ScaledEnergySupportCandidateTimeTranslationKillingEvidenceSurface",
+  "target_support": "SupportCandidateB0",
+  "coordinate_basis_order": [
+    "x_candidate^0",
+    "x_candidate^1",
+    "x_candidate^2",
+    "x_candidate^3"
+  ],
+  "support_semantics": {
+    "interpretation": "support relative to the existing bounded SupportCandidateB0 coordinate region",
+    "global_zero_extension": "NOT_SUPPLIED",
+    "distributional_boundary_analysis": "NOT_SUPPLIED"
+  },
+  "time_flow_input": {
+    "symbol": "u_candidate^mu",
+    "components": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "source": "tau_candidate metric dual",
+    "status": "EXISTING_KILLING_TIME_FLOW_REFERENCED"
+  },
+  "spatial_bump_candidate": {
+    "symbol": "beta_candidate",
+    "one_dimensional_factor": {
+      "symbol": "phi_candidate",
+      "definition": "phi_candidate(s) = exp(1 - 1/(1-s^2)) when abs(s) < 1; phi_candidate(s) = 0 when abs(s) >= 1",
+      "origin_value": 1.0,
+      "support_closure": "[-1,1]"
+    },
+    "spatial_half_widths_m": [
+      0.0005,
+      0.0005,
+      0.0005
+    ],
+    "definition": "beta_candidate(x) = phi_candidate(x_candidate^1/0.0005) * phi_candidate(x_candidate^2/0.0005) * phi_candidate(x_candidate^3/0.0005)",
+    "time_dependence": "independent of x_candidate^0 on SupportCandidateB0",
+    "support_closure_spatial_m": [
+      [
+        -0.0005,
+        0.0005
+      ],
+      [
+        -0.0005,
+        0.0005
+      ],
+      [
+        -0.0005,
+        0.0005
+      ]
+    ],
+    "status": "EXACT_BUMP_CANDIDATE_SUPPLIED"
+  },
+  "energy_density_candidate": {
+    "symbol": "rho_candidate",
+    "definition": "rho_candidate(x) = rho0_candidate * beta_candidate(x)",
+    "rho0_value": 1.0,
+    "rho0_unit": "candidate_energy_density_unit",
+    "empirical_calibration": "NOT_SUPPLIED"
+  },
+  "stress_energy_candidate": {
+    "symbol": "T_candidate^{mu nu}",
+    "variance": "contravariant rank-two tensor candidate",
+    "definition": "T_candidate^{mu nu}(x) = rho_candidate(x) u_candidate^mu u_candidate^nu",
+    "component_matrix": [
+      [
+        "rho_candidate",
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "candidate_status": "NONZERO_COMPACT_SUPPORT_TENSOR_CANDIDATE_SUPPLIED"
+  },
+  "nonzero_witness": {
+    "point": [
+      5e-10,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "beta_value": 1.0,
+    "rho_value": 1.0,
+    "tensor_component": "T_candidate^{00}",
+    "tensor_component_value": 1.0,
+    "verification_status": "NONZERO_WITNESS_COMPONENT_CHECK_VERIFIED"
+  },
+  "symmetry_certificate": {
+    "equation": "T_candidate^{mu nu} = T_candidate^{nu mu}",
+    "ordered_component_check_count": 16,
+    "verification_status": "CANDIDATE_SYMMETRY_COMPONENT_CHECK_VERIFIED"
+  },
+  "relative_compact_support_certificate": {
+    "temporal_support_s": [
+      0.0,
+      1e-09
+    ],
+    "spatial_support_closure_m": [
+      [
+        -0.0005,
+        0.0005
+      ],
+      [
+        -0.0005,
+        0.0005
+      ],
+      [
+        -0.0005,
+        0.0005
+      ]
+    ],
+    "containing_region_temporal_bounds_s": [
+      0.0,
+      1e-09
+    ],
+    "containing_region_spatial_bounds_m": [
+      [
+        -0.001,
+        0.001
+      ],
+      [
+        -0.001,
+        0.001
+      ],
+      [
+        -0.001,
+        0.001
+      ]
+    ],
+    "subset_check_count": 8,
+    "verification_status": "RELATIVE_COMPACT_SUPPORT_BOUNDS_CHECK_VERIFIED"
+  },
+  "inhabited_edge": {
+    "source": "bounded Killing time flow + bounded support region",
+    "target": "NonzeroSymmetricCompactSupportStressEnergyCandidate(SupportCandidateB0)",
+    "status": "INHABITED_BY_COMPONENT_AND_SUPPORT_CHECKS"
+  },
+  "conservation_boundary": {
+    "candidate_equation": "nabla_mu T_candidate^{mu nu} = 0",
+    "verification_status": "NOT_VERIFIED"
+  },
+  "current_boundary": {
+    "candidate_definition": "J_E_candidate^mu = T_candidate^{mu nu} tau_candidate_nu",
+    "verification_status": "NOT_VERIFIED"
+  },
+  "acceptance_boundary": {
+    "d_input_candidate_status": "NOT_ACCEPTED",
+    "restricted_composition_status": "NOT_CONNECTED"
+  },
+  "scope_status": "BOUNDED_NONZERO_SYMMETRIC_COMPACT_SUPPORT_STRESS_ENERGY_CANDIDATE_INHABITED",
+  "blocked_promotions": [
+    "stress-energy candidate -> covariant stress-energy conservation verified",
+    "stress-energy candidate -> global distributional conservation verified",
+    "stress-energy candidate -> scaled-energy current conservation verified",
+    "stress-energy candidate -> detector support realized",
+    "stress-energy candidate -> DInputCandidateB0 accepted",
+    "stress-energy candidate -> restricted composition target accepted",
+    "stress-energy candidate -> empirical confirmation",
+    "stress-energy candidate -> E equals m c cubed verified",
+    "stress-energy candidate -> ZeroDayClosure",
+    "unrestricted ZeroDayClosure"
+  ]
+}
