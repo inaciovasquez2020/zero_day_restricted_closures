@@ -1,9 +1,9 @@
 {
-  "surface": "TrueEnergyObservableMapBoundedDomainSurface",
+  "surface": "ScaledEnergyObservableMapBoundedDomainSurface",
   "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
   "classification": "RESTRICTED_OBSERVABLE_MAP_BOUNDED_DOMAIN_ONLY",
   "bounded_domain": {
-    "name": "TrueEnergyObservableDomainB",
+    "name": "ScaledEnergyObservableDomainB",
     "scope": "restricted_zero_day_instance_only",
     "spacetime_region": "finite detector-supported laboratory region",
     "systems": [
@@ -11,7 +11,7 @@
       "massive scalar test species B"
     ],
     "admissible_energy_current": "J_E^mu with local conservation supplied as an explicit input",
-    "observable_map_shape": "J_E^mu -> J_true^mu := c * J_E^mu",
+    "observable_map_shape": "J_E^mu -> J_scaled^mu := c * J_E^mu",
     "speed_of_light_status": "fixed spacetime-independent conversion constant"
   },
   "allowed_species_set": {
@@ -31,20 +31,20 @@
     "detector coupling realization"
   ],
   "blocked_promotions": [
-    "TrueEnergyObservableMap -> ZeroDayClosure",
+    "ScaledEnergyObservableMap -> ZeroDayClosure",
     "unrestricted ZeroDayClosure",
     "restricted-to-unrestricted lift",
-    "empirical confirmation of true energy",
+    "empirical confirmation of scaled energy",
     "alpha_A != alpha_B established"
   ],
   "non_claims": [
-    "does not construct TrueEnergyObservableMap",
+    "does not construct ScaledEnergyObservableMap",
     "does not prove local conservation",
     "does not establish coupling universality",
     "does not establish alpha_A != alpha_B",
     "does not prove ZeroDayClosure",
     "does not prove unrestricted ZeroDayClosure",
-    "does not construct TrueEnergyObservableMap -> ZeroDayClosure",
+    "does not construct ScaledEnergyObservableMap -> ZeroDayClosure",
     "does not erase the restricted boundary"
   ],
   "next_weakest_point": "Require local-conservation preservation for the bounded observable map without constructing any ZeroDayClosure edge."

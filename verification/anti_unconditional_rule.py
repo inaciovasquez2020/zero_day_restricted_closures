@@ -3204,23 +3204,23 @@ def _guard_f_physical_realization_source_input_contract_realization_source_input
 _guard_f_physical_realization_source_input_contract_realization_source_input_contract()
 
 
-def verify_true_energy_observable_map_zero_day_edge_rejection_guard() -> None:
+def verify_scaled_energy_observable_map_zero_day_edge_rejection_guard() -> None:
     import json
     from pathlib import Path
 
     root = Path(__file__).resolve().parents[1]
-    surface_path = root / "core/true_energy_observable_map_bounded_domain_surface.json"
+    surface_path = root / "core/scaled_energy_observable_map_bounded_domain_surface.json"
 
     if not surface_path.exists():
         raise SystemExit(
-            "MISSING_OBJECT := core/true_energy_observable_map_bounded_domain_surface.json"
+            "MISSING_OBJECT := core/scaled_energy_observable_map_bounded_domain_surface.json"
         )
 
     surface = json.loads(surface_path.read_text(encoding="utf-8"))
-    forbidden_edge = "TrueEnergyObservableMap -> ZeroDayClosure"
+    forbidden_edge = "ScaledEnergyObservableMap -> ZeroDayClosure"
 
     required_pairs = {
-        "surface": "TrueEnergyObservableMapBoundedDomainSurface",
+        "surface": "ScaledEnergyObservableMapBoundedDomainSurface",
         "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
         "classification": "RESTRICTED_OBSERVABLE_MAP_BOUNDED_DOMAIN_ONLY",
         "map_status": "DOMAIN_AND_SPECIES_INSTANTIATED_MAP_NOT_CONSTRUCTED",
@@ -3230,39 +3230,39 @@ def verify_true_energy_observable_map_zero_day_edge_rejection_guard() -> None:
         actual = surface.get(key)
         if actual != expected:
             raise SystemExit(
-                "TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
+                "SCALED_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
                 f"{key} expected {expected!r} got {actual!r}"
             )
 
     blocked_promotions = surface.get("blocked_promotions")
     if not isinstance(blocked_promotions, list):
         raise SystemExit(
-            "TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
+            "SCALED_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
             "blocked_promotions must be a list"
         )
 
     if forbidden_edge not in blocked_promotions:
         raise SystemExit(
-            "TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
-            "missing blocked TrueEnergyObservableMap -> ZeroDayClosure promotion"
+            "SCALED_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
+            "missing blocked ScaledEnergyObservableMap -> ZeroDayClosure promotion"
         )
 
     required_non_claim = (
-        "does not construct TrueEnergyObservableMap -> ZeroDayClosure"
+        "does not construct ScaledEnergyObservableMap -> ZeroDayClosure"
     )
     non_claims = surface.get("non_claims")
     if not isinstance(non_claims, list) or required_non_claim not in non_claims:
         raise SystemExit(
-            "TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
+            "SCALED_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
             "missing explicit downstream-edge non-claim"
         )
 
     forbidden_positive_phrases = {
-        "TrueEnergyObservableMap -> ZeroDayClosure constructed",
-        "TrueEnergyObservableMap -> ZeroDayClosure proved",
-        "TrueEnergyObservableMap -> ZeroDayClosure discharged",
-        "TrueEnergyObservableMap implies ZeroDayClosure",
-        "TrueEnergyObservableMap supplies ZeroDayClosure",
+        "ScaledEnergyObservableMap -> ZeroDayClosure constructed",
+        "ScaledEnergyObservableMap -> ZeroDayClosure proved",
+        "ScaledEnergyObservableMap -> ZeroDayClosure discharged",
+        "ScaledEnergyObservableMap implies ZeroDayClosure",
+        "ScaledEnergyObservableMap supplies ZeroDayClosure",
     }
 
     edge_keys = {
@@ -3310,7 +3310,7 @@ def verify_true_energy_observable_map_zero_day_edge_rejection_guard() -> None:
         for phrase in forbidden_positive_phrases:
             if phrase in body:
                 raise SystemExit(
-                    "TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
+                    "SCALED_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
                     f"{path.relative_to(root)} contains forbidden claim {phrase!r}"
                 )
 
@@ -3322,7 +3322,7 @@ def verify_true_energy_observable_map_zero_day_edge_rejection_guard() -> None:
                 value = node.get(key)
                 if isinstance(value, str) and value.upper() in positive_statuses:
                     raise SystemExit(
-                        "TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
+                        "SCALED_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
                         f"{path.relative_to(root)} promotes forbidden edge with "
                         f"{key}={value!r}"
                     )
@@ -3337,30 +3337,30 @@ def verify_true_energy_observable_map_zero_day_edge_rejection_guard() -> None:
             ):
                 if node.get(key) is True:
                     raise SystemExit(
-                        "TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
+                        "SCALED_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_FAILED := "
                         f"{path.relative_to(root)} promotes forbidden edge with "
                         f"{key}=True"
                     )
 
-    print("TRUE_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_OK")
+    print("SCALED_ENERGY_ZERO_DAY_EDGE_REJECTION_GUARD_OK")
 
 
-verify_true_energy_observable_map_zero_day_edge_rejection_guard()
+verify_scaled_energy_observable_map_zero_day_edge_rejection_guard()
 
 
-def verify_true_energy_coupling_branch_exclusivity_guard() -> None:
+def verify_scaled_energy_coupling_branch_exclusivity_guard() -> None:
     import json
     from pathlib import Path
 
     root = Path(__file__).resolve().parents[1]
     bounded_surface_path = (
-        root / "core/true_energy_observable_map_bounded_domain_surface.json"
+        root / "core/scaled_energy_observable_map_bounded_domain_surface.json"
     )
 
     if not bounded_surface_path.exists():
         raise SystemExit(
             "MISSING_OBJECT := "
-            "core/true_energy_observable_map_bounded_domain_surface.json"
+            "core/scaled_energy_observable_map_bounded_domain_surface.json"
         )
 
     bounded_surface = json.loads(
@@ -3376,7 +3376,7 @@ def verify_true_energy_coupling_branch_exclusivity_guard() -> None:
     missing_non_claims = sorted(required_non_claims - non_claims)
     if missing_non_claims:
         raise SystemExit(
-            "TRUE_ENERGY_COUPLING_BRANCH_EXCLUSIVITY_GUARD_FAILED := "
+            "SCALED_ENERGY_COUPLING_BRANCH_EXCLUSIVITY_GUARD_FAILED := "
             f"missing non_claims {missing_non_claims!r}"
         )
 
@@ -3385,13 +3385,13 @@ def verify_true_energy_coupling_branch_exclusivity_guard() -> None:
     )
     if "alpha_A != alpha_B established" not in blocked_promotions:
         raise SystemExit(
-            "TRUE_ENERGY_COUPLING_BRANCH_EXCLUSIVITY_GUARD_FAILED := "
+            "SCALED_ENERGY_COUPLING_BRANCH_EXCLUSIVITY_GUARD_FAILED := "
             "missing alpha_A != alpha_B blocked promotion"
         )
 
     universality_status_keys = {
         "coupling_universality_status",
-        "true_energy_coupling_universality_status",
+        "scaled_energy_coupling_universality_status",
     }
 
     nonuniversal_status_keys = {
@@ -3452,12 +3452,12 @@ def verify_true_energy_coupling_branch_exclusivity_guard() -> None:
 
             if universal_active and nonuniversal_active:
                 raise SystemExit(
-                    "TRUE_ENERGY_COUPLING_BRANCH_EXCLUSIVITY_GUARD_FAILED := "
+                    "SCALED_ENERGY_COUPLING_BRANCH_EXCLUSIVITY_GUARD_FAILED := "
                     f"{path.relative_to(root)} activates universal and "
                     "nonuniversal coupling branches simultaneously"
                 )
 
-    print("TRUE_ENERGY_COUPLING_BRANCH_EXCLUSIVITY_GUARD_OK")
+    print("SCALED_ENERGY_COUPLING_BRANCH_EXCLUSIVITY_GUARD_OK")
 
 
-verify_true_energy_coupling_branch_exclusivity_guard()
+verify_scaled_energy_coupling_branch_exclusivity_guard()
