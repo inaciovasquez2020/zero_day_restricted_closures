@@ -4017,6 +4017,304 @@ def verify_scaled_energy_detector_response_candidate_acceptance_obligation_guard
 
 verify_scaled_energy_detector_response_candidate_acceptance_obligation_guard()
 
+
+def verify_scaled_energy_vector_flux_detector_numerical_test() -> None:
+    import json
+    import math
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    surface_path = (
+        root
+        / "core"
+        / "scaled_energy_vector_flux_detector_numerical_test_surface.json"
+    )
+
+    if not surface_path.exists():
+        raise SystemExit(
+            "MISSING_OBJECT := "
+            "core/scaled_energy_vector_flux_detector_"
+            "numerical_test_surface.json"
+        )
+
+    surface = json.loads(surface_path.read_text(encoding="utf-8"))
+
+    expected_top_level = {
+        "surface": "ScaledEnergyVectorFluxDetectorNumericalTestSurface",
+        "boundary": "BOUNDARY := ¬ universal physical law E = m c^3",
+        "classification": (
+            "THREE_DIMENSIONAL_SYNTHETIC_VECTOR_FLUX_TEST_ONLY"
+        ),
+        "test_status": "NUMERICAL_SYNTHETIC_TEST_NOT_EMPIRICAL",
+        "empirical_status": "NO_PHYSICAL_DETECTOR_DATA_SUPPLIED",
+    }
+
+    for key, expected in expected_top_level.items():
+        actual = surface.get(key)
+        if actual != expected:
+            raise SystemExit(
+                "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+                f"{key!r} expected {expected!r} got {actual!r}"
+            )
+
+    observable = surface.get("vector_observable", {})
+
+    expected_observable = {
+        "symbol": "Q_vec(t)",
+        "definition": "Q_vec(t) := integral_V S(x,t) d^3x",
+        "quantity_type": "THREE_DIMENSIONAL_VECTOR_NOT_ENERGY",
+        "component_shape": "[Q_x, Q_y, Q_z]",
+        "flux_density_symbol": "S(x,t)",
+        "flux_density_unit": "W m^-2 = M T^-3",
+        "volume_element_unit": "m^3 = L^3",
+        "observable_unit": "W m = M L^3 T^-3",
+    }
+
+    if observable != expected_observable:
+        raise SystemExit(
+            "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+            "vector observable changed"
+        )
+
+    relation = surface.get("conditional_mass_relation", {})
+
+    if relation.get("energy_equivalent_mass") != "m_eq := E / c^2":
+        raise SystemExit(
+            "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+            "missing energy-equivalent mass definition"
+        )
+
+    if relation.get("collimated_relation") != (
+        "Q_vec = c E n_hat = m_eq c^3 n_hat"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+            "collimated relation changed"
+        )
+
+    if relation.get("universal_status") != (
+        "NOT_A_UNIVERSAL_ENERGY_LAW"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+            "relation was promoted to a universal law"
+        )
+
+    detector = surface.get("detector_array", {})
+    shape = detector.get("grid_shape")
+    sample_count = detector.get("sample_count")
+    cell_volume = detector.get("cell_volume_m3")
+
+    if shape != [2, 2, 2]:
+        raise SystemExit(
+            "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+            "unexpected detector grid shape"
+        )
+
+    if math.prod(shape) != sample_count or sample_count != 8:
+        raise SystemExit(
+            "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+            "detector sample count does not match the three-dimensional grid"
+        )
+
+    if not math.isclose(cell_volume, 0.125):
+        raise SystemExit(
+            "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+            "unexpected detector cell volume"
+        )
+
+    if detector.get("construction_status") != (
+        "DETECTOR_ARRAY_NOT_CONSTRUCTED"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+            "detector was promoted to constructed"
+        )
+
+    if detector.get("verification_status") != (
+        "DETECTOR_ARRAY_NOT_VERIFIED"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+            "detector was promoted to verified"
+        )
+
+    c_value = surface.get("constants", {}).get("c_m_per_s")
+
+    if not math.isclose(c_value, 299792458.0):
+        raise SystemExit(
+            "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+            "unexpected value of c"
+        )
+
+    configurations = surface.get("synthetic_configurations", [])
+
+    if [entry.get("name") for entry in configurations] != [
+        "COLLIMATED_POSITIVE_X",
+        "COUNTERPROPAGATING_X",
+    ]:
+        raise SystemExit(
+            "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+            "unexpected configuration inventory"
+        )
+
+    def vector_norm(vector):
+        return math.sqrt(sum(component * component for component in vector))
+
+    def integrate_flux(samples):
+        if len(samples) != sample_count:
+            raise SystemExit(
+                "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+                "fixture sample count does not match detector grid"
+            )
+
+        for sample in samples:
+            if not isinstance(sample, list) or len(sample) != 3:
+                raise SystemExit(
+                    "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+                    "each detector sample must be a three-component vector"
+                )
+
+        return [
+            sum(sample[axis] for sample in samples) * cell_volume
+            for axis in range(3)
+        ]
+
+    def infer_radiation_energy(samples):
+        return (
+            sum(vector_norm(sample) for sample in samples)
+            * cell_volume
+            / c_value
+        )
+
+    results = {}
+
+    for configuration in configurations:
+        if configuration.get("status") != "SYNTHETIC_FIXTURE_ONLY":
+            raise SystemExit(
+                "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+                "fixture was promoted beyond synthetic status"
+            )
+
+        name = configuration["name"]
+        samples = configuration["samples_W_per_m2"]
+        q_vector = integrate_flux(samples)
+        energy_joules = infer_radiation_energy(samples)
+        c_times_energy = c_value * energy_joules
+        mass_equivalent = energy_joules / (c_value * c_value)
+        mass_cubed_relation = mass_equivalent * (c_value ** 3)
+
+        expected_q = configuration["expected_Q_vec_W_m"]
+        expected_c_energy = configuration["expected_cE_W_m"]
+
+        for actual, expected in zip(q_vector, expected_q):
+            if not math.isclose(actual, expected, abs_tol=1e-12):
+                raise SystemExit(
+                    "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+                    f"{name} integrated vector expected "
+                    f"{expected_q!r} got {q_vector!r}"
+                )
+
+        if not math.isclose(
+            c_times_energy,
+            expected_c_energy,
+            rel_tol=1e-12,
+            abs_tol=1e-12,
+        ):
+            raise SystemExit(
+                "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+                f"{name} cE expected {expected_c_energy!r} "
+                f"got {c_times_energy!r}"
+            )
+
+        if not math.isclose(
+            mass_cubed_relation,
+            c_times_energy,
+            rel_tol=1e-12,
+            abs_tol=1e-12,
+        ):
+            raise SystemExit(
+                "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+                f"{name} m_eq*c^3 does not equal cE"
+            )
+
+        results[name] = {
+            "Q_vec": q_vector,
+            "Q_norm": vector_norm(q_vector),
+            "energy_J": energy_joules,
+            "cE_W_m": c_times_energy,
+            "m_eq_c3_W_m": mass_cubed_relation,
+        }
+
+    collimated = results["COLLIMATED_POSITIVE_X"]
+
+    if not math.isclose(
+        collimated["Q_norm"],
+        collimated["cE_W_m"],
+        rel_tol=1e-12,
+        abs_tol=1e-12,
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+            "collimated fixture does not satisfy norm(Q_vec) = cE"
+        )
+
+    counterpropagating = results["COUNTERPROPAGATING_X"]
+
+    if not math.isclose(
+        counterpropagating["Q_norm"],
+        0.0,
+        abs_tol=1e-12,
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+            "counterpropagating fixture did not cancel vector flux"
+        )
+
+    if not counterpropagating["energy_J"] > 0.0:
+        raise SystemExit(
+            "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+            "counterpropagating fixture must retain positive energy"
+        )
+
+    if math.isclose(
+        counterpropagating["Q_norm"],
+        counterpropagating["cE_W_m"],
+        rel_tol=1e-12,
+        abs_tol=1e-12,
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+            "counterpropagating fixture incorrectly satisfies "
+            "norm(Q_vec) = cE"
+        )
+
+    encoded = json.dumps(surface, sort_keys=True)
+
+    forbidden_tokens = (
+        '"quantity_type": "ENERGY"',
+        '"universal_status": "UNIVERSAL_ENERGY_LAW"',
+        '"construction_status": "DETECTOR_ARRAY_CONSTRUCTED"',
+        '"verification_status": "DETECTOR_ARRAY_VERIFIED"',
+        '"test_status": "EMPIRICALLY_CONFIRMED"',
+        '"empirical_status": "PHYSICAL_DATA_CONFIRMED"',
+        '"zero_day_closure_status": "CONSTRUCTED"',
+    )
+
+    for token in forbidden_tokens:
+        if token in encoded:
+            raise SystemExit(
+                "SCALED_ENERGY_VECTOR_FLUX_NUMERICAL_TEST_FAILED := "
+                f"forbidden promotion {token!r}"
+            )
+
+    print(
+        "SCALED_ENERGY_VECTOR_FLUX_DETECTOR_NUMERICAL_TEST_OK"
+    )
+
+
+verify_scaled_energy_vector_flux_detector_numerical_test()
+
 def verify_scaled_energy_coupling_branch_exclusivity_guard() -> None:
     import json
     from pathlib import Path
