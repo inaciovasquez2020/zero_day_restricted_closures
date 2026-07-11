@@ -24,9 +24,10 @@
     },
     {
       "field": "admissible_input_current",
-      "obligation": "T_total_candidate includes field and detector contributions; partial_mu T_total_candidate^{mu nu} = 0 and partial_mu tau_nu = 0 throughout SupportCandidateB0, implying partial_mu J_E_candidate^mu = 0 for J_E_candidate^mu := T_total_candidate^{mu nu} * tau_nu",
-      "discharge_status": "OBLIGATION_NOT_DISCHARGED",
-      "derivation_status": "DERIVATION_DECLARED_EVIDENCE_NOT_SUPPLIED"
+      "obligation": "Specify the geometry and covariant derivative on SupportCandidateB0; prove T_total_candidate^{mu nu} = T_total_candidate^{nu mu}; and establish (nabla_mu T_total_candidate^{mu nu}) * tau_nu + T_total_candidate^{mu nu} * nabla_(mu tau_nu) = 0, implying nabla_mu J_E_candidate^mu = 0 for J_E_candidate^mu := T_total_candidate^{mu nu} * tau_nu",
+      "sufficient_discharge_route": "nabla_mu T_total_candidate^{mu nu} = 0 and nabla_(mu tau_nu) = 0 throughout SupportCandidateB0",
+      "derivation_status": "COVARIANT_DERIVATION_DECLARED_EVIDENCE_NOT_SUPPLIED",
+      "discharge_status": "OBLIGATION_NOT_DISCHARGED"
     },
     {
       "field": "scaled_input_current",
