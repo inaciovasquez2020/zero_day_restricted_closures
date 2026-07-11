@@ -15,89 +15,102 @@
     },
     "spatial_dimension": 3,
     "spacetime_dimension": 4,
-    "chart_status": "CHART_NOT_SUPPLIED"
+    "chart_domain": "R^4",
+    "chart_map": "standard identity coordinate chart",
+    "chart_status": "STANDARD_R4_CHART_SUPPLIED"
   },
   "candidate_parameters": {
-    "temporal_lower_bound": "t_minus",
-    "temporal_upper_bound": "t_plus",
+    "temporal_lower_bound": 0.0,
+    "temporal_upper_bound": 1e-09,
     "spatial_half_widths": [
-      "L_1",
-      "L_2",
-      "L_3"
+      0.001,
+      0.001,
+      0.001
     ],
-    "temporal_coordinate_unit": "UNIT_NOT_SUPPLIED",
-    "spatial_coordinate_unit": "UNIT_NOT_SUPPLIED",
-    "parameter_values_status": "PARAMETER_VALUES_NOT_SUPPLIED"
+    "temporal_coordinate_unit": "s",
+    "spatial_coordinate_unit": "m",
+    "parameter_values_status": "PARAMETER_VALUES_SUPPLIED"
   },
   "candidate_region_definition": {
     "symbol": "SupportCandidateB0",
     "set_builder": "SupportCandidateB0 := {x_candidate in ChartCandidateB0 | t_minus <= x_candidate^0 <= t_plus and -L_1 <= x_candidate^1 <= L_1 and -L_2 <= x_candidate^2 <= L_2 and -L_3 <= x_candidate^3 <= L_3}",
     "shape": "closed coordinate hyperrectangle candidate",
     "boundary_components": [
-      "x_candidate^0 = t_minus",
-      "x_candidate^0 = t_plus",
-      "x_candidate^1 = -L_1",
-      "x_candidate^1 = L_1",
-      "x_candidate^2 = -L_2",
-      "x_candidate^2 = L_2",
-      "x_candidate^3 = -L_3",
-      "x_candidate^3 = L_3"
+      "x_candidate^0 = 0 s",
+      "x_candidate^0 = 1e-9 s",
+      "x_candidate^1 = -0.001 m",
+      "x_candidate^1 = 0.001 m",
+      "x_candidate^2 = -0.001 m",
+      "x_candidate^2 = 0.001 m",
+      "x_candidate^3 = -0.001 m",
+      "x_candidate^3 = 0.001 m"
     ],
     "boundary_component_count": 8,
-    "definition_status": "SYMBOLIC_REGION_CANDIDATE_DEFINED_ONLY"
+    "definition_status": "EXPLICIT_COORDINATE_REGION_INSTANCE_DEFINED",
+    "set_definition": "0 s <= x_candidate^0 <= 1e-9 s; -0.001 m <= x_candidate^i <= 0.001 m for i in {1,2,3}"
   },
   "parameter_obligations": [
     {
       "parameter": "t_minus,t_plus",
       "obligation": "t_minus < t_plus",
-      "status": "OBLIGATION_NOT_DISCHARGED"
+      "status": "OBLIGATION_DISCHARGED",
+      "evidence": "0 s < 1e-9 s"
     },
     {
       "parameter": "L_1",
       "obligation": "L_1 > 0",
-      "status": "OBLIGATION_NOT_DISCHARGED"
+      "status": "OBLIGATION_DISCHARGED",
+      "evidence": "0.001 m > 0 m"
     },
     {
       "parameter": "L_2",
       "obligation": "L_2 > 0",
-      "status": "OBLIGATION_NOT_DISCHARGED"
+      "status": "OBLIGATION_DISCHARGED",
+      "evidence": "0.001 m > 0 m"
     },
     {
       "parameter": "L_3",
       "obligation": "L_3 > 0",
-      "status": "OBLIGATION_NOT_DISCHARGED"
+      "status": "OBLIGATION_DISCHARGED",
+      "evidence": "0.001 m > 0 m"
     },
     {
       "parameter": "coordinate_units",
       "obligation": "temporal and spatial coordinate units are declared explicitly",
-      "status": "OBLIGATION_NOT_DISCHARGED"
+      "status": "OBLIGATION_DISCHARGED",
+      "evidence": "temporal unit s and spatial unit m supplied"
     }
   ],
   "realization_obligations": [
     {
       "field": "chart_realization",
       "obligation": "ChartCandidateB0 is defined on a spacetime manifold and covers the proposed support region",
-      "status": "OBLIGATION_NOT_DISCHARGED"
+      "status": "OBLIGATION_DISCHARGED",
+      "evidence": "standard identity chart on R^4"
     },
     {
       "field": "coordinate_parameter_values",
       "obligation": "finite numerical or symbolic values satisfying all parameter inequalities are supplied",
-      "status": "OBLIGATION_NOT_DISCHARGED"
+      "status": "OBLIGATION_DISCHARGED",
+      "evidence": "t_minus=0 s; t_plus=1e-9 s; L_1=L_2=L_3=0.001 m"
     },
     {
       "field": "nonempty_region_evidence",
       "obligation": "the declared coordinate inequalities admit at least one point",
-      "status": "OBLIGATION_NOT_DISCHARGED"
+      "status": "OBLIGATION_DISCHARGED",
+      "evidence": "(5e-10 s,0 m,0 m,0 m) belongs to SupportCandidateB0"
     },
     {
       "field": "boundedness_evidence",
       "obligation": "boundedness is established in the declared coordinate topology",
-      "status": "OBLIGATION_NOT_DISCHARGED"
+      "status": "OBLIGATION_DISCHARGED",
+      "evidence": "all four coordinate components lie in finite closed intervals"
     },
     {
       "field": "boundary_realization",
       "obligation": "the eight declared coordinate faces realize the candidate region boundary",
-      "status": "OBLIGATION_NOT_DISCHARGED"
+      "status": "OBLIGATION_DISCHARGED",
+      "evidence": "the product of four closed intervals has exactly eight coordinate boundary faces"
     },
     {
       "field": "detector_support_realization",
@@ -106,18 +119,15 @@
     }
   ],
   "region_status": "REGION_CANDIDATE_NOT_ACCEPTED",
-  "nonempty_status": "NONEMPTY_NOT_VERIFIED",
-  "boundedness_status": "BOUNDEDNESS_NOT_VERIFIED",
-  "boundary_status": "BOUNDARY_NOT_VERIFIED",
+  "nonempty_status": "NONEMPTY_VERIFIED",
+  "boundedness_status": "BOUNDEDNESS_VERIFIED",
+  "boundary_status": "BOUNDARY_VERIFIED",
   "atlas_status": "ATLAS_NOT_SUPPLIED",
   "metric_status": "METRIC_NOT_SUPPLIED",
   "connection_status": "CONNECTION_NOT_SUPPLIED",
   "physical_realization_status": "PHYSICAL_DETECTOR_SUPPORT_NOT_REALIZED",
   "blocked_promotions": [
     "region candidate -> accepted SupportCandidateB0",
-    "region candidate -> nonempty region verified",
-    "region candidate -> boundedness verified",
-    "region candidate -> boundary verified",
     "region candidate -> atlas supplied",
     "region candidate -> metric supplied",
     "region candidate -> connection supplied",
@@ -152,5 +162,39 @@
     "does not establish E = m c^3 as an energy law",
     "does not prove ZeroDayClosure"
   ],
-  "next_weakest_point": "Supply one bounded coordinate-chart candidate for ChartCandidateB0 without supplying or verifying metric data."
+  "next_weakest_point": "Supply one bounded coordinate-chart candidate for ChartCandidateB0 without supplying or verifying metric data.",
+  "verification_evidence": {
+    "nonempty_witness": {
+      "point": [
+        5e-10,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coordinate_units": [
+        "s",
+        "m",
+        "m",
+        "m"
+      ],
+      "membership_check": "0 <= 5e-10 <= 1e-9 and -0.001 <= 0 <= 0.001 in each spatial coordinate",
+      "status": "VERIFIED"
+    },
+    "boundedness_certificate": {
+      "temporal_interval": "[0,1e-9] s",
+      "spatial_intervals": [
+        "[-0.001,0.001] m",
+        "[-0.001,0.001] m",
+        "[-0.001,0.001] m"
+      ],
+      "reason": "finite Cartesian product of bounded closed intervals",
+      "status": "VERIFIED"
+    },
+    "boundary_certificate": {
+      "expected_coordinate_faces": 8,
+      "verified_coordinate_faces": 8,
+      "reason": "two endpoint faces for each of four coordinates",
+      "status": "VERIFIED"
+    }
+  }
 }
