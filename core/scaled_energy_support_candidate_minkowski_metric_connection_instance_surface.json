@@ -1,0 +1,136 @@
+{
+  "surface": "ScaledEnergySupportCandidateMinkowskiMetricConnectionInstanceSurface",
+  "classification": "BOUNDED_MINKOWSKI_METRIC_CONNECTION_INPUT_INSTANCE_ONLY",
+  "dependency_region_surface": "ScaledEnergySupportCandidateRegionDefinitionCandidateSurface",
+  "dependency_geometry_contract_surface": "ScaledEnergySupportCandidateCovariantGeometryInputSurface",
+  "target_support": "SupportCandidateB0",
+  "coordinate_scope": {
+    "chart_symbol": "ChartCandidateB0",
+    "chart_domain": "R^4",
+    "basis_order": [
+      "x_candidate^0",
+      "x_candidate^1",
+      "x_candidate^2",
+      "x_candidate^3"
+    ],
+    "temporal_bounds": [
+      0.0,
+      1e-09
+    ],
+    "temporal_unit": "s",
+    "spatial_bounds": [
+      [
+        -0.001,
+        0.001
+      ],
+      [
+        -0.001,
+        0.001
+      ],
+      [
+        -0.001,
+        0.001
+      ]
+    ],
+    "spatial_unit": "m",
+    "scope_status": "EXISTING_BOUNDED_REGION_REFERENCED"
+  },
+  "metric_tensor": {
+    "symbol": "g_candidate_mu_nu",
+    "signature": "(-,+,+,+)",
+    "components": [
+      [
+        -1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1
+      ]
+    ],
+    "coordinate_dependence": "constant on SupportCandidateB0",
+    "partial_derivative_rule": "partial_lambda g_candidate_mu_nu = 0 for all lambda,mu,nu in {0,1,2,3}",
+    "component_status": "EXACT_COMPONENTS_SUPPLIED"
+  },
+  "inverse_metric": {
+    "symbol": "g_candidate_inverse^{mu nu}",
+    "components": [
+      [
+        -1,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1
+      ]
+    ],
+    "inverse_identity": "g_candidate_mu_rho * g_candidate_inverse^{rho nu} = delta_mu^nu",
+    "component_status": "EXACT_INVERSE_COMPONENTS_SUPPLIED",
+    "inverse_check_status": "COMPONENT_CHECK_VERIFIED"
+  },
+  "connection_coefficients": {
+    "symbol": "Gamma_candidate^rho_mu_nu",
+    "component_rule": "Gamma_candidate^rho_mu_nu = 0 for all rho,mu,nu in {0,1,2,3}",
+    "component_count": 64,
+    "component_status": "ZERO_COMPONENTS_SUPPLIED"
+  },
+  "metric_compatibility": {
+    "equation": "nabla_lambda g_candidate_mu_nu = 0",
+    "component_identity": "partial_lambda g_candidate_mu_nu - Gamma_candidate^rho_lambda_mu * g_candidate_rho_nu - Gamma_candidate^rho_lambda_nu * g_candidate_mu_rho = 0",
+    "component_check_count": 64,
+    "verification_status": "COMPONENT_CHECK_VERIFIED"
+  },
+  "torsion_free": {
+    "equation": "Gamma_candidate^rho_mu_nu - Gamma_candidate^rho_nu_mu = 0",
+    "component_check_count": 64,
+    "verification_status": "COMPONENT_CHECK_VERIFIED"
+  },
+  "instance_status": "METRIC_CONNECTION_COMPONENT_INSTANCE_VERIFIED",
+  "contract_inhabitation_status": "FULL_GEOMETRY_INPUT_CONTRACT_NOT_INHABITED",
+  "blocked_promotions": [
+    "metric-connection instance -> accepted SupportCandidateB0",
+    "metric-connection instance -> full geometry contract inhabited",
+    "metric-connection instance -> time translation covector supplied",
+    "metric-connection instance -> Killing evidence verified",
+    "metric-connection instance -> stress-energy symmetry verified",
+    "metric-connection instance -> covariant stress-energy conservation verified",
+    "metric-connection instance -> detector support realized",
+    "metric-connection instance -> current conservation verified",
+    "metric-connection instance -> DInputCandidateB0 accepted",
+    "metric-connection instance -> empirical confirmation",
+    "metric-connection instance -> ZeroDayClosure",
+    "unrestricted ZeroDayClosure"
+  ]
+}
