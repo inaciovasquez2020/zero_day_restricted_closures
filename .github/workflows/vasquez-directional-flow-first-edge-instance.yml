@@ -1,0 +1,52 @@
+name: vasquez-directional-flow-first-edge-instance
+
+on:
+  push:
+    paths:
+      - "core/vasquez_directional_flow_fraction_b_first_edge_instance_surface.json"
+      - "verification/verify_vasquez_directional_flow_fraction_b_first_edge_instance.py"
+      - ".github/workflows/vasquez-directional-flow-first-edge-instance.yml"
+      - "core/vasquez_bounded_closure_equation_surface.json"
+      - "core/directional_flow_fraction_b_conditional_bound_theorem_surface.json"
+      - "core/directional_flow_fraction_b_lean_conditional_integral_bound_surface.json"
+      - "lean/Chronos/Frontier/DirectionalFlowFractionBConditionalIntegralBound.lean"
+      - "verification/anti_unconditional_rule.py"
+      - "lean-toolchain"
+      - "lakefile.toml"
+      - "lakefile.lean"
+      - "lake-manifest.json"
+  pull_request:
+    paths:
+      - "core/vasquez_directional_flow_fraction_b_first_edge_instance_surface.json"
+      - "verification/verify_vasquez_directional_flow_fraction_b_first_edge_instance.py"
+      - ".github/workflows/vasquez-directional-flow-first-edge-instance.yml"
+      - "core/vasquez_bounded_closure_equation_surface.json"
+      - "core/directional_flow_fraction_b_conditional_bound_theorem_surface.json"
+      - "core/directional_flow_fraction_b_lean_conditional_integral_bound_surface.json"
+      - "lean/Chronos/Frontier/DirectionalFlowFractionBConditionalIntegralBound.lean"
+      - "verification/anti_unconditional_rule.py"
+      - "lean-toolchain"
+      - "lakefile.toml"
+      - "lakefile.lean"
+      - "lake-manifest.json"
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate first-edge JSON
+        run: >-
+          python3 -m json.tool
+          core/vasquez_directional_flow_fraction_b_first_edge_instance_surface.json
+          >/dev/null
+
+      - name: Compute first real repository edge cost
+        run: >-
+          python3
+          verification/verify_vasquez_directional_flow_fraction_b_first_edge_instance.py
+
+      - name: Preserve anti-unconditional boundary
+        run: python3 verification/anti_unconditional_rule.py

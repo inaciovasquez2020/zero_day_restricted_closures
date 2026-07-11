@@ -1,0 +1,64 @@
+{
+  "surface": "VasquezDirectionalFlowFractionBFirstEdgeInstanceSurface",
+  "classification": "BOUNDED_REAL_REPOSITORY_EDGE_COST_INSTANCE_ONLY",
+  "metric_surface": "VasquezBoundedClosureEquationSurface",
+  "graph": {
+    "finite": true,
+    "nodes": [
+      "DirectionalFlowFractionBConditionalBoundTheoremSurface",
+      "DirectionalFlowFractionBLeanConditionalIntegralBoundSurface"
+    ],
+    "edges": [
+      "directional-flow-fraction-b-conditional-bound-to-lean-proof"
+    ]
+  },
+  "edge": {
+    "id": "directional-flow-fraction-b-conditional-bound-to-lean-proof",
+    "source_node": "DirectionalFlowFractionBConditionalBoundTheoremSurface",
+    "target_node": "DirectionalFlowFractionBLeanConditionalIntegralBoundSurface",
+    "source_artifact": "core/directional_flow_fraction_b_conditional_bound_theorem_surface.json",
+    "target_artifact": "core/directional_flow_fraction_b_lean_conditional_integral_bound_surface.json",
+    "proof_witness_artifact": "lean/Chronos/Frontier/DirectionalFlowFractionBConditionalIntegralBound.lean"
+  },
+  "weights": {
+    "m_proof": 32,
+    "m_witness": 16,
+    "m_invariant": 8,
+    "m_verifier": 4,
+    "m_evidence": 2,
+    "m_guard": 1
+  },
+  "missingness": {
+    "m_proof": 0,
+    "m_witness": 0,
+    "m_invariant": 0,
+    "m_verifier": 1,
+    "m_evidence": 1,
+    "m_guard": 0
+  },
+  "delta_B": 6,
+  "assessment": {
+    "m_proof": "Lean theorem body is supplied and contains no axiom, opaque, sorry, or admit token.",
+    "m_witness": "The named Lean theorem declaration supplies an explicit kernel-checkable proof witness.",
+    "m_invariant": "The bounded region and assumption list are unchanged and no physical or unrestricted claim is introduced.",
+    "m_verifier": "Open: the target surface records a status but no repository-relative validation command and replay receipt.",
+    "m_evidence": "Open: the repository does not yet pin a Lean toolchain, Lake package configuration, and Lake manifest for this replay.",
+    "m_guard": "The target surface preserves the anti-unconditional blocked promotions and interpretation boundary."
+  },
+  "highest_active_gap": "m_verifier",
+  "next_bounded_improvement": "Add one repository-relative targeted Lean kernel replay command and its generated receipt without changing the theorem statement.",
+  "closure_status": "EDGE_NOT_ZERO_COST",
+  "boundary": {
+    "is_zero_day_closure": false,
+    "is_unrestricted_directional_flow_theorem": false,
+    "is_detector_realization": false,
+    "is_empirical_confirmation": false,
+    "is_global_novelty_claim": false
+  },
+  "blocked_promotions": [
+    "edge cost instance -> unrestricted ZeroDayClosure",
+    "Lean conditional integral bound -> unconditional directional-flow theorem",
+    "static validation status -> reproducible Lean kernel replay",
+    "bounded edge score -> global novelty established"
+  ]
+}
