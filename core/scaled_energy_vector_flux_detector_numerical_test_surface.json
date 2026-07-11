@@ -1,0 +1,172 @@
+{
+  "surface": "ScaledEnergyVectorFluxDetectorNumericalTestSurface",
+  "boundary": "BOUNDARY := ¬ universal physical law E = m c^3",
+  "classification": "THREE_DIMENSIONAL_SYNTHETIC_VECTOR_FLUX_TEST_ONLY",
+  "vector_observable": {
+    "symbol": "Q_vec(t)",
+    "definition": "Q_vec(t) := integral_V S(x,t) d^3x",
+    "quantity_type": "THREE_DIMENSIONAL_VECTOR_NOT_ENERGY",
+    "component_shape": "[Q_x, Q_y, Q_z]",
+    "flux_density_symbol": "S(x,t)",
+    "flux_density_unit": "W m^-2 = M T^-3",
+    "volume_element_unit": "m^3 = L^3",
+    "observable_unit": "W m = M L^3 T^-3"
+  },
+  "conditional_mass_relation": {
+    "energy_equivalent_mass": "m_eq := E / c^2",
+    "collimated_relation": "Q_vec = c E n_hat = m_eq c^3 n_hat",
+    "applicability": "only when the sampled radiation flux is fully collimated in one direction",
+    "universal_status": "NOT_A_UNIVERSAL_ENERGY_LAW"
+  },
+  "detector_array": {
+    "symbol": "DetectorArray3D_B0",
+    "grid_shape": [
+      2,
+      2,
+      2
+    ],
+    "sample_count": 8,
+    "cell_volume_m3": 0.125,
+    "sample_symbol": "S_ijk(t)",
+    "measurement_shape": "S_ijk(t) := [S_x(i,j,k,t), S_y(i,j,k,t), S_z(i,j,k,t)]",
+    "integration_rule": "Q_vec_numeric(t) := sum_ijk S_ijk(t) * delta_V",
+    "construction_status": "DETECTOR_ARRAY_NOT_CONSTRUCTED",
+    "verification_status": "DETECTOR_ARRAY_NOT_VERIFIED"
+  },
+  "constants": {
+    "c_m_per_s": 299792458.0
+  },
+  "synthetic_configurations": [
+    {
+      "name": "COLLIMATED_POSITIVE_X",
+      "samples_W_per_m2": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "expected_Q_vec_W_m": [
+        2.0,
+        0.0,
+        0.0
+      ],
+      "expected_cE_W_m": 2.0,
+      "expected_relation": "norm(Q_vec) = c E = m_eq c^3",
+      "status": "SYNTHETIC_FIXTURE_ONLY"
+    },
+    {
+      "name": "COUNTERPROPAGATING_X",
+      "samples_W_per_m2": [
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          2.0,
+          0.0,
+          0.0
+        ],
+        [
+          -2.0,
+          0.0,
+          0.0
+        ],
+        [
+          -2.0,
+          0.0,
+          0.0
+        ],
+        [
+          -2.0,
+          0.0,
+          0.0
+        ],
+        [
+          -2.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "expected_Q_vec_W_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "expected_cE_W_m": 2.0,
+      "expected_relation": "Q_vec = 0 while E > 0 because opposite fluxes cancel",
+      "status": "SYNTHETIC_FIXTURE_ONLY"
+    }
+  ],
+  "test_status": "NUMERICAL_SYNTHETIC_TEST_NOT_EMPIRICAL",
+  "empirical_status": "NO_PHYSICAL_DETECTOR_DATA_SUPPLIED",
+  "blocked_promotions": [
+    "synthetic numerical test -> physical detector construction",
+    "synthetic numerical test -> detector verification",
+    "synthetic numerical test -> empirical confirmation",
+    "synthetic numerical test -> universal E = m c^3",
+    "synthetic numerical test -> ScaledEnergyObservableMap",
+    "synthetic numerical test -> alpha_A != alpha_B",
+    "synthetic numerical test -> ZeroDayClosure",
+    "unrestricted ZeroDayClosure"
+  ],
+  "non_claims": [
+    "does not define Q_vec as energy",
+    "does not replace E = m c^2",
+    "does not prove universal E = m c^3",
+    "does not construct DetectorArray3D_B0",
+    "does not verify DetectorArray3D_B0",
+    "does not use measured physical data",
+    "does not establish a new interaction",
+    "does not establish alpha_A != alpha_B",
+    "does not construct ScaledEnergyObservableMap",
+    "does not prove ZeroDayClosure"
+  ],
+  "next_weakest_point": "Supply one dimensionally calibrated physical flux dataset without promoting synthetic tests to empirical confirmation."
+}
