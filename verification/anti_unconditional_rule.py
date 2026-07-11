@@ -7088,3 +7088,589 @@ def verify_scaled_energy_support_candidate_compact_support_stress_energy_candida
 
 
 verify_scaled_energy_support_candidate_compact_support_stress_energy_candidate_guard()
+
+def verify_directional_flow_observables_b_guard() -> None:
+    import json
+    import math
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+
+    region_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_"
+            "region_definition_candidate_surface.json"
+        )
+    )
+    fraction_path = (
+        root
+        / "core"
+        / "directional_flow_fraction_b_surface.json"
+    )
+    mass_path = (
+        root
+        / "core"
+        / "directional_flow_mass_b_surface.json"
+    )
+
+    for path in (region_path, fraction_path, mass_path):
+        if not path.exists():
+            raise SystemExit(
+                f"MISSING_OBJECT := {path.relative_to(root)}"
+            )
+
+    region = json.loads(
+        region_path.read_text(encoding="utf-8")
+    )
+    fraction = json.loads(
+        fraction_path.read_text(encoding="utf-8")
+    )
+    mass = json.loads(
+        mass_path.read_text(encoding="utf-8")
+    )
+
+    if region.get("surface") != (
+        "ScaledEnergySupportCandidate"
+        "RegionDefinitionCandidateSurface"
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "region dependency changed"
+        )
+
+    if region.get("target_support") != "SupportCandidateB0":
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "bounded region changed"
+        )
+
+    if fraction.get("surface") != (
+        "DirectionalFlowFractionBSurface"
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "fraction surface changed"
+        )
+
+    if fraction.get("object") != "DirectionalFlowFractionB":
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "fraction object changed"
+        )
+
+    if fraction.get("classification") != (
+        "BOUNDED_MODEL_OBSERVABLE_CONDITIONAL_DEFINITION_ONLY"
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "fraction classification changed"
+        )
+
+    if fraction.get("dependency_region_surface") != (
+        "ScaledEnergySupportCandidate"
+        "RegionDefinitionCandidateSurface"
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "fraction dependency changed"
+        )
+
+    if fraction.get("bounded_region") != "SupportCandidateB0":
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "fraction region changed"
+        )
+
+    expected_integrals = {
+        "energy": {
+            "symbol": "E_B(t)",
+            "definition": (
+                "E_B(t) := integral_B u(t,x) d^3x"
+            ),
+        },
+        "directional_flow": {
+            "symbol": "Q_B(t)",
+            "definition": (
+                "Q_B(t) := integral_B S(t,x) d^3x"
+            ),
+        },
+    }
+
+    if fraction.get("bounded_integrals") != expected_integrals:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "bounded integral definitions changed"
+        )
+
+    expected_fraction_definition = {
+        "symbol": "chi_B(t)",
+        "formula": (
+            "chi_B(t) := ||Q_B(t)|| / (c E_B(t))"
+        ),
+        "domain_assumption": "E_B(t) > 0",
+    }
+
+    if fraction.get("definition") != (
+        expected_fraction_definition
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "fraction definition changed"
+        )
+
+    conditional_bound = fraction.get(
+        "conditional_bound",
+        {},
+    )
+
+    expected_bound_assumptions = {
+        "c > 0",
+        "E_B(t) > 0",
+        "u(t,x) >= 0 on B",
+        (
+            "||S(t,x)|| <= c u(t,x) "
+            "almost everywhere on B"
+        ),
+    }
+
+    if set(
+        conditional_bound.get("assumptions", [])
+    ) != expected_bound_assumptions:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "conditional assumptions changed"
+        )
+
+    expected_reduction = [
+        "0 <= ||Q_B(t)||",
+        (
+            "||Q_B(t)|| <= "
+            "integral_B ||S(t,x)|| d^3x"
+        ),
+        (
+            "integral_B ||S(t,x)|| d^3x "
+            "<= c integral_B u(t,x) d^3x"
+        ),
+        "||Q_B(t)|| <= c E_B(t)",
+        "0 <= chi_B(t) <= 1",
+    ]
+
+    if conditional_bound.get("reduction") != (
+        expected_reduction
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "conditional reduction changed"
+        )
+
+    if conditional_bound.get("status") != (
+        "CONDITIONAL_BOUND_REDUCTION_RECORDED"
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "conditional status changed"
+        )
+
+    if conditional_bound.get("formal_theorem_status") != (
+        "NOT_FORMALLY_PROVED"
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "conditional bound was promoted"
+        )
+
+    interpretation = fraction.get(
+        "interpretation_boundary",
+        {},
+    )
+
+    expected_interpretation = {
+        "is_alternative_energy_law": False,
+        "is_energy_conservation_theorem": False,
+        "is_killing_current_identity_restatement": False,
+        "description": (
+            "bounded model observable for coherent net "
+            "directional transport only"
+        ),
+    }
+
+    if interpretation != expected_interpretation:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "fraction interpretation changed"
+        )
+
+    if fraction.get("novelty_status") != (
+        "GLOBAL_NOVELTY_NOT_ESTABLISHED"
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "fraction novelty was promoted"
+        )
+
+    if mass.get("surface") != (
+        "DirectionalFlowMassBSurface"
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "mass surface changed"
+        )
+
+    if mass.get("object") != "DirectionalFlowMassB":
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "mass object changed"
+        )
+
+    if mass.get("classification") != (
+        "BOUNDED_MODEL_OBSERVABLE_ALGEBRAIC_DEFINITION_ONLY"
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "mass classification changed"
+        )
+
+    if mass.get("dependency_fraction_surface") != (
+        "DirectionalFlowFractionBSurface"
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "mass dependency changed"
+        )
+
+    if mass.get("bounded_region") != "SupportCandidateB0":
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "mass region changed"
+        )
+
+    expected_mass_definition = {
+        "symbol": "m_flow,B(t)",
+        "primary_formula": (
+            "m_flow,B(t) := ||Q_B(t)|| / c^3"
+        ),
+        "fraction_formula": (
+            "m_flow,B(t) = chi_B(t) E_B(t) / c^2"
+        ),
+        "fraction_formula_assumptions": [
+            "c > 0",
+            "E_B(t) > 0",
+            (
+                "chi_B(t) = "
+                "||Q_B(t)|| / (c E_B(t))"
+            ),
+        ],
+        "identity_status": (
+            "ALGEBRAIC_IDENTITY_REDUCTION_RECORDED"
+        ),
+    }
+
+    if mass.get("definition") != expected_mass_definition:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "mass definition changed"
+        )
+
+    expected_mass_interpretation = {
+        "description": (
+            "model quantity measuring coherent net "
+            "directional energy transport"
+        ),
+        "is_rest_mass": False,
+        "is_invariant_mass": False,
+        "is_alternative_energy_law": False,
+        "is_empirically_calibrated": False,
+    }
+
+    if mass.get("interpretation_boundary") != (
+        expected_mass_interpretation
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "mass interpretation changed"
+        )
+
+    if mass.get("novelty_status") != (
+        "GLOBAL_NOVELTY_NOT_ESTABLISHED"
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "mass novelty was promoted"
+        )
+
+    def vector_norm(vector):
+        return math.sqrt(
+            sum(component * component for component in vector)
+        )
+
+    def vector_sum(vectors):
+        return [
+            sum(vector[index] for vector in vectors)
+            for index in range(3)
+        ]
+
+    def evaluate_model(c_value, energies, fluxes):
+        if c_value <= 0:
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+                "nonpositive c fixture"
+            )
+
+        if len(energies) != len(fluxes):
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+                "fixture length mismatch"
+            )
+
+        for energy, flux in zip(energies, fluxes):
+            if energy < 0:
+                raise SystemExit(
+                    "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+                    "negative fixture energy density"
+                )
+
+            if vector_norm(flux) > c_value * energy + 1.0e-12:
+                raise SystemExit(
+                    "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+                    "fixture violates local flux bound"
+                )
+
+        total_energy = sum(energies)
+
+        if total_energy <= 0:
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+                "nonpositive bounded energy fixture"
+            )
+
+        total_flow = vector_sum(fluxes)
+        total_flow_norm = vector_norm(total_flow)
+        integrated_local_norm = sum(
+            vector_norm(flux) for flux in fluxes
+        )
+
+        if total_flow_norm > integrated_local_norm + 1.0e-12:
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+                "triangle inequality fixture failed"
+            )
+
+        if (
+            integrated_local_norm
+            > c_value * total_energy + 1.0e-12
+        ):
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+                "integrated local bound fixture failed"
+            )
+
+        chi_value = (
+            total_flow_norm
+            / (c_value * total_energy)
+        )
+        mass_value = total_flow_norm / (c_value ** 3)
+        mass_from_fraction = (
+            chi_value
+            * total_energy
+            / (c_value ** 2)
+        )
+
+        if chi_value < -1.0e-12 or chi_value > 1.0 + 1.0e-12:
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+                "conditional fraction bound fixture failed"
+            )
+
+        if not math.isclose(
+            mass_value,
+            mass_from_fraction,
+            rel_tol=1.0e-12,
+            abs_tol=1.0e-12,
+        ):
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+                "directional-flow mass identity failed"
+            )
+
+        return {
+            "energy": total_energy,
+            "flow": total_flow,
+            "flow_norm": total_flow_norm,
+            "chi": chi_value,
+            "mass": mass_value,
+        }
+
+    generic = evaluate_model(
+        3.0,
+        [2.0, 1.0, 3.0, 2.0],
+        [
+            [6.0, 0.0, 0.0],
+            [0.0, 3.0, 0.0],
+            [-3.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0],
+        ],
+    )
+
+    if not 0.0 <= generic["chi"] <= 1.0:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "generic conditional bound fixture failed"
+        )
+
+    c_collimated = 5.0
+    collimated_energies = [1.0, 2.0, 3.0]
+    collimated_fluxes = [
+        [c_collimated * energy, 0.0, 0.0]
+        for energy in collimated_energies
+    ]
+
+    collimated = evaluate_model(
+        c_collimated,
+        collimated_energies,
+        collimated_fluxes,
+    )
+
+    if not math.isclose(
+        collimated["chi"],
+        1.0,
+        rel_tol=1.0e-12,
+        abs_tol=1.0e-12,
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "collimated chi fixture failed"
+        )
+
+    if not math.isclose(
+        collimated["mass"] * (c_collimated ** 3),
+        c_collimated * collimated["energy"],
+        rel_tol=1.0e-12,
+        abs_tol=1.0e-12,
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "collimated mass relation failed"
+        )
+
+    c_counter = 5.0
+
+    counterpropagating = evaluate_model(
+        c_counter,
+        [2.0, 2.0],
+        [
+            [10.0, 0.0, 0.0],
+            [-10.0, 0.0, 0.0],
+        ],
+    )
+
+    if counterpropagating["energy"] <= 0:
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "counterpropagating energy fixture failed"
+        )
+
+    if not math.isclose(
+        counterpropagating["flow_norm"],
+        0.0,
+        rel_tol=1.0e-12,
+        abs_tol=1.0e-12,
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "counterpropagating flow cancellation failed"
+        )
+
+    if not math.isclose(
+        counterpropagating["chi"],
+        0.0,
+        rel_tol=1.0e-12,
+        abs_tol=1.0e-12,
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "counterpropagating chi fixture failed"
+        )
+
+    if not math.isclose(
+        counterpropagating["mass"],
+        0.0,
+        rel_tol=1.0e-12,
+        abs_tol=1.0e-12,
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "counterpropagating mass fixture failed"
+        )
+
+    expected_fraction_blocked = {
+        "DirectionalFlowFractionB -> unconditional theorem",
+        "DirectionalFlowFractionB -> new fundamental law",
+        "DirectionalFlowFractionB -> detector realization",
+        "DirectionalFlowFractionB -> empirical confirmation",
+        "DirectionalFlowFractionB -> E equals m c cubed",
+        "DirectionalFlowFractionB -> ZeroDayClosure",
+        "global novelty established",
+        "unrestricted ZeroDayClosure",
+    }
+
+    if set(fraction.get("blocked_promotions", [])) != (
+        expected_fraction_blocked
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "fraction blocked promotions changed"
+        )
+
+    expected_mass_blocked = {
+        "DirectionalFlowMassB -> rest mass",
+        "DirectionalFlowMassB -> invariant mass",
+        "DirectionalFlowMassB -> new fundamental law",
+        "DirectionalFlowMassB -> detector realization",
+        "DirectionalFlowMassB -> empirical confirmation",
+        "DirectionalFlowMassB -> E equals m c cubed",
+        "DirectionalFlowMassB -> ZeroDayClosure",
+        "global novelty established",
+        "unrestricted ZeroDayClosure",
+    }
+
+    if set(mass.get("blocked_promotions", [])) != (
+        expected_mass_blocked
+    ):
+        raise SystemExit(
+            "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+            "mass blocked promotions changed"
+        )
+
+    fraction_encoded = json.dumps(fraction, sort_keys=True)
+    mass_encoded = json.dumps(mass, sort_keys=True)
+
+    forbidden_fragments = (
+        '"formal_theorem_status": "FORMALLY_PROVED"',
+        '"novelty_status": "GLOBAL_NOVELTY_ESTABLISHED"',
+        '"is_alternative_energy_law": true',
+        '"is_energy_conservation_theorem": true',
+        '"is_rest_mass": true',
+        '"is_invariant_mass": true',
+        '"is_empirically_calibrated": true',
+        '"detector_realization_status": "REALIZED"',
+        '"empirical_confirmation_status": "CONFIRMED"',
+        '"e_equals_m_c_cubed_status": "VERIFIED"',
+        '"zero_day_closure_status": "CONSTRUCTED"',
+    )
+
+    for fragment in forbidden_fragments:
+        if (
+            fragment in fraction_encoded
+            or fragment in mass_encoded
+        ):
+            raise SystemExit(
+                "DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_FAILED := "
+                f"forbidden promotion {fragment!r}"
+            )
+
+    print("DIRECTIONAL_FLOW_OBSERVABLES_B_GUARD_OK")
+
+
+verify_directional_flow_observables_b_guard()
