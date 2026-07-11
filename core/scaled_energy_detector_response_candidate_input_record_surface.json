@@ -26,11 +26,14 @@
       {
         "field": "admissible_input_current",
         "candidate_value": "J_E_candidate^mu := T_total_candidate^{mu nu} * tau_nu",
-        "obligation": "partial_mu T_total_candidate^{mu nu} = 0 and partial_mu tau_nu = 0 on SupportCandidateB0",
-        "status": "CANDIDATE_UNVERIFIED",
-        "derivation_shape": "partial_mu J_E_candidate^mu = (partial_mu T_total_candidate^{mu nu}) * tau_nu + T_total_candidate^{mu nu} * partial_mu tau_nu = 0",
+        "geometry_scope": "SupportCandidateB0 requires a specified metric and compatible covariant derivative nabla",
         "stress_energy_scope": "T_total_candidate includes field and detector contributions",
-        "frame_scope": "tau_nu is a constant inertial laboratory time-translation covector"
+        "tensor_symmetry_obligation": "T_total_candidate^{mu nu} = T_total_candidate^{nu mu}",
+        "general_conservation_condition": "(nabla_mu T_total_candidate^{mu nu}) * tau_nu + T_total_candidate^{mu nu} * nabla_(mu tau_nu) = 0 on SupportCandidateB0",
+        "sufficient_specialization": "nabla_mu T_total_candidate^{mu nu} = 0 and nabla_(mu tau_nu) = 0 on SupportCandidateB0",
+        "derivation_shape": "nabla_mu J_E_candidate^mu = (nabla_mu T_total_candidate^{mu nu}) * tau_nu + T_total_candidate^{mu nu} * nabla_mu tau_nu = (nabla_mu T_total_candidate^{mu nu}) * tau_nu + T_total_candidate^{mu nu} * nabla_(mu tau_nu)",
+        "killing_scope": "tau_nu is a candidate Killing covector, not necessarily covariantly constant",
+        "status": "CANDIDATE_UNVERIFIED"
       },
       {
         "field": "scaled_input_current",

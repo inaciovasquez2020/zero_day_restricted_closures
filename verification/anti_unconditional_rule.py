@@ -4489,6 +4489,7 @@ def verify_scaled_energy_detector_response_finite_support_candidate() -> None:
 verify_scaled_energy_detector_response_finite_support_candidate()
 
 
+
 def verify_scaled_energy_energy_current_conservation_formulation_guard() -> None:
     import json
     from pathlib import Path
@@ -4524,38 +4525,52 @@ def verify_scaled_energy_energy_current_conservation_formulation_guard() -> None
             "expected one admissible_input_current candidate field"
         )
 
-    current_field = current_fields[0]
-
     expected_candidate = {
         "field": "admissible_input_current",
         "candidate_value": (
             "J_E_candidate^mu := "
             "T_total_candidate^{mu nu} * tau_nu"
         ),
-        "obligation": (
-            "partial_mu T_total_candidate^{mu nu} = 0 and "
-            "partial_mu tau_nu = 0 on SupportCandidateB0"
-        ),
-        "derivation_shape": (
-            "partial_mu J_E_candidate^mu = "
-            "(partial_mu T_total_candidate^{mu nu}) * tau_nu + "
-            "T_total_candidate^{mu nu} * partial_mu tau_nu = 0"
+        "geometry_scope": (
+            "SupportCandidateB0 requires a specified metric and "
+            "compatible covariant derivative nabla"
         ),
         "stress_energy_scope": (
             "T_total_candidate includes field and detector contributions"
         ),
-        "frame_scope": (
-            "tau_nu is a constant inertial laboratory "
-            "time-translation covector"
+        "tensor_symmetry_obligation": (
+            "T_total_candidate^{mu nu} = "
+            "T_total_candidate^{nu mu}"
+        ),
+        "general_conservation_condition": (
+            "(nabla_mu T_total_candidate^{mu nu}) * tau_nu + "
+            "T_total_candidate^{mu nu} * "
+            "nabla_(mu tau_nu) = 0 on SupportCandidateB0"
+        ),
+        "sufficient_specialization": (
+            "nabla_mu T_total_candidate^{mu nu} = 0 and "
+            "nabla_(mu tau_nu) = 0 on SupportCandidateB0"
+        ),
+        "derivation_shape": (
+            "nabla_mu J_E_candidate^mu = "
+            "(nabla_mu T_total_candidate^{mu nu}) * tau_nu + "
+            "T_total_candidate^{mu nu} * nabla_mu tau_nu = "
+            "(nabla_mu T_total_candidate^{mu nu}) * tau_nu + "
+            "T_total_candidate^{mu nu} * "
+            "nabla_(mu tau_nu)"
+        ),
+        "killing_scope": (
+            "tau_nu is a candidate Killing covector, not necessarily "
+            "covariantly constant"
         ),
         "status": "CANDIDATE_UNVERIFIED",
     }
 
-    if current_field != expected_candidate:
+    if current_fields[0] != expected_candidate:
         raise SystemExit(
             "SCALED_ENERGY_CURRENT_CONSERVATION_FORMULATION_FAILED := "
             f"candidate field expected {expected_candidate!r} "
-            f"got {current_field!r}"
+            f"got {current_fields[0]!r}"
         )
 
     acceptance_obligations = acceptance.get("obligations", [])
@@ -4574,14 +4589,23 @@ def verify_scaled_energy_energy_current_conservation_formulation_guard() -> None
     expected_acceptance = {
         "field": "admissible_input_current",
         "obligation": (
-            "T_total_candidate includes field and detector contributions; "
-            "partial_mu T_total_candidate^{mu nu} = 0 and "
-            "partial_mu tau_nu = 0 throughout SupportCandidateB0, "
-            "implying partial_mu J_E_candidate^mu = 0 for "
-            "J_E_candidate^mu := T_total_candidate^{mu nu} * tau_nu"
+            "Specify the geometry and covariant derivative on "
+            "SupportCandidateB0; prove "
+            "T_total_candidate^{mu nu} = "
+            "T_total_candidate^{nu mu}; and establish "
+            "(nabla_mu T_total_candidate^{mu nu}) * tau_nu + "
+            "T_total_candidate^{mu nu} * "
+            "nabla_(mu tau_nu) = 0, implying "
+            "nabla_mu J_E_candidate^mu = 0 for "
+            "J_E_candidate^mu := "
+            "T_total_candidate^{mu nu} * tau_nu"
+        ),
+        "sufficient_discharge_route": (
+            "nabla_mu T_total_candidate^{mu nu} = 0 and "
+            "nabla_(mu tau_nu) = 0 throughout SupportCandidateB0"
         ),
         "derivation_status": (
-            "DERIVATION_DECLARED_EVIDENCE_NOT_SUPPLIED"
+            "COVARIANT_DERIVATION_DECLARED_EVIDENCE_NOT_SUPPLIED"
         ),
         "discharge_status": "OBLIGATION_NOT_DISCHARGED",
     }
@@ -4607,17 +4631,18 @@ def verify_scaled_energy_energy_current_conservation_formulation_guard() -> None
 
     encoded = json.dumps(
         {
-            "candidate": current_field,
+            "candidate": current_fields[0],
             "acceptance": current_obligations[0],
         },
         sort_keys=True,
     )
 
     forbidden_tokens = (
+        "partial_mu",
+        "constant inertial laboratory time-translation covector",
         '"status": "CANDIDATE_VERIFIED"',
-        '"derivation_status": "DERIVATION_VERIFIED"',
+        '"derivation_status": "COVARIANT_DERIVATION_VERIFIED"',
         '"discharge_status": "OBLIGATION_DISCHARGED"',
-        '"stress_energy_scope": "FIELD_ONLY"',
         '"acceptance_status": "CANDIDATE_ACCEPTED"',
     )
 
@@ -4625,11 +4650,11 @@ def verify_scaled_energy_energy_current_conservation_formulation_guard() -> None
         if token in encoded:
             raise SystemExit(
                 "SCALED_ENERGY_CURRENT_CONSERVATION_FORMULATION_FAILED := "
-                f"forbidden promotion {token!r}"
+                f"forbidden token or promotion {token!r}"
             )
 
     print(
-        "SCALED_ENERGY_CURRENT_CONSERVATION_FORMULATION_GUARD_OK"
+        "SCALED_ENERGY_COVARIANT_CURRENT_CONSERVATION_FORMULATION_GUARD_OK"
     )
 
 
