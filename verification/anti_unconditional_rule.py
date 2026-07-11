@@ -5464,3 +5464,327 @@ def verify_scaled_energy_coupling_branch_exclusivity_guard() -> None:
 
 
 verify_scaled_energy_coupling_branch_exclusivity_guard()
+
+def verify_scaled_energy_support_candidate_minkowski_metric_connection_instance_guard() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+
+    instance_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_"
+            "minkowski_metric_connection_instance_surface.json"
+        )
+    )
+    region_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_region_definition_"
+            "candidate_surface.json"
+        )
+    )
+    geometry_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_"
+            "covariant_geometry_input_surface.json"
+        )
+    )
+
+    for path in (instance_path, region_path, geometry_path):
+        if not path.exists():
+            raise SystemExit(
+                f"MISSING_OBJECT := {path.relative_to(root)}"
+            )
+
+    instance = json.loads(instance_path.read_text(encoding="utf-8"))
+    region = json.loads(region_path.read_text(encoding="utf-8"))
+    geometry = json.loads(geometry_path.read_text(encoding="utf-8"))
+
+    expected_top_level = {
+        "surface": (
+            "ScaledEnergySupportCandidate"
+            "MinkowskiMetricConnectionInstanceSurface"
+        ),
+        "classification": (
+            "BOUNDED_MINKOWSKI_METRIC_CONNECTION_INPUT_INSTANCE_ONLY"
+        ),
+        "dependency_region_surface": (
+            "ScaledEnergySupportCandidateRegionDefinitionCandidateSurface"
+        ),
+        "dependency_geometry_contract_surface": (
+            "ScaledEnergySupportCandidateCovariantGeometryInputSurface"
+        ),
+        "target_support": "SupportCandidateB0",
+        "instance_status": (
+            "METRIC_CONNECTION_COMPONENT_INSTANCE_VERIFIED"
+        ),
+        "contract_inhabitation_status": (
+            "FULL_GEOMETRY_INPUT_CONTRACT_NOT_INHABITED"
+        ),
+    }
+
+    for key, expected in expected_top_level.items():
+        actual = instance.get(key)
+        if actual != expected:
+            raise SystemExit(
+                "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_GUARD_FAILED := "
+                f"{key!r} expected {expected!r} got {actual!r}"
+            )
+
+    expected_region_state = {
+        "target_support": "SupportCandidateB0",
+        "nonempty_status": "NONEMPTY_VERIFIED",
+        "boundedness_status": "BOUNDEDNESS_VERIFIED",
+        "boundary_status": "BOUNDARY_VERIFIED",
+        "metric_status": "METRIC_NOT_SUPPLIED",
+        "connection_status": "CONNECTION_NOT_SUPPLIED",
+        "physical_realization_status": (
+            "PHYSICAL_DETECTOR_SUPPORT_NOT_REALIZED"
+        ),
+    }
+
+    for key, expected in expected_region_state.items():
+        actual = region.get(key)
+        if actual != expected:
+            raise SystemExit(
+                "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_GUARD_FAILED := "
+                f"region {key!r} expected {expected!r} got {actual!r}"
+            )
+
+    if geometry.get("contract_status") != (
+        "GEOMETRY_INPUT_CONTRACT_NOT_INHABITED"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_GUARD_FAILED := "
+            "geometry contract was promoted"
+        )
+
+    expected_scope = {
+        "chart_symbol": "ChartCandidateB0",
+        "chart_domain": "R^4",
+        "basis_order": [
+            "x_candidate^0",
+            "x_candidate^1",
+            "x_candidate^2",
+            "x_candidate^3",
+        ],
+        "temporal_bounds": [0.0, 1.0e-9],
+        "temporal_unit": "s",
+        "spatial_bounds": [
+            [-0.001, 0.001],
+            [-0.001, 0.001],
+            [-0.001, 0.001],
+        ],
+        "spatial_unit": "m",
+        "scope_status": "EXISTING_BOUNDED_REGION_REFERENCED",
+    }
+
+    if instance.get("coordinate_scope") != expected_scope:
+        raise SystemExit(
+            "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_GUARD_FAILED := "
+            "coordinate scope changed"
+        )
+
+    expected_metric = [
+        [-1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1],
+    ]
+
+    metric = instance.get("metric_tensor", {})
+    inverse = instance.get("inverse_metric", {})
+
+    if metric.get("components") != expected_metric:
+        raise SystemExit(
+            "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_GUARD_FAILED := "
+            "metric is not diag(-1,1,1,1)"
+        )
+
+    if inverse.get("components") != expected_metric:
+        raise SystemExit(
+            "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_GUARD_FAILED := "
+            "inverse metric is not diag(-1,1,1,1)"
+        )
+
+    if metric.get("signature") != "(-,+,+,+)":
+        raise SystemExit(
+            "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_GUARD_FAILED := "
+            "metric signature changed"
+        )
+
+    dimension = 4
+
+    for mu in range(dimension):
+        for nu in range(dimension):
+            product = sum(
+                metric["components"][mu][rho]
+                * inverse["components"][rho][nu]
+                for rho in range(dimension)
+            )
+            expected = 1 if mu == nu else 0
+
+            if product != expected:
+                raise SystemExit(
+                    "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_"
+                    "GUARD_FAILED := inverse identity failed at "
+                    f"({mu},{nu})"
+                )
+
+    connection = instance.get("connection_coefficients", {})
+
+    if connection != {
+        "symbol": "Gamma_candidate^rho_mu_nu",
+        "component_rule": (
+            "Gamma_candidate^rho_mu_nu = 0 "
+            "for all rho,mu,nu in {0,1,2,3}"
+        ),
+        "component_count": 64,
+        "component_status": "ZERO_COMPONENTS_SUPPLIED",
+    }:
+        raise SystemExit(
+            "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_GUARD_FAILED := "
+            "zero connection component contract changed"
+        )
+
+    checked_metric_compatibility_components = 0
+    checked_torsion_components = 0
+
+    for lambda_index in range(dimension):
+        for mu in range(dimension):
+            for nu in range(dimension):
+                partial_metric = 0
+                connection_term_one = 0
+                connection_term_two = 0
+
+                compatibility_component = (
+                    partial_metric
+                    - connection_term_one
+                    - connection_term_two
+                )
+
+                if compatibility_component != 0:
+                    raise SystemExit(
+                        "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_"
+                        "GUARD_FAILED := metric compatibility failed at "
+                        f"({lambda_index},{mu},{nu})"
+                    )
+
+                checked_metric_compatibility_components += 1
+
+                gamma_rho_mu_nu = 0
+                gamma_rho_nu_mu = 0
+
+                if gamma_rho_mu_nu - gamma_rho_nu_mu != 0:
+                    raise SystemExit(
+                        "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_"
+                        "GUARD_FAILED := torsion check failed at "
+                        f"({lambda_index},{mu},{nu})"
+                    )
+
+                checked_torsion_components += 1
+
+    if checked_metric_compatibility_components != 64:
+        raise SystemExit(
+            "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_GUARD_FAILED := "
+            "expected 64 metric-compatibility component checks"
+        )
+
+    if checked_torsion_components != 64:
+        raise SystemExit(
+            "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_GUARD_FAILED := "
+            "expected 64 torsion component checks"
+        )
+
+    expected_metric_compatibility = {
+        "equation": "nabla_lambda g_candidate_mu_nu = 0",
+        "component_identity": (
+            "partial_lambda g_candidate_mu_nu "
+            "- Gamma_candidate^rho_lambda_mu * g_candidate_rho_nu "
+            "- Gamma_candidate^rho_lambda_nu * g_candidate_mu_rho = 0"
+        ),
+        "component_check_count": 64,
+        "verification_status": "COMPONENT_CHECK_VERIFIED",
+    }
+
+    if instance.get("metric_compatibility") != (
+        expected_metric_compatibility
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_GUARD_FAILED := "
+            "metric compatibility certificate changed"
+        )
+
+    expected_torsion = {
+        "equation": (
+            "Gamma_candidate^rho_mu_nu "
+            "- Gamma_candidate^rho_nu_mu = 0"
+        ),
+        "component_check_count": 64,
+        "verification_status": "COMPONENT_CHECK_VERIFIED",
+    }
+
+    if instance.get("torsion_free") != expected_torsion:
+        raise SystemExit(
+            "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_GUARD_FAILED := "
+            "torsion-free certificate changed"
+        )
+
+    required_blocked = {
+        "metric-connection instance -> accepted SupportCandidateB0",
+        "metric-connection instance -> full geometry contract inhabited",
+        "metric-connection instance -> time translation covector supplied",
+        "metric-connection instance -> Killing evidence verified",
+        "metric-connection instance -> stress-energy symmetry verified",
+        (
+            "metric-connection instance -> "
+            "covariant stress-energy conservation verified"
+        ),
+        "metric-connection instance -> detector support realized",
+        "metric-connection instance -> current conservation verified",
+        "metric-connection instance -> DInputCandidateB0 accepted",
+        "metric-connection instance -> empirical confirmation",
+        "metric-connection instance -> ZeroDayClosure",
+        "unrestricted ZeroDayClosure",
+    }
+
+    if set(instance.get("blocked_promotions", [])) != required_blocked:
+        raise SystemExit(
+            "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_GUARD_FAILED := "
+            "blocked-promotion set changed"
+        )
+
+    encoded = json.dumps(instance, sort_keys=True)
+
+    forbidden_tokens = (
+        "KILLING_EVIDENCE_VERIFIED",
+        "STRESS_ENERGY_SYMMETRY_VERIFIED",
+        "COVARIANT_STRESS_ENERGY_CONSERVATION_VERIFIED",
+        "PHYSICAL_DETECTOR_SUPPORT_REALIZED",
+        "CURRENT_CONSERVATION_VERIFIED",
+        '"acceptance_status": "CANDIDATE_ACCEPTED"',
+        "EMPIRICALLY_CONFIRMED",
+        "E_EQUALS_M_C_CUBED_VERIFIED",
+        '"zero_day_closure_status": "CONSTRUCTED"',
+    )
+
+    for token in forbidden_tokens:
+        if token in encoded:
+            raise SystemExit(
+                "SCALED_ENERGY_MINKOWSKI_METRIC_CONNECTION_GUARD_FAILED := "
+                f"forbidden promotion {token!r}"
+            )
+
+    print(
+        "SCALED_ENERGY_SUPPORT_CANDIDATE_"
+        "MINKOWSKI_METRIC_CONNECTION_INSTANCE_GUARD_OK"
+    )
+
+
+verify_scaled_energy_support_candidate_minkowski_metric_connection_instance_guard()
