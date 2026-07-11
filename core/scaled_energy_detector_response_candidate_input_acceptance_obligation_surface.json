@@ -24,8 +24,9 @@
     },
     {
       "field": "admissible_input_current",
-      "obligation": "partial_mu J_E_candidate^mu = 0 throughout SupportCandidateB0",
-      "discharge_status": "OBLIGATION_NOT_DISCHARGED"
+      "obligation": "T_total_candidate includes field and detector contributions; partial_mu T_total_candidate^{mu nu} = 0 and partial_mu tau_nu = 0 throughout SupportCandidateB0, implying partial_mu J_E_candidate^mu = 0 for J_E_candidate^mu := T_total_candidate^{mu nu} * tau_nu",
+      "discharge_status": "OBLIGATION_NOT_DISCHARGED",
+      "derivation_status": "DERIVATION_DECLARED_EVIDENCE_NOT_SUPPLIED"
     },
     {
       "field": "scaled_input_current",
