@@ -3834,6 +3834,189 @@ def verify_scaled_energy_detector_response_candidate_input_record_guard() -> Non
 
 verify_scaled_energy_detector_response_candidate_input_record_guard()
 
+
+def verify_scaled_energy_detector_response_candidate_acceptance_obligation_guard() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    surface_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_detector_response_candidate_input_"
+            "acceptance_obligation_surface.json"
+        )
+    )
+
+    if not surface_path.exists():
+        raise SystemExit(
+            "MISSING_OBJECT := "
+            "core/scaled_energy_detector_response_candidate_input_"
+            "acceptance_obligation_surface.json"
+        )
+
+    surface = json.loads(surface_path.read_text(encoding="utf-8"))
+
+    expected_top_level = {
+        "surface": (
+            "ScaledEnergyDetectorResponseCandidateInput"
+            "AcceptanceObligationSurface"
+        ),
+        "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+        "classification": (
+            "BOUNDED_CANDIDATE_INPUT_ACCEPTANCE_OBLIGATIONS_ONLY"
+        ),
+        "dependency_surface": (
+            "ScaledEnergyDetectorResponseCandidateInputRecordSurface"
+        ),
+        "candidate_record": "DInputCandidateB0",
+        "obligation_count": 10,
+        "discharged_obligation_count": 0,
+        "acceptance_status": "CANDIDATE_NOT_ACCEPTED",
+        "contract_inhabitation_status": "INPUT_CONTRACT_NOT_INHABITED",
+        "verification_status": (
+            "ACCEPTANCE_OBLIGATIONS_NOT_VERIFIED"
+        ),
+        "detector_status": "DETECTOR_NOT_CONSTRUCTED",
+        "functional_status": "FUNCTIONAL_NOT_CONSTRUCTED",
+        "empirical_status": "NO_EMPIRICAL_EVIDENCE_SUPPLIED",
+    }
+
+    for key, expected in expected_top_level.items():
+        actual = surface.get(key)
+        if actual != expected:
+            raise SystemExit(
+                "SCALED_ENERGY_DETECTOR_RESPONSE_CANDIDATE_"
+                "ACCEPTANCE_OBLIGATION_GUARD_FAILED := "
+                f"{key!r} expected {expected!r} got {actual!r}"
+            )
+
+    expected_scope = {
+        "domain": "ScaledEnergyObservableDomainB",
+        "species_set": "Sigma_B := {A, B}",
+        "closed_world": True,
+        "additional_species_allowed": False,
+    }
+
+    if surface.get("bounded_scope") != expected_scope:
+        raise SystemExit(
+            "SCALED_ENERGY_DETECTOR_RESPONSE_CANDIDATE_"
+            "ACCEPTANCE_OBLIGATION_GUARD_FAILED := "
+            "bounded scope changed"
+        )
+
+    obligations = surface.get("obligations")
+
+    if not isinstance(obligations, list) or len(obligations) != 10:
+        raise SystemExit(
+            "SCALED_ENERGY_DETECTOR_RESPONSE_CANDIDATE_"
+            "ACCEPTANCE_OBLIGATION_GUARD_FAILED := "
+            "expected exactly ten obligations"
+        )
+
+    expected_fields = [
+        "detector_identifier",
+        "detector_support",
+        "admissible_input_current",
+        "scaled_input_current",
+        "response_codomain",
+        "response_output_unit",
+        "response_functional",
+        "calibration_rule",
+        "finite_output_rule",
+        "constant_rescaling_distinction_predicate",
+    ]
+
+    actual_fields = [entry.get("field") for entry in obligations]
+
+    if actual_fields != expected_fields:
+        raise SystemExit(
+            "SCALED_ENERGY_DETECTOR_RESPONSE_CANDIDATE_"
+            "ACCEPTANCE_OBLIGATION_GUARD_FAILED := "
+            f"expected fields {expected_fields!r} got {actual_fields!r}"
+        )
+
+    for entry in obligations:
+        if entry.get("discharge_status") != (
+            "OBLIGATION_NOT_DISCHARGED"
+        ):
+            raise SystemExit(
+                "SCALED_ENERGY_DETECTOR_RESPONSE_CANDIDATE_"
+                "ACCEPTANCE_OBLIGATION_GUARD_FAILED := "
+                f"promoted obligation {entry.get('field')!r}"
+            )
+
+        obligation = entry.get("obligation")
+        if not isinstance(obligation, str) or not obligation:
+            raise SystemExit(
+                "SCALED_ENERGY_DETECTOR_RESPONSE_CANDIDATE_"
+                "ACCEPTANCE_OBLIGATION_GUARD_FAILED := "
+                f"missing obligation for {entry.get('field')!r}"
+            )
+
+    required_blocked = {
+        (
+            "acceptance obligations "
+            "-> discharged acceptance obligations"
+        ),
+        (
+            "acceptance obligations "
+            "-> DInputCandidateB0 accepted"
+        ),
+        (
+            "acceptance obligations "
+            "-> detector-response input contract inhabited"
+        ),
+        "acceptance obligations -> detector construction",
+        "acceptance obligations -> response-functional construction",
+        "acceptance obligations -> detector verification",
+        "acceptance obligations -> empirical confirmation",
+        "acceptance obligations -> ScaledEnergyObservableMap",
+        "acceptance obligations -> alpha_A != alpha_B",
+        "acceptance obligations -> ZeroDayClosure",
+        "unrestricted ZeroDayClosure",
+        "restricted-to-unrestricted lift",
+    }
+
+    if set(surface.get("blocked_promotions", [])) != required_blocked:
+        raise SystemExit(
+            "SCALED_ENERGY_DETECTOR_RESPONSE_CANDIDATE_"
+            "ACCEPTANCE_OBLIGATION_GUARD_FAILED := "
+            "blocked-promotion set changed"
+        )
+
+    encoded = json.dumps(surface, sort_keys=True)
+
+    forbidden_tokens = (
+        '"discharge_status": "OBLIGATION_DISCHARGED"',
+        '"discharged_obligation_count": 10',
+        '"acceptance_status": "CANDIDATE_ACCEPTED"',
+        '"contract_inhabitation_status": "INPUT_CONTRACT_INHABITED"',
+        '"verification_status": "ACCEPTANCE_OBLIGATIONS_VERIFIED"',
+        '"detector_status": "DETECTOR_CONSTRUCTED"',
+        '"functional_status": "FUNCTIONAL_CONSTRUCTED"',
+        '"empirical_status": "EMPIRICALLY_CONFIRMED"',
+        '"map_status": "CONSTRUCTED"',
+        '"zero_day_closure_status": "CONSTRUCTED"',
+    )
+
+    for token in forbidden_tokens:
+        if token in encoded:
+            raise SystemExit(
+                "SCALED_ENERGY_DETECTOR_RESPONSE_CANDIDATE_"
+                "ACCEPTANCE_OBLIGATION_GUARD_FAILED := "
+                f"forbidden promotion {token!r}"
+            )
+
+    print(
+        "SCALED_ENERGY_DETECTOR_RESPONSE_CANDIDATE_"
+        "ACCEPTANCE_OBLIGATION_GUARD_OK"
+    )
+
+
+verify_scaled_energy_detector_response_candidate_acceptance_obligation_guard()
+
 def verify_scaled_energy_coupling_branch_exclusivity_guard() -> None:
     import json
     from pathlib import Path

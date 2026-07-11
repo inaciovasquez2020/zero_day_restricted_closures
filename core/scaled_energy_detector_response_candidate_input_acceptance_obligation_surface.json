@@ -1,0 +1,109 @@
+{
+  "surface": "ScaledEnergyDetectorResponseCandidateInputAcceptanceObligationSurface",
+  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure",
+  "classification": "BOUNDED_CANDIDATE_INPUT_ACCEPTANCE_OBLIGATIONS_ONLY",
+  "dependency_surface": "ScaledEnergyDetectorResponseCandidateInputRecordSurface",
+  "candidate_record": "DInputCandidateB0",
+  "bounded_scope": {
+    "domain": "ScaledEnergyObservableDomainB",
+    "species_set": "Sigma_B := {A, B}",
+    "closed_world": true,
+    "additional_species_allowed": false
+  },
+  "acceptance_rule_shape": "AcceptDInputCandidateB0 requires discharge of every listed field obligation",
+  "obligations": [
+    {
+      "field": "detector_identifier",
+      "obligation": "DetectorCandidateB0 is a bounded opaque identifier within the closed candidate record",
+      "discharge_status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "field": "detector_support",
+      "obligation": "SupportCandidateB0 is finite and contained in ScaledEnergyObservableDomainB",
+      "discharge_status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "field": "admissible_input_current",
+      "obligation": "partial_mu J_E_candidate^mu = 0 throughout SupportCandidateB0",
+      "discharge_status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "field": "scaled_input_current",
+      "obligation": "c != 0 and J_scaled_candidate^mu = c * J_E_candidate^mu",
+      "discharge_status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "field": "response_codomain",
+      "obligation": "M_D > 0 and DetectorOutputCandidateB is a bounded declared codomain",
+      "discharge_status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "field": "response_output_unit",
+      "obligation": "detector_count is declared dimensionless and is compatible with DetectorOutputCandidateB",
+      "discharge_status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "field": "response_functional",
+      "obligation": "R_D_candidate is total on the admitted bounded input domain and returns DetectorOutputCandidateB",
+      "discharge_status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "field": "calibration_rule",
+      "obligation": "independent bounded values for k_D and b_D are supplied and justify readout_D = k_D * y_D + b_D",
+      "discharge_status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "field": "finite_output_rule",
+      "obligation": "for every admitted input, abs(R_D_candidate(admitted_input)) <= M_D",
+      "discharge_status": "OBLIGATION_NOT_DISCHARGED"
+    },
+    {
+      "field": "constant_rescaling_distinction_predicate",
+      "obligation": "DistinctFromConstantRescaling_D is witnessed by one admitted input without assuming the desired inequality",
+      "discharge_status": "OBLIGATION_NOT_DISCHARGED"
+    }
+  ],
+  "obligation_count": 10,
+  "discharged_obligation_count": 0,
+  "acceptance_status": "CANDIDATE_NOT_ACCEPTED",
+  "contract_inhabitation_status": "INPUT_CONTRACT_NOT_INHABITED",
+  "verification_status": "ACCEPTANCE_OBLIGATIONS_NOT_VERIFIED",
+  "detector_status": "DETECTOR_NOT_CONSTRUCTED",
+  "functional_status": "FUNCTIONAL_NOT_CONSTRUCTED",
+  "empirical_status": "NO_EMPIRICAL_EVIDENCE_SUPPLIED",
+  "blocked_promotions": [
+    "acceptance obligations -> discharged acceptance obligations",
+    "acceptance obligations -> DInputCandidateB0 accepted",
+    "acceptance obligations -> detector-response input contract inhabited",
+    "acceptance obligations -> detector construction",
+    "acceptance obligations -> response-functional construction",
+    "acceptance obligations -> detector verification",
+    "acceptance obligations -> empirical confirmation",
+    "acceptance obligations -> ScaledEnergyObservableMap",
+    "acceptance obligations -> alpha_A != alpha_B",
+    "acceptance obligations -> ZeroDayClosure",
+    "unrestricted ZeroDayClosure",
+    "restricted-to-unrestricted lift"
+  ],
+  "non_claims": [
+    "does not discharge any acceptance obligation",
+    "does not accept DInputCandidateB0",
+    "does not inhabit the detector-response input contract",
+    "does not prove finite detector support",
+    "does not prove local current conservation",
+    "does not prove c != 0",
+    "does not prove M_D > 0",
+    "does not construct R_D_candidate",
+    "does not calibrate k_D or b_D",
+    "does not prove the finite-output rule",
+    "does not witness DistinctFromConstantRescaling_D",
+    "does not construct DetectorCandidateB0",
+    "does not verify a detector",
+    "does not supply empirical evidence",
+    "does not establish alpha_A != alpha_B",
+    "does not construct ScaledEnergyObservableMap",
+    "does not prove ZeroDayClosure",
+    "does not prove unrestricted ZeroDayClosure"
+  ],
+  "next_weakest_point": "Refine the finite-support obligation into an executable candidate verifier without discharging it."
+}
