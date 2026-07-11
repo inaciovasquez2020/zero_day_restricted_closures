@@ -5788,3 +5788,319 @@ def verify_scaled_energy_support_candidate_minkowski_metric_connection_instance_
 
 
 verify_scaled_energy_support_candidate_minkowski_metric_connection_instance_guard()
+
+def verify_scaled_energy_support_candidate_time_translation_covector_candidate_guard() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+
+    surface_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_"
+            "time_translation_covector_candidate_surface.json"
+        )
+    )
+    region_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_region_definition_"
+            "candidate_surface.json"
+        )
+    )
+    metric_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_"
+            "minkowski_metric_connection_instance_surface.json"
+        )
+    )
+    geometry_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_"
+            "covariant_geometry_input_surface.json"
+        )
+    )
+
+    for path in (
+        surface_path,
+        region_path,
+        metric_path,
+        geometry_path,
+    ):
+        if not path.exists():
+            raise SystemExit(
+                f"MISSING_OBJECT := {path.relative_to(root)}"
+            )
+
+    surface = json.loads(surface_path.read_text(encoding="utf-8"))
+    region = json.loads(region_path.read_text(encoding="utf-8"))
+    metric = json.loads(metric_path.read_text(encoding="utf-8"))
+    geometry = json.loads(geometry_path.read_text(encoding="utf-8"))
+
+    expected_top_level = {
+        "surface": (
+            "ScaledEnergySupportCandidate"
+            "TimeTranslationCovectorCandidateSurface"
+        ),
+        "classification": (
+            "BOUNDED_TIME_TRANSLATION_COVECTOR_CANDIDATE_ONLY"
+        ),
+        "dependency_region_surface": (
+            "ScaledEnergySupportCandidateRegionDefinitionCandidateSurface"
+        ),
+        "dependency_metric_connection_surface": (
+            "ScaledEnergySupportCandidate"
+            "MinkowskiMetricConnectionInstanceSurface"
+        ),
+        "dependency_geometry_contract_surface": (
+            "ScaledEnergySupportCandidateCovariantGeometryInputSurface"
+        ),
+        "target_support": "SupportCandidateB0",
+        "candidate_status": (
+            "TIME_TRANSLATION_COVECTOR_CANDIDATE_COMPONENTS_VERIFIED"
+        ),
+        "contract_inhabitation_status": (
+            "FULL_GEOMETRY_INPUT_CONTRACT_NOT_INHABITED"
+        ),
+    }
+
+    for key, expected in expected_top_level.items():
+        actual = surface.get(key)
+        if actual != expected:
+            raise SystemExit(
+                "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+                f"{key!r} expected {expected!r} got {actual!r}"
+            )
+
+    if region.get("target_support") != "SupportCandidateB0":
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+            "region support changed"
+        )
+
+    if region.get("physical_realization_status") != (
+        "PHYSICAL_DETECTOR_SUPPORT_NOT_REALIZED"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+            "detector support was promoted"
+        )
+
+    if metric.get("instance_status") != (
+        "METRIC_CONNECTION_COMPONENT_INSTANCE_VERIFIED"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+            "metric-connection dependency not verified"
+        )
+
+    if geometry.get("contract_status") != (
+        "GEOMETRY_INPUT_CONTRACT_NOT_INHABITED"
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+            "geometry contract was promoted"
+        )
+
+    expected_scope = {
+        "chart_symbol": "ChartCandidateB0",
+        "chart_domain": "R^4",
+        "basis_order": [
+            "x_candidate^0",
+            "x_candidate^1",
+            "x_candidate^2",
+            "x_candidate^3",
+        ],
+        "temporal_bounds": [0.0, 1.0e-9],
+        "temporal_unit": "s",
+        "spatial_bounds": [
+            [-0.001, 0.001],
+            [-0.001, 0.001],
+            [-0.001, 0.001],
+        ],
+        "spatial_unit": "m",
+        "scope_status": "EXISTING_BOUNDED_REGION_REFERENCED",
+    }
+
+    if surface.get("coordinate_scope") != expected_scope:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+            "coordinate scope changed"
+        )
+
+    covector = surface.get("covector_candidate", {})
+
+    if covector != {
+        "symbol": "tau_candidate_nu",
+        "variance": "covariant rank-one tensor",
+        "components": [-1, 0, 0, 0],
+        "component_rule": (
+            "tau_candidate_nu = (-1,0,0,0) "
+            "in ChartCandidateB0 on SupportCandidateB0"
+        ),
+        "component_status": "EXACT_CANDIDATE_COMPONENTS_SUPPLIED",
+    }:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+            "covector candidate changed"
+        )
+
+    inverse_metric = (
+        metric.get("inverse_metric", {}).get("components")
+    )
+    tau_covariant = covector["components"]
+
+    if inverse_metric != [
+        [-1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1],
+    ]:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+            "inverse metric dependency changed"
+        )
+
+    tau_contravariant = [
+        sum(
+            inverse_metric[mu][nu] * tau_covariant[nu]
+            for nu in range(4)
+        )
+        for mu in range(4)
+    ]
+
+    if tau_contravariant != [1, 0, 0, 0]:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+            "metric dual component check failed"
+        )
+
+    norm = sum(
+        inverse_metric[mu][nu]
+        * tau_covariant[mu]
+        * tau_covariant[nu]
+        for mu in range(4)
+        for nu in range(4)
+    )
+
+    if norm != -1:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+            "timelike norm component check failed"
+        )
+
+    if surface.get("metric_dual_candidate") != {
+        "symbol": "tau_candidate^mu",
+        "definition": (
+            "tau_candidate^mu := "
+            "g_candidate_inverse^{mu nu} * tau_candidate_nu"
+        ),
+        "components": [1, 0, 0, 0],
+        "component_status": "COMPONENT_CHECK_VERIFIED",
+    }:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+            "metric dual certificate changed"
+        )
+
+    if surface.get("norm_candidate") != {
+        "definition": (
+            "g_candidate_inverse^{mu nu} "
+            "* tau_candidate_mu * tau_candidate_nu"
+        ),
+        "value": -1,
+        "signature": "(-,+,+,+)",
+        "classification": "UNIT_TIMELIKE_COVECTOR_CANDIDATE",
+        "component_status": "COMPONENT_CHECK_VERIFIED",
+    }:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+            "norm certificate changed"
+        )
+
+    if surface.get("derivative_boundary") != {
+        "candidate_expression": (
+            "nabla_candidate_mu tau_candidate_nu"
+        ),
+        "verification_status": (
+            "COVARIANT_DERIVATIVE_NOT_VERIFIED"
+        ),
+    }:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+            "derivative boundary changed"
+        )
+
+    if surface.get("killing_boundary") != {
+        "candidate_equation": (
+            "nabla_candidate_(mu tau_candidate_nu) = 0"
+        ),
+        "evidence_status": "KILLING_EVIDENCE_NOT_VERIFIED",
+        "theorem_status": "KILLING_THEOREM_NOT_CONSTRUCTED",
+    }:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+            "Killing boundary changed"
+        )
+
+    required_blocked = {
+        "covector candidate -> accepted SupportCandidateB0",
+        "covector candidate -> full geometry contract inhabited",
+        "covector candidate -> covariant derivative verified",
+        "covector candidate -> Killing evidence verified",
+        "covector candidate -> stress-energy symmetry verified",
+        (
+            "covector candidate -> "
+            "covariant stress-energy conservation verified"
+        ),
+        "covector candidate -> detector support realized",
+        "covector candidate -> current conservation verified",
+        "covector candidate -> DInputCandidateB0 accepted",
+        "covector candidate -> empirical confirmation",
+        "covector candidate -> ZeroDayClosure",
+        "unrestricted ZeroDayClosure",
+    }
+
+    if set(surface.get("blocked_promotions", [])) != required_blocked:
+        raise SystemExit(
+            "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+            "blocked-promotion set changed"
+        )
+
+    encoded = json.dumps(surface, sort_keys=True)
+
+    forbidden_tokens = (
+        '"verification_status": "COVARIANT_DERIVATIVE_VERIFIED"',
+        '"evidence_status": "KILLING_EVIDENCE_VERIFIED"',
+        '"theorem_status": "KILLING_THEOREM_CONSTRUCTED"',
+        "STRESS_ENERGY_SYMMETRY_VERIFIED",
+        "COVARIANT_STRESS_ENERGY_CONSERVATION_VERIFIED",
+        "PHYSICAL_DETECTOR_SUPPORT_REALIZED",
+        "CURRENT_CONSERVATION_VERIFIED",
+        '"acceptance_status": "CANDIDATE_ACCEPTED"',
+        "EMPIRICALLY_CONFIRMED",
+        "E_EQUALS_M_C_CUBED_VERIFIED",
+        '"zero_day_closure_status": "CONSTRUCTED"',
+    )
+
+    for token in forbidden_tokens:
+        if token in encoded:
+            raise SystemExit(
+                "SCALED_ENERGY_TIME_TRANSLATION_COVECTOR_GUARD_FAILED := "
+                f"forbidden promotion {token!r}"
+            )
+
+    print(
+        "SCALED_ENERGY_SUPPORT_CANDIDATE_"
+        "TIME_TRANSLATION_COVECTOR_CANDIDATE_GUARD_OK"
+    )
+
+
+verify_scaled_energy_support_candidate_time_translation_covector_candidate_guard()
