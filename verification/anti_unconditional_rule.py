@@ -3346,3 +3346,118 @@ def verify_true_energy_observable_map_zero_day_edge_rejection_guard() -> None:
 
 
 verify_true_energy_observable_map_zero_day_edge_rejection_guard()
+
+
+def verify_true_energy_coupling_branch_exclusivity_guard() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    bounded_surface_path = (
+        root / "core/true_energy_observable_map_bounded_domain_surface.json"
+    )
+
+    if not bounded_surface_path.exists():
+        raise SystemExit(
+            "MISSING_OBJECT := "
+            "core/true_energy_observable_map_bounded_domain_surface.json"
+        )
+
+    bounded_surface = json.loads(
+        bounded_surface_path.read_text(encoding="utf-8")
+    )
+
+    required_non_claims = {
+        "does not establish coupling universality",
+        "does not establish alpha_A != alpha_B",
+    }
+
+    non_claims = set(bounded_surface.get("non_claims", []))
+    missing_non_claims = sorted(required_non_claims - non_claims)
+    if missing_non_claims:
+        raise SystemExit(
+            "TRUE_ENERGY_COUPLING_BRANCH_EXCLUSIVITY_GUARD_FAILED := "
+            f"missing non_claims {missing_non_claims!r}"
+        )
+
+    blocked_promotions = set(
+        bounded_surface.get("blocked_promotions", [])
+    )
+    if "alpha_A != alpha_B established" not in blocked_promotions:
+        raise SystemExit(
+            "TRUE_ENERGY_COUPLING_BRANCH_EXCLUSIVITY_GUARD_FAILED := "
+            "missing alpha_A != alpha_B blocked promotion"
+        )
+
+    universality_status_keys = {
+        "coupling_universality_status",
+        "true_energy_coupling_universality_status",
+    }
+
+    nonuniversal_status_keys = {
+        "nonuniversal_specialization_status",
+        "alpha_A_not_equal_alpha_B_status",
+        "alpha_inequality_status",
+    }
+
+    active_universality_statuses = {
+        "ACTIVE",
+        "ESTABLISHED",
+        "VERIFIED",
+        "PROVED",
+        "INPUT_SUPPLIED",
+        "UNIVERSAL_COUPLING_ACTIVE",
+    }
+
+    active_nonuniversal_statuses = {
+        "ACTIVE",
+        "ESTABLISHED",
+        "VERIFIED",
+        "PROVED",
+        "NONUNIVERSAL_COUPLING_ACTIVE",
+        "ALPHA_A_NOT_EQUAL_ALPHA_B_ESTABLISHED",
+    }
+
+    def objects(value):
+        if isinstance(value, dict):
+            yield value
+            for child in value.values():
+                yield from objects(child)
+        elif isinstance(value, list):
+            for child in value:
+                yield from objects(child)
+
+    for path in sorted((root / "core").glob("*.json")):
+        data = json.loads(path.read_text(encoding="utf-8"))
+
+        for node in objects(data):
+            universal_active = (
+                node.get("coupling_universality_active") is True
+                or any(
+                    isinstance(node.get(key), str)
+                    and node[key].upper() in active_universality_statuses
+                    for key in universality_status_keys
+                )
+            )
+
+            nonuniversal_active = (
+                node.get("nonuniversal_specialization_active") is True
+                or node.get("alpha_A_not_equal_alpha_B_active") is True
+                or any(
+                    isinstance(node.get(key), str)
+                    and node[key].upper() in active_nonuniversal_statuses
+                    for key in nonuniversal_status_keys
+                )
+            )
+
+            if universal_active and nonuniversal_active:
+                raise SystemExit(
+                    "TRUE_ENERGY_COUPLING_BRANCH_EXCLUSIVITY_GUARD_FAILED := "
+                    f"{path.relative_to(root)} activates universal and "
+                    "nonuniversal coupling branches simultaneously"
+                )
+
+    print("TRUE_ENERGY_COUPLING_BRANCH_EXCLUSIVITY_GUARD_OK")
+
+
+verify_true_energy_coupling_branch_exclusivity_guard()
