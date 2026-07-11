@@ -4660,6 +4660,238 @@ def verify_scaled_energy_energy_current_conservation_formulation_guard() -> None
 
 verify_scaled_energy_energy_current_conservation_formulation_guard()
 
+
+def verify_scaled_energy_support_candidate_covariant_geometry_input_guard() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    surface_path = (
+        root
+        / "core"
+        / (
+            "scaled_energy_support_candidate_"
+            "covariant_geometry_input_surface.json"
+        )
+    )
+
+    if not surface_path.exists():
+        raise SystemExit(
+            "MISSING_OBJECT := "
+            "core/scaled_energy_support_candidate_"
+            "covariant_geometry_input_surface.json"
+        )
+
+    surface = json.loads(surface_path.read_text(encoding="utf-8"))
+
+    expected_top_level = {
+        "surface": (
+            "ScaledEnergySupportCandidateCovariantGeometryInputSurface"
+        ),
+        "classification": (
+            "BOUNDED_COVARIANT_GEOMETRY_INPUT_CONTRACT_ONLY"
+        ),
+        "target_support": "SupportCandidateB0",
+        "contract_status": "GEOMETRY_INPUT_CONTRACT_NOT_INHABITED",
+    }
+
+    for key, expected in expected_top_level.items():
+        actual = surface.get(key)
+        if actual != expected:
+            raise SystemExit(
+                "SCALED_ENERGY_COVARIANT_GEOMETRY_INPUT_GUARD_FAILED := "
+                f"{key!r} expected {expected!r} got {actual!r}"
+            )
+
+    expected_dimension_contract = {
+        "spatial_dimension": 3,
+        "spacetime_dimension": 4,
+        "index_range": "mu,nu in {0,1,2,3}",
+        "dimension_status": "DIMENSION_CONVENTION_DECLARED_ONLY",
+    }
+
+    if surface.get("dimension_contract") != expected_dimension_contract:
+        raise SystemExit(
+            "SCALED_ENERGY_COVARIANT_GEOMETRY_INPUT_GUARD_FAILED := "
+            "dimension contract changed"
+        )
+
+    inputs = surface.get("required_geometry_inputs")
+
+    expected_fields = [
+        "support_region_definition",
+        "coordinate_or_atlas_data",
+        "metric_tensor",
+        "inverse_metric",
+        "covariant_derivative",
+        "connection_coefficients",
+        "metric_compatibility_evidence",
+        "torsion_free_evidence",
+        "time_translation_covector",
+        "stress_energy_symmetry_evidence",
+    ]
+
+    if not isinstance(inputs, list):
+        raise SystemExit(
+            "SCALED_ENERGY_COVARIANT_GEOMETRY_INPUT_GUARD_FAILED := "
+            "required geometry inputs missing"
+        )
+
+    actual_fields = [entry.get("field") for entry in inputs]
+
+    if actual_fields != expected_fields:
+        raise SystemExit(
+            "SCALED_ENERGY_COVARIANT_GEOMETRY_INPUT_GUARD_FAILED := "
+            f"expected fields {expected_fields!r} got {actual_fields!r}"
+        )
+
+    for entry in inputs:
+        if entry.get("status") != "REQUIRED_NOT_SUPPLIED":
+            raise SystemExit(
+                "SCALED_ENERGY_COVARIANT_GEOMETRY_INPUT_GUARD_FAILED := "
+                f"promoted geometry input {entry.get('field')!r}"
+            )
+
+        for required_key in ("symbol", "requirement"):
+            value = entry.get(required_key)
+            if not isinstance(value, str) or not value:
+                raise SystemExit(
+                    "SCALED_ENERGY_COVARIANT_GEOMETRY_INPUT_GUARD_FAILED := "
+                    f"missing {required_key!r} for "
+                    f"{entry.get('field')!r}"
+                )
+
+    expected_symmetrization = {
+        "rank_two_definition": (
+            "A_(mu nu) := "
+            "1/2 * (A_mu_nu + A_nu_mu)"
+        ),
+        "covector_derivative_definition": (
+            "nabla_(mu tau_nu) := "
+            "1/2 * (nabla_mu tau_nu + nabla_nu tau_mu)"
+        ),
+        "normalization_factor": "1/2",
+        "convention_status": "CONVENTION_DEFINED_ONLY",
+    }
+
+    if surface.get("symmetrization_convention") != (
+        expected_symmetrization
+    ):
+        raise SystemExit(
+            "SCALED_ENERGY_COVARIANT_GEOMETRY_INPUT_GUARD_FAILED := "
+            "symmetrization convention changed"
+        )
+
+    killing = surface.get("killing_condition", {})
+
+    if killing != {
+        "equation": "nabla_(mu tau_nu) = 0",
+        "interpretation": (
+            "tau_candidate_nu is Killing with respect to "
+            "g_candidate and nabla_candidate"
+        ),
+        "evidence_status": "KILLING_EVIDENCE_NOT_SUPPLIED",
+    }:
+        raise SystemExit(
+            "SCALED_ENERGY_COVARIANT_GEOMETRY_INPUT_GUARD_FAILED := "
+            "Killing-condition contract changed"
+        )
+
+    current_identity = surface.get("current_identity", {})
+
+    expected_identity = {
+        "current_definition": (
+            "J_E_candidate^mu := "
+            "T_total_candidate^{mu nu} * tau_candidate_nu"
+        ),
+        "raw_product_rule": (
+            "nabla_mu J_E_candidate^mu = "
+            "(nabla_mu T_total_candidate^{mu nu}) "
+            "* tau_candidate_nu + "
+            "T_total_candidate^{mu nu} "
+            "* nabla_mu tau_candidate_nu"
+        ),
+        "symmetric_reduction": (
+            "T_total_candidate^{mu nu} "
+            "* nabla_mu tau_candidate_nu = "
+            "T_total_candidate^{mu nu} "
+            "* nabla_(mu tau_candidate_nu)"
+        ),
+        "symmetric_reduction_requires": (
+            "T_total_candidate^{mu nu} "
+            "= T_total_candidate^{nu mu}"
+        ),
+        "general_conservation_condition": (
+            "(nabla_mu T_total_candidate^{mu nu}) "
+            "* tau_candidate_nu + "
+            "T_total_candidate^{mu nu} "
+            "* nabla_(mu tau_candidate_nu) = 0"
+        ),
+        "sufficient_route": (
+            "nabla_mu T_total_candidate^{mu nu} = 0 "
+            "and nabla_(mu tau_candidate_nu) = 0"
+        ),
+        "verification_status": "IDENTITY_NOT_VERIFIED",
+    }
+
+    if current_identity != expected_identity:
+        raise SystemExit(
+            "SCALED_ENERGY_COVARIANT_GEOMETRY_INPUT_GUARD_FAILED := "
+            "current identity contract changed"
+        )
+
+    required_blocked = {
+        "geometry input contract -> geometry supplied",
+        "geometry input contract -> metric verified",
+        "geometry input contract -> connection verified",
+        "geometry input contract -> tensor symmetry verified",
+        "geometry input contract -> covariant conservation verified",
+        "geometry input contract -> Killing condition verified",
+        "geometry input contract -> current conservation verified",
+        "geometry input contract -> acceptance obligation discharged",
+        "geometry input contract -> DInputCandidateB0 accepted",
+        "geometry input contract -> detector constructed",
+        "geometry input contract -> empirical confirmation",
+        "geometry input contract -> ZeroDayClosure",
+        "unrestricted ZeroDayClosure",
+    }
+
+    if set(surface.get("blocked_promotions", [])) != required_blocked:
+        raise SystemExit(
+            "SCALED_ENERGY_COVARIANT_GEOMETRY_INPUT_GUARD_FAILED := "
+            "blocked-promotion set changed"
+        )
+
+    encoded = json.dumps(surface, sort_keys=True)
+
+    forbidden_tokens = (
+        '"status": "REQUIRED_SUPPLIED"',
+        '"dimension_status": "DIMENSION_VERIFIED"',
+        '"contract_status": "GEOMETRY_INPUT_CONTRACT_INHABITED"',
+        '"convention_status": "CONVENTION_VERIFIED"',
+        '"evidence_status": "KILLING_EVIDENCE_VERIFIED"',
+        '"verification_status": "IDENTITY_VERIFIED"',
+        '"geometry_status": "GEOMETRY_VERIFIED"',
+        '"current_conservation_status": "VERIFIED"',
+        '"acceptance_status": "CANDIDATE_ACCEPTED"',
+        '"zero_day_closure_status": "CONSTRUCTED"',
+    )
+
+    for token in forbidden_tokens:
+        if token in encoded:
+            raise SystemExit(
+                "SCALED_ENERGY_COVARIANT_GEOMETRY_INPUT_GUARD_FAILED := "
+                f"forbidden promotion {token!r}"
+            )
+
+    print(
+        "SCALED_ENERGY_SUPPORT_CANDIDATE_"
+        "COVARIANT_GEOMETRY_INPUT_GUARD_OK"
+    )
+
+
+verify_scaled_energy_support_candidate_covariant_geometry_input_guard()
+
 def verify_scaled_energy_coupling_branch_exclusivity_guard() -> None:
     import json
     from pathlib import Path

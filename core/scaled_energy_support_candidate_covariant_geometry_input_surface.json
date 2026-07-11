@@ -1,0 +1,134 @@
+{
+  "surface": "ScaledEnergySupportCandidateCovariantGeometryInputSurface",
+  "boundary": "BOUNDARY := not (geometry supplied or tensor symmetry verified or covariant conservation verified or Killing condition verified or obligation discharged or candidate accepted)",
+  "classification": "BOUNDED_COVARIANT_GEOMETRY_INPUT_CONTRACT_ONLY",
+  "dependency_surfaces": [
+    "ScaledEnergyDetectorResponseCandidateInputRecordSurface",
+    "ScaledEnergyDetectorResponseCandidateInputAcceptanceObligationSurface"
+  ],
+  "target_support": "SupportCandidateB0",
+  "dimension_contract": {
+    "spatial_dimension": 3,
+    "spacetime_dimension": 4,
+    "index_range": "mu,nu in {0,1,2,3}",
+    "dimension_status": "DIMENSION_CONVENTION_DECLARED_ONLY"
+  },
+  "required_geometry_inputs": [
+    {
+      "field": "support_region_definition",
+      "symbol": "SupportCandidateB0",
+      "requirement": "explicit bounded spacetime region with declared boundary",
+      "status": "REQUIRED_NOT_SUPPLIED"
+    },
+    {
+      "field": "coordinate_or_atlas_data",
+      "symbol": "AtlasCandidateB0",
+      "requirement": "coordinate charts or atlas covering SupportCandidateB0",
+      "status": "REQUIRED_NOT_SUPPLIED"
+    },
+    {
+      "field": "metric_tensor",
+      "symbol": "g_candidate_{mu nu}",
+      "requirement": "nondegenerate Lorentzian metric on SupportCandidateB0",
+      "status": "REQUIRED_NOT_SUPPLIED"
+    },
+    {
+      "field": "inverse_metric",
+      "symbol": "g_candidate^{mu nu}",
+      "requirement": "inverse satisfying g_candidate^{mu rho} g_candidate_{rho nu} = delta^mu_nu",
+      "status": "REQUIRED_NOT_SUPPLIED"
+    },
+    {
+      "field": "covariant_derivative",
+      "symbol": "nabla_candidate",
+      "requirement": "connection acting on tensors over SupportCandidateB0",
+      "status": "REQUIRED_NOT_SUPPLIED"
+    },
+    {
+      "field": "connection_coefficients",
+      "symbol": "Gamma_candidate^rho_{mu nu}",
+      "requirement": "connection coefficients compatible with nabla_candidate in the declared charts",
+      "status": "REQUIRED_NOT_SUPPLIED"
+    },
+    {
+      "field": "metric_compatibility_evidence",
+      "symbol": "nabla_candidate_lambda g_candidate_{mu nu} = 0",
+      "requirement": "evidence that nabla_candidate is metric-compatible",
+      "status": "REQUIRED_NOT_SUPPLIED"
+    },
+    {
+      "field": "torsion_free_evidence",
+      "symbol": "Gamma_candidate^rho_{mu nu} = Gamma_candidate^rho_{nu mu}",
+      "requirement": "evidence that nabla_candidate is torsion-free",
+      "status": "REQUIRED_NOT_SUPPLIED"
+    },
+    {
+      "field": "time_translation_covector",
+      "symbol": "tau_candidate_nu",
+      "requirement": "covector field defined throughout SupportCandidateB0",
+      "status": "REQUIRED_NOT_SUPPLIED"
+    },
+    {
+      "field": "stress_energy_symmetry_evidence",
+      "symbol": "T_total_candidate^{mu nu} = T_total_candidate^{nu mu}",
+      "requirement": "evidence that the total stress-energy tensor is symmetric",
+      "status": "REQUIRED_NOT_SUPPLIED"
+    }
+  ],
+  "symmetrization_convention": {
+    "rank_two_definition": "A_(mu nu) := 1/2 * (A_mu_nu + A_nu_mu)",
+    "covector_derivative_definition": "nabla_(mu tau_nu) := 1/2 * (nabla_mu tau_nu + nabla_nu tau_mu)",
+    "normalization_factor": "1/2",
+    "convention_status": "CONVENTION_DEFINED_ONLY"
+  },
+  "killing_condition": {
+    "equation": "nabla_(mu tau_nu) = 0",
+    "interpretation": "tau_candidate_nu is Killing with respect to g_candidate and nabla_candidate",
+    "evidence_status": "KILLING_EVIDENCE_NOT_SUPPLIED"
+  },
+  "current_identity": {
+    "current_definition": "J_E_candidate^mu := T_total_candidate^{mu nu} * tau_candidate_nu",
+    "raw_product_rule": "nabla_mu J_E_candidate^mu = (nabla_mu T_total_candidate^{mu nu}) * tau_candidate_nu + T_total_candidate^{mu nu} * nabla_mu tau_candidate_nu",
+    "symmetric_reduction": "T_total_candidate^{mu nu} * nabla_mu tau_candidate_nu = T_total_candidate^{mu nu} * nabla_(mu tau_candidate_nu)",
+    "symmetric_reduction_requires": "T_total_candidate^{mu nu} = T_total_candidate^{nu mu}",
+    "general_conservation_condition": "(nabla_mu T_total_candidate^{mu nu}) * tau_candidate_nu + T_total_candidate^{mu nu} * nabla_(mu tau_candidate_nu) = 0",
+    "sufficient_route": "nabla_mu T_total_candidate^{mu nu} = 0 and nabla_(mu tau_candidate_nu) = 0",
+    "verification_status": "IDENTITY_NOT_VERIFIED"
+  },
+  "contract_status": "GEOMETRY_INPUT_CONTRACT_NOT_INHABITED",
+  "blocked_promotions": [
+    "geometry input contract -> geometry supplied",
+    "geometry input contract -> metric verified",
+    "geometry input contract -> connection verified",
+    "geometry input contract -> tensor symmetry verified",
+    "geometry input contract -> covariant conservation verified",
+    "geometry input contract -> Killing condition verified",
+    "geometry input contract -> current conservation verified",
+    "geometry input contract -> acceptance obligation discharged",
+    "geometry input contract -> DInputCandidateB0 accepted",
+    "geometry input contract -> detector constructed",
+    "geometry input contract -> empirical confirmation",
+    "geometry input contract -> ZeroDayClosure",
+    "unrestricted ZeroDayClosure"
+  ],
+  "non_claims": [
+    "does not define SupportCandidateB0 concretely",
+    "does not supply a metric",
+    "does not supply an inverse metric",
+    "does not supply a connection",
+    "does not prove metric compatibility",
+    "does not prove vanishing torsion",
+    "does not supply tau_candidate_nu",
+    "does not prove stress-energy symmetry",
+    "does not prove the Killing equation",
+    "does not prove covariant stress-energy conservation",
+    "does not verify the current identity",
+    "does not discharge current conservation",
+    "does not accept DInputCandidateB0",
+    "does not construct a detector",
+    "does not supply empirical evidence",
+    "does not establish E = m c^3 as an energy law",
+    "does not prove ZeroDayClosure"
+  ],
+  "next_weakest_point": "Supply one bounded SupportCandidateB0 region-definition candidate without supplying or verifying metric data."
+}
