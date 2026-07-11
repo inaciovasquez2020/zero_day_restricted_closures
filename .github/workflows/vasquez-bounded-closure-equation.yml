@@ -1,0 +1,28 @@
+name: vasquez-bounded-closure-equation
+
+on:
+  push:
+    paths:
+      - "core/vasquez_bounded_closure_equation_surface.json"
+      - "verification/verify_vasquez_bounded_closure_equation_surface.py"
+      - ".github/workflows/vasquez-bounded-closure-equation.yml"
+      - "verification/anti_unconditional_rule.py"
+  pull_request:
+    paths:
+      - "core/vasquez_bounded_closure_equation_surface.json"
+      - "verification/verify_vasquez_bounded_closure_equation_surface.py"
+      - ".github/workflows/vasquez-bounded-closure-equation.yml"
+      - "verification/anti_unconditional_rule.py"
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON surface
+        run: python3 -m json.tool core/vasquez_bounded_closure_equation_surface.json >/dev/null
+      - name: Verify bounded-closure equation surface
+        run: python3 verification/verify_vasquez_bounded_closure_equation_surface.py
+      - name: Preserve anti-unconditional boundary
+        run: python3 verification/anti_unconditional_rule.py
