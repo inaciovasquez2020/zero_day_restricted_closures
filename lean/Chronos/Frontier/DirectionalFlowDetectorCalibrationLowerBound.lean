@@ -281,3 +281,35 @@ structure DirectionalFlowAffineInputRecord where
     δ_readout + k_D * δ_response < readout_D - b_D
 
 end Chronos.Frontier
+
+namespace Chronos.Frontier
+
+namespace DirectionalFlowAffineInputRecord
+
+/--
+Every independently supplied inhabitant of the bounded affine input contract
+yields the existing positive directional-flow lower bound.
+
+This theorem does not construct an input-record inhabitant.
+-/
+theorem positive_lower_bound
+    (r : DirectionalFlowAffineInputRecord) :
+    let D : DirectionalFlowDetectorModel :=
+      { R_B := r.readout_D - r.b_D
+        κ := r.k_D
+        ε := r.δ_readout + r.k_D * r.δ_response
+        flowNorm_B := r.flowNorm_B
+        c := r.c }
+    0 < D.calibratedLowerBound_B ∧
+      D.calibratedLowerBound_B ≤ D.mFlow_B := by
+  exact
+    affine_detector_positive_lower_bound
+      r.gain_pos
+      r.speed_pos
+      r.readout_error_bound
+      r.response_error_bound
+      r.signal_above_total_uncertainty
+
+end DirectionalFlowAffineInputRecord
+
+end Chronos.Frontier
