@@ -313,3 +313,25 @@ theorem positive_lower_bound
 end DirectionalFlowAffineInputRecord
 
 end Chronos.Frontier
+
+namespace Chronos.Frontier
+
+/-
+An external admission predicate for a bounded affine detector-input record.
+
+The three evidence propositions must be supplied independently. Defining this
+predicate does not construct a record, prove the propositions, or assert that
+physical measurements exist.
+-/
+def DirectionalFlowExternalMeasurementAdmission
+    (r : DirectionalFlowAffineInputRecord)
+    (measurementRecorded : Prop)
+    (calibrationIndependent : Prop)
+    (uncertaintyBudgetRecorded : Prop) : Prop :=
+  measurementRecorded ∧
+    calibrationIndependent ∧
+    uncertaintyBudgetRecorded ∧
+    |r.readout_D - (r.k_D * r.y_D + r.b_D)| ≤ r.δ_readout ∧
+    |r.y_D - r.flowNorm_B| ≤ r.δ_response
+
+end Chronos.Frontier
