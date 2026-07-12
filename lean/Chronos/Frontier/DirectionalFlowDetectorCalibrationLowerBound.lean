@@ -395,4 +395,24 @@ theorem energy_zero_or_speed_one_of_quadratic_and_cubic
           rw [mul_one]
     exact mul_left_cancel₀ hFactorNonzero hCancelled
 
+theorem cubic_of_quadratic_and_energy_zero_or_speed_one
+    (E m c : ℝ)
+    (hQuadratic : E = m * c ^ 2)
+    (hBoundary : E = 0 ∨ c = 1) :
+    E = m * c ^ 3 := by
+  cases hBoundary with
+  | inl hE =>
+      have hFactorZero : m * c ^ 2 = 0 :=
+        hQuadratic.symm.trans hE
+      calc
+        E = 0 := hE
+        _ = (m * c ^ 2) * c := by
+          rw [hFactorZero, zero_mul]
+        _ = m * (c ^ 2 * c) := by
+          rw [mul_assoc]
+        _ = m * c ^ 3 := by
+          rw [← pow_succ]
+  | inr hc =>
+      simpa [hc] using hQuadratic
+
 end Chronos.Frontier.Mc3Boundary
