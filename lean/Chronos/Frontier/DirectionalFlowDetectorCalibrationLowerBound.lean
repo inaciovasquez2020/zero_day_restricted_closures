@@ -462,4 +462,9 @@ theorem P_c_eq_mass_times_speed_cubed
     _ = m * c ^ 3 := by
       rw [← pow_succ]
 
+/-- Dimension-tagged scalar quantities used to distinguish energy from energy-times-speed. -/
+inductive DimensionalQuantity where
+  | energy (value : ℝ)
+  | energyTimesSpeed (value : ℝ)
+
 end Chronos.Frontier.Mc3Boundary
