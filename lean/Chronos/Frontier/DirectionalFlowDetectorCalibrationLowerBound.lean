@@ -415,4 +415,18 @@ theorem cubic_of_quadratic_and_energy_zero_or_speed_one
   | inr hc =>
       simpa [hc] using hQuadratic
 
+theorem cubic_iff_energy_zero_or_speed_one
+    (E m c : ℝ)
+    (hQuadratic : E = m * c ^ 2) :
+    E = m * c ^ 3 ↔ E = 0 ∨ c = 1 := by
+  constructor
+  · intro hCubic
+    exact
+      energy_zero_or_speed_one_of_quadratic_and_cubic
+        E m c hQuadratic hCubic
+  · intro hBoundary
+    exact
+      cubic_of_quadratic_and_energy_zero_or_speed_one
+        E m c hQuadratic hBoundary
+
 end Chronos.Frontier.Mc3Boundary
