@@ -474,4 +474,9 @@ theorem energy_ne_energyTimesSpeed
   intro h
   cases h
 
+/-- Algebraic conversion from energy-times-speed using an explicit nonzero-scale candidate. -/
+noncomputable def energyFromEnergyTimesSpeed
+    (P conversionSpeed : ℝ) : ℝ :=
+  P / conversionSpeed
+
 end Chronos.Frontier.Mc3Boundary
