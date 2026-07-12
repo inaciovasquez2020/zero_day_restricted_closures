@@ -1,0 +1,28 @@
+name: directional-flow-detector-measurement-receipt
+
+on:
+  push:
+    paths:
+      - "core/directional_flow_detector_measurement_receipt.schema.json"
+      - "core/directional_flow_detector_measurement_receipt.template.json"
+      - "verification/verify_directional_flow_detector_measurement_receipt_schema.py"
+      - "artifacts/external_validation/directional_flow_detector_measurement_receipt_*.json"
+      - ".github/workflows/directional-flow-detector-measurement-receipt.yml"
+  pull_request:
+    paths:
+      - "core/directional_flow_detector_measurement_receipt.schema.json"
+      - "core/directional_flow_detector_measurement_receipt.template.json"
+      - "verification/verify_directional_flow_detector_measurement_receipt_schema.py"
+      - "artifacts/external_validation/directional_flow_detector_measurement_receipt_*.json"
+      - ".github/workflows/directional-flow-detector-measurement-receipt.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify detector measurement receipt schema
+        run: python3 verification/verify_directional_flow_detector_measurement_receipt_schema.py
