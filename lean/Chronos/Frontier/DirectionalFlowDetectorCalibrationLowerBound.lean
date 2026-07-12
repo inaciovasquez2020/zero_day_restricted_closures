@@ -445,4 +445,8 @@ theorem not_cubic_of_quadratic_and_nondegenerate_boundary
   | inr hSpeedOne =>
       exact hSpeedNotOne hSpeedOne
 
+/-- Energy multiplied by the selected speed scale. -/
+noncomputable def P_c (E c : ℝ) : ℝ :=
+  E * c
+
 end Chronos.Frontier.Mc3Boundary
