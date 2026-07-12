@@ -217,3 +217,39 @@ theorem directionalFlowCalibrationCertificate_of_affine
     hresponse
 
 end Chronos.Frontier
+
+namespace Chronos.Frontier
+
+/--
+The affine detector assumptions directly imply a strictly positive calibrated
+lower bound for the bounded directional-flow mass.
+-/
+theorem affine_detector_positive_lower_bound
+    {readout_D k_D b_D y_D flowNorm_B
+      δ_readout δ_response c : ℝ}
+    (hk : 0 < k_D)
+    (hc : 0 < c)
+    (hreadout :
+      |readout_D - (k_D * y_D + b_D)| ≤ δ_readout)
+    (hresponse :
+      |y_D - flowNorm_B| ≤ δ_response)
+    (hsignal :
+      δ_readout + k_D * δ_response < readout_D - b_D) :
+    let D : DirectionalFlowDetectorModel :=
+      { R_B := readout_D - b_D
+        κ := k_D
+        ε := δ_readout + k_D * δ_response
+        flowNorm_B := flowNorm_B
+        c := c }
+    0 < D.calibratedLowerBound_B ∧
+      D.calibratedLowerBound_B ≤ D.mFlow_B := by
+  exact
+    DirectionalFlowCalibrationCertificate.detector_lower_bound_implication
+      (directionalFlowCalibrationCertificate_of_affine
+        hk
+        hc
+        hreadout
+        hresponse
+        hsignal)
+
+end Chronos.Frontier
