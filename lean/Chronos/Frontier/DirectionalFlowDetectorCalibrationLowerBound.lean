@@ -486,4 +486,27 @@ theorem energyFromEnergyTimesSpeed_P_c
   unfold energyFromEnergyTimesSpeed P_c
   exact (div_eq_iff hc).2 rfl
 
+theorem energyFromEnergyTimesSpeed_P_c_eq_iff
+    (E c conversionSpeed : ℝ)
+    (hConversionSpeed : conversionSpeed ≠ 0) :
+    energyFromEnergyTimesSpeed (P_c E c) conversionSpeed = E ↔
+      E = 0 ∨ c = conversionSpeed := by
+  constructor
+  · intro hRecovered
+    have hScaled :
+        E * c = E * conversionSpeed := by
+      exact (div_eq_iff hConversionSpeed).1 hRecovered
+    by_cases hEnergy : E = 0
+    · exact Or.inl hEnergy
+    · exact Or.inr (mul_left_cancel₀ hEnergy hScaled)
+  · intro hBoundary
+    cases hBoundary with
+    | inl hEnergy =>
+        unfold energyFromEnergyTimesSpeed P_c
+        simp [hEnergy]
+    | inr hScale =>
+        simpa [hScale] using
+          energyFromEnergyTimesSpeed_P_c
+            E conversionSpeed hConversionSpeed
+
 end Chronos.Frontier.Mc3Boundary
