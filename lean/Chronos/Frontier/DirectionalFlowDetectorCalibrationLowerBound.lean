@@ -253,3 +253,31 @@ theorem affine_detector_positive_lower_bound
         hsignal)
 
 end Chronos.Frontier
+
+namespace Chronos.Frontier
+
+/--
+A bounded input contract for independently supplied affine detector values.
+
+Defining this record does not construct an inhabitant, supply measurements,
+or assert empirical detector evidence.
+-/
+structure DirectionalFlowAffineInputRecord where
+  readout_D : ℝ
+  k_D : ℝ
+  b_D : ℝ
+  y_D : ℝ
+  flowNorm_B : ℝ
+  δ_readout : ℝ
+  δ_response : ℝ
+  c : ℝ
+  gain_pos : 0 < k_D
+  speed_pos : 0 < c
+  readout_error_bound :
+    |readout_D - (k_D * y_D + b_D)| ≤ δ_readout
+  response_error_bound :
+    |y_D - flowNorm_B| ≤ δ_response
+  signal_above_total_uncertainty :
+    δ_readout + k_D * δ_response < readout_D - b_D
+
+end Chronos.Frontier
