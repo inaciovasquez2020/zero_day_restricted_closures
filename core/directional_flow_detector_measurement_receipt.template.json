@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0.0",
+  "receipt_status": "template_uninhabited",
+  "receipt_id": "MISSING",
+  "created_utc": "MISSING",
+  "dataset": {
+    "filename": "MISSING",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "byte_size": 0,
+    "mime_type": "MISSING",
+    "recorded_utc": "MISSING",
+    "instrument_id": "MISSING",
+    "immutable": false,
+    "source_uri": "MISSING"
+  },
+  "measurement_context": {
+    "bounded_region_id": "MISSING",
+    "coordinate_system": "MISSING",
+    "readout_unit": "MISSING",
+    "response_unit": "MISSING",
+    "flow_norm_unit": "MISSING",
+    "speed_unit": "MISSING",
+    "mass_flow_unit": "MISSING",
+    "environment_notes": "Template only."
+  },
+  "calibration": {
+    "independent": false,
+    "artifact_filename": "MISSING",
+    "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "method": "MISSING",
+    "performed_by": "MISSING",
+    "k_D": 0.0,
+    "k_D_unit": "MISSING",
+    "b_D": 0.0,
+    "b_D_unit": "MISSING",
+    "valid_from_utc": "MISSING",
+    "valid_to_utc": "MISSING"
+  },
+  "uncertainty_budget": {
+    "coverage_factor": 0.0,
+    "confidence_level": 0.0,
+    "delta_readout": 0.0,
+    "delta_response": 0.0,
+    "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "components": [
+      {
+        "name": "MISSING",
+        "standard_uncertainty": 0.0,
+        "unit": "MISSING"
+      }
+    ]
+  },
+  "systematic_error_subtraction": {
+    "method": "MISSING",
+    "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "raw_signal": 0.0,
+    "total_systematic_correction": 0.0,
+    "residual_signal": 0.0,
+    "unit": "MISSING"
+  },
+  "null_estimators": [
+    {
+      "name": "MISSING",
+      "definition": "MISSING",
+      "observed_value": 0.0,
+      "unit": "MISSING",
+      "acceptance_threshold": 0.0,
+      "passed": false,
+      "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  ],
+  "derived_affine_inputs": {
+    "readout_D": 0.0,
+    "y_D": 0.0,
+    "flowNorm_B": 0.0,
+    "c": 0.0,
+    "calibration_residual": 0.0,
+    "combined_uncertainty": 0.0,
+    "signal_above_uncertainty": false,
+    "calibrated_lower_bound_B": 0.0,
+    "flow_mass_B": 0.0
+  },
+  "admission_boundaries": {
+    "measurement_receipt_only": true,
+    "empirical_promotion_authorized": false,
+    "universal_E_eq_mc3_claimed": false,
+    "notes": "Uninhabited template; no external measurement evidence."
+  }
+}

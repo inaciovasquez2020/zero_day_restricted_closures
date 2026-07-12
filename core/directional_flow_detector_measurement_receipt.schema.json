@@ -1,0 +1,421 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:chronos:directional-flow-detector-measurement-receipt:1.0.0",
+  "title": "Directional Flow Detector Measurement Receipt",
+  "description": "External measurement receipt for the bounded conditional detector-calibration pipeline. Validation does not establish a universal physical law.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "receipt_status",
+    "receipt_id",
+    "created_utc",
+    "dataset",
+    "measurement_context",
+    "calibration",
+    "uncertainty_budget",
+    "systematic_error_subtraction",
+    "null_estimators",
+    "derived_affine_inputs",
+    "admission_boundaries"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "receipt_status": {
+      "type": "string",
+      "const": "external_measurement"
+    },
+    "receipt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "filename",
+        "sha256",
+        "byte_size",
+        "mime_type",
+        "recorded_utc",
+        "instrument_id",
+        "immutable",
+        "source_uri"
+      ],
+      "properties": {
+        "filename": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^(?!0{64}$)[A-Fa-f0-9]{64}$"
+        },
+        "byte_size": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "mime_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "recorded_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "instrument_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "immutable": {
+          "type": "boolean",
+          "const": true
+        },
+        "source_uri": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "measurement_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bounded_region_id",
+        "coordinate_system",
+        "readout_unit",
+        "response_unit",
+        "flow_norm_unit",
+        "speed_unit",
+        "mass_flow_unit"
+      ],
+      "properties": {
+        "bounded_region_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "coordinate_system": {
+          "type": "string",
+          "minLength": 1
+        },
+        "readout_unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "response_unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "flow_norm_unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "speed_unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mass_flow_unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "environment_notes": {
+          "type": "string"
+        }
+      }
+    },
+    "calibration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "independent",
+        "artifact_filename",
+        "artifact_sha256",
+        "method",
+        "performed_by",
+        "k_D",
+        "k_D_unit",
+        "b_D",
+        "b_D_unit",
+        "valid_from_utc",
+        "valid_to_utc"
+      ],
+      "properties": {
+        "independent": {
+          "type": "boolean",
+          "const": true
+        },
+        "artifact_filename": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^(?!0{64}$)[A-Fa-f0-9]{64}$"
+        },
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "performed_by": {
+          "type": "string",
+          "minLength": 1
+        },
+        "k_D": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "k_D_unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "b_D": {
+          "type": "number"
+        },
+        "b_D_unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "valid_from_utc": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "valid_to_utc": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "uncertainty_budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "coverage_factor",
+        "confidence_level",
+        "delta_readout",
+        "delta_response",
+        "artifact_sha256",
+        "components"
+      ],
+      "properties": {
+        "coverage_factor": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "confidence_level": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "delta_readout": {
+          "type": "number",
+          "minimum": 0
+        },
+        "delta_response": {
+          "type": "number",
+          "minimum": 0
+        },
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^(?!0{64}$)[A-Fa-f0-9]{64}$"
+        },
+        "components": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "standard_uncertainty",
+              "unit"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "standard_uncertainty": {
+                "type": "number",
+                "minimum": 0
+              },
+              "unit": {
+                "type": "string",
+                "minLength": 1
+              },
+              "correlation_group": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "systematic_error_subtraction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "artifact_sha256",
+        "raw_signal",
+        "total_systematic_correction",
+        "residual_signal",
+        "unit"
+      ],
+      "properties": {
+        "method": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_sha256": {
+          "type": "string",
+          "pattern": "^(?!0{64}$)[A-Fa-f0-9]{64}$"
+        },
+        "raw_signal": {
+          "type": "number"
+        },
+        "total_systematic_correction": {
+          "type": "number"
+        },
+        "residual_signal": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "null_estimators": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "definition",
+          "observed_value",
+          "unit",
+          "acceptance_threshold",
+          "passed",
+          "artifact_sha256"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "definition": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observed_value": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string",
+            "minLength": 1
+          },
+          "acceptance_threshold": {
+            "type": "number",
+            "minimum": 0
+          },
+          "passed": {
+            "type": "boolean",
+            "const": true
+          },
+          "artifact_sha256": {
+            "type": "string",
+            "pattern": "^(?!0{64}$)[A-Fa-f0-9]{64}$"
+          }
+        }
+      }
+    },
+    "derived_affine_inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "readout_D",
+        "y_D",
+        "flowNorm_B",
+        "c",
+        "calibration_residual",
+        "combined_uncertainty",
+        "signal_above_uncertainty",
+        "calibrated_lower_bound_B",
+        "flow_mass_B"
+      ],
+      "properties": {
+        "readout_D": {
+          "type": "number"
+        },
+        "y_D": {
+          "type": "number"
+        },
+        "flowNorm_B": {
+          "type": "number",
+          "minimum": 0
+        },
+        "c": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "calibration_residual": {
+          "type": "number",
+          "minimum": 0
+        },
+        "combined_uncertainty": {
+          "type": "number",
+          "minimum": 0
+        },
+        "signal_above_uncertainty": {
+          "type": "boolean",
+          "const": true
+        },
+        "calibrated_lower_bound_B": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "flow_mass_B": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "admission_boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "measurement_receipt_only",
+        "empirical_promotion_authorized",
+        "universal_E_eq_mc3_claimed",
+        "notes"
+      ],
+      "properties": {
+        "measurement_receipt_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "empirical_promotion_authorized": {
+          "type": "boolean",
+          "const": false
+        },
+        "universal_E_eq_mc3_claimed": {
+          "type": "boolean",
+          "const": false
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
