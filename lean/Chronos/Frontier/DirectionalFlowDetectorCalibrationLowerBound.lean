@@ -429,4 +429,20 @@ theorem cubic_iff_energy_zero_or_speed_one
       cubic_of_quadratic_and_energy_zero_or_speed_one
         E m c hQuadratic hBoundary
 
+theorem not_cubic_of_quadratic_and_nondegenerate_boundary
+    (E m c : ℝ)
+    (hQuadratic : E = m * c ^ 2)
+    (hEnergyNonzero : E ≠ 0)
+    (hSpeedNotOne : c ≠ 1) :
+    E ≠ m * c ^ 3 := by
+  intro hCubic
+  have hBoundary : E = 0 ∨ c = 1 :=
+    energy_zero_or_speed_one_of_quadratic_and_cubic
+      E m c hQuadratic hCubic
+  cases hBoundary with
+  | inl hEnergyZero =>
+      exact hEnergyNonzero hEnergyZero
+  | inr hSpeedOne =>
+      exact hSpeedNotOne hSpeedOne
+
 end Chronos.Frontier.Mc3Boundary
