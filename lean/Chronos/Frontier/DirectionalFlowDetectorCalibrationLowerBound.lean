@@ -141,3 +141,43 @@ theorem positive_flow_mass :
 end DirectionalFlowBoundedArithmeticInstance
 
 end Chronos.Frontier
+
+namespace Chronos.Frontier
+
+/-
+The affine detector rule and a bounded response error imply a calibrated
+directional-flow residual bound.
+-/
+theorem affine_response_calibration_bound
+    {readout_D k_D b_D y_D flowNorm_B
+      δ_readout δ_response : ℝ}
+    (hk : 0 ≤ k_D)
+    (hreadout :
+      |readout_D - (k_D * y_D + b_D)| ≤ δ_readout)
+    (hresponse :
+      |y_D - flowNorm_B| ≤ δ_response) :
+    |(readout_D - b_D) - k_D * flowNorm_B|
+      ≤ δ_readout + k_D * δ_response := by
+  have hdecomp :
+      (readout_D - b_D) - k_D * flowNorm_B =
+        (readout_D - (k_D * y_D + b_D)) +
+          k_D * (y_D - flowNorm_B) := by
+    rw [mul_sub]
+    linarith
+  rw [hdecomp]
+  calc
+    |(readout_D - (k_D * y_D + b_D)) +
+        k_D * (y_D - flowNorm_B)|
+        ≤ |readout_D - (k_D * y_D + b_D)| +
+            |k_D * (y_D - flowNorm_B)| :=
+      abs_add_le _ _
+    _ =
+        |readout_D - (k_D * y_D + b_D)| +
+          k_D * |y_D - flowNorm_B| := by
+      rw [abs_mul, abs_of_nonneg hk]
+    _ ≤ δ_readout + k_D * δ_response :=
+      add_le_add
+        hreadout
+        (mul_le_mul_of_nonneg_left hresponse hk)
+
+end Chronos.Frontier
