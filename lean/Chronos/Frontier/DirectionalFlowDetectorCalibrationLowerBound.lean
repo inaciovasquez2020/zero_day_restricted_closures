@@ -92,3 +92,52 @@ theorem mFlow_pos
 end DirectionalFlowCalibrationCertificate
 
 end Chronos.Frontier
+
+namespace Chronos.Frontier
+
+/-
+A purely arithmetic bounded instance showing that the calibration certificate
+and lower-bound theorem are non-vacuous.
+
+This instance is not empirical detector evidence.
+-/
+namespace DirectionalFlowBoundedArithmeticInstance
+
+def model : DirectionalFlowDetectorModel where
+  R_B := 2
+  κ := 1
+  ε := 1
+  flowNorm_B := 2
+  c := 1
+
+theorem certificate :
+    DirectionalFlowCalibrationCertificate model := by
+  refine
+    { gain_pos := ?_
+      speed_pos := ?_
+      calibration_bound := ?_
+      signal_above_uncertainty := ?_ }
+  · change (0 : ℝ) < 1
+    exact zero_lt_one
+  · change (0 : ℝ) < 1
+    exact zero_lt_one
+  · change |(2 : ℝ) - 1 * 2| ≤ 1
+    simpa using (show (0 : ℝ) ≤ 1 from zero_le_one)
+  · change (1 : ℝ) < 2
+    linarith
+
+theorem lower_bound :
+    0 < model.calibratedLowerBound_B ∧
+      model.calibratedLowerBound_B ≤ model.mFlow_B := by
+  exact
+    DirectionalFlowCalibrationCertificate.detector_lower_bound_implication
+      certificate
+
+theorem positive_flow_mass :
+    0 < model.mFlow_B := by
+  exact
+    DirectionalFlowCalibrationCertificate.mFlow_pos certificate
+
+end DirectionalFlowBoundedArithmeticInstance
+
+end Chronos.Frontier
