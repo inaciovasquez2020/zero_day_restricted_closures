@@ -509,4 +509,20 @@ theorem energyFromEnergyTimesSpeed_P_c_eq_iff
           energyFromEnergyTimesSpeed_P_c
             E conversionSpeed hConversionSpeed
 
+theorem energyFromEnergyTimesSpeed_P_c_ne_of_nonzero_and_scale_ne
+    (E c conversionSpeed : ℝ)
+    (hConversionSpeed : conversionSpeed ≠ 0)
+    (hEnergy : E ≠ 0)
+    (hScale : c ≠ conversionSpeed) :
+    energyFromEnergyTimesSpeed (P_c E c) conversionSpeed ≠ E := by
+  intro hRecovered
+  have hBoundary : E = 0 ∨ c = conversionSpeed :=
+    (energyFromEnergyTimesSpeed_P_c_eq_iff
+      E c conversionSpeed hConversionSpeed).1 hRecovered
+  cases hBoundary with
+  | inl hEnergyZero =>
+      exact hEnergy hEnergyZero
+  | inr hScaleEqual =>
+      exact hScale hScaleEqual
+
 end Chronos.Frontier.Mc3Boundary
