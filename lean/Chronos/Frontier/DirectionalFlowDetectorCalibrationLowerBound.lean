@@ -366,4 +366,33 @@ theorem μ_eq_mass_div_speed
     _ = m / c :=
       mul_div_mul_left m c (pow_ne_zero 2 hc)
 
+theorem energy_zero_or_speed_one_of_quadratic_and_cubic
+    (E m c : ℝ)
+    (hQuadratic : E = m * c ^ 2)
+    (hCubic : E = m * c ^ 3) :
+    E = 0 ∨ c = 1 := by
+  by_cases hE : E = 0
+  · exact Or.inl hE
+  · right
+    have hFactorNonzero : m * c ^ 2 ≠ 0 := by
+      intro hFactorZero
+      apply hE
+      calc
+        E = m * c ^ 2 := hQuadratic
+        _ = 0 := hFactorZero
+    have hEqual :
+        m * c ^ 2 = m * c ^ 3 :=
+      hQuadratic.symm.trans hCubic
+    have hCancelled :
+        m * c ^ 2 * c = m * c ^ 2 * 1 := by
+      calc
+        m * c ^ 2 * c = m * (c ^ 2 * c) := by
+          rw [mul_assoc]
+        _ = m * c ^ 3 := by
+          rw [← pow_succ]
+        _ = m * c ^ 2 := hEqual.symm
+        _ = m * c ^ 2 * 1 := by
+          rw [mul_one]
+    exact mul_left_cancel₀ hFactorNonzero hCancelled
+
 end Chronos.Frontier.Mc3Boundary
