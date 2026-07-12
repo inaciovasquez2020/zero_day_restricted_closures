@@ -7,6 +7,7 @@ on:
       - "core/directional_flow_detector_measurement_receipt.template.json"
       - "verification/verify_directional_flow_detector_measurement_receipt_schema.py"
       - "artifacts/external_validation/directional_flow_detector_measurement_receipt_*.json"
+      - "lean/Chronos/Frontier/DirectionalFlowDetectorCalibrationLowerBound.lean"
       - ".github/workflows/directional-flow-detector-measurement-receipt.yml"
   pull_request:
     paths:
