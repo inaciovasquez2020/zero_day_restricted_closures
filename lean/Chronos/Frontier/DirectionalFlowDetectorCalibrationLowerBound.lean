@@ -181,3 +181,39 @@ theorem affine_response_calibration_bound
         (mul_le_mul_of_nonneg_left hresponse hk)
 
 end Chronos.Frontier
+
+namespace Chronos.Frontier
+
+/--
+Constructs the directional-flow calibration certificate from an affine
+detector response, bounded readout error, bounded response error, positive
+gain and speed, and an independently supplied signal margin.
+-/
+theorem directionalFlowCalibrationCertificate_of_affine
+    {readout_D k_D b_D y_D flowNorm_B
+      δ_readout δ_response c : ℝ}
+    (hk : 0 < k_D)
+    (hc : 0 < c)
+    (hreadout :
+      |readout_D - (k_D * y_D + b_D)| ≤ δ_readout)
+    (hresponse :
+      |y_D - flowNorm_B| ≤ δ_response)
+    (hsignal :
+      δ_readout + k_D * δ_response < readout_D - b_D) :
+    DirectionalFlowCalibrationCertificate
+      { R_B := readout_D - b_D
+        κ := k_D
+        ε := δ_readout + k_D * δ_response
+        flowNorm_B := flowNorm_B
+        c := c } := by
+  refine
+    { gain_pos := hk
+      speed_pos := hc
+      calibration_bound := ?_
+      signal_above_uncertainty := hsignal }
+  exact affine_response_calibration_bound
+    (le_of_lt hk)
+    hreadout
+    hresponse
+
+end Chronos.Frontier
