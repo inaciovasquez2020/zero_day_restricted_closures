@@ -335,3 +335,11 @@ def DirectionalFlowExternalMeasurementAdmission
     |r.y_D - r.flowNorm_B| ≤ r.δ_response
 
 end Chronos.Frontier
+
+namespace Chronos.Frontier.Mc3Boundary
+
+/-- Cubically scaled real-number parameter. -/
+noncomputable def μ (E c : ℝ) : ℝ :=
+  E / c ^ 3
+
+end Chronos.Frontier.Mc3Boundary
