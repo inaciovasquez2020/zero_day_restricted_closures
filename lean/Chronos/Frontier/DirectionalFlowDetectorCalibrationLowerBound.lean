@@ -479,4 +479,11 @@ noncomputable def energyFromEnergyTimesSpeed
     (P conversionSpeed : ℝ) : ℝ :=
   P / conversionSpeed
 
+theorem energyFromEnergyTimesSpeed_P_c
+    (E c : ℝ)
+    (hc : c ≠ 0) :
+    energyFromEnergyTimesSpeed (P_c E c) c = E := by
+  unfold energyFromEnergyTimesSpeed P_c
+  exact (div_eq_iff hc).2 rfl
+
 end Chronos.Frontier.Mc3Boundary
