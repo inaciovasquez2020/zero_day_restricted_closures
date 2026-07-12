@@ -467,4 +467,11 @@ inductive DimensionalQuantity where
   | energy (value : ℝ)
   | energyTimesSpeed (value : ℝ)
 
+theorem energy_ne_energyTimesSpeed
+    (E P : ℝ) :
+    DimensionalQuantity.energy E ≠
+      DimensionalQuantity.energyTimesSpeed P := by
+  intro h
+  cases h
+
 end Chronos.Frontier.Mc3Boundary
