@@ -449,4 +449,17 @@ theorem not_cubic_of_quadratic_and_nondegenerate_boundary
 noncomputable def P_c (E c : ℝ) : ℝ :=
   E * c
 
+theorem P_c_eq_mass_times_speed_cubed
+    (E m c : ℝ)
+    (hQuadratic : E = m * c ^ 2) :
+    P_c E c = m * c ^ 3 := by
+  calc
+    P_c E c = E * c := rfl
+    _ = (m * c ^ 2) * c :=
+      congrArg (fun x : ℝ => x * c) hQuadratic
+    _ = m * (c ^ 2 * c) := by
+      rw [mul_assoc]
+    _ = m * c ^ 3 := by
+      rw [← pow_succ]
+
 end Chronos.Frontier.Mc3Boundary
