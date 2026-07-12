@@ -342,4 +342,8 @@ namespace Chronos.Frontier.Mc3Boundary
 noncomputable def μ (E c : ℝ) : ℝ :=
   E / c ^ 3
 
+@[simp] theorem μ_eq (E c : ℝ) :
+    μ E c = E / c ^ 3 := by
+  rfl
+
 end Chronos.Frontier.Mc3Boundary
