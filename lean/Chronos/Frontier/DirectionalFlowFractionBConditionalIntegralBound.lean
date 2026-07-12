@@ -30,7 +30,9 @@ theorem directionalFlowFractionB_conditionalIntegralBound
   · exact norm_integral_le_integral_norm S
   · have hcu :
         Integrable (fun x => c * u x) (μ.restrict B) := by
-      simpa only [Pi.smul_apply, smul_eq_mul] using hu.smul c
+      refine (hu.smul c).congr ?_
+      filter_upwards with x
+      simp [Pi.smul_apply, smul_eq_mul]
     have hmono :
         ∫ x in B, ‖S x‖ ∂μ ≤ ∫ x in B, c * u x ∂μ := by
       exact integral_mono_ae hS.norm hcu hflux
