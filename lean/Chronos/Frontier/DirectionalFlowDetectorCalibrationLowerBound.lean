@@ -346,4 +346,24 @@ noncomputable def μ (E c : ℝ) : ℝ :=
     μ E c = E / c ^ 3 := by
   rfl
 
+theorem μ_eq_mass_div_speed
+    (E m c : ℝ)
+    (hE : E = m * c ^ 2)
+    (hc : c ≠ 0) :
+    μ E c = m / c := by
+  calc
+    μ E c = E / c ^ 3 := μ_eq E c
+    _ = m * c ^ 2 / c ^ 3 :=
+      congrArg (fun x : ℝ => x / c ^ 3) hE
+    _ = c ^ 2 * m / c ^ 3 :=
+      congrArg
+        (fun x : ℝ => x / c ^ 3)
+        (mul_comm m (c ^ 2))
+    _ = c ^ 2 * m / (c ^ 2 * c) :=
+      congrArg
+        (fun x : ℝ => c ^ 2 * m / x)
+        (pow_succ c 2)
+    _ = m / c :=
+      mul_div_mul_left m c (pow_ne_zero 2 hc)
+
 end Chronos.Frontier.Mc3Boundary
