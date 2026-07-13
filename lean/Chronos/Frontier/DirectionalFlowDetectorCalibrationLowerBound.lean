@@ -659,4 +659,34 @@ noncomputable def fifthElementSpatialNullEstimator
   residual / (abs residual + abs tolerance)
 
 
+
+theorem abs_fifthElementSpatialNullEstimator_le_one
+    {Carrier : Type}
+    (field : FifthElementFieldCandidate Carrier)
+    (x y : Carrier)
+    (m c measuredX measuredY tolerance : ℝ)
+    (hTolerance : tolerance ≠ 0) :
+    abs
+        (fifthElementSpatialNullEstimator
+          field x y m c measuredX measuredY tolerance) ≤ 1 := by
+  unfold fifthElementSpatialNullEstimator
+  dsimp
+  let residual : ℝ :=
+    (measuredX - measuredY) -
+      (fifthElementMassEnergyCoupling field x m c -
+        fifthElementMassEnergyCoupling field y m c)
+  change abs (residual / (abs residual + abs tolerance)) ≤ 1
+  have hTolerancePos : 0 < abs tolerance :=
+    abs_pos.mpr hTolerance
+  have hDenominatorPos : 0 < abs residual + abs tolerance :=
+    add_pos_of_nonneg_of_pos
+      (abs_nonneg residual)
+      hTolerancePos
+  rw [abs_div, abs_of_pos hDenominatorPos]
+  apply (div_le_iff₀ hDenominatorPos).2
+  simpa using
+    (le_add_of_nonneg_right (abs_nonneg tolerance) :
+      abs residual ≤ abs residual + abs tolerance)
+
+
 end Chronos.Frontier.Mc3Boundary
