@@ -548,4 +548,17 @@ theorem scaled_energy_recovery_error
     _ = E * (c - conversionSpeed) := by
       rw [mul_sub]
 
+
+theorem energy_recovery_error_ratio
+    (E c conversionSpeed : ℝ)
+    (hConversionSpeed : conversionSpeed ≠ 0) :
+    energyFromEnergyTimesSpeed
+          (P_c E c) conversionSpeed - E =
+      E * (c - conversionSpeed) / conversionSpeed := by
+  apply (eq_div_iff hConversionSpeed).2
+  rw [mul_comm]
+  exact scaled_energy_recovery_error
+    E c conversionSpeed hConversionSpeed
+
+
 end Chronos.Frontier.Mc3Boundary
