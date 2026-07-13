@@ -1390,6 +1390,56 @@ theorem fifthElement_measured_values_distinct_of_signalFit
   rw [hObservedZero, zero_sub, abs_neg] at hResidualBound
   exact (not_le_of_gt hFit.2.1) hResidualBound
 
+
+/--
+A signal fit forces the observed splitting and the fixed predicted splitting
+to have the same strict sign.
+
+This theorem constructs no specification, carrier, signal-fit proof, or
+empirical evidence.
+-/
+theorem fifthElement_observedSplit_mul_predictedSplit_pos_of_signalFit
+    {Source : Type}
+    {specification : FifthElementPredictionSpecification}
+    {carrier : FifthElementExternalMeasurementReceiptCarrier Source}
+    (hFit : FifthElementSignalFit specification carrier) :
+    0 <
+      (carrier.measurement.measuredX -
+          carrier.measurement.measuredY) *
+        specification.predictedSplit := by
+  have hResidual :=
+    abs_le.mp hFit.2.2
+  by_cases hPredNonnegative :
+      0 ≤ specification.predictedSplit
+  · have hToleranceLtPrediction :
+        carrier.measurement.tolerance <
+          specification.predictedSplit := by
+      simpa [abs_of_nonneg hPredNonnegative] using hFit.2.1
+    have hObservedPositive :
+        0 <
+          carrier.measurement.measuredX -
+            carrier.measurement.measuredY := by
+      linarith [hResidual.1]
+    have hPredictionPositive :
+        0 < specification.predictedSplit :=
+      lt_trans hFit.1 hToleranceLtPrediction
+    exact mul_pos hObservedPositive hPredictionPositive
+  · have hPredictionNegative :
+        specification.predictedSplit < 0 :=
+      lt_of_not_ge hPredNonnegative
+    have hToleranceLtNegativePrediction :
+        carrier.measurement.tolerance <
+          -specification.predictedSplit := by
+      simpa [abs_of_neg hPredictionNegative] using hFit.2.1
+    have hObservedNegative :
+        carrier.measurement.measuredX -
+            carrier.measurement.measuredY < 0 := by
+      linarith [hResidual.2]
+    exact
+      mul_pos_of_neg_of_neg
+        hObservedNegative
+        hPredictionNegative
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
