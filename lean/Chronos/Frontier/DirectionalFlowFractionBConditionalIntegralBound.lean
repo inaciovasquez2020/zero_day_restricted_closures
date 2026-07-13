@@ -1,4 +1,6 @@
 import Mathlib
+import Mathlib.Analysis.InnerProductSpace.PiL2
+import Mathlib.LinearAlgebra.CrossProduct
 
 namespace Chronos.Frontier
 
@@ -143,5 +145,118 @@ theorem poynting_algebraic_bound
         (1 / (2 * c)) * e ^ 2 +
           (c / 2) * b ^ 2 := by
       field_simp [ne_of_gt hc]
+
+
+/--
+Three-dimensional Euclidean vectors represented with Mathlib's `L²`
+inner-product norm.
+-/
+abbrev EuclideanVector3 :=
+  EuclideanSpace ℝ (Fin 3)
+
+/--
+The ordinary three-dimensional cross product, transported into Mathlib's
+Euclidean `L²` space.
+-/
+noncomputable def euclideanCrossProduct
+    (v w : EuclideanVector3) :
+    EuclideanVector3 :=
+  WithLp.toLp 2 ((crossProduct v.ofLp) w.ofLp)
+
+/--
+The geometric cross-product bound in three-dimensional Euclidean space:
+`‖v × w‖ ≤ ‖v‖ ‖w‖`.
+
+The proof uses Mathlib's exact scalar quadruple-product identity and the
+nonnegativity of the squared dot product.
+-/
+theorem euclideanCrossProduct_norm_le
+    (v w : EuclideanVector3) :
+    ‖euclideanCrossProduct v w‖ ≤
+      ‖v‖ * ‖w‖ := by
+  have hDotSelf
+      (x : EuclideanVector3) :
+      dotProduct x.ofLp x.ofLp =
+        ‖x‖ ^ 2 := by
+    rw [← real_inner_self_eq_norm_sq x]
+    rw [PiLp.inner_apply]
+    change
+      (∑ i, x.ofLp i * x.ofLp i) =
+        (∑ i, x.ofLp i * x.ofLp i)
+    rfl
+
+  have hCrossSelf :
+      dotProduct
+          ((crossProduct v.ofLp) w.ofLp)
+          ((crossProduct v.ofLp) w.ofLp) =
+        ‖euclideanCrossProduct v w‖ ^ 2 := by
+    rw [
+      ← real_inner_self_eq_norm_sq
+        (euclideanCrossProduct v w)
+    ]
+    rw [PiLp.inner_apply]
+    change
+      (∑ i,
+          ((crossProduct v.ofLp) w.ofLp) i *
+            ((crossProduct v.ofLp) w.ofLp) i) =
+        (∑ i,
+          ((crossProduct v.ofLp) w.ofLp) i *
+            ((crossProduct v.ofLp) w.ofLp) i)
+    rfl
+
+  have hCrossDot :
+      dotProduct
+          ((crossProduct v.ofLp) w.ofLp)
+          ((crossProduct v.ofLp) w.ofLp) =
+        dotProduct v.ofLp v.ofLp *
+            dotProduct w.ofLp w.ofLp -
+          dotProduct v.ofLp w.ofLp *
+            dotProduct v.ofLp w.ofLp := by
+    simpa [dotProduct, mul_comm] using
+      (cross_dot_cross
+        v.ofLp
+        w.ofLp
+        v.ofLp
+        w.ofLp)
+
+  have hSquared :
+      ‖euclideanCrossProduct v w‖ ^ 2 ≤
+        (‖v‖ * ‖w‖) ^ 2 := by
+    calc
+      ‖euclideanCrossProduct v w‖ ^ 2 =
+          dotProduct
+            ((crossProduct v.ofLp) w.ofLp)
+            ((crossProduct v.ofLp) w.ofLp) :=
+        hCrossSelf.symm
+      _ =
+          dotProduct v.ofLp v.ofLp *
+              dotProduct w.ofLp w.ofLp -
+            dotProduct v.ofLp w.ofLp *
+              dotProduct v.ofLp w.ofLp :=
+        hCrossDot
+      _ ≤
+          dotProduct v.ofLp v.ofLp *
+            dotProduct w.ofLp w.ofLp := by
+        nlinarith [
+          sq_nonneg
+            (dotProduct v.ofLp w.ofLp)
+        ]
+      _ = ‖v‖ ^ 2 * ‖w‖ ^ 2 := by
+        rw [hDotSelf v, hDotSelf w]
+      _ = (‖v‖ * ‖w‖) ^ 2 := by
+        ring
+
+  have hRight :
+      0 ≤ ‖v‖ * ‖w‖ :=
+    mul_nonneg
+      (norm_nonneg v)
+      (norm_nonneg w)
+
+  apply
+    (mul_self_le_mul_self_iff
+      (norm_nonneg (euclideanCrossProduct v w))
+      hRight).2
+
+  simpa [pow_two] using hSquared
 
 end Chronos.Frontier
