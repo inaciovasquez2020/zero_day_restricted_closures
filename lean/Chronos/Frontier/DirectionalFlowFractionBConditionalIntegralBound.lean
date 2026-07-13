@@ -100,6 +100,6 @@ theorem directionalFlowMassB_conditionalUpperBound
             hNormBound
             (le_of_lt hc3))
     _ = (∫ x in B, u x ∂μ) / c ^ 2 := by
-      field_simp [ne_of_gt hc] <;> ring
+      field_simp [ne_of_gt hc]
 
 end Chronos.Frontier
