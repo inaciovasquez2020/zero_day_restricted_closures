@@ -798,6 +798,14 @@ structure FifthElementReceiptAcceptanceWitness
     (carrier : FifthElementExternalMeasurementReceiptCarrier Source) where
   accepted : carrier.receiptAccepted
 
+/-- Extracts receipt acceptance from an existing acceptance witness. -/
+theorem fifthElementReceiptAccepted_of_witness
+    {Source : Type}
+    {carrier : FifthElementExternalMeasurementReceiptCarrier Source}
+    (witness : FifthElementReceiptAcceptanceWitness carrier) :
+    carrier.receiptAccepted :=
+  witness.accepted
+
 
 
 section SIDFHBoundedFieldBridge
