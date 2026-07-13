@@ -734,4 +734,23 @@ theorem fifthElementSpatialNullEstimator_eq_zero_iff
     simp [hResidual]
 
 
+
+/--
+Bounded measurement-record candidate for the spatial energy-split experiment.
+
+The record stores two measured energies, a nonnegative tolerance, and a
+nonnegative finite magnitude bound. It is a data contract only and supplies
+no experimental measurement or physical fifth-element evidence.
+-/
+structure FifthElementSpatialMeasurementRecord where
+  measuredX : ℝ
+  measuredY : ℝ
+  tolerance : ℝ
+  magnitudeBound : ℝ
+  toleranceNonnegative : 0 ≤ tolerance
+  magnitudeBoundNonnegative : 0 ≤ magnitudeBound
+  measuredXBounded : abs measuredX ≤ magnitudeBound
+  measuredYBounded : abs measuredY ≤ magnitudeBound
+
+
 end Chronos.Frontier.Mc3Boundary
