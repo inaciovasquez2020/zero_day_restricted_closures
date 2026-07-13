@@ -592,4 +592,23 @@ structure FifthElementFieldCandidate (Carrier : Type) where
   timeDimension : timeExponent = 1
 
 
+
+/--
+Candidate coupling of the inverse-speed fifth-element field to mass-energy.
+
+The scalar expression has the intended dimensional form
+
+    field × mass × speed³,
+
+which reduces to an energy dimension when the field has inverse-speed
+dimension. This definition does not assert that such a physical field exists.
+-/
+noncomputable def fifthElementMassEnergyCoupling
+    {Carrier : Type}
+    (field : FifthElementFieldCandidate Carrier)
+    (x : Carrier)
+    (m c : ℝ) : ℝ :=
+  field.value x * (m * c ^ 3)
+
+
 end Chronos.Frontier.Mc3Boundary
