@@ -1063,6 +1063,46 @@ structure ExternallyValidatedOperationalFifthElementCarrier
   acceptanceSemantics :
     carrier.receiptAccepted ↔ FifthElementSignalFit specification carrier
 
+
+/--
+An ordered provenance-receipt interface for an externally supplied measurement
+carrier.
+
+Strictly smaller step indices prevent cyclic or forward provenance references.
+Every step must consume at least one declared input, and every input must be the
+raw artifact or the output of an earlier step. Distinct steps must have distinct
+output digests.
+
+This declaration does not verify any digest, authenticate program execution,
+construct an inhabitant, or prove external provenance validity.
+-/
+structure FifthElementOrderedProvenanceReceipt {Source : Type}
+    (carrier : FifthElementExternalMeasurementReceiptCarrier Source) : Type where
+  rawArtifactDigest : String
+  stepCount : ℕ
+  inputDigests : Fin stepCount → List String
+  outputDigest : Fin stepCount → String
+  programDigest : Fin stepCount → String
+  environmentDigest : Fin stepCount → String
+  inputsNonempty :
+    ∀ i : Fin stepCount, inputDigests i ≠ []
+  orderedInputs :
+    ∀ (i : Fin stepCount) (digest : String),
+      digest ∈ inputDigests i →
+        digest = rawArtifactDigest ∨
+          ∃ j : Fin stepCount,
+            j.val < i.val ∧ outputDigest j = digest
+  outputDigestInjective :
+    Function.Injective outputDigest
+  finalStep : Fin stepCount
+  finalArtifactDigest : String
+  finalOutputMatches :
+    outputDigest finalStep = finalArtifactDigest
+  recordedObservedSplit : ℝ
+  observedSplitMatches :
+    recordedObservedSplit =
+      carrier.measurement.measuredX - carrier.measurement.measuredY
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
