@@ -102,4 +102,46 @@ theorem directionalFlowMassB_conditionalUpperBound
     _ = (∫ x in B, u x ∂μ) / c ^ 2 := by
       field_simp [ne_of_gt hc]
 
+
+/--
+The scale-weighted algebraic inequality underlying the classical vacuum
+Poynting-flux bound.
+
+It follows from the nonnegativity of `(e - c * b)²`. No sign hypotheses on
+`e` or `b` are required. This is an algebraic theorem only; it does not yet
+construct electromagnetic fields or a three-dimensional cross product.
+-/
+theorem poynting_algebraic_bound
+    (e b c : ℝ)
+    (hc : 0 < c) :
+    e * b ≤
+      (1 / (2 * c)) * e ^ 2 +
+        (c / 2) * b ^ 2 := by
+  have hSquare :
+      0 ≤ (e - c * b) ^ 2 :=
+    sq_nonneg (e - c * b)
+  have hRearranged :
+      2 * c * (e * b) ≤
+        e ^ 2 + c ^ 2 * b ^ 2 := by
+    nlinarith
+  have hReordered :
+      e * b * (2 * c) ≤
+        e ^ 2 + c ^ 2 * b ^ 2 := by
+    simpa [mul_assoc, mul_comm, mul_left_comm] using hRearranged
+  have hTwoC :
+      0 < 2 * c := by
+    nlinarith
+  have hDivided :
+      e * b ≤
+        (e ^ 2 + c ^ 2 * b ^ 2) / (2 * c) := by
+    exact (le_div_iff₀ hTwoC).2 hReordered
+  calc
+    e * b
+        ≤ (e ^ 2 + c ^ 2 * b ^ 2) / (2 * c) :=
+      hDivided
+    _ =
+        (1 / (2 * c)) * e ^ 2 +
+          (c / 2) * b ^ 2 := by
+      field_simp [ne_of_gt hc]
+
 end Chronos.Frontier
