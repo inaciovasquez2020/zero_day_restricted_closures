@@ -525,4 +525,27 @@ theorem energyFromEnergyTimesSpeed_P_c_ne_of_nonzero_and_scale_ne
   | inr hScaleEqual =>
       exact hScale hScaleEqual
 
+theorem scaled_energy_recovery_error
+    (E c conversionSpeed : ℝ)
+    (hConversionSpeed : conversionSpeed ≠ 0) :
+    conversionSpeed *
+        (energyFromEnergyTimesSpeed
+          (P_c E c) conversionSpeed - E) =
+      E * (c - conversionSpeed) := by
+  unfold energyFromEnergyTimesSpeed P_c
+  calc
+    conversionSpeed * (E * c / conversionSpeed - E) =
+        conversionSpeed * (E * c / conversionSpeed) -
+          conversionSpeed * E := by
+      rw [mul_sub]
+    _ = (E * c / conversionSpeed) * conversionSpeed -
+          conversionSpeed * E := by
+      rw [mul_comm conversionSpeed (E * c / conversionSpeed)]
+    _ = E * c - conversionSpeed * E := by
+      rw [div_mul_cancel₀ (E * c) hConversionSpeed]
+    _ = E * c - E * conversionSpeed := by
+      rw [mul_comm conversionSpeed E]
+    _ = E * (c - conversionSpeed) := by
+      rw [mul_sub]
+
 end Chronos.Frontier.Mc3Boundary
