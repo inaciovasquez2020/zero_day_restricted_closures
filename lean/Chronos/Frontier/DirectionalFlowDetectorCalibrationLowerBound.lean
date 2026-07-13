@@ -823,6 +823,16 @@ def FifthElementReceiptAcceptanceObligation
     Prop :=
   carrier.receiptAccepted
 
+/-- Converts an inhabited acceptance obligation into an acceptance witness. -/
+theorem fifthElementReceiptAcceptanceWitness_of_obligation
+    {Source : Type}
+    (carrier : FifthElementExternalMeasurementReceiptCarrier Source)
+    (hObligation : FifthElementReceiptAcceptanceObligation carrier) :
+    FifthElementReceiptAcceptanceWitness carrier :=
+  fifthElementReceiptAcceptanceWitness_of_accepted
+    carrier
+    hObligation
+
 
 
 section SIDFHBoundedFieldBridge
