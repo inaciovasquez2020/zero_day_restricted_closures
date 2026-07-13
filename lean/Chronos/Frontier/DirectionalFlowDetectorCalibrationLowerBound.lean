@@ -1145,6 +1145,61 @@ structure FifthElementDigestVerificationReceipt
       environmentArtifactDigest (stepEnvironmentArtifact i) =
         provenance.environmentDigest i
 
+
+/--
+An authenticated-execution receipt interface connecting each provenance step
+to the declared input artifacts, verified program artifact, verified
+environment artifact, and verified output artifact.
+
+The authentication predicate and its witnesses must be supplied externally.
+This declaration does not define an execution semantics, prove that the
+authentication mechanism is sound, construct an inhabitant, or establish
+external provenance validity.
+-/
+structure FifthElementAuthenticatedExecutionReceipt
+    {Source : Type}
+    (carrier : FifthElementExternalMeasurementReceiptCarrier Source)
+    (provenance : FifthElementOrderedProvenanceReceipt carrier)
+    (Artifact : Type)
+    (ProgramArtifact : Type)
+    (EnvironmentArtifact : Type)
+    (artifactDigest : Artifact → String)
+    (programArtifactDigest : ProgramArtifact → String)
+    (environmentArtifactDigest : EnvironmentArtifact → String)
+    (digestVerification :
+      FifthElementDigestVerificationReceipt
+        carrier
+        provenance
+        Artifact
+        ProgramArtifact
+        EnvironmentArtifact
+        artifactDigest
+        programArtifactDigest
+        environmentArtifactDigest)
+    (ExecutionWitness : Type)
+    (ExecutionAuthenticated :
+      ProgramArtifact →
+        EnvironmentArtifact →
+          List Artifact →
+            Artifact →
+              ExecutionWitness → Prop) : Type where
+  stepInputArtifacts :
+    Fin provenance.stepCount → List Artifact
+  stepInputDigestsMatch :
+    ∀ i : Fin provenance.stepCount,
+      List.map artifactDigest (stepInputArtifacts i) =
+        provenance.inputDigests i
+  stepExecutionWitness :
+    Fin provenance.stepCount → ExecutionWitness
+  stepExecutionAuthenticated :
+    ∀ i : Fin provenance.stepCount,
+      ExecutionAuthenticated
+        (digestVerification.stepProgramArtifact i)
+        (digestVerification.stepEnvironmentArtifact i)
+        (stepInputArtifacts i)
+        (digestVerification.stepOutputArtifact i)
+        (stepExecutionWitness i)
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
