@@ -611,4 +611,29 @@ noncomputable def fifthElementMassEnergyCoupling
   field.value x * (m * c ^ 3)
 
 
+
+/--
+Falsifiable spatial-splitting prediction: for the same nonzero mass and
+nonzero speed, unequal fifth-element field values predict unequal coupled
+energies. The standard expression `m * c^2` has no dependence on `x` or `y`.
+-/
+theorem fifthElement_spatial_energy_split
+    {Carrier : Type}
+    (field : FifthElementFieldCandidate Carrier)
+    (x y : Carrier)
+    (m c : ℝ)
+    (hField : field.value x ≠ field.value y)
+    (hMass : m ≠ 0)
+    (hSpeed : c ≠ 0) :
+    fifthElementMassEnergyCoupling field x m c ≠
+      fifthElementMassEnergyCoupling field y m c := by
+  unfold fifthElementMassEnergyCoupling
+  intro hEqual
+  have hScale : m * c ^ 3 ≠ 0 :=
+    mul_ne_zero hMass (pow_ne_zero 3 hSpeed)
+  have hValueEqual : field.value x = field.value y :=
+    mul_right_cancel₀ hScale hEqual
+  exact hField hValueEqual
+
+
 end Chronos.Frontier.Mc3Boundary
