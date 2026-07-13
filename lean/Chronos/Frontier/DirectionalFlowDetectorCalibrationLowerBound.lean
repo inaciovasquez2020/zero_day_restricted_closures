@@ -998,6 +998,36 @@ structure OperationallyBoundFifthElementCarrier
       FifthElementSignalFit specification carrier
 
 
+/-- Carries externally supplied proofs of the five independent validation
+obligations for a fixed prediction specification and measurement carrier.
+
+The predicates are supplied independently of this structure. This
+declaration does not define them, prove them, connect them to
+`receiptAccepted`, or construct an evidence instance.
+-/
+structure FifthElementExternalValidationEvidence
+    {Source : Type}
+    (specification : FifthElementPredictionSpecification)
+    (carrier : FifthElementExternalMeasurementReceiptCarrier Source)
+    (Preregistered :
+      FifthElementPredictionSpecification →
+        FifthElementExternalMeasurementReceiptCarrier Source → Prop)
+    (ProvenanceValid :
+      FifthElementExternalMeasurementReceiptCarrier Source → Prop)
+    (CalibrationValid :
+      FifthElementExternalMeasurementReceiptCarrier Source → Prop)
+    (UncertaintyBudgetVerified :
+      FifthElementExternalMeasurementReceiptCarrier Source → Prop)
+    (KnownPhysicsExcluded :
+      FifthElementExternalMeasurementReceiptCarrier Source → Prop) :
+    Prop where
+  preregistered : Preregistered specification carrier
+  provenanceValid : ProvenanceValid carrier
+  calibrationValid : CalibrationValid carrier
+  uncertaintyBudgetVerified : UncertaintyBudgetVerified carrier
+  knownPhysicsExcluded : KnownPhysicsExcluded carrier
+
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
