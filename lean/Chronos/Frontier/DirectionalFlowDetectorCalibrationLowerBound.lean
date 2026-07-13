@@ -753,4 +753,23 @@ structure FifthElementSpatialMeasurementRecord where
   measuredYBounded : abs measuredY ≤ magnitudeBound
 
 
+
+/--
+Evaluates a bounded spatial measurement record with the fifth-element
+null estimator. This map consumes record fields only; it does not assert
+that the record contains an external experimental measurement.
+-/
+noncomputable def evaluateFifthElementSpatialMeasurementRecord
+    {Carrier : Type}
+    (field : FifthElementFieldCandidate Carrier)
+    (x y : Carrier)
+    (m c : ℝ)
+    (record : FifthElementSpatialMeasurementRecord) : ℝ :=
+  fifthElementSpatialNullEstimator
+    field x y m c
+    record.measuredX
+    record.measuredY
+    record.tolerance
+
+
 end Chronos.Frontier.Mc3Boundary
