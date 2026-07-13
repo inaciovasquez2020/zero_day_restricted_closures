@@ -636,4 +636,27 @@ theorem fifthElement_spatial_energy_split
   exact hField hValueEqual
 
 
+
+/--
+Dimensionless bounded-null estimator candidate for a spatial energy-split
+experiment.
+
+The numerator is the measured split minus the fifth-element predicted split.
+Normalization by `|residual| + |tolerance|` prepares an estimator whose
+absolute value can be bounded by one. This definition contains no measurement
+evidence and does not certify that the proposed field is physical.
+-/
+noncomputable def fifthElementSpatialNullEstimator
+    {Carrier : Type}
+    (field : FifthElementFieldCandidate Carrier)
+    (x y : Carrier)
+    (m c measuredX measuredY tolerance : ℝ) : ℝ :=
+  let predictedSplit :=
+    fifthElementMassEnergyCoupling field x m c -
+      fifthElementMassEnergyCoupling field y m c
+  let residual :=
+    (measuredX - measuredY) - predictedSplit
+  residual / (abs residual + abs tolerance)
+
+
 end Chronos.Frontier.Mc3Boundary
