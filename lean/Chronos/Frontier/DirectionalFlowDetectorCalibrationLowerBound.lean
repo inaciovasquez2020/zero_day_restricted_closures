@@ -1274,6 +1274,57 @@ structure FifthElementCalibrationValidityReceipt
   calibrationUncertaintyYNonnegative :
     0 ≤ calibrationUncertaintyY
 
+
+/--
+An uncertainty-budget receipt interface for an externally supplied measurement
+carrier.
+
+The component inventory, covariance model, and aggregation-validity predicate
+must be supplied externally. The resulting combined uncertainty must be
+nonnegative and no larger than the carrier's fixed measurement tolerance.
+
+This declaration does not validate a statistical model, prove completeness of
+the component inventory, construct an inhabitant, or establish empirical
+fifth-element evidence.
+-/
+structure FifthElementUncertaintyBudgetReceipt
+    {Source : Type}
+    (carrier : FifthElementExternalMeasurementReceiptCarrier Source)
+    (Component : Type)
+    (ComponentDeclared : Component → Prop)
+    (componentUncertainty : Component → ℝ)
+    (componentCovariance : Component → Component → ℝ)
+    (combinedUncertainty : ℝ)
+    (BudgetAggregationValid :
+      (Component → ℝ) →
+        (Component → Component → ℝ) →
+          ℝ → Prop) : Type where
+  componentInventoryNonempty :
+    ∃ component : Component, ComponentDeclared component
+  declaredComponentUncertaintyNonnegative :
+    ∀ component : Component,
+      ComponentDeclared component →
+        0 ≤ componentUncertainty component
+  covarianceSymmetric :
+    ∀ left right : Component,
+      ComponentDeclared left →
+        ComponentDeclared right →
+          componentCovariance left right =
+            componentCovariance right left
+  covarianceDiagonalNonnegative :
+    ∀ component : Component,
+      ComponentDeclared component →
+        0 ≤ componentCovariance component component
+  aggregationValid :
+    BudgetAggregationValid
+      componentUncertainty
+      componentCovariance
+      combinedUncertainty
+  combinedUncertaintyNonnegative :
+    0 ≤ combinedUncertainty
+  combinedUncertaintyWithinTolerance :
+    combinedUncertainty ≤ carrier.measurement.tolerance
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
