@@ -1442,11 +1442,13 @@ theorem fifthElement_observedSplit_mul_predictedSplit_pos_of_signalFit
 
 
 /--
-A signal fit quantitatively bounds the observed splitting away from zero:
+A signal fit lower-bounds the observed splitting magnitude:
 the absolute predicted splitting minus the fixed tolerance is no larger than
 the absolute observed splitting.
 
-This theorem constructs no specification, carrier, signal-fit proof, or
+Because a signal fit also requires the fixed tolerance to be strictly smaller
+than the absolute predicted splitting, this lower bound is strictly positive.
+The theorem constructs no specification, carrier, signal-fit proof, or
 empirical evidence.
 -/
 theorem fifthElement_abs_predictedSplit_sub_tolerance_le_abs_observedSplit
