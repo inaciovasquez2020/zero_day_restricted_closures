@@ -684,9 +684,7 @@ theorem abs_fifthElementSpatialNullEstimator_le_one
       hTolerancePos
   rw [abs_div, abs_of_pos hDenominatorPos]
   apply (div_le_iff₀ hDenominatorPos).2
-  simpa using
-    (le_add_of_nonneg_right (abs_nonneg tolerance) :
-      abs residual ≤ abs residual + abs tolerance)
+  simp
 
 
 
