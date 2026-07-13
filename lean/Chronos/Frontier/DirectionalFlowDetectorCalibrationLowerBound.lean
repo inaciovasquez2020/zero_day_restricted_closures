@@ -1546,6 +1546,34 @@ theorem fifthElement_abs_observedSplit_le_abs_predictedSplit_add_tolerance
     ]
     linarith [hResidual.1]
 
+
+/--
+A signal fit places the absolute observed splitting inside the closed
+tolerance interval around the absolute fixed prediction.
+
+This theorem merely packages the previously proved lower and upper bounds. It
+constructs no specification, carrier, signal-fit proof, or empirical evidence.
+-/
+theorem fifthElement_abs_observedSplit_two_sided_bound_of_signalFit
+    {Source : Type}
+    {specification : FifthElementPredictionSpecification}
+    {carrier : FifthElementExternalMeasurementReceiptCarrier Source}
+    (hFit : FifthElementSignalFit specification carrier) :
+    abs specification.predictedSplit -
+          carrier.measurement.tolerance ≤
+        abs
+          (carrier.measurement.measuredX -
+            carrier.measurement.measuredY) ∧
+      abs
+          (carrier.measurement.measuredX -
+            carrier.measurement.measuredY) ≤
+        abs specification.predictedSplit +
+          carrier.measurement.tolerance := by
+  exact ⟨
+    fifthElement_abs_predictedSplit_sub_tolerance_le_abs_observedSplit hFit,
+    fifthElement_abs_observedSplit_le_abs_predictedSplit_add_tolerance hFit
+  ⟩
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
