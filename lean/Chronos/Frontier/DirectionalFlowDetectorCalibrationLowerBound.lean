@@ -1647,6 +1647,33 @@ theorem fifthElement_predictedSplit_ne_zero_of_signalFit
     (not_lt_of_ge (le_of_lt hFit.1))
       hToleranceNegative
 
+
+/--
+A signal fit forces the absolute observed splitting to be strictly positive.
+
+The proof combines the strictly positive prediction-minus-tolerance margin
+with the previously proved lower bound on the observed splitting magnitude.
+This theorem constructs no specification, carrier, signal-fit proof, or
+empirical evidence.
+-/
+theorem fifthElement_abs_observedSplit_pos_of_signalFit
+    {Source : Type}
+    {specification : FifthElementPredictionSpecification}
+    {carrier : FifthElementExternalMeasurementReceiptCarrier Source}
+    (hFit : FifthElementSignalFit specification carrier) :
+    0 <
+      abs
+        (carrier.measurement.measuredX -
+          carrier.measurement.measuredY) := by
+  have hMarginPositive :
+      0 <
+        abs specification.predictedSplit -
+          carrier.measurement.tolerance :=
+    sub_pos.mpr hFit.2.1
+  have hObservedLowerBound :=
+    fifthElement_abs_predictedSplit_sub_tolerance_le_abs_observedSplit hFit
+  exact lt_of_lt_of_le hMarginPositive hObservedLowerBound
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
