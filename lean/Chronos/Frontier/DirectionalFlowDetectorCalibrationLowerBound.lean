@@ -786,4 +786,17 @@ structure FifthElementExternalMeasurementReceiptCarrier
   receiptAccepted : Prop
 
 
+
+/--
+Acceptance-witness interface for an external fifth-element measurement receipt.
+
+An inhabitant must carry a proof of the receipt's stored acceptance
+proposition. This declaration constructs no receipt and no acceptance witness.
+-/
+structure FifthElementReceiptAcceptanceWitness
+    {Source : Type}
+    (carrier : FifthElementExternalMeasurementReceiptCarrier Source) where
+  accepted : carrier.receiptAccepted
+
+
 end Chronos.Frontier.Mc3Boundary
