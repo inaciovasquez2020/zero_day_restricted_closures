@@ -1325,6 +1325,42 @@ structure FifthElementUncertaintyBudgetReceipt
   combinedUncertaintyWithinTolerance :
     combinedUncertainty ≤ carrier.measurement.tolerance
 
+
+/--
+An inhabited uncertainty budget lies strictly below the absolute fixed
+prediction whenever its combined uncertainty is bounded by the carrier
+tolerance and the carrier satisfies the existing signal-fit predicate.
+
+This theorem constructs no budget, carrier, signal-fit proof, or empirical
+evidence.
+-/
+theorem fifthElement_combinedUncertainty_lt_abs_predictedSplit
+    {Source Component : Type}
+    {specification : FifthElementPredictionSpecification}
+    {carrier : FifthElementExternalMeasurementReceiptCarrier Source}
+    {ComponentDeclared : Component → Prop}
+    {componentUncertainty : Component → ℝ}
+    {componentCovariance : Component → Component → ℝ}
+    {combinedUncertainty : ℝ}
+    {BudgetAggregationValid :
+      (Component → ℝ) →
+        (Component → Component → ℝ) →
+          ℝ → Prop}
+    (budget :
+      FifthElementUncertaintyBudgetReceipt
+        carrier
+        Component
+        ComponentDeclared
+        componentUncertainty
+        componentCovariance
+        combinedUncertainty
+        BudgetAggregationValid)
+    (hFit : FifthElementSignalFit specification carrier) :
+    combinedUncertainty < abs specification.predictedSplit := by
+  exact lt_of_le_of_lt
+    budget.combinedUncertaintyWithinTolerance
+    hFit.2.1
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
