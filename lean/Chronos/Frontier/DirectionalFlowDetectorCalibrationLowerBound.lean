@@ -1028,6 +1028,41 @@ structure FifthElementExternalValidationEvidence
   knownPhysicsExcluded : KnownPhysicsExcluded carrier
 
 
+
+/--
+An operational fifth-element carrier bundled with all five externally supplied
+validation obligations.
+
+This structure does not construct an inhabitant or assert that qualifying
+external evidence exists.
+-/
+structure ExternallyValidatedOperationalFifthElementCarrier
+    (Source : Type)
+    (Preregistered :
+      FifthElementPredictionSpecification →
+        FifthElementExternalMeasurementReceiptCarrier Source → Prop)
+    (ProvenanceValid :
+      FifthElementExternalMeasurementReceiptCarrier Source → Prop)
+    (CalibrationValid :
+      FifthElementExternalMeasurementReceiptCarrier Source → Prop)
+    (UncertaintyBudgetVerified :
+      FifthElementExternalMeasurementReceiptCarrier Source → Prop)
+    (KnownPhysicsExcluded :
+      FifthElementExternalMeasurementReceiptCarrier Source → Prop) : Type where
+  specification : FifthElementPredictionSpecification
+  carrier : FifthElementExternalMeasurementReceiptCarrier Source
+  externalValidation :
+    FifthElementExternalValidationEvidence
+      specification
+      carrier
+      Preregistered
+      ProvenanceValid
+      CalibrationValid
+      UncertaintyBudgetVerified
+      KnownPhysicsExcluded
+  acceptanceSemantics :
+    carrier.receiptAccepted ↔ FifthElementSignalFit specification carrier
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
