@@ -1103,6 +1103,48 @@ structure FifthElementOrderedProvenanceReceipt {Source : Type}
     recordedObservedSplit =
       carrier.measurement.measuredX - carrier.measurement.measuredY
 
+
+/--
+A digest-verification receipt interface tying the digests declared by an
+ordered provenance receipt to supplied raw, output, program, and environment
+artifacts.
+
+This declaration does not select a cryptographic algorithm, prove collision
+resistance, authenticate execution of a program, construct an inhabitant, or
+establish external provenance validity.
+-/
+structure FifthElementDigestVerificationReceipt
+    {Source : Type}
+    (carrier : FifthElementExternalMeasurementReceiptCarrier Source)
+    (provenance : FifthElementOrderedProvenanceReceipt carrier)
+    (Artifact : Type)
+    (ProgramArtifact : Type)
+    (EnvironmentArtifact : Type)
+    (artifactDigest : Artifact → String)
+    (programArtifactDigest : ProgramArtifact → String)
+    (environmentArtifactDigest : EnvironmentArtifact → String) : Type where
+  rawArtifact : Artifact
+  rawArtifactDigestVerified :
+    artifactDigest rawArtifact = provenance.rawArtifactDigest
+  stepOutputArtifact :
+    Fin provenance.stepCount → Artifact
+  stepOutputDigestVerified :
+    ∀ i : Fin provenance.stepCount,
+      artifactDigest (stepOutputArtifact i) =
+        provenance.outputDigest i
+  stepProgramArtifact :
+    Fin provenance.stepCount → ProgramArtifact
+  stepProgramDigestVerified :
+    ∀ i : Fin provenance.stepCount,
+      programArtifactDigest (stepProgramArtifact i) =
+        provenance.programDigest i
+  stepEnvironmentArtifact :
+    Fin provenance.stepCount → EnvironmentArtifact
+  stepEnvironmentDigestVerified :
+    ∀ i : Fin provenance.stepCount,
+      environmentArtifactDigest (stepEnvironmentArtifact i) =
+        provenance.environmentDigest i
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
