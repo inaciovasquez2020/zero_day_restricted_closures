@@ -950,6 +950,18 @@ theorem nonempty_externalReceiptAcceptancePackage_iff_exists_receiptAccepted
       nonempty_externalReceiptAcceptancePackage_of_exists_receiptAccepted
 
 
+/-- A data-independent fifth-element prediction specification.
+
+This records the predicted two-point splitting and an immutable
+specification identifier. It does not prove that the specification was
+fixed before any dataset was selected; that remains an external
+preregistration obligation.
+-/
+structure FifthElementPredictionSpecification where
+  predictedSplit : ℝ
+  specificationCode : ℕ
+
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
