@@ -1200,6 +1200,80 @@ structure FifthElementAuthenticatedExecutionReceipt
         (digestVerification.stepOutputArtifact i)
         (stepExecutionWitness i)
 
+
+/--
+A calibration-validity receipt interface connecting an externally supplied
+measurement carrier to authenticated calibration and reference-standard
+artifacts, a calibration-validity window, affine channel maps, and bounded
+pre-run and post-run reference checks.
+
+The artifact-validity predicate and its proof must be supplied externally.
+This declaration does not establish metrological traceability, authenticate
+the calibration authority, construct an inhabitant, or prove empirical
+fifth-element evidence.
+-/
+structure FifthElementCalibrationValidityReceipt
+    {Source : Type}
+    (carrier : FifthElementExternalMeasurementReceiptCarrier Source)
+    (CalibrationArtifact : Type)
+    (ReferenceStandard : Type)
+    (calibrationArtifactDigest : CalibrationArtifact → String)
+    (referenceStandardDigest : ReferenceStandard → String)
+    (CalibrationArtifactValid :
+      CalibrationArtifact → ReferenceStandard → Prop) : Type where
+  calibrationArtifact : CalibrationArtifact
+  referenceStandard : ReferenceStandard
+  declaredCalibrationArtifactDigest : String
+  declaredReferenceStandardDigest : String
+  calibrationArtifactDigestVerified :
+    calibrationArtifactDigest calibrationArtifact =
+      declaredCalibrationArtifactDigest
+  referenceStandardDigestVerified :
+    referenceStandardDigest referenceStandard =
+      declaredReferenceStandardDigest
+  calibrationArtifactValid :
+    CalibrationArtifactValid calibrationArtifact referenceStandard
+  calibrationValidFrom : ℕ
+  calibrationValidUntil : ℕ
+  measurementRecordedAt : ℕ
+  calibrationWindowOrdered :
+    calibrationValidFrom ≤ calibrationValidUntil
+  measurementWithinCalibrationWindow :
+    calibrationValidFrom ≤ measurementRecordedAt ∧
+      measurementRecordedAt ≤ calibrationValidUntil
+  rawReadoutX : ℝ
+  rawReadoutY : ℝ
+  gainX : ℝ
+  gainY : ℝ
+  offsetX : ℝ
+  offsetY : ℝ
+  gainXPositive : 0 < gainX
+  gainYPositive : 0 < gainY
+  measuredXCalibration :
+    carrier.measurement.measuredX =
+      gainX * rawReadoutX + offsetX
+  measuredYCalibration :
+    carrier.measurement.measuredY =
+      gainY * rawReadoutY + offsetY
+  referenceExpected : ℝ
+  preRunReferenceReadout : ℝ
+  postRunReferenceReadout : ℝ
+  referenceDriftTolerance : ℝ
+  referenceDriftToleranceNonnegative :
+    0 ≤ referenceDriftTolerance
+  preRunReferenceBound :
+    abs (preRunReferenceReadout - referenceExpected) ≤
+      referenceDriftTolerance
+  postRunReferenceBound :
+    abs (postRunReferenceReadout - referenceExpected) ≤
+      referenceDriftTolerance
+  calibrationUncertaintyX : ℝ
+  calibrationUncertaintyY : ℝ
+  calibrationUncertaintyXNonnegative :
+    0 ≤ calibrationUncertaintyX
+  calibrationUncertaintyYNonnegative :
+    0 ≤ calibrationUncertaintyY
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
