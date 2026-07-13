@@ -1361,6 +1361,35 @@ theorem fifthElement_combinedUncertainty_lt_abs_predictedSplit
     budget.combinedUncertaintyWithinTolerance
     hFit.2.1
 
+
+/--
+A signal fit whose tolerance is strictly smaller than the absolute fixed
+prediction cannot have equal measured channel values.
+
+This theorem constructs no specification, carrier, signal-fit proof, or
+empirical evidence.
+-/
+theorem fifthElement_measured_values_distinct_of_signalFit
+    {Source : Type}
+    {specification : FifthElementPredictionSpecification}
+    {carrier : FifthElementExternalMeasurementReceiptCarrier Source}
+    (hFit : FifthElementSignalFit specification carrier) :
+    carrier.measurement.measuredX ≠ carrier.measurement.measuredY := by
+  intro hEqual
+  have hObservedZero :
+      carrier.measurement.measuredX -
+          carrier.measurement.measuredY = 0 :=
+    sub_eq_zero.mpr hEqual
+  have hResidualBound :
+      abs
+          ((carrier.measurement.measuredX -
+              carrier.measurement.measuredY) -
+            specification.predictedSplit) ≤
+        carrier.measurement.tolerance :=
+    hFit.2.2
+  rw [hObservedZero, zero_sub, abs_neg] at hResidualBound
+  exact (not_le_of_gt hFit.2.1) hResidualBound
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
