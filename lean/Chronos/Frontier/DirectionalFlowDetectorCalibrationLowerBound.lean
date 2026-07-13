@@ -921,6 +921,21 @@ theorem exists_receiptAccepted_of_nonempty_externalReceiptAcceptancePackage
   exact ⟨package.carrier, package.receiptAccepted⟩
 
 
+/-- Constructs an inhabited external receipt-acceptance package from an
+externally supplied accepted receipt carrier. -/
+theorem nonempty_externalReceiptAcceptancePackage_of_exists_receiptAccepted
+    {Source : Type}
+    (hAccepted :
+      ∃ carrier : FifthElementExternalMeasurementReceiptCarrier Source,
+        carrier.receiptAccepted) :
+    Nonempty (FifthElementExternalReceiptAcceptancePackage Source) := by
+  rcases hAccepted with ⟨carrier, hReceiptAccepted⟩
+  exact
+    ⟨⟨carrier,
+        show FifthElementReceiptAcceptanceObligation carrier from
+          hReceiptAccepted⟩⟩
+
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
