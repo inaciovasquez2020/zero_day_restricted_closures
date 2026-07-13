@@ -1600,6 +1600,32 @@ theorem fifthElement_abs_observedSplit_sub_abs_predictedSplit_le_tolerance
   · linarith [hBounds.1]
   · linarith [hBounds.2]
 
+
+/--
+A signal fit places the signed observed splitting inside the closed tolerance
+interval centered at the fixed predicted splitting.
+
+This theorem constructs no specification, carrier, signal-fit proof, or
+empirical evidence.
+-/
+theorem fifthElement_observedSplit_interval_of_signalFit
+    {Source : Type}
+    {specification : FifthElementPredictionSpecification}
+    {carrier : FifthElementExternalMeasurementReceiptCarrier Source}
+    (hFit : FifthElementSignalFit specification carrier) :
+    specification.predictedSplit -
+          carrier.measurement.tolerance ≤
+        carrier.measurement.measuredX -
+          carrier.measurement.measuredY ∧
+      carrier.measurement.measuredX -
+          carrier.measurement.measuredY ≤
+        specification.predictedSplit +
+          carrier.measurement.tolerance := by
+  have hResidual := abs_le.mp hFit.2.2
+  constructor
+  · linarith [hResidual.1]
+  · linarith [hResidual.2]
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
