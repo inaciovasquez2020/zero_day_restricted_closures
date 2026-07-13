@@ -909,6 +909,18 @@ theorem
 
 
 
+/-- Projects existence of an accepted external receipt carrier from an
+inhabited external receipt-acceptance package. -/
+theorem exists_receiptAccepted_of_nonempty_externalReceiptAcceptancePackage
+    {Source : Type}
+    (hPackage :
+      Nonempty (FifthElementExternalReceiptAcceptancePackage Source)) :
+    ∃ carrier : FifthElementExternalMeasurementReceiptCarrier Source,
+      carrier.receiptAccepted := by
+  rcases hPackage with ⟨package⟩
+  exact ⟨package.carrier, package.receiptAccepted⟩
+
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
