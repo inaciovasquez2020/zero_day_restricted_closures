@@ -689,4 +689,49 @@ theorem abs_fifthElementSpatialNullEstimator_le_one
       abs residual ≤ abs residual + abs tolerance)
 
 
+
+theorem fifthElementSpatialNullEstimator_eq_zero_iff
+    {Carrier : Type}
+    (field : FifthElementFieldCandidate Carrier)
+    (x y : Carrier)
+    (m c measuredX measuredY tolerance : ℝ)
+    (hTolerance : tolerance ≠ 0) :
+    fifthElementSpatialNullEstimator
+          field x y m c measuredX measuredY tolerance = 0 ↔
+      (measuredX - measuredY) -
+          (fifthElementMassEnergyCoupling field x m c -
+            fifthElementMassEnergyCoupling field y m c) = 0 := by
+  unfold fifthElementSpatialNullEstimator
+  dsimp
+  let residual : ℝ :=
+    (measuredX - measuredY) -
+      (fifthElementMassEnergyCoupling field x m c -
+        fifthElementMassEnergyCoupling field y m c)
+  change
+    residual / (abs residual + abs tolerance) = 0 ↔
+      residual = 0
+  have hTolerancePos : 0 < abs tolerance :=
+    abs_pos.mpr hTolerance
+  have hDenominatorPos : 0 < abs residual + abs tolerance :=
+    add_pos_of_nonneg_of_pos
+      (abs_nonneg residual)
+      hTolerancePos
+  have hDenominator :
+      abs residual + abs tolerance ≠ 0 :=
+    ne_of_gt hDenominatorPos
+  constructor
+  · intro hEstimatorZero
+    have hScaled :
+        (residual / (abs residual + abs tolerance)) *
+            (abs residual + abs tolerance) =
+          0 * (abs residual + abs tolerance) :=
+      congrArg
+        (fun z : ℝ => z * (abs residual + abs tolerance))
+        hEstimatorZero
+    rw [div_mul_cancel₀ residual hDenominator] at hScaled
+    simpa using hScaled
+  · intro hResidual
+    simp [hResidual]
+
+
 end Chronos.Frontier.Mc3Boundary
