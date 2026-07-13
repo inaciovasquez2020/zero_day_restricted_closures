@@ -850,6 +850,14 @@ theorem fifthElementReceiptAcceptanceObligation_iff_nonemptyWitness
     simpa [FifthElementReceiptAcceptanceObligation] using
       fifthElementReceiptAccepted_of_witness witness
 
+/-- Packages an externally supplied receipt carrier together with a proof
+that its acceptance obligation is inhabited. This declaration constructs
+neither component. -/
+structure FifthElementExternalReceiptAcceptancePackage
+    (Source : Type) where
+  carrier : FifthElementExternalMeasurementReceiptCarrier Source
+  acceptance : FifthElementReceiptAcceptanceObligation carrier
+
 
 
 section SIDFHBoundedFieldBridge
