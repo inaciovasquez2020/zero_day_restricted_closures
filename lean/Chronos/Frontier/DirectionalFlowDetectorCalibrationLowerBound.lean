@@ -1626,6 +1626,27 @@ theorem fifthElement_observedSplit_interval_of_signalFit
   · linarith [hResidual.1]
   · linarith [hResidual.2]
 
+
+/--
+A signal fit forces the fixed predicted splitting to be nonzero.
+
+This theorem constructs no specification, carrier, signal-fit proof, or
+empirical evidence.
+-/
+theorem fifthElement_predictedSplit_ne_zero_of_signalFit
+    {Source : Type}
+    {specification : FifthElementPredictionSpecification}
+    {carrier : FifthElementExternalMeasurementReceiptCarrier Source}
+    (hFit : FifthElementSignalFit specification carrier) :
+    specification.predictedSplit ≠ 0 := by
+  intro hPredictedZero
+  have hToleranceNegative :
+      carrier.measurement.tolerance < 0 := by
+    simpa [hPredictedZero] using hFit.2.1
+  exact
+    (not_lt_of_ge (le_of_lt hFit.1))
+      hToleranceNegative
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
