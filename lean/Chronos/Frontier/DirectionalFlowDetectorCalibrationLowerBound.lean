@@ -770,4 +770,20 @@ noncomputable def evaluateFifthElementSpatialMeasurementRecord
     record.tolerance
 
 
+
+/--
+Carrier schema for a measurement record claimed to originate outside the
+formal repository.
+
+`receiptAccepted` is only a proposition stored by the schema. No proof of it,
+no carrier instance, and no external experimental evidence are supplied here.
+-/
+structure FifthElementExternalMeasurementReceiptCarrier
+    (Source : Type) where
+  source : Source
+  measurement : FifthElementSpatialMeasurementRecord
+  receiptCode : ℕ
+  receiptAccepted : Prop
+
+
 end Chronos.Frontier.Mc3Boundary
