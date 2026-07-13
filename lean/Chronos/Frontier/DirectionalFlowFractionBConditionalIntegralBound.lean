@@ -259,4 +259,126 @@ theorem euclideanCrossProduct_norm_le
 
   simpa [pow_two] using hSquared
 
+
+/--
+The classical vacuum Poynting vector
+`S = (1 / μ₀) • (E × B)` in three-dimensional Euclidean space.
+-/
+noncomputable def vacuumPoyntingVector
+    (μ₀ : ℝ)
+    (E B : EuclideanVector3) :
+    EuclideanVector3 :=
+  (1 / μ₀) • euclideanCrossProduct E B
+
+/--
+The classical vacuum electromagnetic energy density
+`u = (ε₀ / 2) ‖E‖² + (1 / (2 μ₀)) ‖B‖²`.
+-/
+noncomputable def vacuumElectromagneticEnergyDensity
+    (ε₀ μ₀ : ℝ)
+    (E B : EuclideanVector3) :
+    ℝ :=
+  (ε₀ / 2) * ‖E‖ ^ 2 +
+    (1 / (2 * μ₀)) * ‖B‖ ^ 2
+
+/--
+The classical pointwise vacuum electromagnetic energy-flux bound:
+
+`‖S‖ ≤ c u`.
+
+The proof combines the exact three-dimensional cross-product norm bound,
+the scale-weighted algebraic inequality, and the vacuum-constant relation
+`ε₀ μ₀ c² = 1`.
+
+This theorem is pointwise. It does not assert Maxwell evolution equations,
+energy conservation, empirical evidence, or a new physical law.
+-/
+theorem vacuumPoyntingVector_norm_le_speed_mul_energyDensity
+    (E B : EuclideanVector3)
+    (ε₀ μ₀ c : ℝ)
+    (hμ₀ : 0 < μ₀)
+    (hc : 0 < c)
+    (hVacuumConstants :
+      ε₀ * μ₀ * c ^ 2 = 1) :
+    ‖vacuumPoyntingVector μ₀ E B‖ ≤
+      c *
+        vacuumElectromagneticEnergyDensity
+          ε₀ μ₀ E B := by
+  have hμ₀ne :
+      μ₀ ≠ 0 :=
+    ne_of_gt hμ₀
+
+  have hcne :
+      c ≠ 0 :=
+    ne_of_gt hc
+
+  have hDenominator :
+      μ₀ * c ^ 2 ≠ 0 :=
+    mul_ne_zero
+      hμ₀ne
+      (pow_ne_zero 2 hcne)
+
+  have hε₀ :
+      ε₀ = 1 / (μ₀ * c ^ 2) := by
+    apply (eq_div_iff hDenominator).2
+    simpa [mul_assoc] using hVacuumConstants
+
+  have hInverseMuPositive :
+      0 < 1 / μ₀ :=
+    one_div_pos.mpr hμ₀
+
+  have hInverseMuNonnegative :
+      0 ≤ 1 / μ₀ :=
+    le_of_lt hInverseMuPositive
+
+  have hGeometric :
+      ‖euclideanCrossProduct E B‖ ≤
+        ‖E‖ * ‖B‖ :=
+    euclideanCrossProduct_norm_le E B
+
+  have hAlgebraic :
+      ‖E‖ * ‖B‖ ≤
+        (1 / (2 * c)) * ‖E‖ ^ 2 +
+          (c / 2) * ‖B‖ ^ 2 :=
+    poynting_algebraic_bound
+      ‖E‖
+      ‖B‖
+      c
+      hc
+
+  calc
+    ‖vacuumPoyntingVector μ₀ E B‖ =
+        (1 / μ₀) *
+          ‖euclideanCrossProduct E B‖ := by
+      rw [vacuumPoyntingVector, norm_smul]
+      change
+        |1 / μ₀| *
+            ‖euclideanCrossProduct E B‖ =
+          (1 / μ₀) *
+            ‖euclideanCrossProduct E B‖
+      rw [abs_of_pos hInverseMuPositive]
+    _ ≤
+        (1 / μ₀) * (‖E‖ * ‖B‖) := by
+      exact
+        mul_le_mul_of_nonneg_left
+          hGeometric
+          hInverseMuNonnegative
+    _ ≤
+        (1 / μ₀) *
+          ((1 / (2 * c)) * ‖E‖ ^ 2 +
+            (c / 2) * ‖B‖ ^ 2) := by
+      exact
+        mul_le_mul_of_nonneg_left
+          hAlgebraic
+          hInverseMuNonnegative
+    _ =
+        c *
+          vacuumElectromagneticEnergyDensity
+            ε₀ μ₀ E B := by
+      rw [
+        vacuumElectromagneticEnergyDensity,
+        hε₀
+      ]
+      field_simp [hμ₀ne, hcne]
+
 end Chronos.Frontier
