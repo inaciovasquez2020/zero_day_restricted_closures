@@ -1440,6 +1440,59 @@ theorem fifthElement_observedSplit_mul_predictedSplit_pos_of_signalFit
         hObservedNegative
         hPredictionNegative
 
+
+/--
+A signal fit quantitatively bounds the observed splitting away from zero:
+the absolute predicted splitting minus the fixed tolerance is no larger than
+the absolute observed splitting.
+
+This theorem constructs no specification, carrier, signal-fit proof, or
+empirical evidence.
+-/
+theorem fifthElement_abs_predictedSplit_sub_tolerance_le_abs_observedSplit
+    {Source : Type}
+    {specification : FifthElementPredictionSpecification}
+    {carrier : FifthElementExternalMeasurementReceiptCarrier Source}
+    (hFit : FifthElementSignalFit specification carrier) :
+    abs specification.predictedSplit -
+        carrier.measurement.tolerance ≤
+      abs
+        (carrier.measurement.measuredX -
+          carrier.measurement.measuredY) := by
+  have hResidual := abs_le.mp hFit.2.2
+  by_cases hPredNonnegative :
+      0 ≤ specification.predictedSplit
+  · have hToleranceLtPrediction :
+        carrier.measurement.tolerance <
+          specification.predictedSplit := by
+      simpa [abs_of_nonneg hPredNonnegative] using hFit.2.1
+    have hObservedPositive :
+        0 <
+          carrier.measurement.measuredX -
+            carrier.measurement.measuredY := by
+      linarith [hResidual.1]
+    rw [
+      abs_of_nonneg hPredNonnegative,
+      abs_of_pos hObservedPositive
+    ]
+    linarith [hResidual.1]
+  · have hPredictionNegative :
+        specification.predictedSplit < 0 :=
+      lt_of_not_ge hPredNonnegative
+    have hToleranceLtNegativePrediction :
+        carrier.measurement.tolerance <
+          -specification.predictedSplit := by
+      simpa [abs_of_neg hPredictionNegative] using hFit.2.1
+    have hObservedNegative :
+        carrier.measurement.measuredX -
+            carrier.measurement.measuredY < 0 := by
+      linarith [hResidual.2]
+    rw [
+      abs_of_neg hPredictionNegative,
+      abs_of_neg hObservedNegative
+    ]
+    linarith [hResidual.2]
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
