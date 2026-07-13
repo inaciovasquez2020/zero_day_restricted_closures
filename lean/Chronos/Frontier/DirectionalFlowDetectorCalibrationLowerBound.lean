@@ -936,6 +936,20 @@ theorem nonempty_externalReceiptAcceptancePackage_of_exists_receiptAccepted
           hReceiptAccepted⟩⟩
 
 
+/-- Characterizes external receipt-acceptance package inhabitation by
+existence of an externally supplied accepted receipt carrier. -/
+theorem nonempty_externalReceiptAcceptancePackage_iff_exists_receiptAccepted
+    {Source : Type} :
+    Nonempty (FifthElementExternalReceiptAcceptancePackage Source) ↔
+      ∃ carrier : FifthElementExternalMeasurementReceiptCarrier Source,
+        carrier.receiptAccepted := by
+  constructor
+  · exact
+      exists_receiptAccepted_of_nonempty_externalReceiptAcceptancePackage
+  · exact
+      nonempty_externalReceiptAcceptancePackage_of_exists_receiptAccepted
+
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
