@@ -877,6 +877,19 @@ theorem FifthElementExternalReceiptAcceptancePackage.receiptAccepted
   simpa [FifthElementReceiptAcceptanceObligation] using
     package.acceptance
 
+/-- Characterizes package inhabitation by existence of an externally
+supplied carrier whose acceptance obligation is inhabited. -/
+theorem nonempty_fifthElementExternalReceiptAcceptancePackage_iff_exists
+    {Source : Type} :
+    Nonempty (FifthElementExternalReceiptAcceptancePackage Source) ↔
+      ∃ carrier : FifthElementExternalMeasurementReceiptCarrier Source,
+        FifthElementReceiptAcceptanceObligation carrier := by
+  constructor
+  · rintro ⟨package⟩
+    exact ⟨package.carrier, package.acceptance⟩
+  · rintro ⟨carrier, hAcceptance⟩
+    exact ⟨⟨carrier, hAcceptance⟩⟩
+
 
 
 section SIDFHBoundedFieldBridge
