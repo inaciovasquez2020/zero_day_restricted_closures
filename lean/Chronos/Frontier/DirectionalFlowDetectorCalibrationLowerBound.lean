@@ -799,4 +799,112 @@ structure FifthElementReceiptAcceptanceWitness
   accepted : carrier.receiptAccepted
 
 
+
+section SIDFHBoundedFieldBridge
+
+noncomputable def sidfhPhi
+    {Time Point : Type}
+    (ψSI : Time → Point → ℝ)
+    (c : ℝ)
+    (t : Time)
+    (x : Point) : ℝ :=
+  (1 + ψSI t x) / c
+
+noncomputable def sidfhEnergy
+    {Time Point : Type}
+    (ψSI : Time → Point → ℝ)
+    (m c : ℝ)
+    (t : Time)
+    (x : Point) : ℝ :=
+  sidfhPhi ψSI c t x * m * c ^ 3
+
+theorem sidfhEnergy_eq_quadratic
+    {Time Point : Type}
+    (ψSI : Time → Point → ℝ)
+    (m c : ℝ)
+    (t : Time)
+    (x : Point)
+    (hc : c ≠ 0) :
+    sidfhEnergy ψSI m c t x =
+      (1 + ψSI t x) * m * c ^ 2 := by
+  unfold sidfhEnergy sidfhPhi
+  rw [div_mul_eq_mul_div, div_mul_eq_mul_div]
+  apply (div_eq_iff hc).2
+  simp [pow_succ, mul_assoc]
+
+theorem sidfhEnergy_twoPoint_splitting
+    {Time Point : Type}
+    (ψSI : Time → Point → ℝ)
+    (m c : ℝ)
+    (t : Time)
+    (x y : Point)
+    (hc : c ≠ 0) :
+    sidfhEnergy ψSI m c t x -
+        sidfhEnergy ψSI m c t y =
+      m * c ^ 2 * (ψSI t x - ψSI t y) := by
+  rw [
+    sidfhEnergy_eq_quadratic
+      (ψSI := ψSI)
+      (m := m)
+      (c := c)
+      (t := t)
+      (x := x)
+      hc,
+    sidfhEnergy_eq_quadratic
+      (ψSI := ψSI)
+      (m := m)
+      (c := c)
+      (t := t)
+      (x := y)
+      hc
+  ]
+  calc
+    (1 + ψSI t x) * m * c ^ 2 -
+          (1 + ψSI t y) * m * c ^ 2 =
+        (1 + ψSI t x) * (m * c ^ 2) -
+          (1 + ψSI t y) * (m * c ^ 2) := by
+      simp only [mul_assoc]
+    _ =
+        ((1 + ψSI t x) - (1 + ψSI t y)) *
+          (m * c ^ 2) := by
+      rw [sub_mul]
+    _ =
+        (ψSI t x - ψSI t y) * (m * c ^ 2) := by
+      have h :
+          (1 + ψSI t x) - (1 + ψSI t y) =
+            ψSI t x - ψSI t y := by
+        linarith
+      rw [h]
+    _ = m * c ^ 2 * (ψSI t x - ψSI t y) := by
+      exact mul_comm _ _
+
+def sidfhDarkFrontSupportCondition
+    {Time Point : Type}
+    (darkFrontSupport : Time → Point → Prop)
+    (ψSI : Time → Point → ℝ) : Prop :=
+  ∀ t x, ¬ darkFrontSupport t x → ψSI t x = 0
+
+def sidfhFieldExistenceObligation
+    {Time Point : Type}
+    (darkFrontSupport : Time → Point → Prop)
+    (physicallyRealized : (Time → Point → ℝ) → Prop)
+    (c : ℝ) : Prop :=
+  c ≠ 0 ∧
+    ∃ ψSI : Time → Point → ℝ,
+      physicallyRealized ψSI ∧
+        sidfhDarkFrontSupportCondition darkFrontSupport ψSI
+
+def sidfhPhysicalVariationObligation
+    {Time Point : Type}
+    (darkFrontSupport : Time → Point → Prop)
+    (physicallyResolvedPair : Time → Point → Point → Prop)
+    (ψSI : Time → Point → ℝ) : Prop :=
+  ∃ t x y,
+    darkFrontSupport t x ∧
+      darkFrontSupport t y ∧
+      physicallyResolvedPair t x y ∧
+      ψSI t x ≠ ψSI t y
+
+end SIDFHBoundedFieldBridge
+
 end Chronos.Frontier.Mc3Boundary
