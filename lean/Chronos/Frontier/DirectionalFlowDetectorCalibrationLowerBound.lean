@@ -890,6 +890,23 @@ theorem nonempty_fifthElementExternalReceiptAcceptancePackage_iff_exists
   · rintro ⟨carrier, hAcceptance⟩
     exact ⟨⟨carrier, hAcceptance⟩⟩
 
+/-- Characterizes package inhabitation by existence of an externally
+supplied carrier with an inhabited acceptance-witness type. -/
+theorem
+    nonempty_fifthElementExternalReceiptAcceptancePackage_iff_exists_nonemptyWitness
+    {Source : Type} :
+    Nonempty (FifthElementExternalReceiptAcceptancePackage Source) ↔
+      ∃ carrier : FifthElementExternalMeasurementReceiptCarrier Source,
+        Nonempty (FifthElementReceiptAcceptanceWitness carrier) := by
+  constructor
+  · rintro ⟨package⟩
+    exact ⟨package.carrier, ⟨package.acceptanceWitness⟩⟩
+  · rintro ⟨carrier, ⟨witness⟩⟩
+    exact
+      ⟨⟨carrier,
+          (fifthElementReceiptAcceptanceObligation_iff_nonemptyWitness
+            carrier).2 ⟨witness⟩⟩⟩
+
 
 
 section SIDFHBoundedFieldBridge
