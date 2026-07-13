@@ -122,7 +122,7 @@ theorem certificate :
   · change (0 : ℝ) < 1
     exact zero_lt_one
   · change |(2 : ℝ) - 1 * 2| ≤ 1
-    simpa using (show (0 : ℝ) ≤ 1 from zero_le_one)
+    simp
   · change (1 : ℝ) < 2
     linarith
 
