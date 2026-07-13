@@ -962,6 +962,27 @@ structure FifthElementPredictionSpecification where
   specificationCode : ℕ
 
 
+/-- Tests whether the observed two-point split agrees with a fixed
+prediction within the supplied measurement tolerance.
+
+This predicate does not establish provenance, calibration, uncertainty
+validation, exclusion of known physics, preregistration, or receipt
+acceptance.
+-/
+def FifthElementSignalFit
+    {Source : Type}
+    (specification : FifthElementPredictionSpecification)
+    (carrier : FifthElementExternalMeasurementReceiptCarrier Source) :
+    Prop :=
+  let observedSplit :=
+    carrier.measurement.measuredX -
+      carrier.measurement.measuredY
+  0 < carrier.measurement.tolerance ∧
+    carrier.measurement.tolerance < abs specification.predictedSplit ∧
+    abs (observedSplit - specification.predictedSplit) ≤
+      carrier.measurement.tolerance
+
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
