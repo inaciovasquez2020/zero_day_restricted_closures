@@ -576,4 +576,20 @@ theorem relative_energy_recovery_error
   rw [mul_comm E (c - conversionSpeed)]
 
 
+
+/--
+A candidate scalar fifth-element field whose certified SI dimension is
+`T * L⁻¹`, equivalently inverse speed. This is the dimension required for
+a coefficient multiplying `m * c^3` to produce an energy quantity.
+-/
+structure FifthElementFieldCandidate (Carrier : Type) where
+  value : Carrier → ℝ
+  massExponent : ℤ
+  lengthExponent : ℤ
+  timeExponent : ℤ
+  massDimension : massExponent = 0
+  lengthDimension : lengthExponent = -1
+  timeDimension : timeExponent = 1
+
+
 end Chronos.Frontier.Mc3Boundary
