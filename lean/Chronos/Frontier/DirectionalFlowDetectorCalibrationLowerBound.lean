@@ -983,6 +983,21 @@ def FifthElementSignalFit
       carrier.measurement.tolerance
 
 
+/-- Binds the stored receipt-acceptance proposition to the fixed
+prediction and measurement signal-fit predicate.
+
+This structure supplies no carrier, specification, signal-fit proof,
+acceptance proof, or empirical evidence.
+-/
+structure OperationallyBoundFifthElementCarrier
+    (Source : Type) where
+  specification : FifthElementPredictionSpecification
+  carrier : FifthElementExternalMeasurementReceiptCarrier Source
+  acceptanceSemantics :
+    carrier.receiptAccepted ↔
+      FifthElementSignalFit specification carrier
+
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
