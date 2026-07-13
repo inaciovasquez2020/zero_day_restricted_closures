@@ -815,6 +815,14 @@ theorem fifthElementReceiptAcceptanceWitness_of_accepted
     FifthElementReceiptAcceptanceWitness carrier :=
   ⟨hAccepted⟩
 
+/-- Acceptance obligation for an externally supplied receipt carrier.
+This declaration supplies neither the carrier nor a proof of acceptance. -/
+def FifthElementReceiptAcceptanceObligation
+    {Source : Type}
+    (carrier : FifthElementExternalMeasurementReceiptCarrier Source) :
+    Prop :=
+  carrier.receiptAccepted
+
 
 
 section SIDFHBoundedFieldBridge
