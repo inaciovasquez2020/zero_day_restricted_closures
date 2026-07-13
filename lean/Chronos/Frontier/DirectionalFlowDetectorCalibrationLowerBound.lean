@@ -806,6 +806,15 @@ theorem fifthElementReceiptAccepted_of_witness
     carrier.receiptAccepted :=
   witness.accepted
 
+/-- Constructs an acceptance witness from an independently supplied
+proof of the carrier's stored acceptance proposition. -/
+theorem fifthElementReceiptAcceptanceWitness_of_accepted
+    {Source : Type}
+    (carrier : FifthElementExternalMeasurementReceiptCarrier Source)
+    (hAccepted : carrier.receiptAccepted) :
+    FifthElementReceiptAcceptanceWitness carrier :=
+  ⟨hAccepted⟩
+
 
 
 section SIDFHBoundedFieldBridge
