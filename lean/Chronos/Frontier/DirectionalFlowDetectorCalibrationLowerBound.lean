@@ -858,6 +858,16 @@ structure FifthElementExternalReceiptAcceptancePackage
   carrier : FifthElementExternalMeasurementReceiptCarrier Source
   acceptance : FifthElementReceiptAcceptanceObligation carrier
 
+/-- Extracts the acceptance witness carried by an existing externally
+supplied receipt-acceptance package. -/
+theorem FifthElementExternalReceiptAcceptancePackage.acceptanceWitness
+    {Source : Type}
+    (package : FifthElementExternalReceiptAcceptancePackage Source) :
+    FifthElementReceiptAcceptanceWitness package.carrier :=
+  fifthElementReceiptAcceptanceWitness_of_obligation
+    package.carrier
+    package.acceptance
+
 
 
 section SIDFHBoundedFieldBridge
