@@ -868,6 +868,15 @@ theorem FifthElementExternalReceiptAcceptancePackage.acceptanceWitness
     package.carrier
     package.acceptance
 
+/-- Extracts receipt acceptance from an existing externally supplied
+receipt-acceptance package. -/
+theorem FifthElementExternalReceiptAcceptancePackage.receiptAccepted
+    {Source : Type}
+    (package : FifthElementExternalReceiptAcceptancePackage Source) :
+    package.carrier.receiptAccepted := by
+  simpa [FifthElementReceiptAcceptanceObligation] using
+    package.acceptance
+
 
 
 section SIDFHBoundedFieldBridge
