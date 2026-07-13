@@ -833,6 +833,23 @@ theorem fifthElementReceiptAcceptanceWitness_of_obligation
     carrier
     hObligation
 
+/-- The externally supplied acceptance obligation is equivalent to
+nonemptiness of the corresponding acceptance-witness type. -/
+theorem fifthElementReceiptAcceptanceObligation_iff_nonemptyWitness
+    {Source : Type}
+    (carrier : FifthElementExternalMeasurementReceiptCarrier Source) :
+    FifthElementReceiptAcceptanceObligation carrier ↔
+      Nonempty (FifthElementReceiptAcceptanceWitness carrier) := by
+  constructor
+  · intro hObligation
+    exact
+      ⟨fifthElementReceiptAcceptanceWitness_of_obligation
+        carrier
+        hObligation⟩
+  · rintro ⟨witness⟩
+    simpa [FifthElementReceiptAcceptanceObligation] using
+      fifthElementReceiptAccepted_of_witness witness
+
 
 
 section SIDFHBoundedFieldBridge
