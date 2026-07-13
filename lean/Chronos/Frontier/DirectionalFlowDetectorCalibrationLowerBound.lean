@@ -1574,6 +1574,32 @@ theorem fifthElement_abs_observedSplit_two_sided_bound_of_signalFit
     fifthElement_abs_observedSplit_le_abs_predictedSplit_add_tolerance hFit
   ⟩
 
+
+/--
+A signal fit bounds the difference between the absolute observed splitting and
+the absolute fixed prediction by the measurement tolerance.
+
+This theorem packages the previously proved two-sided magnitude bounds. It
+constructs no specification, carrier, signal-fit proof, or empirical evidence.
+-/
+theorem fifthElement_abs_observedSplit_sub_abs_predictedSplit_le_tolerance
+    {Source : Type}
+    {specification : FifthElementPredictionSpecification}
+    {carrier : FifthElementExternalMeasurementReceiptCarrier Source}
+    (hFit : FifthElementSignalFit specification carrier) :
+    abs
+        (abs
+            (carrier.measurement.measuredX -
+              carrier.measurement.measuredY) -
+          abs specification.predictedSplit) ≤
+      carrier.measurement.tolerance := by
+  have hBounds :=
+    fifthElement_abs_observedSplit_two_sided_bound_of_signalFit hFit
+  apply abs_le.mpr
+  constructor
+  · linarith [hBounds.1]
+  · linarith [hBounds.2]
+
 section SIDFHBoundedFieldBridge
 
 noncomputable def sidfhPhi
