@@ -561,4 +561,19 @@ theorem energy_recovery_error_ratio
     E c conversionSpeed hConversionSpeed
 
 
+
+theorem relative_energy_recovery_error
+    (E c conversionSpeed : ℝ)
+    (hConversionSpeed : conversionSpeed ≠ 0)
+    (hEnergy : E ≠ 0) :
+    (energyFromEnergyTimesSpeed
+          (P_c E c) conversionSpeed - E) / E =
+      (c - conversionSpeed) / conversionSpeed := by
+  rw [energy_recovery_error_ratio
+    E c conversionSpeed hConversionSpeed]
+  apply (div_eq_iff hEnergy).2
+  rw [div_mul_eq_mul_div]
+  rw [mul_comm E (c - conversionSpeed)]
+
+
 end Chronos.Frontier.Mc3Boundary
