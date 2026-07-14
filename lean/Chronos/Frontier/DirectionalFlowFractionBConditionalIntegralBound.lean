@@ -1138,7 +1138,124 @@ theorem maxwellSpatialDerivative3_cross_coordinate_one
 /-
 PROVED := differentiated_cross_product_coordinate_zero
 PROVED := differentiated_cross_product_coordinate_one
-BOUNDARY := ¬ differentiated_cross_product_coordinate_two_proved
+PROVED := differentiated_cross_product_coordinate_two
+BOUNDARY := ¬ divergence_cross_product_identity_from_fderiv_proved
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
+
+/--
+Spatial derivative of the second cross-product coordinate:
+
+`∂₂(E × B)₂ =
+  E₀ ∂₂B₁ + B₁ ∂₂E₀ -
+  (E₁ ∂₂B₀ + B₀ ∂₂E₁)`.
+-/
+theorem maxwellSpatialDerivative3_cross_coordinate_two
+    (E B : MaxwellVectorField3)
+    (p : MaxwellSpacetime3)
+    (hE0 :
+      DifferentiableAt ℝ
+        (fun q => E q (0 : Fin 3))
+        p)
+    (hE1 :
+      DifferentiableAt ℝ
+        (fun q => E q (1 : Fin 3))
+        p)
+    (hB0 :
+      DifferentiableAt ℝ
+        (fun q => B q (0 : Fin 3))
+        p)
+    (hB1 :
+      DifferentiableAt ℝ
+        (fun q => B q (1 : Fin 3))
+        p) :
+    maxwellSpatialDerivative3
+        (fun q =>
+          maxwellCross3
+            (E q)
+            (B q)
+            (2 : Fin 3))
+        (2 : Fin 3)
+        p =
+      (
+        E p (0 : Fin 3) *
+            maxwellSpatialDerivative3
+              (fun q => B q (1 : Fin 3))
+              (2 : Fin 3)
+              p +
+          B p (1 : Fin 3) *
+            maxwellSpatialDerivative3
+              (fun q => E q (0 : Fin 3))
+              (2 : Fin 3)
+              p
+      ) -
+      (
+        E p (1 : Fin 3) *
+            maxwellSpatialDerivative3
+              (fun q => B q (0 : Fin 3))
+              (2 : Fin 3)
+              p +
+          B p (0 : Fin 3) *
+            maxwellSpatialDerivative3
+              (fun q => E q (1 : Fin 3))
+              (2 : Fin 3)
+              p
+      ) := by
+  have hCoordinate :
+      (fun q =>
+        maxwellCross3
+          (E q)
+          (B q)
+          (2 : Fin 3)) =
+      (fun q =>
+        E q (0 : Fin 3) * B q (1 : Fin 3) -
+          E q (1 : Fin 3) * B q (0 : Fin 3)) := by
+    funext q
+    exact
+      (maxwellCross3_coordinate_expansion
+        (E q)
+        (B q)).2.2
+
+  rw [hCoordinate]
+
+  rw [
+    maxwellSpatialDerivative3_sub
+      (fun q =>
+        E q (0 : Fin 3) * B q (1 : Fin 3))
+      (fun q =>
+        E q (1 : Fin 3) * B q (0 : Fin 3))
+      (2 : Fin 3)
+      p
+      (hE0.mul hB1)
+      (hE1.mul hB0)
+  ]
+
+  rw [
+    maxwellSpatialDerivative3_mul
+      (fun q => E q (0 : Fin 3))
+      (fun q => B q (1 : Fin 3))
+      (2 : Fin 3)
+      p
+      hE0
+      hB1
+  ]
+
+  rw [
+    maxwellSpatialDerivative3_mul
+      (fun q => E q (1 : Fin 3))
+      (fun q => B q (0 : Fin 3))
+      (2 : Fin 3)
+      p
+      hE1
+      hB0
+  ]
+
+/-
+PROVED := differentiated_cross_product_coordinate_zero
+PROVED := differentiated_cross_product_coordinate_one
+PROVED := differentiated_cross_product_coordinate_two
 BOUNDARY := ¬ divergence_cross_product_identity_from_fderiv_proved
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
