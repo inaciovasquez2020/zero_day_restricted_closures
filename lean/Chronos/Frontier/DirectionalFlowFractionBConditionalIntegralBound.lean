@@ -4945,4 +4945,60 @@ BOUNDARY := ¬ isolation_derived_without_assumption
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
+/--
+A smooth source-free Maxwell field has exactly conserved total
+electromagnetic energy between any two times whenever its outward
+rectangular boundary flux vanishes pointwise in time.
+-/
+theorem maxwellTotalElectromagneticEnergy3_conserved_of_sourceFree_zeroBoundaryFlux
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t₀ t₁ : ℝ)
+    (hEvolution :
+      ∀ τ x,
+        UncontractedMaxwellEvolutionAt3
+          ε₀ μ₀ F (τ, x))
+    (hCurrentZero :
+      ∀ p : MaxwellSpacetime3,
+        F.current p = 0)
+    (hBoundaryFluxZero :
+      ∀ τ : ℝ,
+        maxwellRectangularBoundaryFlux3
+          D
+          (maxwellPoyntingSpatialSlice3 μ₀ F τ) =
+        0) :
+    maxwellTotalElectromagneticEnergy3
+        ε₀ μ₀ F D t₁ =
+      maxwellTotalElectromagneticEnergy3
+        ε₀ μ₀ F D t₀ := by
+  have hIntegratedFluxZero :
+      (∫ τ in t₀..t₁,
+        maxwellRectangularBoundaryFlux3
+          D
+          (maxwellPoyntingSpatialSlice3 μ₀ F τ)) =
+        0 := by
+    simp [hBoundaryFluxZero]
+
+  exact
+    maxwellTotalElectromagneticEnergy3_conserved_of_sourceFree_zeroIntegratedFlux
+      ε₀
+      μ₀
+      F
+      D
+      t₀
+      t₁
+      hEvolution
+      hCurrentZero
+      hIntegratedFluxZero
+
+/-
+PROVED := pointwise_zero_boundary_flux_implies_zero_integrated_flux
+PROVED := source_free_pointwise_isolated_total_energy_conservation
+PROVED := total_electromagnetic_energy_equal_at_arbitrary_endpoint_times
+BOUNDARY := ¬ pointwise_zero_boundary_flux_derived_without_assumption
+BOUNDARY := ¬ isolation_derived_without_assumption
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
 end Chronos.Frontier
