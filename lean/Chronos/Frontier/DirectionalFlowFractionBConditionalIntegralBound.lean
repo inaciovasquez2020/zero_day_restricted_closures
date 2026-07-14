@@ -3447,4 +3447,89 @@ BOUNDARY := ¬ fixed_time_boundary_flux_balance_derived_from_smoothness_alone
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
+/--
+At every fixed time, the Poynting spatial slice of a
+`SmoothMaxwellField3` is differentiable on all of `ℝ³`.
+-/
+theorem maxwellPoyntingSpatialSlice3_differentiable
+    (μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (t : ℝ) :
+    Differentiable ℝ
+      (maxwellPoyntingSpatialSlice3 μ₀ F t) := by
+  intro x
+
+  have hEmbedding :
+      DifferentiableAt ℝ
+        (fun y : MaxwellVector3 =>
+          ((t, y) : MaxwellSpacetime3))
+        x :=
+    (hasFDerivAt_prodMk_right t x).differentiableAt
+
+  have hElectric :
+      DifferentiableAt ℝ F.electric (t, x) :=
+    (F.electric_contDiff.differentiable
+      (by norm_num))
+      (t, x)
+
+  have hMagnetic :
+      DifferentiableAt ℝ F.magnetic (t, x) :=
+    (F.magnetic_contDiff.differentiable
+      (by norm_num))
+      (t, x)
+
+  have hCross :
+      ∀ i : Fin 3,
+        DifferentiableAt ℝ
+          (fun q =>
+            maxwellCross3
+              (F.electric q)
+              (F.magnetic q)
+              i)
+          (t, x) :=
+    maxwellCross3_component_differentiableAt
+      F.electric
+      F.magnetic
+      (t, x)
+      ((differentiableAt_pi.mp hElectric) (0 : Fin 3))
+      ((differentiableAt_pi.mp hElectric) (1 : Fin 3))
+      ((differentiableAt_pi.mp hElectric) (2 : Fin 3))
+      ((differentiableAt_pi.mp hMagnetic) (0 : Fin 3))
+      ((differentiableAt_pi.mp hMagnetic) (1 : Fin 3))
+      ((differentiableAt_pi.mp hMagnetic) (2 : Fin 3))
+
+  rw [differentiableAt_pi]
+
+  intro i
+
+  have hFixedCross :
+      DifferentiableAt ℝ
+        (fun y : MaxwellVector3 =>
+          maxwellCross3
+            (F.electric (t, y))
+            (F.magnetic (t, y))
+            i)
+        x :=
+    (hCross i).comp x hEmbedding
+
+  have hConstant :
+      DifferentiableAt ℝ
+        (fun _ : MaxwellVector3 =>
+          (1 / μ₀ : ℝ))
+        x :=
+    differentiableAt_const (1 / μ₀)
+
+  simpa [
+    maxwellPoyntingSpatialSlice3,
+    Pi.smul_apply,
+    smul_eq_mul
+  ] using hConstant.mul hFixedCross
+
+/-
+PROVED := fixed_time_Poynting_spatial_slice_differentiable_from_smooth_fields
+PROVED := fixed_time_Poynting_spatial_slice_continuous_from_differentiability
+BOUNDARY := ¬ spatial_divergence_integrability_derived_on_rectangular_domain
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
 end Chronos.Frontier
