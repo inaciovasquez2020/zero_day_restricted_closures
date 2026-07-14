@@ -4847,4 +4847,53 @@ BOUNDARY := ¬ uncontracted_Maxwell_evolution_derived_without_assumption
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
+/--
+For a smooth source-free Maxwell field, the change in stored
+electromagnetic energy plus the time-integrated outward rectangular
+boundary flux is zero.
+-/
+theorem maxwellIntegratedRectangularPoyntingBalance3_sourceFree_of_smooth_evolution
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t₀ t₁ : ℝ)
+    (hEvolution :
+      ∀ τ x,
+        UncontractedMaxwellEvolutionAt3
+          ε₀ μ₀ F (τ, x))
+    (hCurrentZero :
+      ∀ p : MaxwellSpacetime3,
+        F.current p = 0) :
+    maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D t₁ -
+        maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D t₀ +
+        (∫ τ in t₀..t₁,
+          maxwellRectangularBoundaryFlux3
+            D
+            (maxwellPoyntingSpatialSlice3 μ₀ F τ)) =
+      0 := by
+  have hBalance :=
+    maxwellIntegratedRectangularPoyntingBalance3_of_smooth_evolution
+      ε₀
+      μ₀
+      F
+      D
+      t₀
+      t₁
+      hEvolution
+
+  simpa [
+    hCurrentZero,
+    maxwellDot3
+  ] using hBalance
+
+/-
+PROVED := source_free_integrated_rectangular_Poynting_balance
+PROVED := stored_energy_change_plus_boundary_flux_equals_zero
+BOUNDARY := ¬ zero_boundary_flux_assumed
+BOUNDARY := ¬ total_electromagnetic_energy_time_invariance_without_isolation
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
 end Chronos.Frontier
