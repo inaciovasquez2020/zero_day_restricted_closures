@@ -834,7 +834,51 @@ theorem maxwellSpatialDerivative3_mul
 
 /-
 PROVED := spatial_Frechet_product_rule
-BOUNDARY := ¬ spatial_Frechet_subtraction_rule_proved
+PROVED := spatial_Frechet_subtraction_rule
+BOUNDARY := ¬ divergence_cross_product_identity_from_fderiv_proved
+BOUNDARY := ¬ uncontracted_Maxwell_evolution_equations_formalized
+BOUNDARY := ¬ energy_density_time_derivative_from_fderiv_proved
+BOUNDARY := ¬ divergence_theorem_instantiated_for_the_electromagnetic_domain
+BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
+
+/--
+Fréchet subtraction rule evaluated in one spatial coordinate direction.
+-/
+theorem maxwellSpatialDerivative3_sub
+    (f g : MaxwellScalarField3)
+    (i : Fin 3)
+    (p : MaxwellSpacetime3)
+    (hf : DifferentiableAt ℝ f p)
+    (hg : DifferentiableAt ℝ g p) :
+    maxwellSpatialDerivative3
+        (fun q => f q - g q)
+        i
+        p =
+      maxwellSpatialDerivative3 f i p -
+        maxwellSpatialDerivative3 g i p := by
+  have hfg :
+      HasFDerivAt
+        (fun q => f q - g q)
+        (fderiv ℝ f p - fderiv ℝ g p)
+        p :=
+    hf.hasFDerivAt.sub hg.hasFDerivAt
+  have h :=
+    congrArg
+      (fun L : MaxwellSpacetime3 →L[ℝ] ℝ =>
+        L (maxwellSpatialDirection3 i))
+      hfg.fderiv
+  simpa [
+    maxwellSpatialDerivative3
+  ] using h
+
+/-
+PROVED := spatial_Frechet_product_rule
+PROVED := spatial_Frechet_subtraction_rule
+BOUNDARY := ¬ coordinate_cross_product_expansion_proved
 BOUNDARY := ¬ divergence_cross_product_identity_from_fderiv_proved
 BOUNDARY := ¬ uncontracted_Maxwell_evolution_equations_formalized
 BOUNDARY := ¬ energy_density_time_derivative_from_fderiv_proved
