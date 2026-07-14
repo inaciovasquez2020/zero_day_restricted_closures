@@ -2401,7 +2401,100 @@ theorem maxwellCross3_component_differentiableAt
 
 /-
 PROVED := cross_product_component_differentiability
-BOUNDARY := ¬ fixed_time_spatial_derivative_composition
+PROVED := fixed_time_spatial_derivative_composition
+BOUNDARY := ¬ spacetime_divergence_identified_with_spatial_slice_divergence
+BOUNDARY := ¬ spatially_integrated_local_Poynting_balance
+BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
+
+/--
+The derivative of a fixed-time spatial restriction in coordinate
+direction `i` is the spacetime spatial derivative in direction `i`.
+-/
+theorem maxwellFixedTimeSpatialDerivative3
+    (f : MaxwellScalarField3)
+    (t : ℝ)
+    (x : MaxwellVector3)
+    (i : Fin 3)
+    (hf :
+      DifferentiableAt ℝ
+        f
+        (t, x)) :
+    (fderiv ℝ
+        (fun y : MaxwellVector3 =>
+          f (t, y))
+        x)
+        (Pi.single i 1) =
+      maxwellSpatialDerivative3
+        f
+        i
+        (t, x) := by
+  have hEmbedding :
+      HasFDerivAt
+        (fun y : MaxwellVector3 =>
+          ((t, y) : MaxwellSpacetime3))
+        (ContinuousLinearMap.inr
+          ℝ
+          ℝ
+          MaxwellVector3)
+        x := by
+    exact
+      hasFDerivAt_prodMk_right
+        t
+        x
+
+  have hComposition :
+      HasFDerivAt
+        (fun y : MaxwellVector3 =>
+          f (t, y))
+        (
+          (fderiv ℝ f (t, x)).comp
+            (
+              ContinuousLinearMap.inr
+                ℝ
+                ℝ
+                MaxwellVector3
+            )
+        )
+        x :=
+    hf.hasFDerivAt.comp
+      x
+      hEmbedding
+
+  have hDirection :
+      (
+        ContinuousLinearMap.inr
+          ℝ
+          ℝ
+          MaxwellVector3
+      )
+          (Pi.single i 1) =
+        maxwellSpatialDirection3 i := by
+    apply Prod.ext
+    · rfl
+    ·
+      funext j
+      simp [
+        maxwellSpatialDirection3,
+        Pi.single_apply,
+        eq_comm
+      ]
+
+  unfold maxwellSpatialDerivative3
+
+  rw [hComposition.fderiv]
+
+  simp only [
+    ContinuousLinearMap.comp_apply
+  ]
+
+  rw [hDirection]
+
+/-
+PROVED := fixed_time_spatial_derivative_composition
 BOUNDARY := ¬ spacetime_divergence_identified_with_spatial_slice_divergence
 BOUNDARY := ¬ spatially_integrated_local_Poynting_balance
 BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
