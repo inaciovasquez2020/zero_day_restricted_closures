@@ -552,7 +552,254 @@ theorem nullElectromagneticEquality_algebraic_iff
     ring
 
 /-
-BOUNDARY := ¬ field_level_Maxwell_differential_operators_formalized
+BOUNDARY := ¬ uncontracted_Maxwell_evolution_equations_formalized
+BOUNDARY := ¬ energy_density_time_derivative_from_fderiv_proved
+BOUNDARY := ¬ divergence_cross_product_identity_from_fderiv_proved
+BOUNDARY := ¬ divergence_theorem_instantiated_for_the_electromagnetic_domain
+BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
+
+/-!
+## Field-level Maxwell differential operators on `ℝ × ℝ³`
+
+The spatial carrier is represented directly as `Fin 3 → ℝ`. This avoids
+the `WithLp` wrapper used by `EuclideanVector3` while retaining the exact
+three-dimensional coordinate type required by `crossProduct`.
+-/
+
+/-- Coordinate representation of a vector in three-dimensional space. -/
+abbrev MaxwellVector3 :=
+  Fin 3 → ℝ
+
+/-- A space-time point consisting of time and three spatial coordinates. -/
+abbrev MaxwellSpacetime3 :=
+  ℝ × MaxwellVector3
+
+/-- A scalar field on space-time. -/
+abbrev MaxwellScalarField3 :=
+  MaxwellSpacetime3 → ℝ
+
+/-- A three-vector field on space-time. -/
+abbrev MaxwellVectorField3 :=
+  MaxwellSpacetime3 → MaxwellVector3
+
+/-- Unit direction in the time coordinate. -/
+def maxwellTimeDirection3 :
+    MaxwellSpacetime3 :=
+  (1, 0)
+
+/-- Unit direction in spatial coordinate `i`. -/
+def maxwellSpatialDirection3
+    (i : Fin 3) :
+    MaxwellSpacetime3 :=
+  (
+    0,
+    fun j =>
+      if j = i then 1 else 0
+  )
+
+/-- Fréchet derivative in the time direction. -/
+noncomputable def maxwellTimeDerivative3
+    {Y : Type*}
+    [NormedAddCommGroup Y]
+    [NormedSpace ℝ Y]
+    (f : MaxwellSpacetime3 → Y)
+    (p : MaxwellSpacetime3) :
+    Y :=
+  (fderiv ℝ f p) maxwellTimeDirection3
+
+/-- Fréchet derivative in spatial coordinate `i`. -/
+noncomputable def maxwellSpatialDerivative3
+    {Y : Type*}
+    [NormedAddCommGroup Y]
+    [NormedSpace ℝ Y]
+    (f : MaxwellSpacetime3 → Y)
+    (i : Fin 3)
+    (p : MaxwellSpacetime3) :
+    Y :=
+  (fderiv ℝ f p)
+    (maxwellSpatialDirection3 i)
+
+/-- Euclidean coordinate dot product on `Fin 3 → ℝ`. -/
+def maxwellDot3
+    (u v : MaxwellVector3) :
+    ℝ :=
+  ∑ i : Fin 3, u i * v i
+
+/-- Three-dimensional coordinate cross product. -/
+def maxwellCross3
+    (u v : MaxwellVector3) :
+    MaxwellVector3 :=
+  crossProduct u v
+
+/-- Spatial divergence of a space-time vector field. -/
+noncomputable def maxwellDivergence3
+    (F : MaxwellVectorField3)
+    (p : MaxwellSpacetime3) :
+    ℝ :=
+  ∑ i : Fin 3,
+    maxwellSpatialDerivative3
+      (fun q => F q i)
+      i
+      p
+
+/-- Spatial curl of a space-time vector field. -/
+noncomputable def maxwellCurl3
+    (F : MaxwellVectorField3)
+    (p : MaxwellSpacetime3) :
+    MaxwellVector3 :=
+  fun i =>
+    if i = (0 : Fin 3) then
+      maxwellSpatialDerivative3
+          (fun q => F q (2 : Fin 3))
+          (1 : Fin 3)
+          p -
+        maxwellSpatialDerivative3
+          (fun q => F q (1 : Fin 3))
+          (2 : Fin 3)
+          p
+    else if i = (1 : Fin 3) then
+      maxwellSpatialDerivative3
+          (fun q => F q (0 : Fin 3))
+          (2 : Fin 3)
+          p -
+        maxwellSpatialDerivative3
+          (fun q => F q (2 : Fin 3))
+          (0 : Fin 3)
+          p
+    else
+      maxwellSpatialDerivative3
+          (fun q => F q (1 : Fin 3))
+          (0 : Fin 3)
+          p -
+        maxwellSpatialDerivative3
+          (fun q => F q (0 : Fin 3))
+          (1 : Fin 3)
+          p
+
+/-- Continuously differentiable electric, magnetic, and current fields. -/
+structure SmoothMaxwellField3 where
+  electric : MaxwellVectorField3
+  magnetic : MaxwellVectorField3
+  current : MaxwellVectorField3
+  electric_contDiff :
+    ContDiff ℝ 1 electric
+  magnetic_contDiff :
+    ContDiff ℝ 1 magnetic
+  current_contDiff :
+    ContDiff ℝ 1 current
+
+/--
+Field-level contracted hypotheses needed by the algebraic local Poynting
+kernel at one space-time point.
+
+The divergence-of-cross-product identity remains an explicit hypothesis
+until its coordinate product-rule proof is formalized.
+-/
+structure ContractedMaxwellPoyntingAt3
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (p : MaxwellSpacetime3) :
+    Prop where
+  faraday_contracted :
+    maxwellDot3
+        (F.magnetic p)
+        (maxwellTimeDerivative3 F.magnetic p) =
+      -maxwellDot3
+        (F.magnetic p)
+        (maxwellCurl3 F.electric p)
+  ampereMaxwell_contracted :
+    ε₀ *
+        maxwellDot3
+          (F.electric p)
+          (maxwellTimeDerivative3 F.electric p) =
+      (1 / μ₀) *
+          maxwellDot3
+            (F.electric p)
+            (maxwellCurl3 F.magnetic p) -
+        maxwellDot3
+          (F.current p)
+          (F.electric p)
+  divergence_cross :
+    maxwellDivergence3
+        (fun q =>
+          maxwellCross3
+            (F.electric q)
+            (F.magnetic q))
+        p =
+      maxwellDot3
+          (F.magnetic p)
+          (maxwellCurl3 F.electric p) -
+        maxwellDot3
+          (F.electric p)
+          (maxwellCurl3 F.magnetic p)
+
+/--
+The scalar algebraic Poynting kernel instantiated with field-level
+Fréchet time derivatives, spatial curl, divergence, dot product, and
+cross product.
+-/
+theorem localPoyntingIdentity_fieldLevel3
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (p : MaxwellSpacetime3)
+    (h :
+      ContractedMaxwellPoyntingAt3
+        ε₀ μ₀ F p) :
+    ε₀ *
+          maxwellDot3
+            (F.electric p)
+            (maxwellTimeDerivative3 F.electric p) +
+        (1 / μ₀) *
+          maxwellDot3
+            (F.magnetic p)
+            (maxwellTimeDerivative3 F.magnetic p) +
+        (1 / μ₀) *
+          maxwellDivergence3
+            (fun q =>
+              maxwellCross3
+                (F.electric q)
+                (F.magnetic q))
+            p =
+      -maxwellDot3
+        (F.current p)
+        (F.electric p) := by
+  exact
+    localPoyntingIdentity_algebraicKernel
+      ε₀
+      μ₀
+      (maxwellDot3
+        (F.electric p)
+        (maxwellTimeDerivative3 F.electric p))
+      (maxwellDot3
+        (F.magnetic p)
+        (maxwellTimeDerivative3 F.magnetic p))
+      (maxwellDot3
+        (F.electric p)
+        (maxwellCurl3 F.magnetic p))
+      (maxwellDot3
+        (F.magnetic p)
+        (maxwellCurl3 F.electric p))
+      (maxwellDot3
+        (F.current p)
+        (F.electric p))
+      (maxwellDivergence3
+        (fun q =>
+          maxwellCross3
+            (F.electric q)
+            (F.magnetic q))
+        p)
+      h.faraday_contracted
+      h.ampereMaxwell_contracted
+      h.divergence_cross
+
+/-
+BOUNDARY := ¬ uncontracted_Maxwell_evolution_equations_formalized
+BOUNDARY := ¬ energy_density_time_derivative_from_fderiv_proved
+BOUNDARY := ¬ divergence_cross_product_identity_from_fderiv_proved
 BOUNDARY := ¬ divergence_theorem_instantiated_for_the_electromagnetic_domain
 BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
 BOUNDARY := ¬ external_measurement_receipt_present
