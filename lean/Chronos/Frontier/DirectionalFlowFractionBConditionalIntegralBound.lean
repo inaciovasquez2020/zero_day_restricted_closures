@@ -2132,7 +2132,197 @@ PROVED := time_derivative_of_vector_component
 PROVED := time_derivative_of_dot_self
 PROVED := energy_density_time_derivative_from_fderiv
 PROVED := local_Poynting_conservation_in_energy_density_form
-BOUNDARY := ¬ divergence_theorem_instantiated_for_the_electromagnetic_domain
+PROVED := divergence_theorem_instantiated_for_the_electromagnetic_domain
+BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
+
+/--
+A closed rectangular spatial domain in `ℝ³`.
+-/
+structure MaxwellRectangularDomain3 where
+  lower : MaxwellVector3
+  upper : MaxwellVector3
+  lower_le_upper : lower ≤ upper
+
+/--
+The Poynting spatial slice at a fixed time:
+
+`Sₜ(x) = (1 / μ₀) • (E(t,x) × B(t,x))`.
+-/
+noncomputable def maxwellPoyntingSpatialSlice3
+    (μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (t : ℝ) :
+    MaxwellVector3 → MaxwellVector3 :=
+  fun x =>
+    (1 / μ₀) •
+      maxwellCross3
+        (F.electric (t, x))
+        (F.magnetic (t, x))
+
+/--
+The divergence of a spatial vector field, expressed directly through
+its Fréchet derivative on `ℝ³`.
+-/
+noncomputable def maxwellSpatialSliceDivergence3
+    (S : MaxwellVector3 → MaxwellVector3) :
+    MaxwellVector3 → ℝ :=
+  fun x =>
+    ∑ i : Fin 3,
+      (fderiv ℝ S x)
+        (Pi.single i 1)
+        i
+
+/--
+The signed outward flux through the six coordinate faces of a closed
+rectangular domain.
+-/
+noncomputable def maxwellRectangularBoundaryFlux3
+    (D : MaxwellRectangularDomain3)
+    (S : MaxwellVector3 → MaxwellVector3) :
+    ℝ :=
+  ∑ i : Fin 3,
+    (
+      (
+        ∫ y in
+          Set.Icc
+            (D.lower ∘ Fin.succAbove i)
+            (D.upper ∘ Fin.succAbove i),
+          S
+              (Fin.insertNth
+                i
+                (D.upper i)
+                y)
+              i
+      ) -
+      (
+        ∫ y in
+          Set.Icc
+            (D.lower ∘ Fin.succAbove i)
+            (D.upper ∘ Fin.succAbove i),
+          S
+              (Fin.insertNth
+                i
+                (D.lower i)
+                y)
+              i
+      )
+    )
+
+/--
+Divergence theorem on a closed rectangular domain in `ℝ³`.
+
+The volume integral of the Fréchet divergence equals the signed sum of
+the six coordinate-face flux integrals.
+-/
+theorem maxwellRectangularDivergenceTheorem3
+    (D : MaxwellRectangularDomain3)
+    (S : MaxwellVector3 → MaxwellVector3)
+    (hContinuous :
+      ContinuousOn
+        S
+        (Set.Icc D.lower D.upper))
+    (hDifferentiable :
+      ∀ x ∈
+        Set.pi
+          Set.univ
+          (fun i =>
+            Set.Ioo
+              (D.lower i)
+              (D.upper i)),
+        DifferentiableAt ℝ S x)
+    (hIntegrable :
+      IntegrableOn
+        (maxwellSpatialSliceDivergence3 S)
+        (Set.Icc D.lower D.upper)) :
+    (∫ x in Set.Icc D.lower D.upper,
+        maxwellSpatialSliceDivergence3 S x) =
+      maxwellRectangularBoundaryFlux3 D S := by
+  have hRaw :=
+    MeasureTheory.integral_divergence_of_hasFDerivAt_off_countable
+      D.lower
+      D.upper
+      D.lower_le_upper
+      S
+      (fun x => fderiv ℝ S x)
+      (∅ : Set MaxwellVector3)
+      (by simp)
+      hContinuous
+      (by
+        intro x hx
+        exact
+          (
+            hDifferentiable
+              x
+              hx.1
+          ).hasFDerivAt)
+      (by
+        simpa [maxwellSpatialSliceDivergence3] using
+          hIntegrable)
+
+  simpa [
+    maxwellSpatialSliceDivergence3,
+    maxwellRectangularBoundaryFlux3
+  ] using hRaw
+
+/--
+The rectangular-domain divergence theorem specialized to the
+electromagnetic Poynting spatial slice.
+-/
+theorem maxwellPoyntingRectangularDivergenceTheorem3
+    (μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (t : ℝ)
+    (D : MaxwellRectangularDomain3)
+    (hContinuous :
+      ContinuousOn
+        (maxwellPoyntingSpatialSlice3 μ₀ F t)
+        (Set.Icc D.lower D.upper))
+    (hDifferentiable :
+      ∀ x ∈
+        Set.pi
+          Set.univ
+          (fun i =>
+            Set.Ioo
+              (D.lower i)
+              (D.upper i)),
+        DifferentiableAt ℝ
+          (maxwellPoyntingSpatialSlice3 μ₀ F t)
+          x)
+    (hIntegrable :
+      IntegrableOn
+        (
+          maxwellSpatialSliceDivergence3
+            (maxwellPoyntingSpatialSlice3 μ₀ F t)
+        )
+        (Set.Icc D.lower D.upper)) :
+    (
+      ∫ x in Set.Icc D.lower D.upper,
+        maxwellSpatialSliceDivergence3
+          (maxwellPoyntingSpatialSlice3 μ₀ F t)
+          x
+    ) =
+      maxwellRectangularBoundaryFlux3
+        D
+        (maxwellPoyntingSpatialSlice3 μ₀ F t) := by
+  exact
+    maxwellRectangularDivergenceTheorem3
+      D
+      (maxwellPoyntingSpatialSlice3 μ₀ F t)
+      hContinuous
+      hDifferentiable
+      hIntegrable
+
+/-
+PROVED := rectangular_spatial_domain_carrier
+PROVED := electromagnetic_Poynting_spatial_slice
+PROVED := rectangular_boundary_flux_as_signed_face_integrals
+PROVED := divergence_theorem_instantiated_for_the_electromagnetic_domain
+BOUNDARY := ¬ spacetime_divergence_identified_with_spatial_slice_divergence
+BOUNDARY := ¬ spatially_integrated_local_Poynting_balance
 BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
