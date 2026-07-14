@@ -4727,4 +4727,43 @@ BOUNDARY := ¬ unconditional_integrated_rectangular_balance_packaged
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
+/--
+The fixed-time rectangular Poynting balances assembled as a theorem
+family indexed by time.
+-/
+theorem maxwellFixedTimeRectangularPoyntingBalance3_family_of_smooth_evolution
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (hEvolution :
+      ∀ τ x,
+        UncontractedMaxwellEvolutionAt3
+          ε₀ μ₀ F (τ, x)) :
+    ∀ τ : ℝ,
+      (∫ x in Set.Icc D.lower D.upper,
+          maxwellTimeDerivative3
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (τ, x)) +
+        maxwellRectangularBoundaryFlux3
+          D
+          (maxwellPoyntingSpatialSlice3 μ₀ F τ) =
+      -(∫ x in Set.Icc D.lower D.upper,
+          maxwellDot3
+            (F.current (τ, x))
+            (F.electric (τ, x))) := by
+  intro τ
+
+  exact
+    maxwellFixedTimeRectangularPoyntingBalance3_of_smooth_evolution
+      ε₀
+      μ₀
+      F
+      τ
+      D
+      (hEvolution τ)
+
+/-
+PROVED := fixed_time_rectangular_balance_family_from_smooth_Maxwell_evolution
+BOUNDARY := ¬ smooth_integrated_rectangular_balance_packaged
+-/
 end Chronos.Frontier
