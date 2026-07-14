@@ -806,4 +806,42 @@ BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
 
+
+/--
+Fréchet product rule evaluated in one spatial coordinate direction.
+-/
+theorem maxwellSpatialDerivative3_mul
+    (f g : MaxwellScalarField3)
+    (i : Fin 3)
+    (p : MaxwellSpacetime3)
+    (hf : DifferentiableAt ℝ f p)
+    (hg : DifferentiableAt ℝ g p) :
+    maxwellSpatialDerivative3
+        (fun q => f q * g q)
+        i
+        p =
+      f p * maxwellSpatialDerivative3 g i p +
+        g p * maxwellSpatialDerivative3 f i p := by
+  have h :=
+    congrArg
+      (fun L : MaxwellSpacetime3 →L[ℝ] ℝ =>
+        L (maxwellSpatialDirection3 i))
+      (fderiv_fun_mul hf hg)
+  simpa [
+    maxwellSpatialDerivative3,
+    smul_eq_mul
+  ] using h
+
+/-
+PROVED := spatial_Frechet_product_rule
+BOUNDARY := ¬ spatial_Frechet_subtraction_rule_proved
+BOUNDARY := ¬ divergence_cross_product_identity_from_fderiv_proved
+BOUNDARY := ¬ uncontracted_Maxwell_evolution_equations_formalized
+BOUNDARY := ¬ energy_density_time_derivative_from_fderiv_proved
+BOUNDARY := ¬ divergence_theorem_instantiated_for_the_electromagnetic_domain
+BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
 end Chronos.Frontier
