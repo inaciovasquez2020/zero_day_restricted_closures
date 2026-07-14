@@ -381,4 +381,182 @@ theorem vacuumPoyntingVector_norm_le_speed_mul_energyDensity
       ]
       field_simp [hμ₀ne, hcne]
 
+/--
+Algebraic kernel of the local Poynting identity.
+
+The inputs represent the scalar contractions
+
+* `eDotDtE = E · ∂ₜE`,
+* `bDotDtB = B · ∂ₜB`,
+* `eDotCurlB = E · curl B`,
+* `bDotCurlE = B · curl E`,
+* `jDotE = J · E`,
+* `divCross = div (E × B)`.
+
+`hFaraday`, `hAmpere`, and `hDivCross` are exactly the contracted
+Maxwell equations and the divergence-of-cross-product identity.
+-/
+theorem localPoyntingIdentity_algebraicKernel
+    (ε₀ μ₀
+      eDotDtE bDotDtB
+      eDotCurlB bDotCurlE
+      jDotE divCross : ℝ)
+    (hFaraday :
+      bDotDtB = -bDotCurlE)
+    (hAmpere :
+      ε₀ * eDotDtE =
+        (1 / μ₀) * eDotCurlB - jDotE)
+    (hDivCross :
+      divCross =
+        bDotCurlE - eDotCurlB) :
+    ε₀ * eDotDtE +
+        (1 / μ₀) * bDotDtB +
+        (1 / μ₀) * divCross =
+      -jDotE := by
+  rw [hFaraday, hDivCross]
+  linarith
+
+/--
+Composition of the time fundamental theorem, the spatial divergence
+theorem, and the space-time integral of the local Poynting identity.
+
+The quantities represent
+
+* `U₁ - U₀`: change of stored electromagnetic energy,
+* `timeEnergyDerivative`: time integral of the spatial energy derivative,
+* `volumeDivergence`: space-time integral of `div S`,
+* `boundaryFlux`: time-integrated outward boundary flux,
+* `work`: space-time integral of `J · E`.
+-/
+theorem integratedSpacetimeEnergyBalance_from_FTC_and_divergence
+    (U₀ U₁
+      timeEnergyDerivative
+      volumeDivergence
+      boundaryFlux
+      work : ℝ)
+    (hFTC :
+      U₁ - U₀ =
+        timeEnergyDerivative)
+    (hDivergence :
+      volumeDivergence =
+        boundaryFlux)
+    (hIntegratedLocal :
+      timeEnergyDerivative +
+          volumeDivergence =
+        -work) :
+    U₁ - U₀ + boundaryFlux =
+      -work := by
+  linarith
+
+/--
+Algebraic equality criterion for the three-dimensional cross-product
+bound.
+
+Under the substitution
+
+* `x = ‖E‖`,
+* `y = c ‖B‖`,
+* `r = c ‖E × B‖`,
+* `d = c |E · B|`,
+
+`hLagrange` is the scaled Lagrange identity.
+-/
+theorem crossMagnitudeEquality_iff_dotZero_algebraic
+    (x y r d : ℝ)
+    (hx : 0 ≤ x)
+    (hy : 0 ≤ y)
+    (hr : 0 ≤ r)
+    (hLagrange :
+      r ^ 2 + d ^ 2 =
+        x ^ 2 * y ^ 2) :
+    r = x * y ↔ d = 0 := by
+  constructor
+  · intro hrxy
+    have hd2 : d ^ 2 = 0 := by
+      rw [hrxy] at hLagrange
+      nlinarith
+    have hdmul : d * d = 0 := by
+      simpa [pow_two] using hd2
+    rcases mul_eq_zero.mp hdmul with hd0 | hd0
+    · exact hd0
+    · exact hd0
+  · intro hd0
+    have hxy_nonneg :
+        0 ≤ x * y :=
+      mul_nonneg hx hy
+    have hsquares :
+        r ^ 2 = (x * y) ^ 2 := by
+      calc
+        r ^ 2 = x ^ 2 * y ^ 2 := by
+          rw [hd0] at hLagrange
+          nlinarith
+        _ = (x * y) ^ 2 := by
+          ring
+    rcases
+        (sq_eq_sq_iff_eq_or_eq_neg.mp hsquares)
+      with h | h
+    · exact h
+    · nlinarith
+
+/--
+Both directions of the null electromagnetic equality characterization.
+
+With
+
+* `x = ‖E‖`,
+* `y = c ‖B‖`,
+* `r = c ‖E × B‖`,
+* `d = c |E · B|`,
+
+the equation `2 * r = x² + y²` is the normalized form of
+`‖S‖ = c * u`.
+
+The conclusion `d = 0 ∧ x = y` is exactly
+
+`E · B = 0 ∧ ‖E‖ = c ‖B‖`.
+-/
+theorem nullElectromagneticEquality_algebraic_iff
+    (x y r d : ℝ)
+    (hx : 0 ≤ x)
+    (hy : 0 ≤ y)
+    (hr : 0 ≤ r)
+    (hCrossBound :
+      r ≤ x * y)
+    (hLagrange :
+      r ^ 2 + d ^ 2 =
+        x ^ 2 * y ^ 2) :
+    2 * r = x ^ 2 + y ^ 2 ↔
+      d = 0 ∧ x = y := by
+  have hCrossEquality :
+      r = x * y ↔ d = 0 :=
+    crossMagnitudeEquality_iff_dotZero_algebraic
+      x y r d hx hy hr hLagrange
+  constructor
+  · intro hEndpoint
+    have hAMGM :
+        2 * x * y ≤ x ^ 2 + y ^ 2 := by
+      nlinarith [sq_nonneg (x - y)]
+    have hrxy :
+        r = x * y := by
+      nlinarith
+    have hxy :
+        x = y := by
+      nlinarith [sq_nonneg (x - y)]
+    exact
+      ⟨hCrossEquality.mp hrxy, hxy⟩
+  · rintro ⟨hd0, hxy⟩
+    have hrxy :
+        r = x * y :=
+      hCrossEquality.mpr hd0
+    rw [hrxy, hxy]
+    ring
+
+/-
+BOUNDARY := ¬ field_level_Maxwell_differential_operators_formalized
+BOUNDARY := ¬ divergence_theorem_instantiated_for_the_electromagnetic_domain
+BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
 end Chronos.Frontier
