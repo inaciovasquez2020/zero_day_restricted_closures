@@ -5440,4 +5440,48 @@ theorem maxwellTotalElectromagneticEnergy3_conserved_of_sourceFree_facewiseZeroN
       hCurrentZero
       hBoundaryFluxZero
 
+
+/--
+A smooth Maxwell field on a rectangular domain together with the
+three hypotheses required for isolated source-free energy
+conservation:
+
+* Maxwell evolution;
+* vanishing electric current;
+* vanishing outward-normal Poynting flow on every boundary face.
+-/
+structure IsolatedSourceFreeMaxwellSolution3
+    (ε₀ μ₀ : ℝ)
+    (D : MaxwellRectangularDomain3) where
+  maxwellField : SmoothMaxwellField3
+  evolution :
+    ∀ (τ : ℝ) (x : MaxwellVector3),
+      UncontractedMaxwellEvolutionAt3
+        ε₀ μ₀ maxwellField (τ, x)
+  currentZero :
+    ∀ p : MaxwellSpacetime3,
+      maxwellField.current p = 0
+  upperFaceZeroNormalFlux :
+    ∀ (τ : ℝ) (i : Fin 3) (y : Fin 2 → ℝ),
+      y ∈
+          Set.Icc
+            (D.lower ∘ Fin.succAbove i)
+            (D.upper ∘ Fin.succAbove i) →
+        maxwellDot3
+            (maxwellPoyntingSpatialSlice3 μ₀ maxwellField τ
+              (Fin.insertNth i (D.upper i) y))
+            (maxwellRectangularFaceOutwardNormal3 (i, true)) =
+          0
+  lowerFaceZeroNormalFlux :
+    ∀ (τ : ℝ) (i : Fin 3) (y : Fin 2 → ℝ),
+      y ∈
+          Set.Icc
+            (D.lower ∘ Fin.succAbove i)
+            (D.upper ∘ Fin.succAbove i) →
+        maxwellDot3
+            (maxwellPoyntingSpatialSlice3 μ₀ maxwellField τ
+              (Fin.insertNth i (D.lower i) y))
+            (maxwellRectangularFaceOutwardNormal3 (i, false)) =
+          0
+
 end Chronos.Frontier
