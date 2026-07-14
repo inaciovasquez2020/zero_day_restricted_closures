@@ -5001,4 +5001,53 @@ BOUNDARY := ¬ isolation_derived_without_assumption
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
+/--
+For a smooth source-free Maxwell field with pointwise zero outward
+rectangular boundary flux, total electromagnetic energy has the same
+value at every pair of times.
+-/
+theorem maxwellTotalElectromagneticEnergy3_constant_of_sourceFree_zeroBoundaryFlux
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (hEvolution :
+      ∀ τ x,
+        UncontractedMaxwellEvolutionAt3
+          ε₀ μ₀ F (τ, x))
+    (hCurrentZero :
+      ∀ p : MaxwellSpacetime3,
+        F.current p = 0)
+    (hBoundaryFluxZero :
+      ∀ τ : ℝ,
+        maxwellRectangularBoundaryFlux3
+          D
+          (maxwellPoyntingSpatialSlice3 μ₀ F τ) =
+        0) :
+    ∀ t₀ t₁ : ℝ,
+      maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D t₀ =
+        maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D t₁ := by
+  intro t₀ t₁
+
+  exact
+    (maxwellTotalElectromagneticEnergy3_conserved_of_sourceFree_zeroBoundaryFlux
+      ε₀
+      μ₀
+      F
+      D
+      t₀
+      t₁
+      hEvolution
+      hCurrentZero
+      hBoundaryFluxZero).symm
+
+/-
+PROVED := total_electromagnetic_energy_pairwise_constant
+PROVED := arbitrary_time_pair_energy_equality_packaged
+BOUNDARY := ¬ pointwise_zero_boundary_flux_derived_without_assumption
+BOUNDARY := ¬ isolation_derived_without_assumption
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
 end Chronos.Frontier
