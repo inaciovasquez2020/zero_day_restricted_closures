@@ -3816,4 +3816,138 @@ BOUNDARY := ¬ time_interval_integrability_derived_from_smoothness
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
+/--
+For a `SmoothMaxwellField3`, the Fréchet time derivative of the
+electromagnetic energy density is continuous on spacetime.
+-/
+theorem maxwellEnergyDensity3_timeDerivative_continuous
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3) :
+    Continuous
+      (maxwellTimeDerivative3
+        (maxwellEnergyDensity3 ε₀ μ₀ F)) := by
+  have hElectric :
+      ∀ i : Fin 3,
+        ContDiff ℝ 1
+          (fun p : MaxwellSpacetime3 =>
+            F.electric p i) :=
+    fun i =>
+      (contDiff_pi.mp F.electric_contDiff) i
+
+  have hMagnetic :
+      ∀ i : Fin 3,
+        ContDiff ℝ 1
+          (fun p : MaxwellSpacetime3 =>
+            F.magnetic p i) :=
+    fun i =>
+      (contDiff_pi.mp F.magnetic_contDiff) i
+
+  have hElectricDotExpanded :
+      ContDiff ℝ 1
+        (fun p : MaxwellSpacetime3 =>
+          F.electric p (0 : Fin 3) *
+              F.electric p (0 : Fin 3) +
+            (F.electric p (1 : Fin 3) *
+                F.electric p (1 : Fin 3) +
+              F.electric p (2 : Fin 3) *
+                F.electric p (2 : Fin 3))) :=
+    ((hElectric (0 : Fin 3)).mul
+        (hElectric (0 : Fin 3))).add
+      (((hElectric (1 : Fin 3)).mul
+          (hElectric (1 : Fin 3))).add
+        ((hElectric (2 : Fin 3)).mul
+          (hElectric (2 : Fin 3))))
+
+  have hMagneticDotExpanded :
+      ContDiff ℝ 1
+        (fun p : MaxwellSpacetime3 =>
+          F.magnetic p (0 : Fin 3) *
+              F.magnetic p (0 : Fin 3) +
+            (F.magnetic p (1 : Fin 3) *
+                F.magnetic p (1 : Fin 3) +
+              F.magnetic p (2 : Fin 3) *
+                F.magnetic p (2 : Fin 3))) :=
+    ((hMagnetic (0 : Fin 3)).mul
+        (hMagnetic (0 : Fin 3))).add
+      (((hMagnetic (1 : Fin 3)).mul
+          (hMagnetic (1 : Fin 3))).add
+        ((hMagnetic (2 : Fin 3)).mul
+          (hMagnetic (2 : Fin 3))))
+
+  have hElectricDot :
+      ContDiff ℝ 1
+        (fun p : MaxwellSpacetime3 =>
+          maxwellDot3
+            (F.electric p)
+            (F.electric p)) := by
+    simpa [
+      maxwellDot3,
+      Fin.sum_univ_succ
+    ] using hElectricDotExpanded
+
+  have hMagneticDot :
+      ContDiff ℝ 1
+        (fun p : MaxwellSpacetime3 =>
+          maxwellDot3
+            (F.magnetic p)
+            (F.magnetic p)) := by
+    simpa [
+      maxwellDot3,
+      Fin.sum_univ_succ
+    ] using hMagneticDotExpanded
+
+  have hElectricScale :
+      ContDiff ℝ 1
+        (fun _ : MaxwellSpacetime3 =>
+          ε₀ / 2) :=
+    contDiff_const
+
+  have hMagneticScale :
+      ContDiff ℝ 1
+        (fun _ : MaxwellSpacetime3 =>
+          1 / (2 * μ₀)) :=
+    contDiff_const
+
+  have hEnergy :
+      ContDiff ℝ 1
+        (maxwellEnergyDensity3 ε₀ μ₀ F) := by
+    change
+      ContDiff ℝ 1
+        (fun p : MaxwellSpacetime3 =>
+          (ε₀ / 2) *
+              maxwellDot3
+                (F.electric p)
+                (F.electric p) +
+            (1 / (2 * μ₀)) *
+              maxwellDot3
+                (F.magnetic p)
+                (F.magnetic p))
+
+    exact
+      (hElectricScale.mul hElectricDot).add
+        (hMagneticScale.mul hMagneticDot)
+
+  have hPair :
+      Continuous
+        (fun p : MaxwellSpacetime3 =>
+          (p, maxwellTimeDirection3)) :=
+    continuous_id.prodMk continuous_const
+
+  have hDerivative :
+      Continuous
+        (fun p : MaxwellSpacetime3 =>
+          (fderiv ℝ
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            p)
+            maxwellTimeDirection3) :=
+    (hEnergy.continuous_fderiv_apply
+      (by norm_num)).comp hPair
+
+  simpa [maxwellTimeDerivative3] using hDerivative
+
+/-
+PROVED := electromagnetic_energy_density_time_derivative_continuous
+BOUNDARY := ¬ time_derivative_integrability_derived_on_rectangular_domain
+BOUNDARY := ¬ time_interval_integrability_derived_from_smoothness
+-/
 end Chronos.Frontier
