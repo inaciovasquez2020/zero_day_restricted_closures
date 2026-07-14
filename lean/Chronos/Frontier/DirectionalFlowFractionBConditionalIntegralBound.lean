@@ -1364,7 +1364,248 @@ theorem localPoyntingIdentity_fieldLevel3
 /-
 PROVED := contracted_Maxwell_structure_uses_derived_divergence_identity
 PROVED := local_Poynting_identity_uses_six_component_differentiability_hypotheses
-BOUNDARY := ¬ uncontracted_Maxwell_evolution_equations_formalized
+PROVED := uncontracted_Maxwell_evolution_equations_formalized
+BOUNDARY := ¬ energy_density_time_derivative_from_fderiv_proved
+BOUNDARY := ¬ divergence_theorem_instantiated_for_the_electromagnetic_domain
+BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
+
+/--
+Uncontracted Faraday and Ampère–Maxwell evolution equations at one
+space-time point.
+
+The Ampère–Maxwell equation is written in the componentwise scaled form
+
+`ε₀ ∂ₜE = (1 / μ₀) curl B - J`,
+
+which is algebraically equivalent to the usual SI equation whenever
+`ε₀ ≠ 0`.
+-/
+structure UncontractedMaxwellEvolutionAt3
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (p : MaxwellSpacetime3) :
+    Prop where
+  faraday :
+    maxwellTimeDerivative3 F.magnetic p =
+      fun i =>
+        -maxwellCurl3 F.electric p i
+  ampereMaxwell :
+    (fun i =>
+      ε₀ *
+        maxwellTimeDerivative3
+          F.electric
+          p
+          i) =
+      (fun i =>
+        (1 / μ₀) *
+            maxwellCurl3
+              F.magnetic
+              p
+              i -
+          F.current p i)
+
+/--
+The contracted Faraday scalar equation follows from the uncontracted
+vector equation by taking the dot product with `B`.
+-/
+theorem faradayContracted_of_uncontracted
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (p : MaxwellSpacetime3)
+    (h :
+      UncontractedMaxwellEvolutionAt3
+        ε₀ μ₀ F p) :
+    maxwellDot3
+        (F.magnetic p)
+        (maxwellTimeDerivative3 F.magnetic p) =
+      -maxwellDot3
+        (F.magnetic p)
+        (maxwellCurl3 F.electric p) := by
+  have hDot :=
+    congrArg
+      (fun v : MaxwellVector3 =>
+        maxwellDot3
+          (F.magnetic p)
+          v)
+      h.faraday
+  simpa [
+    maxwellDot3,
+    Fin.sum_univ_succ
+  ] using hDot
+
+/--
+The contracted Ampère–Maxwell scalar equation follows from the
+uncontracted vector equation by taking the dot product with `E`.
+-/
+theorem ampereMaxwellContracted_of_uncontracted
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (p : MaxwellSpacetime3)
+    (h :
+      UncontractedMaxwellEvolutionAt3
+        ε₀ μ₀ F p) :
+    ε₀ *
+        maxwellDot3
+          (F.electric p)
+          (maxwellTimeDerivative3 F.electric p) =
+      (1 / μ₀) *
+          maxwellDot3
+            (F.electric p)
+            (maxwellCurl3 F.magnetic p) -
+        maxwellDot3
+          (F.current p)
+          (F.electric p) := by
+  have hDot :=
+    congrArg
+      (fun v : MaxwellVector3 =>
+        maxwellDot3
+          (F.electric p)
+          v)
+      h.ampereMaxwell
+  simp [
+    maxwellDot3,
+    Fin.sum_univ_succ
+  ] at hDot ⊢
+  ring_nf at hDot ⊢
+  exact hDot
+
+/--
+Construction of the contracted local Poynting hypotheses from the
+uncontracted Maxwell equations and the six component differentiability
+hypotheses.
+-/
+theorem contractedMaxwellPoyntingAt3_of_uncontracted
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (p : MaxwellSpacetime3)
+    (hEvolution :
+      UncontractedMaxwellEvolutionAt3
+        ε₀ μ₀ F p)
+    (hE0 :
+      DifferentiableAt ℝ
+        (fun q => F.electric q (0 : Fin 3))
+        p)
+    (hE1 :
+      DifferentiableAt ℝ
+        (fun q => F.electric q (1 : Fin 3))
+        p)
+    (hE2 :
+      DifferentiableAt ℝ
+        (fun q => F.electric q (2 : Fin 3))
+        p)
+    (hB0 :
+      DifferentiableAt ℝ
+        (fun q => F.magnetic q (0 : Fin 3))
+        p)
+    (hB1 :
+      DifferentiableAt ℝ
+        (fun q => F.magnetic q (1 : Fin 3))
+        p)
+    (hB2 :
+      DifferentiableAt ℝ
+        (fun q => F.magnetic q (2 : Fin 3))
+        p) :
+    ContractedMaxwellPoyntingAt3
+      ε₀ μ₀ F p := by
+  refine
+    {
+      faraday_contracted :=
+        faradayContracted_of_uncontracted
+          ε₀ μ₀ F p hEvolution
+      ampereMaxwell_contracted :=
+        ampereMaxwellContracted_of_uncontracted
+          ε₀ μ₀ F p hEvolution
+      electric_component_zero_differentiable := hE0
+      electric_component_one_differentiable := hE1
+      electric_component_two_differentiable := hE2
+      magnetic_component_zero_differentiable := hB0
+      magnetic_component_one_differentiable := hB1
+      magnetic_component_two_differentiable := hB2
+    }
+
+/--
+The local field-level Poynting identity derived from the uncontracted
+Faraday and Ampère–Maxwell equations.
+-/
+theorem localPoyntingIdentity_fieldLevel3_of_uncontracted
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (p : MaxwellSpacetime3)
+    (hEvolution :
+      UncontractedMaxwellEvolutionAt3
+        ε₀ μ₀ F p)
+    (hE0 :
+      DifferentiableAt ℝ
+        (fun q => F.electric q (0 : Fin 3))
+        p)
+    (hE1 :
+      DifferentiableAt ℝ
+        (fun q => F.electric q (1 : Fin 3))
+        p)
+    (hE2 :
+      DifferentiableAt ℝ
+        (fun q => F.electric q (2 : Fin 3))
+        p)
+    (hB0 :
+      DifferentiableAt ℝ
+        (fun q => F.magnetic q (0 : Fin 3))
+        p)
+    (hB1 :
+      DifferentiableAt ℝ
+        (fun q => F.magnetic q (1 : Fin 3))
+        p)
+    (hB2 :
+      DifferentiableAt ℝ
+        (fun q => F.magnetic q (2 : Fin 3))
+        p) :
+    ε₀ *
+          maxwellDot3
+            (F.electric p)
+            (maxwellTimeDerivative3 F.electric p) +
+        (1 / μ₀) *
+          maxwellDot3
+            (F.magnetic p)
+            (maxwellTimeDerivative3 F.magnetic p) +
+        (1 / μ₀) *
+          maxwellDivergence3
+            (fun q =>
+              maxwellCross3
+                (F.electric q)
+                (F.magnetic q))
+            p =
+      -maxwellDot3
+        (F.current p)
+        (F.electric p) := by
+  exact
+    localPoyntingIdentity_fieldLevel3
+      ε₀
+      μ₀
+      F
+      p
+      (
+        contractedMaxwellPoyntingAt3_of_uncontracted
+          ε₀
+          μ₀
+          F
+          p
+          hEvolution
+          hE0
+          hE1
+          hE2
+          hB0
+          hB1
+          hB2
+      )
+
+/-
+PROVED := uncontracted_Maxwell_evolution_equations_formalized
+PROVED := contracted_Faraday_derived_from_uncontracted_equation
+PROVED := contracted_Ampere_Maxwell_derived_from_uncontracted_equation
+PROVED := local_Poynting_identity_derived_from_uncontracted_Maxwell_equations
 BOUNDARY := ¬ energy_density_time_derivative_from_fderiv_proved
 BOUNDARY := ¬ divergence_theorem_instantiated_for_the_electromagnetic_domain
 BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
