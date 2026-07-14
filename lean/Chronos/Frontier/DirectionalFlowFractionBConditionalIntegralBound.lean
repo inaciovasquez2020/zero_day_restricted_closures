@@ -5379,4 +5379,65 @@ theorem maxwellRectangularBoundaryFlux3_eq_zero_of_facewise_zero_normalFlux
   rw [hUpperIntegral i, hLowerIntegral i]
   norm_num
 
+
+/--
+A smooth source-free Maxwell field has equal total electromagnetic
+energy at arbitrary endpoint times when its Poynting field has zero
+outward-normal component on every point of all six rectangular faces.
+-/
+theorem maxwellTotalElectromagneticEnergy3_conserved_of_sourceFree_facewiseZeroNormalFlux
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t₀ t₁ : ℝ)
+    (hEvolution :
+      ∀ τ x,
+        UncontractedMaxwellEvolutionAt3 ε₀ μ₀ F (τ, x))
+    (hCurrentZero :
+      ∀ p : MaxwellSpacetime3,
+        F.current p = 0)
+    (hUpper :
+      ∀ (τ : ℝ) (i : Fin 3) (y : Fin 2 → ℝ),
+        y ∈
+            Set.Icc
+              (D.lower ∘ Fin.succAbove i)
+              (D.upper ∘ Fin.succAbove i) →
+          maxwellDot3
+              (maxwellPoyntingSpatialSlice3 μ₀ F τ
+                (Fin.insertNth i (D.upper i) y))
+              (maxwellRectangularFaceOutwardNormal3 (i, true)) =
+            0)
+    (hLower :
+      ∀ (τ : ℝ) (i : Fin 3) (y : Fin 2 → ℝ),
+        y ∈
+            Set.Icc
+              (D.lower ∘ Fin.succAbove i)
+              (D.upper ∘ Fin.succAbove i) →
+          maxwellDot3
+              (maxwellPoyntingSpatialSlice3 μ₀ F τ
+                (Fin.insertNth i (D.lower i) y))
+              (maxwellRectangularFaceOutwardNormal3 (i, false)) =
+            0) :
+    maxwellTotalElectromagneticEnergy3 ε₀ μ₀ F D t₁ =
+      maxwellTotalElectromagneticEnergy3 ε₀ μ₀ F D t₀ := by
+  have hBoundaryFluxZero :
+      ∀ τ : ℝ,
+        maxwellRectangularBoundaryFlux3 D
+            (maxwellPoyntingSpatialSlice3 μ₀ F τ) =
+          0 := by
+    intro τ
+    exact
+      maxwellRectangularBoundaryFlux3_eq_zero_of_facewise_zero_normalFlux
+        D
+        (maxwellPoyntingSpatialSlice3 μ₀ F τ)
+        (hUpper τ)
+        (hLower τ)
+
+  exact
+    maxwellTotalElectromagneticEnergy3_conserved_of_sourceFree_zeroBoundaryFlux
+      ε₀ μ₀ F D t₀ t₁
+      hEvolution
+      hCurrentZero
+      hBoundaryFluxZero
+
 end Chronos.Frontier
