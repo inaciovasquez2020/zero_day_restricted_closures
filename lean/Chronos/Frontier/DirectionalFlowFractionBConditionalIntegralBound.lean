@@ -3714,4 +3714,28 @@ theorem maxwellPoyntingSpatialSliceDivergence3_continuous
       (maxwellPoyntingSpatialSlice3 μ₀ F t)
       (maxwellPoyntingSpatialSlice3_contDiff
         μ₀ F t)
+/--
+The continuous spatial divergence of the fixed-time Poynting slice is
+integrable over every closed rectangular domain.
+-/
+theorem maxwellPoyntingSpatialSliceDivergence3_integrableOn_rectangularDomain
+    (μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (t : ℝ)
+    (D : MaxwellRectangularDomain3) :
+    IntegrableOn
+      (maxwellSpatialSliceDivergence3
+        (maxwellPoyntingSpatialSlice3 μ₀ F t))
+      (Set.Icc D.lower D.upper) := by
+  exact
+    (maxwellPoyntingSpatialSliceDivergence3_continuous
+      μ₀ F t).integrableOn_Icc
+
+/-
+PROVED := Poynting_spatial_divergence_integrable_on_every_rectangular_domain
+BOUNDARY := ¬ time_derivative_integrability_derived_on_rectangular_domain
+BOUNDARY := ¬ fixed_time_rectangular_balance_packaged_from_smoothness
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
 end Chronos.Frontier
