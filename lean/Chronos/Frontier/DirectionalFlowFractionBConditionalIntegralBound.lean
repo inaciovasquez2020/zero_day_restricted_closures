@@ -1613,4 +1613,36 @@ BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
 
+
+/--
+The time derivative of one component of a differentiable Pi-valued
+field is the corresponding component of its vector-valued derivative.
+-/
+theorem maxwellTimeDerivative3_apply
+    (V : MaxwellVectorField3)
+    (p : MaxwellSpacetime3)
+    (hV : DifferentiableAt ℝ V p)
+    (i : Fin 3) :
+    maxwellTimeDerivative3
+        (fun q => V q i)
+        p =
+      maxwellTimeDerivative3 V p i := by
+  have hi :=
+    (hasFDerivAt_pi'.mp hV.hasFDerivAt) i
+  have h :=
+    congrArg
+      (fun L : MaxwellSpacetime3 →L[ℝ] ℝ =>
+        L maxwellTimeDirection3)
+      hi.fderiv
+  simpa [maxwellTimeDerivative3] using h
+
+/-
+PROVED := time_derivative_of_vector_component
+BOUNDARY := ¬ energy_density_time_derivative_from_fderiv_proved
+BOUNDARY := ¬ divergence_theorem_instantiated_for_the_electromagnetic_domain
+BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
 end Chronos.Frontier
