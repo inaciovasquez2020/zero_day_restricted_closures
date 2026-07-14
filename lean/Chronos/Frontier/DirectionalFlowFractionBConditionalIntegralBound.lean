@@ -3738,4 +3738,82 @@ BOUNDARY := ¬ fixed_time_rectangular_balance_packaged_from_smoothness
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
+/--
+For a smooth Maxwell field, the fixed-time rectangular Poynting
+balance follows without separate component-regularity, continuity,
+differentiability, or divergence-integrability premises.
+-/
+theorem maxwellFixedTimeRectangularPoyntingBalance3_of_smooth
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (t : ℝ)
+    (D : MaxwellRectangularDomain3)
+    (hEvolution :
+      ∀ x : MaxwellVector3,
+        UncontractedMaxwellEvolutionAt3
+          ε₀ μ₀ F (t, x))
+    (hTimeIntegrable :
+      IntegrableOn
+        (fun x =>
+          maxwellTimeDerivative3
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (t, x))
+        (Set.Icc D.lower D.upper)) :
+    (∫ x in Set.Icc D.lower D.upper,
+        maxwellTimeDerivative3
+          (maxwellEnergyDensity3 ε₀ μ₀ F)
+          (t, x)) +
+      maxwellRectangularBoundaryFlux3
+        D
+        (maxwellPoyntingSpatialSlice3 μ₀ F t) =
+    -(∫ x in Set.Icc D.lower D.upper,
+        maxwellDot3
+          (F.current (t, x))
+          (F.electric (t, x))) := by
+  have hDivergenceIntegrable :=
+    maxwellPoyntingSpatialSliceDivergence3_integrableOn_rectangularDomain
+      μ₀
+      F
+      t
+      D
+
+  have hIntegratedLocal :=
+    maxwellFixedTimeSpatiallyIntegratedLocalPoyntingIdentity3_of_smooth
+      ε₀
+      μ₀
+      F
+      t
+      (Set.Icc D.lower D.upper)
+      hEvolution
+      hTimeIntegrable
+      hDivergenceIntegrable
+
+  have hPoyntingDifferentiable :=
+    maxwellPoyntingSpatialSlice3_differentiable
+      μ₀
+      F
+      t
+
+  exact
+    maxwellFixedTimeRectangularPoyntingBalance3
+      ε₀
+      μ₀
+      F
+      t
+      D
+      hIntegratedLocal
+      hPoyntingDifferentiable.continuous.continuousOn
+      (fun x _ => hPoyntingDifferentiable x)
+      hDivergenceIntegrable
+
+/-
+PROVED := fixed_time_rectangular_Poynting_balance_packaged_from_smoothness
+PROVED := spatial_continuity_premise_eliminated
+PROVED := spatial_differentiability_premise_eliminated
+PROVED := divergence_integrability_premise_eliminated
+BOUNDARY := ¬ time_derivative_integrability_derived_on_rectangular_domain
+BOUNDARY := ¬ time_interval_integrability_derived_from_smoothness
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
 end Chronos.Frontier
