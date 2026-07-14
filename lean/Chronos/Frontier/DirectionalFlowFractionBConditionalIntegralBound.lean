@@ -693,11 +693,10 @@ structure SmoothMaxwellField3 where
     ContDiff ℝ 1 current
 
 /--
-Field-level contracted hypotheses needed by the algebraic local Poynting
-kernel at one space-time point.
+Field-level contracted Maxwell hypotheses at one space-time point.
 
-The divergence-of-cross-product identity remains an explicit hypothesis
-until its coordinate product-rule proof is formalized.
+The divergence-of-cross-product identity is not stored as a hypothesis.
+It is derived from the six component differentiability hypotheses.
 -/
 structure ContractedMaxwellPoyntingAt3
     (ε₀ μ₀ : ℝ)
@@ -723,78 +722,31 @@ structure ContractedMaxwellPoyntingAt3
         maxwellDot3
           (F.current p)
           (F.electric p)
-  divergence_cross :
-    maxwellDivergence3
-        (fun q =>
-          maxwellCross3
-            (F.electric q)
-            (F.magnetic q))
-        p =
-      maxwellDot3
-          (F.magnetic p)
-          (maxwellCurl3 F.electric p) -
-        maxwellDot3
-          (F.electric p)
-          (maxwellCurl3 F.magnetic p)
+  electric_component_zero_differentiable :
+    DifferentiableAt ℝ
+      (fun q => F.electric q (0 : Fin 3))
+      p
+  electric_component_one_differentiable :
+    DifferentiableAt ℝ
+      (fun q => F.electric q (1 : Fin 3))
+      p
+  electric_component_two_differentiable :
+    DifferentiableAt ℝ
+      (fun q => F.electric q (2 : Fin 3))
+      p
+  magnetic_component_zero_differentiable :
+    DifferentiableAt ℝ
+      (fun q => F.magnetic q (0 : Fin 3))
+      p
+  magnetic_component_one_differentiable :
+    DifferentiableAt ℝ
+      (fun q => F.magnetic q (1 : Fin 3))
+      p
+  magnetic_component_two_differentiable :
+    DifferentiableAt ℝ
+      (fun q => F.magnetic q (2 : Fin 3))
+      p
 
-/--
-The scalar algebraic Poynting kernel instantiated with field-level
-Fréchet time derivatives, spatial curl, divergence, dot product, and
-cross product.
--/
-theorem localPoyntingIdentity_fieldLevel3
-    (ε₀ μ₀ : ℝ)
-    (F : SmoothMaxwellField3)
-    (p : MaxwellSpacetime3)
-    (h :
-      ContractedMaxwellPoyntingAt3
-        ε₀ μ₀ F p) :
-    ε₀ *
-          maxwellDot3
-            (F.electric p)
-            (maxwellTimeDerivative3 F.electric p) +
-        (1 / μ₀) *
-          maxwellDot3
-            (F.magnetic p)
-            (maxwellTimeDerivative3 F.magnetic p) +
-        (1 / μ₀) *
-          maxwellDivergence3
-            (fun q =>
-              maxwellCross3
-                (F.electric q)
-                (F.magnetic q))
-            p =
-      -maxwellDot3
-        (F.current p)
-        (F.electric p) := by
-  exact
-    localPoyntingIdentity_algebraicKernel
-      ε₀
-      μ₀
-      (maxwellDot3
-        (F.electric p)
-        (maxwellTimeDerivative3 F.electric p))
-      (maxwellDot3
-        (F.magnetic p)
-        (maxwellTimeDerivative3 F.magnetic p))
-      (maxwellDot3
-        (F.electric p)
-        (maxwellCurl3 F.magnetic p))
-      (maxwellDot3
-        (F.magnetic p)
-        (maxwellCurl3 F.electric p))
-      (maxwellDot3
-        (F.current p)
-        (F.electric p))
-      (maxwellDivergence3
-        (fun q =>
-          maxwellCross3
-            (F.electric q)
-            (F.magnetic q))
-        p)
-      h.faraday_contracted
-      h.ampereMaxwell_contracted
-      h.divergence_cross
 
 /-
 BOUNDARY := ¬ uncontracted_Maxwell_evolution_equations_formalized
@@ -1321,7 +1273,101 @@ theorem maxwellDivergence3_cross_eq_dot_curl_sub_dot_curl
 
 /-
 PROVED := divergence_cross_product_identity_from_fderiv
-BOUNDARY := ¬ contracted_Maxwell_structure_uses_derived_divergence_identity
+PROVED := contracted_Maxwell_structure_uses_derived_divergence_identity
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
+
+/--
+The local field-level Poynting identity with the cross-product divergence
+derived from the six component differentiability hypotheses.
+-/
+theorem localPoyntingIdentity_fieldLevel3
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (p : MaxwellSpacetime3)
+    (h :
+      ContractedMaxwellPoyntingAt3
+        ε₀ μ₀ F p) :
+    ε₀ *
+          maxwellDot3
+            (F.electric p)
+            (maxwellTimeDerivative3 F.electric p) +
+        (1 / μ₀) *
+          maxwellDot3
+            (F.magnetic p)
+            (maxwellTimeDerivative3 F.magnetic p) +
+        (1 / μ₀) *
+          maxwellDivergence3
+            (fun q =>
+              maxwellCross3
+                (F.electric q)
+                (F.magnetic q))
+            p =
+      -maxwellDot3
+        (F.current p)
+        (F.electric p) := by
+  have hDivergenceCross :
+      maxwellDivergence3
+          (fun q =>
+            maxwellCross3
+              (F.electric q)
+              (F.magnetic q))
+          p =
+        maxwellDot3
+            (F.magnetic p)
+            (maxwellCurl3 F.electric p) -
+          maxwellDot3
+            (F.electric p)
+            (maxwellCurl3 F.magnetic p) :=
+    maxwellDivergence3_cross_eq_dot_curl_sub_dot_curl
+      F.electric
+      F.magnetic
+      p
+      h.electric_component_zero_differentiable
+      h.electric_component_one_differentiable
+      h.electric_component_two_differentiable
+      h.magnetic_component_zero_differentiable
+      h.magnetic_component_one_differentiable
+      h.magnetic_component_two_differentiable
+
+  exact
+    localPoyntingIdentity_algebraicKernel
+      ε₀
+      μ₀
+      (maxwellDot3
+        (F.electric p)
+        (maxwellTimeDerivative3 F.electric p))
+      (maxwellDot3
+        (F.magnetic p)
+        (maxwellTimeDerivative3 F.magnetic p))
+      (maxwellDot3
+        (F.electric p)
+        (maxwellCurl3 F.magnetic p))
+      (maxwellDot3
+        (F.magnetic p)
+        (maxwellCurl3 F.electric p))
+      (maxwellDot3
+        (F.current p)
+        (F.electric p))
+      (maxwellDivergence3
+        (fun q =>
+          maxwellCross3
+            (F.electric q)
+            (F.magnetic q))
+        p)
+      h.faraday_contracted
+      h.ampereMaxwell_contracted
+      hDivergenceCross
+
+/-
+PROVED := contracted_Maxwell_structure_uses_derived_divergence_identity
+PROVED := local_Poynting_identity_uses_six_component_differentiability_hypotheses
+BOUNDARY := ¬ uncontracted_Maxwell_evolution_equations_formalized
+BOUNDARY := ¬ energy_density_time_derivative_from_fderiv_proved
+BOUNDARY := ¬ divergence_theorem_instantiated_for_the_electromagnetic_domain
+BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
