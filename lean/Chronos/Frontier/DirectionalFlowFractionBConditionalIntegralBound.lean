@@ -5484,4 +5484,31 @@ structure IsolatedSourceFreeMaxwellSolution3
             (maxwellRectangularFaceOutwardNormal3 (i, false)) =
           0
 
+
+/--
+Total electromagnetic energy is conserved for every packaged isolated
+source-free Maxwell solution on a rectangular domain.
+-/
+theorem maxwellTotalElectromagneticEnergy3_conserved_of_isolatedSourceFreeSolution
+    {ε₀ μ₀ : ℝ}
+    {D : MaxwellRectangularDomain3}
+    (solution : IsolatedSourceFreeMaxwellSolution3 ε₀ μ₀ D)
+    (t₀ t₁ : ℝ) :
+    maxwellTotalElectromagneticEnergy3
+        ε₀ μ₀ solution.maxwellField D t₁ =
+      maxwellTotalElectromagneticEnergy3
+        ε₀ μ₀ solution.maxwellField D t₀ := by
+  exact
+    maxwellTotalElectromagneticEnergy3_conserved_of_sourceFree_facewiseZeroNormalFlux
+      ε₀
+      μ₀
+      solution.maxwellField
+      D
+      t₀
+      t₁
+      solution.evolution
+      solution.currentZero
+      solution.upperFaceZeroNormalFlux
+      solution.lowerFaceZeroNormalFlux
+
 end Chronos.Frontier
