@@ -1638,7 +1638,500 @@ theorem maxwellTimeDerivative3_apply
 
 /-
 PROVED := time_derivative_of_vector_component
-BOUNDARY := ¬ energy_density_time_derivative_from_fderiv_proved
+PROVED := energy_density_time_derivative_from_fderiv
+BOUNDARY := ¬ divergence_theorem_instantiated_for_the_electromagnetic_domain
+BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
+
+/--
+Fréchet addition rule evaluated in the time direction.
+-/
+theorem maxwellTimeDerivative3_add
+    (f g : MaxwellScalarField3)
+    (p : MaxwellSpacetime3)
+    (hf : DifferentiableAt ℝ f p)
+    (hg : DifferentiableAt ℝ g p) :
+    maxwellTimeDerivative3
+        (fun q => f q + g q)
+        p =
+      maxwellTimeDerivative3 f p +
+        maxwellTimeDerivative3 g p := by
+  have hfg :
+      HasFDerivAt
+        (fun q => f q + g q)
+        (fderiv ℝ f p + fderiv ℝ g p)
+        p :=
+    hf.hasFDerivAt.add hg.hasFDerivAt
+  have h :=
+    congrArg
+      (fun L : MaxwellSpacetime3 →L[ℝ] ℝ =>
+        L maxwellTimeDirection3)
+      hfg.fderiv
+  simpa [maxwellTimeDerivative3] using h
+
+/--
+Fréchet multiplication rule evaluated in the time direction.
+-/
+theorem maxwellTimeDerivative3_mul
+    (f g : MaxwellScalarField3)
+    (p : MaxwellSpacetime3)
+    (hf : DifferentiableAt ℝ f p)
+    (hg : DifferentiableAt ℝ g p) :
+    maxwellTimeDerivative3
+        (fun q => f q * g q)
+        p =
+      f p * maxwellTimeDerivative3 g p +
+        g p * maxwellTimeDerivative3 f p := by
+  have h :=
+    congrArg
+      (fun L : MaxwellSpacetime3 →L[ℝ] ℝ =>
+        L maxwellTimeDirection3)
+      (fderiv_fun_mul hf hg)
+  simpa [
+    maxwellTimeDerivative3,
+    smul_eq_mul
+  ] using h
+
+/--
+A constant scalar factor passes through the time derivative.
+-/
+theorem maxwellTimeDerivative3_const_mul
+    (a : ℝ)
+    (f : MaxwellScalarField3)
+    (p : MaxwellSpacetime3)
+    (hf : DifferentiableAt ℝ f p) :
+    maxwellTimeDerivative3
+        (fun q => a * f q)
+        p =
+      a * maxwellTimeDerivative3 f p := by
+  have hconst :
+      DifferentiableAt ℝ
+        (fun _ : MaxwellSpacetime3 => a)
+        p :=
+    differentiableAt_const a
+  have h :=
+    maxwellTimeDerivative3_mul
+      (fun _ : MaxwellSpacetime3 => a)
+      f
+      p
+      hconst
+      hf
+  simpa [maxwellTimeDerivative3] using h
+
+/--
+Componentwise differentiability implies differentiability of the
+three-vector field.
+-/
+theorem maxwellVectorField3_differentiableAt
+    (V : MaxwellVectorField3)
+    (p : MaxwellSpacetime3)
+    (hV0 :
+      DifferentiableAt ℝ
+        (fun q => V q (0 : Fin 3))
+        p)
+    (hV1 :
+      DifferentiableAt ℝ
+        (fun q => V q (1 : Fin 3))
+        p)
+    (hV2 :
+      DifferentiableAt ℝ
+        (fun q => V q (2 : Fin 3))
+        p) :
+    DifferentiableAt ℝ V p := by
+  rw [differentiableAt_pi]
+  intro i
+  fin_cases i
+  · exact hV0
+  · exact hV1
+  · exact hV2
+
+/--
+The squared coordinate norm represented by `maxwellDot3 V V` is
+differentiable when all three components are differentiable.
+-/
+theorem maxwellDot3_self_differentiableAt
+    (V : MaxwellVectorField3)
+    (p : MaxwellSpacetime3)
+    (hV0 :
+      DifferentiableAt ℝ
+        (fun q => V q (0 : Fin 3))
+        p)
+    (hV1 :
+      DifferentiableAt ℝ
+        (fun q => V q (1 : Fin 3))
+        p)
+    (hV2 :
+      DifferentiableAt ℝ
+        (fun q => V q (2 : Fin 3))
+        p) :
+    DifferentiableAt ℝ
+      (fun q =>
+        maxwellDot3
+          (V q)
+          (V q))
+      p := by
+  have hCoordinate :
+      (fun q =>
+        maxwellDot3
+          (V q)
+          (V q)) =
+      (fun q =>
+        V q (0 : Fin 3) * V q (0 : Fin 3) +
+          (
+            V q (1 : Fin 3) * V q (1 : Fin 3) +
+              V q (2 : Fin 3) * V q (2 : Fin 3)
+          )) := by
+    funext q
+    simp [
+      maxwellDot3,
+      Fin.sum_univ_succ
+    ]
+
+  rw [hCoordinate]
+
+  exact
+    (hV0.mul hV0).add
+      (
+        (hV1.mul hV1).add
+          (hV2.mul hV2)
+      )
+
+/--
+Time derivative of the squared coordinate norm:
+
+`∂ₜ(V · V) = 2 V · ∂ₜV`.
+-/
+theorem maxwellTimeDerivative3_dot_self
+    (V : MaxwellVectorField3)
+    (p : MaxwellSpacetime3)
+    (hV0 :
+      DifferentiableAt ℝ
+        (fun q => V q (0 : Fin 3))
+        p)
+    (hV1 :
+      DifferentiableAt ℝ
+        (fun q => V q (1 : Fin 3))
+        p)
+    (hV2 :
+      DifferentiableAt ℝ
+        (fun q => V q (2 : Fin 3))
+        p) :
+    maxwellTimeDerivative3
+        (fun q =>
+          maxwellDot3
+            (V q)
+            (V q))
+        p =
+      2 *
+        maxwellDot3
+          (V p)
+          (maxwellTimeDerivative3 V p) := by
+  have hV :
+      DifferentiableAt ℝ V p :=
+    maxwellVectorField3_differentiableAt
+      V p hV0 hV1 hV2
+
+  have hCoordinate :
+      (fun q =>
+        maxwellDot3
+          (V q)
+          (V q)) =
+      (fun q =>
+        V q (0 : Fin 3) * V q (0 : Fin 3) +
+          (
+            V q (1 : Fin 3) * V q (1 : Fin 3) +
+              V q (2 : Fin 3) * V q (2 : Fin 3)
+          )) := by
+    funext q
+    simp [
+      maxwellDot3,
+      Fin.sum_univ_succ
+    ]
+
+  rw [hCoordinate]
+
+  rw [
+    maxwellTimeDerivative3_add
+      (fun q =>
+        V q (0 : Fin 3) * V q (0 : Fin 3))
+      (fun q =>
+        V q (1 : Fin 3) * V q (1 : Fin 3) +
+          V q (2 : Fin 3) * V q (2 : Fin 3))
+      p
+      (hV0.mul hV0)
+      ((hV1.mul hV1).add (hV2.mul hV2))
+  ]
+
+  rw [
+    maxwellTimeDerivative3_add
+      (fun q =>
+        V q (1 : Fin 3) * V q (1 : Fin 3))
+      (fun q =>
+        V q (2 : Fin 3) * V q (2 : Fin 3))
+      p
+      (hV1.mul hV1)
+      (hV2.mul hV2)
+  ]
+
+  rw [
+    maxwellTimeDerivative3_mul
+      (fun q => V q (0 : Fin 3))
+      (fun q => V q (0 : Fin 3))
+      p
+      hV0
+      hV0
+  ]
+
+  rw [
+    maxwellTimeDerivative3_mul
+      (fun q => V q (1 : Fin 3))
+      (fun q => V q (1 : Fin 3))
+      p
+      hV1
+      hV1
+  ]
+
+  rw [
+    maxwellTimeDerivative3_mul
+      (fun q => V q (2 : Fin 3))
+      (fun q => V q (2 : Fin 3))
+      p
+      hV2
+      hV2
+  ]
+
+  rw [
+    maxwellTimeDerivative3_apply
+      V p hV (0 : Fin 3),
+    maxwellTimeDerivative3_apply
+      V p hV (1 : Fin 3),
+    maxwellTimeDerivative3_apply
+      V p hV (2 : Fin 3)
+  ]
+
+  simp [
+    maxwellDot3,
+    Fin.sum_univ_succ
+  ]
+
+  ring
+
+/--
+Field-level electromagnetic energy density:
+
+`u = (ε₀ / 2) (E · E) + (1 / (2 μ₀)) (B · B)`.
+-/
+noncomputable def maxwellEnergyDensity3
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3) :
+    MaxwellScalarField3 :=
+  fun p =>
+    (ε₀ / 2) *
+        maxwellDot3
+          (F.electric p)
+          (F.electric p) +
+      (1 / (2 * μ₀)) *
+        maxwellDot3
+          (F.magnetic p)
+          (F.magnetic p)
+
+/--
+The Fréchet time derivative of electromagnetic energy density is the
+sum of the electric and magnetic contraction terms.
+-/
+theorem maxwellEnergyDensity3_timeDerivative
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (p : MaxwellSpacetime3)
+    (hE0 :
+      DifferentiableAt ℝ
+        (fun q => F.electric q (0 : Fin 3))
+        p)
+    (hE1 :
+      DifferentiableAt ℝ
+        (fun q => F.electric q (1 : Fin 3))
+        p)
+    (hE2 :
+      DifferentiableAt ℝ
+        (fun q => F.electric q (2 : Fin 3))
+        p)
+    (hB0 :
+      DifferentiableAt ℝ
+        (fun q => F.magnetic q (0 : Fin 3))
+        p)
+    (hB1 :
+      DifferentiableAt ℝ
+        (fun q => F.magnetic q (1 : Fin 3))
+        p)
+    (hB2 :
+      DifferentiableAt ℝ
+        (fun q => F.magnetic q (2 : Fin 3))
+        p) :
+    maxwellTimeDerivative3
+        (maxwellEnergyDensity3 ε₀ μ₀ F)
+        p =
+      ε₀ *
+          maxwellDot3
+            (F.electric p)
+            (maxwellTimeDerivative3 F.electric p) +
+        (1 / μ₀) *
+          maxwellDot3
+            (F.magnetic p)
+            (maxwellTimeDerivative3 F.magnetic p) := by
+  have hEDot :
+      DifferentiableAt ℝ
+        (fun q =>
+          maxwellDot3
+            (F.electric q)
+            (F.electric q))
+        p :=
+    maxwellDot3_self_differentiableAt
+      F.electric p hE0 hE1 hE2
+
+  have hBDot :
+      DifferentiableAt ℝ
+        (fun q =>
+          maxwellDot3
+            (F.magnetic q)
+            (F.magnetic q))
+        p :=
+    maxwellDot3_self_differentiableAt
+      F.magnetic p hB0 hB1 hB2
+
+  change
+    maxwellTimeDerivative3
+        (fun q =>
+          (ε₀ / 2) *
+              maxwellDot3
+                (F.electric q)
+                (F.electric q) +
+            (1 / (2 * μ₀)) *
+              maxwellDot3
+                (F.magnetic q)
+                (F.magnetic q))
+        p =
+      _
+
+  rw [
+    maxwellTimeDerivative3_add
+      (fun q =>
+        (ε₀ / 2) *
+          maxwellDot3
+            (F.electric q)
+            (F.electric q))
+      (fun q =>
+        (1 / (2 * μ₀)) *
+          maxwellDot3
+            (F.magnetic q)
+            (F.magnetic q))
+      p
+      ((differentiableAt_const (ε₀ / 2)).mul hEDot)
+      ((differentiableAt_const (1 / (2 * μ₀))).mul hBDot)
+  ]
+
+  rw [
+    maxwellTimeDerivative3_const_mul
+      (ε₀ / 2)
+      (fun q =>
+        maxwellDot3
+          (F.electric q)
+          (F.electric q))
+      p
+      hEDot
+  ]
+
+  rw [
+    maxwellTimeDerivative3_const_mul
+      (1 / (2 * μ₀))
+      (fun q =>
+        maxwellDot3
+          (F.magnetic q)
+          (F.magnetic q))
+      p
+      hBDot
+  ]
+
+  rw [
+    maxwellTimeDerivative3_dot_self
+      F.electric p hE0 hE1 hE2,
+    maxwellTimeDerivative3_dot_self
+      F.magnetic p hB0 hB1 hB2
+  ]
+
+  ring
+
+/--
+Local Poynting conservation written with the time derivative of the
+electromagnetic energy density.
+-/
+theorem localPoyntingConservation_fieldLevel3_of_uncontracted
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (p : MaxwellSpacetime3)
+    (hEvolution :
+      UncontractedMaxwellEvolutionAt3
+        ε₀ μ₀ F p)
+    (hE0 :
+      DifferentiableAt ℝ
+        (fun q => F.electric q (0 : Fin 3))
+        p)
+    (hE1 :
+      DifferentiableAt ℝ
+        (fun q => F.electric q (1 : Fin 3))
+        p)
+    (hE2 :
+      DifferentiableAt ℝ
+        (fun q => F.electric q (2 : Fin 3))
+        p)
+    (hB0 :
+      DifferentiableAt ℝ
+        (fun q => F.magnetic q (0 : Fin 3))
+        p)
+    (hB1 :
+      DifferentiableAt ℝ
+        (fun q => F.magnetic q (1 : Fin 3))
+        p)
+    (hB2 :
+      DifferentiableAt ℝ
+        (fun q => F.magnetic q (2 : Fin 3))
+        p) :
+    maxwellTimeDerivative3
+          (maxwellEnergyDensity3 ε₀ μ₀ F)
+          p +
+        (1 / μ₀) *
+          maxwellDivergence3
+            (fun q =>
+              maxwellCross3
+                (F.electric q)
+                (F.magnetic q))
+            p =
+      -maxwellDot3
+        (F.current p)
+        (F.electric p) := by
+  rw [
+    maxwellEnergyDensity3_timeDerivative
+      ε₀ μ₀ F p
+      hE0 hE1 hE2
+      hB0 hB1 hB2
+  ]
+
+  exact
+    localPoyntingIdentity_fieldLevel3_of_uncontracted
+      ε₀ μ₀ F p
+      hEvolution
+      hE0 hE1 hE2
+      hB0 hB1 hB2
+
+/-
+PROVED := Frechet_time_addition_rule
+PROVED := Frechet_time_product_rule
+PROVED := time_derivative_of_vector_component
+PROVED := time_derivative_of_dot_self
+PROVED := energy_density_time_derivative_from_fderiv
+PROVED := local_Poynting_conservation_in_energy_density_form
 BOUNDARY := ¬ divergence_theorem_instantiated_for_the_electromagnetic_domain
 BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
 BOUNDARY := ¬ external_measurement_receipt_present
