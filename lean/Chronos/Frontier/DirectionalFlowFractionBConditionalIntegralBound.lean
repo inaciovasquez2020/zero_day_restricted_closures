@@ -5214,4 +5214,18 @@ BOUNDARY := ¬ isolation_derived_without_assumption
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
+
+/--
+The outward unit normal of one rectangular face.
+
+`face.1` selects the coordinate axis. `face.2 = false` selects the
+lower face and `face.2 = true` selects the upper face.
+-/
+def maxwellRectangularFaceOutwardNormal3
+    (face : Fin 3 × Bool) : MaxwellVector3 :=
+  if face.2 = true then
+    (maxwellSpatialDirection3 face.1).2
+  else
+    -((maxwellSpatialDirection3 face.1).2)
+
 end Chronos.Frontier
