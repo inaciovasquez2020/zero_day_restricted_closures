@@ -5268,4 +5268,21 @@ theorem maxwellDot3_rectangularUpperFaceOutwardNormal3
     maxwellSpatialDirection3
   ]
 
+
+/--
+Dotting a vector with the outward normal of the lower face orthogonal
+to coordinate axis `i` extracts the negative of its `i`th coordinate.
+-/
+theorem maxwellDot3_rectangularLowerFaceOutwardNormal3
+    (v : MaxwellVector3)
+    (i : Fin 3) :
+    maxwellDot3 v
+        (maxwellRectangularFaceOutwardNormal3 (i, false)) =
+      -v i := by
+  simp [
+    maxwellDot3,
+    maxwellRectangularFaceOutwardNormal3,
+    maxwellSpatialDirection3
+  ]
+
 end Chronos.Frontier
