@@ -5228,4 +5228,27 @@ def maxwellRectangularFaceOutwardNormal3
   else
     -((maxwellSpatialDirection3 face.1).2)
 
+
+/--
+The rectangular boundary flux is exactly the signed sum of its six
+coordinate-face integrals: upper-face flux minus lower-face flux for
+each of the three spatial coordinate axes.
+-/
+theorem maxwellRectangularBoundaryFlux3_signedSixFaceExpansion
+    (D : MaxwellRectangularDomain3)
+    (S : MaxwellVector3 → MaxwellVector3) :
+    maxwellRectangularBoundaryFlux3 D S =
+      ∑ i : Fin 3,
+        ((∫ y in
+              Set.Icc
+                (D.lower ∘ Fin.succAbove i)
+                (D.upper ∘ Fin.succAbove i),
+            S (Fin.insertNth i (D.upper i) y) i) -
+          (∫ y in
+              Set.Icc
+                (D.lower ∘ Fin.succAbove i)
+                (D.upper ∘ Fin.succAbove i),
+            S (Fin.insertNth i (D.lower i) y) i)) := by
+  rfl
+
 end Chronos.Frontier
