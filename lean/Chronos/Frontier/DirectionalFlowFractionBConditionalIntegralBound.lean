@@ -5285,4 +5285,98 @@ theorem maxwellDot3_rectangularLowerFaceOutwardNormal3
     maxwellSpatialDirection3
   ]
 
+
+/--
+If the vector field has zero outward-normal component at every point
+of all six rectangular faces, then its total rectangular boundary
+flux is zero.
+-/
+theorem maxwellRectangularBoundaryFlux3_eq_zero_of_facewise_zero_normalFlux
+    (D : MaxwellRectangularDomain3)
+    (S : MaxwellVector3 → MaxwellVector3)
+    (hUpper :
+      ∀ (i : Fin 3) (y : Fin 2 → ℝ),
+        y ∈
+            Set.Icc
+              (D.lower ∘ Fin.succAbove i)
+              (D.upper ∘ Fin.succAbove i) →
+          maxwellDot3
+              (S (Fin.insertNth i (D.upper i) y))
+              (maxwellRectangularFaceOutwardNormal3 (i, true)) =
+            0)
+    (hLower :
+      ∀ (i : Fin 3) (y : Fin 2 → ℝ),
+        y ∈
+            Set.Icc
+              (D.lower ∘ Fin.succAbove i)
+              (D.upper ∘ Fin.succAbove i) →
+          maxwellDot3
+              (S (Fin.insertNth i (D.lower i) y))
+              (maxwellRectangularFaceOutwardNormal3 (i, false)) =
+            0) :
+    maxwellRectangularBoundaryFlux3 D S = 0 := by
+  have hUpperIntegral (i : Fin 3) :
+      (∫ y in
+          Set.Icc
+            (D.lower ∘ Fin.succAbove i)
+            (D.upper ∘ Fin.succAbove i),
+        S (Fin.insertNth i (D.upper i) y) i) =
+        0 := by
+    have hAE :
+        (fun y : Fin 2 → ℝ =>
+          S (Fin.insertNth i (D.upper i) y) i) =ᵐ[
+            volume.restrict
+              (Set.Icc
+                (D.lower ∘ Fin.succAbove i)
+                (D.upper ∘ Fin.succAbove i))]
+          (fun _ : Fin 2 → ℝ => 0) := by
+      filter_upwards [
+        MeasureTheory.ae_restrict_mem
+          (measurableSet_Icc :
+            MeasurableSet
+              (Set.Icc
+                (D.lower ∘ Fin.succAbove i)
+                (D.upper ∘ Fin.succAbove i)))
+      ] with y hy
+      have h := hUpper i y hy
+      rw [maxwellDot3_rectangularUpperFaceOutwardNormal3] at h
+      exact h
+    have hIntegral := integral_congr_ae hAE
+    simpa using hIntegral
+
+  have hLowerIntegral (i : Fin 3) :
+      (∫ y in
+          Set.Icc
+            (D.lower ∘ Fin.succAbove i)
+            (D.upper ∘ Fin.succAbove i),
+        S (Fin.insertNth i (D.lower i) y) i) =
+        0 := by
+    have hAE :
+        (fun y : Fin 2 → ℝ =>
+          S (Fin.insertNth i (D.lower i) y) i) =ᵐ[
+            volume.restrict
+              (Set.Icc
+                (D.lower ∘ Fin.succAbove i)
+                (D.upper ∘ Fin.succAbove i))]
+          (fun _ : Fin 2 → ℝ => 0) := by
+      filter_upwards [
+        MeasureTheory.ae_restrict_mem
+          (measurableSet_Icc :
+            MeasurableSet
+              (Set.Icc
+                (D.lower ∘ Fin.succAbove i)
+                (D.upper ∘ Fin.succAbove i)))
+      ] with y hy
+      have h := hLower i y hy
+      rw [maxwellDot3_rectangularLowerFaceOutwardNormal3] at h
+      exact neg_eq_zero.mp h
+    have hIntegral := integral_congr_ae hAE
+    simpa using hIntegral
+
+  rw [maxwellRectangularBoundaryFlux3_signedSixFaceExpansion]
+  apply Finset.sum_eq_zero
+  intro i hi
+  rw [hUpperIntegral i, hLowerIntegral i]
+  norm_num
+
 end Chronos.Frontier
