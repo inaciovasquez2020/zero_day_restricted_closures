@@ -4629,4 +4629,102 @@ PROVED := spatially_integrated_electromagnetic_work_interval_integrable
 BOUNDARY := ¬ boundary_flux_interval_integrability_derived
 BOUNDARY := ¬ unconditional_integrated_rectangular_balance_packaged
 -/
+/--
+For a smooth Maxwell field satisfying the uncontracted Maxwell
+evolution equations, the rectangular Poynting boundary flux is
+interval integrable in time.
+
+The proof rewrites the flux using the fixed-time energy balance and
+the already established time integrability of the spatial energy
+derivative and electromagnetic work.
+-/
+theorem maxwellRectangularBoundaryFlux3_intervalIntegrable_of_smooth_evolution
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t₀ t₁ : ℝ)
+    (hEvolution :
+      ∀ τ x,
+        UncontractedMaxwellEvolutionAt3
+          ε₀ μ₀ F (τ, x)) :
+    IntervalIntegrable
+      (fun τ =>
+        maxwellRectangularBoundaryFlux3
+          D
+          (maxwellPoyntingSpatialSlice3 μ₀ F τ))
+      volume
+      t₀
+      t₁ := by
+  have hEnergyDerivative :
+      IntervalIntegrable
+        (fun τ =>
+          ∫ x in Set.Icc D.lower D.upper,
+            maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x))
+        volume
+        t₀
+        t₁ :=
+    maxwellSpatiallyIntegratedEnergyDerivative_intervalIntegrable
+      ε₀
+      μ₀
+      F
+      D
+      t₀
+      t₁
+
+  have hWork :
+      IntervalIntegrable
+        (fun τ =>
+          ∫ x in Set.Icc D.lower D.upper,
+            maxwellDot3
+              (F.current (τ, x))
+              (F.electric (τ, x)))
+        volume
+        t₀
+        t₁ :=
+    maxwellSpatiallyIntegratedWork_intervalIntegrable
+      F
+      D
+      t₀
+      t₁
+
+  have hFluxIdentity :
+      (fun τ =>
+        maxwellRectangularBoundaryFlux3
+          D
+          (maxwellPoyntingSpatialSlice3 μ₀ F τ)) =
+      (fun τ =>
+        -(∫ x in Set.Icc D.lower D.upper,
+            maxwellDot3
+              (F.current (τ, x))
+              (F.electric (τ, x))) -
+          (∫ x in Set.Icc D.lower D.upper,
+            maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x))) := by
+    funext τ
+
+    have hBalance :=
+      maxwellFixedTimeRectangularPoyntingBalance3_of_smooth_evolution
+        ε₀
+        μ₀
+        F
+        τ
+        D
+        (hEvolution τ)
+
+    linarith
+
+  rw [hFluxIdentity]
+
+  exact hWork.neg.sub hEnergyDerivative
+
+/-
+PROVED := rectangular_boundary_flux_interval_integrable
+PROVED := boundary_flux_integrability_derived_from_fixed_time_balance
+BOUNDARY := ¬ unconditional_integrated_rectangular_balance_packaged
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
 end Chronos.Frontier
