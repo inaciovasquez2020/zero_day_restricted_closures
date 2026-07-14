@@ -5050,4 +5050,72 @@ BOUNDARY := ¬ isolation_derived_without_assumption
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
+/--
+For a smooth source-free Maxwell field with pointwise zero outward
+rectangular boundary flux, total electromagnetic energy has derivative
+zero at every time.
+-/
+theorem maxwellTotalElectromagneticEnergy3_hasDerivAt_zero_of_sourceFree_zeroBoundaryFlux
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t : ℝ)
+    (hEvolution :
+      ∀ τ x,
+        UncontractedMaxwellEvolutionAt3
+          ε₀ μ₀ F (τ, x))
+    (hCurrentZero :
+      ∀ p : MaxwellSpacetime3,
+        F.current p = 0)
+    (hBoundaryFluxZero :
+      ∀ τ : ℝ,
+        maxwellRectangularBoundaryFlux3
+          D
+          (maxwellPoyntingSpatialSlice3 μ₀ F τ) =
+        0) :
+    HasDerivAt
+      (maxwellTotalElectromagneticEnergy3
+        ε₀ μ₀ F D)
+      0
+      t := by
+  have hIntegratedEnergyDerivativeZero :
+      (∫ x in Set.Icc D.lower D.upper,
+        maxwellTimeDerivative3
+          (maxwellEnergyDensity3 ε₀ μ₀ F)
+          (t, x)) =
+        0 := by
+    have hBalance :=
+      maxwellFixedTimeRectangularPoyntingBalance3_of_smooth_evolution
+        ε₀
+        μ₀
+        F
+        t
+        D
+        (hEvolution t)
+
+    simpa [
+      hCurrentZero,
+      hBoundaryFluxZero,
+      maxwellDot3
+    ] using hBalance
+
+  have hDerivative :=
+    maxwellTotalElectromagneticEnergy3_hasDerivAt_of_smooth
+      ε₀
+      μ₀
+      F
+      D
+      t
+
+  simpa [hIntegratedEnergyDerivativeZero] using hDerivative
+
+/-
+PROVED := isolated_source_free_total_energy_derivative_is_zero
+PROVED := integrated_energy_density_time_derivative_is_zero
+PROVED := local_differential_energy_conservation
+BOUNDARY := ¬ pointwise_zero_boundary_flux_derived_without_assumption
+BOUNDARY := ¬ isolation_derived_without_assumption
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
 end Chronos.Frontier
