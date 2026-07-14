@@ -3348,4 +3348,103 @@ BOUNDARY := ¬ analytic_hypotheses_derived_for_every_Maxwell_field
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
+/--
+For a `SmoothMaxwellField3`, the six component-differentiability
+premises of the fixed-time spatially integrated local Poynting identity
+follow directly from the stored `ContDiff ℝ 1` field regularity.
+-/
+theorem maxwellFixedTimeSpatiallyIntegratedLocalPoyntingIdentity3_of_smooth
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (t : ℝ)
+    (Ω : Set MaxwellVector3)
+    (hEvolution :
+      ∀ x : MaxwellVector3,
+        UncontractedMaxwellEvolutionAt3
+          ε₀ μ₀ F (t, x))
+    (hTimeIntegrable :
+      IntegrableOn
+        (fun x =>
+          maxwellTimeDerivative3
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (t, x))
+        Ω)
+    (hDivergenceIntegrable :
+      IntegrableOn
+        (maxwellSpatialSliceDivergence3
+          (maxwellPoyntingSpatialSlice3 μ₀ F t))
+        Ω) :
+    (∫ x in Ω,
+        maxwellTimeDerivative3
+          (maxwellEnergyDensity3 ε₀ μ₀ F)
+          (t, x)) +
+      (∫ x in Ω,
+        maxwellSpatialSliceDivergence3
+          (maxwellPoyntingSpatialSlice3 μ₀ F t)
+          x) =
+    -(∫ x in Ω,
+        maxwellDot3
+          (F.current (t, x))
+          (F.electric (t, x))) := by
+  have hElectric :
+      ∀ (i : Fin 3) (x : MaxwellVector3),
+        DifferentiableAt ℝ
+          (fun q => F.electric q i)
+          (t, x) := by
+    intro i x
+
+    have hVector :
+        DifferentiableAt ℝ
+          F.electric
+          (t, x) :=
+      (F.electric_contDiff.differentiable
+        (by norm_num))
+        (t, x)
+
+    exact
+      (differentiableAt_pi.mp hVector) i
+
+  have hMagnetic :
+      ∀ (i : Fin 3) (x : MaxwellVector3),
+        DifferentiableAt ℝ
+          (fun q => F.magnetic q i)
+          (t, x) := by
+    intro i x
+
+    have hVector :
+        DifferentiableAt ℝ
+          F.magnetic
+          (t, x) :=
+      (F.magnetic_contDiff.differentiable
+        (by norm_num))
+        (t, x)
+
+    exact
+      (differentiableAt_pi.mp hVector) i
+
+  exact
+    maxwellFixedTimeSpatiallyIntegratedLocalPoyntingIdentity3
+      ε₀
+      μ₀
+      F
+      t
+      Ω
+      hEvolution
+      (hElectric (0 : Fin 3))
+      (hElectric (1 : Fin 3))
+      (hElectric (2 : Fin 3))
+      (hMagnetic (0 : Fin 3))
+      (hMagnetic (1 : Fin 3))
+      (hMagnetic (2 : Fin 3))
+      hTimeIntegrable
+      hDivergenceIntegrable
+
+/-
+PROVED := smooth_field_regularities_supply_all_component_differentiability
+PROVED := fixed_time_spatial_integration_without_six_redundant_component_hypotheses
+BOUNDARY := ¬ spatial_integrability_derived_from_smoothness_on_rectangular_domain
+BOUNDARY := ¬ fixed_time_boundary_flux_balance_derived_from_smoothness_alone
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
 end Chronos.Frontier
