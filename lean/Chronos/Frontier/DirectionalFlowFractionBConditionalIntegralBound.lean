@@ -3656,4 +3656,62 @@ BOUNDARY := ¬ spatial_divergence_integrability_derived_on_rectangular_domain
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
+/--
+The Fréchet-coordinate divergence of a continuously differentiable
+spatial vector field is continuous.
+-/
+theorem maxwellSpatialSliceDivergence3_continuous_of_contDiff
+    (S : MaxwellVector3 → MaxwellVector3)
+    (hS : ContDiff ℝ 1 S) :
+    Continuous
+      (maxwellSpatialSliceDivergence3 S) := by
+  unfold maxwellSpatialSliceDivergence3
+
+  exact
+    continuous_finset_sum
+      Finset.univ
+      (fun i _ => by
+        have hSingle :
+            Continuous
+              (fun _ : MaxwellVector3 =>
+                (Pi.single i (1 : ℝ) :
+                  MaxwellVector3)) :=
+          continuous_const
+
+        have hPair :
+            Continuous
+              (fun x : MaxwellVector3 =>
+                (x,
+                  (Pi.single i (1 : ℝ) :
+                    MaxwellVector3))) :=
+          continuous_id.prodMk hSingle
+
+        have hDirectionalDerivative :
+            Continuous
+              (fun x : MaxwellVector3 =>
+                (fderiv ℝ S x)
+                  (Pi.single i (1 : ℝ))) :=
+          (hS.continuous_fderiv_apply
+            (by norm_num)).comp hPair
+
+        exact
+          (continuous_apply i).comp
+            hDirectionalDerivative)
+
+/--
+The spatial divergence of the fixed-time Poynting slice of a smooth
+Maxwell field is continuous.
+-/
+theorem maxwellPoyntingSpatialSliceDivergence3_continuous
+    (μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (t : ℝ) :
+    Continuous
+      (maxwellSpatialSliceDivergence3
+        (maxwellPoyntingSpatialSlice3 μ₀ F t)) := by
+  exact
+    maxwellSpatialSliceDivergence3_continuous_of_contDiff
+      (maxwellPoyntingSpatialSlice3 μ₀ F t)
+      (maxwellPoyntingSpatialSlice3_contDiff
+        μ₀ F t)
 end Chronos.Frontier
