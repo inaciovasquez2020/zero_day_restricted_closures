@@ -5552,4 +5552,24 @@ theorem maxwellTotalElectromagneticEnergy3_hasDerivAt_zero_of_isolatedSourceFree
       solution.currentZero
       hBoundaryFluxZero
 
+
+/--
+The ordinary derivative of total electromagnetic energy is zero at
+every time for a packaged isolated source-free Maxwell solution.
+-/
+theorem maxwellTotalElectromagneticEnergy3_deriv_eq_zero_of_isolatedSourceFreeSolution
+    {ε₀ μ₀ : ℝ}
+    {D : MaxwellRectangularDomain3}
+    (solution : IsolatedSourceFreeMaxwellSolution3 ε₀ μ₀ D)
+    (t : ℝ) :
+    deriv
+        (maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ solution.maxwellField D)
+        t =
+      0 := by
+  exact
+    (maxwellTotalElectromagneticEnergy3_hasDerivAt_zero_of_isolatedSourceFreeSolution
+      solution
+      t).deriv
+
 end Chronos.Frontier
