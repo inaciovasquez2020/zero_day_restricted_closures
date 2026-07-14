@@ -4766,4 +4766,85 @@ theorem maxwellFixedTimeRectangularPoyntingBalance3_family_of_smooth_evolution
 PROVED := fixed_time_rectangular_balance_family_from_smooth_Maxwell_evolution
 BOUNDARY := ¬ smooth_integrated_rectangular_balance_packaged
 -/
+/--
+The integrated rectangular Poynting balance for a smooth Maxwell
+field satisfying the uncontracted Maxwell evolution equations at
+every spacetime point.
+
+All analytic differentiation and integrability premises are supplied
+by the previously derived smooth-field theorems.
+-/
+theorem maxwellIntegratedRectangularPoyntingBalance3_of_smooth_evolution
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t₀ t₁ : ℝ)
+    (hEvolution :
+      ∀ τ x,
+        UncontractedMaxwellEvolutionAt3
+          ε₀ μ₀ F (τ, x)) :
+    maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D t₁ -
+        maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D t₀ +
+        (∫ τ in t₀..t₁,
+          maxwellRectangularBoundaryFlux3
+            D
+            (maxwellPoyntingSpatialSlice3 μ₀ F τ)) =
+      -(∫ τ in t₀..t₁,
+          ∫ x in Set.Icc D.lower D.upper,
+            maxwellDot3
+              (F.current (τ, x))
+              (F.electric (τ, x))) := by
+  exact
+    maxwellIntegratedRectangularPoyntingBalance3
+      (ε₀ := ε₀)
+      (μ₀ := μ₀)
+      (F := F)
+      (D := D)
+      (t₀ := t₀)
+      (t₁ := t₁)
+      (hDerivative :=
+        fun τ _ =>
+          maxwellTotalElectromagneticEnergy3_hasDerivAt_of_smooth
+            ε₀
+            μ₀
+            F
+            D
+            τ)
+      (hDerivativeIntervalIntegrable :=
+        maxwellSpatiallyIntegratedEnergyDerivative_intervalIntegrable
+          ε₀
+          μ₀
+          F
+          D
+          t₀
+          t₁)
+      (hFluxIntervalIntegrable :=
+        maxwellRectangularBoundaryFlux3_intervalIntegrable_of_smooth_evolution
+          ε₀
+          μ₀
+          F
+          D
+          t₀
+          t₁
+          hEvolution)
+      (hFixedTimeBalance :=
+        maxwellFixedTimeRectangularPoyntingBalance3_family_of_smooth_evolution
+          ε₀
+          μ₀
+          F
+          D
+          hEvolution)
+
+/-
+PROVED := integrated_rectangular_Poynting_balance_from_smooth_Maxwell_evolution
+PROVED := total_energy_differentiation_instantiated
+PROVED := energy_derivative_interval_integrability_instantiated
+PROVED := boundary_flux_interval_integrability_instantiated
+PROVED := fixed_time_balance_family_instantiated
+BOUNDARY := ¬ uncontracted_Maxwell_evolution_derived_without_assumption
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
 end Chronos.Frontier
