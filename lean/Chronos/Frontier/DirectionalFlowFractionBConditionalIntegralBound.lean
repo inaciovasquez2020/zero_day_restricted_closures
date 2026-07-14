@@ -3950,4 +3950,46 @@ PROVED := electromagnetic_energy_density_time_derivative_continuous
 BOUNDARY := ¬ time_derivative_integrability_derived_on_rectangular_domain
 BOUNDARY := ¬ time_interval_integrability_derived_from_smoothness
 -/
+/--
+At every fixed time, the electromagnetic energy-density time
+derivative of a smooth Maxwell field is integrable on every closed
+rectangular spatial domain.
+-/
+theorem maxwellEnergyDensity3_timeDerivative_integrableOn_rectangularDomain
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (t : ℝ)
+    (D : MaxwellRectangularDomain3) :
+    IntegrableOn
+      (fun x : MaxwellVector3 =>
+        maxwellTimeDerivative3
+          (maxwellEnergyDensity3 ε₀ μ₀ F)
+          (t, x))
+      (Set.Icc D.lower D.upper) := by
+  have hEmbedding :
+      Continuous
+        (fun x : MaxwellVector3 =>
+          ((t, x) : MaxwellSpacetime3)) :=
+    continuous_const.prodMk continuous_id
+
+  have hSlice :
+      Continuous
+        (fun x : MaxwellVector3 =>
+          maxwellTimeDerivative3
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (t, x)) :=
+    (maxwellEnergyDensity3_timeDerivative_continuous
+      ε₀
+      μ₀
+      F).comp hEmbedding
+
+  exact hSlice.integrableOn_Icc
+
+/-
+PROVED := energy_density_time_derivative_integrable_on_every_rectangular_domain
+BOUNDARY := ¬ time_interval_integrability_derived_from_smoothness
+BOUNDARY := ¬ unconditional_integrated_rectangular_balance_packaged
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
 end Chronos.Frontier
