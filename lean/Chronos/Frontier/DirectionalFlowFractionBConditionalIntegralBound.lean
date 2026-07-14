@@ -5165,4 +5165,53 @@ BOUNDARY := ¬ isolation_derived_without_assumption
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
+/--
+For a smooth source-free Maxwell field with pointwise zero outward
+rectangular boundary flux, the derivative of total electromagnetic
+energy vanishes at every time.
+-/
+theorem maxwellTotalElectromagneticEnergy3_deriv_eq_zero_all_times_of_sourceFree_zeroBoundaryFlux
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (hEvolution :
+      ∀ τ x,
+        UncontractedMaxwellEvolutionAt3
+          ε₀ μ₀ F (τ, x))
+    (hCurrentZero :
+      ∀ p : MaxwellSpacetime3,
+        F.current p = 0)
+    (hBoundaryFluxZero :
+      ∀ τ : ℝ,
+        maxwellRectangularBoundaryFlux3
+          D
+          (maxwellPoyntingSpatialSlice3 μ₀ F τ) =
+        0) :
+    ∀ t : ℝ,
+      deriv
+          (maxwellTotalElectromagneticEnergy3
+            ε₀ μ₀ F D)
+          t =
+        0 := by
+  intro t
+
+  exact
+    maxwellTotalElectromagneticEnergy3_deriv_eq_zero_of_sourceFree_zeroBoundaryFlux
+      ε₀
+      μ₀
+      F
+      D
+      t
+      hEvolution
+      hCurrentZero
+      hBoundaryFluxZero
+
+/-
+PROVED := isolated_source_free_total_energy_derivative_zero_for_all_times
+PROVED := differential_energy_conservation_packaged_as_theorem_family
+BOUNDARY := ¬ pointwise_zero_boundary_flux_derived_without_assumption
+BOUNDARY := ¬ isolation_derived_without_assumption
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
 end Chronos.Frontier
