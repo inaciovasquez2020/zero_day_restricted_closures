@@ -3532,4 +3532,128 @@ BOUNDARY := ¬ spatial_divergence_integrability_derived_on_rectangular_domain
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
+/--
+At each fixed time, the Poynting spatial slice of a
+`SmoothMaxwellField3` is continuously differentiable of order one.
+-/
+theorem maxwellPoyntingSpatialSlice3_contDiff
+    (μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (t : ℝ) :
+    ContDiff ℝ 1
+      (maxwellPoyntingSpatialSlice3 μ₀ F t) := by
+  have hEmbedding :
+      ContDiff ℝ 1
+        (fun y : MaxwellVector3 =>
+          ((t, y) : MaxwellSpacetime3)) :=
+    contDiff_const.prodMk contDiff_id
+
+  have hElectricVector :
+      ContDiff ℝ 1
+        (fun y : MaxwellVector3 =>
+          F.electric (t, y)) := by
+    simpa only [Function.comp_apply] using
+      F.electric_contDiff.comp hEmbedding
+
+  have hMagneticVector :
+      ContDiff ℝ 1
+        (fun y : MaxwellVector3 =>
+          F.magnetic (t, y)) := by
+    simpa only [Function.comp_apply] using
+      F.magnetic_contDiff.comp hEmbedding
+
+  have hElectric :
+      ∀ i : Fin 3,
+        ContDiff ℝ 1
+          (fun y : MaxwellVector3 =>
+            F.electric (t, y) i) :=
+    fun i =>
+      (contDiff_pi.mp hElectricVector) i
+
+  have hMagnetic :
+      ∀ i : Fin 3,
+        ContDiff ℝ 1
+          (fun y : MaxwellVector3 =>
+            F.magnetic (t, y) i) :=
+    fun i =>
+      (contDiff_pi.mp hMagneticVector) i
+
+  have hScale :
+      ContDiff ℝ 1
+        (fun _ : MaxwellVector3 =>
+          (1 / μ₀ : ℝ)) :=
+    contDiff_const
+
+  rw [contDiff_pi]
+  intro i
+  fin_cases i
+
+  · have hCross :
+        ContDiff ℝ 1
+          (fun y : MaxwellVector3 =>
+            F.electric (t, y) (1 : Fin 3) *
+                F.magnetic (t, y) (2 : Fin 3) -
+              F.electric (t, y) (2 : Fin 3) *
+                F.magnetic (t, y) (1 : Fin 3)) :=
+      ((hElectric (1 : Fin 3)).mul
+          (hMagnetic (2 : Fin 3))).sub
+        ((hElectric (2 : Fin 3)).mul
+          (hMagnetic (1 : Fin 3)))
+
+    simpa [
+      maxwellPoyntingSpatialSlice3,
+      maxwellCross3,
+      cross_apply,
+      Pi.smul_apply,
+      smul_eq_mul
+    ] using hScale.mul hCross
+
+  · have hCross :
+        ContDiff ℝ 1
+          (fun y : MaxwellVector3 =>
+            F.electric (t, y) (2 : Fin 3) *
+                F.magnetic (t, y) (0 : Fin 3) -
+              F.electric (t, y) (0 : Fin 3) *
+                F.magnetic (t, y) (2 : Fin 3)) :=
+      ((hElectric (2 : Fin 3)).mul
+          (hMagnetic (0 : Fin 3))).sub
+        ((hElectric (0 : Fin 3)).mul
+          (hMagnetic (2 : Fin 3)))
+
+    simpa [
+      maxwellPoyntingSpatialSlice3,
+      maxwellCross3,
+      cross_apply,
+      Pi.smul_apply,
+      smul_eq_mul
+    ] using hScale.mul hCross
+
+  · have hCross :
+        ContDiff ℝ 1
+          (fun y : MaxwellVector3 =>
+            F.electric (t, y) (0 : Fin 3) *
+                F.magnetic (t, y) (1 : Fin 3) -
+              F.electric (t, y) (1 : Fin 3) *
+                F.magnetic (t, y) (0 : Fin 3)) :=
+      ((hElectric (0 : Fin 3)).mul
+          (hMagnetic (1 : Fin 3))).sub
+        ((hElectric (1 : Fin 3)).mul
+          (hMagnetic (0 : Fin 3)))
+
+    simpa [
+      maxwellPoyntingSpatialSlice3,
+      maxwellCross3,
+      cross_apply,
+      Pi.smul_apply,
+      smul_eq_mul
+    ] using hScale.mul hCross
+
+/-
+PROVED := fixed_time_Poynting_spatial_slice_is_C1
+PROVED := Poynting_spatial_slice_fderiv_is_continuous
+BOUNDARY := ¬ spatial_divergence_continuity_derived
+BOUNDARY := ¬ spatial_divergence_integrability_derived_on_rectangular_domain
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
 end Chronos.Frontier
