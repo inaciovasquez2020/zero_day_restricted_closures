@@ -5251,4 +5251,21 @@ theorem maxwellRectangularBoundaryFlux3_signedSixFaceExpansion
             S (Fin.insertNth i (D.lower i) y) i)) := by
   rfl
 
+
+/--
+Dotting a vector with the outward normal of the upper face orthogonal
+to coordinate axis `i` extracts its `i`th coordinate.
+-/
+theorem maxwellDot3_rectangularUpperFaceOutwardNormal3
+    (v : MaxwellVector3)
+    (i : Fin 3) :
+    maxwellDot3 v
+        (maxwellRectangularFaceOutwardNormal3 (i, true)) =
+      v i := by
+  simp [
+    maxwellDot3,
+    maxwellRectangularFaceOutwardNormal3,
+    maxwellSpatialDirection3
+  ]
+
 end Chronos.Frontier
