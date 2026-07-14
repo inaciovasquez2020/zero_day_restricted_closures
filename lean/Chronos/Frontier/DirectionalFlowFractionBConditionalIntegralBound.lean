@@ -4133,4 +4133,354 @@ BOUNDARY := ¬ total_energy_derivative_HasDerivAt_fully_derived
 BOUNDARY := ¬ boundary_flux_interval_integrability_derived
 BOUNDARY := ¬ unconditional_integrated_rectangular_balance_packaged
 -/
+/--
+For every smooth Maxwell field, differentiation passes through the
+rectangular spatial energy integral.
+
+The required local dominating bound is obtained from continuity of the
+energy-density time derivative on a compact time-space rectangle.
+-/
+theorem maxwellTotalElectromagneticEnergy3_hasDerivAt_of_smooth
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t : ℝ) :
+    HasDerivAt
+      (maxwellTotalElectromagneticEnergy3
+        ε₀ μ₀ F D)
+      (∫ x in Set.Icc D.lower D.upper,
+        maxwellTimeDerivative3
+          (maxwellEnergyDensity3 ε₀ μ₀ F)
+          (t, x))
+      t := by
+  have hElectric :
+      ∀ i : Fin 3,
+        ContDiff ℝ 1
+          (fun p : MaxwellSpacetime3 =>
+            F.electric p i) :=
+    fun i =>
+      (contDiff_pi.mp F.electric_contDiff) i
+
+  have hMagnetic :
+      ∀ i : Fin 3,
+        ContDiff ℝ 1
+          (fun p : MaxwellSpacetime3 =>
+            F.magnetic p i) :=
+    fun i =>
+      (contDiff_pi.mp F.magnetic_contDiff) i
+
+  have hElectricDotExpanded :
+      ContDiff ℝ 1
+        (fun p : MaxwellSpacetime3 =>
+          F.electric p (0 : Fin 3) *
+              F.electric p (0 : Fin 3) +
+            (F.electric p (1 : Fin 3) *
+                F.electric p (1 : Fin 3) +
+              F.electric p (2 : Fin 3) *
+                F.electric p (2 : Fin 3))) :=
+    ((hElectric (0 : Fin 3)).mul
+        (hElectric (0 : Fin 3))).add
+      (((hElectric (1 : Fin 3)).mul
+          (hElectric (1 : Fin 3))).add
+        ((hElectric (2 : Fin 3)).mul
+          (hElectric (2 : Fin 3))))
+
+  have hMagneticDotExpanded :
+      ContDiff ℝ 1
+        (fun p : MaxwellSpacetime3 =>
+          F.magnetic p (0 : Fin 3) *
+              F.magnetic p (0 : Fin 3) +
+            (F.magnetic p (1 : Fin 3) *
+                F.magnetic p (1 : Fin 3) +
+              F.magnetic p (2 : Fin 3) *
+                F.magnetic p (2 : Fin 3))) :=
+    ((hMagnetic (0 : Fin 3)).mul
+        (hMagnetic (0 : Fin 3))).add
+      (((hMagnetic (1 : Fin 3)).mul
+          (hMagnetic (1 : Fin 3))).add
+        ((hMagnetic (2 : Fin 3)).mul
+          (hMagnetic (2 : Fin 3))))
+
+  have hElectricDot :
+      ContDiff ℝ 1
+        (fun p : MaxwellSpacetime3 =>
+          maxwellDot3
+            (F.electric p)
+            (F.electric p)) := by
+    simpa [
+      maxwellDot3,
+      Fin.sum_univ_succ
+    ] using hElectricDotExpanded
+
+  have hMagneticDot :
+      ContDiff ℝ 1
+        (fun p : MaxwellSpacetime3 =>
+          maxwellDot3
+            (F.magnetic p)
+            (F.magnetic p)) := by
+    simpa [
+      maxwellDot3,
+      Fin.sum_univ_succ
+    ] using hMagneticDotExpanded
+
+  have hElectricScale :
+      ContDiff ℝ 1
+        (fun _ : MaxwellSpacetime3 =>
+          ε₀ / 2) :=
+    contDiff_const
+
+  have hMagneticScale :
+      ContDiff ℝ 1
+        (fun _ : MaxwellSpacetime3 =>
+          1 / (2 * μ₀)) :=
+    contDiff_const
+
+  have hEnergy :
+      ContDiff ℝ 1
+        (maxwellEnergyDensity3 ε₀ μ₀ F) := by
+    change
+      ContDiff ℝ 1
+        (fun p : MaxwellSpacetime3 =>
+          (ε₀ / 2) *
+              maxwellDot3
+                (F.electric p)
+                (F.electric p) +
+            (1 / (2 * μ₀)) *
+              maxwellDot3
+                (F.magnetic p)
+                (F.magnetic p))
+
+    exact
+      (hElectricScale.mul hElectricDot).add
+        (hMagneticScale.mul hMagneticDot)
+
+  let s : Set ℝ :=
+    Set.Icc (t - 1) (t + 1)
+
+  let K : Set MaxwellSpacetime3 :=
+    s ×ˢ Set.Icc D.lower D.upper
+
+  have hs :
+      s ∈ nhds t := by
+    dsimp [s]
+    exact
+      Icc_mem_nhds
+        (by linarith)
+        (by linarith)
+
+  have hKCompact :
+      IsCompact K := by
+    dsimp [K, s]
+    exact
+      isCompact_Icc.prod
+        isCompact_Icc
+
+  have hDerivativeNormContinuous :
+      Continuous
+        (fun p : MaxwellSpacetime3 =>
+          ‖maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              p‖) :=
+    (maxwellEnergyDensity3_timeDerivative_continuous
+      ε₀
+      μ₀
+      F).norm
+
+  have hBounded :
+      BddAbove
+        ((fun p : MaxwellSpacetime3 =>
+            ‖maxwellTimeDerivative3
+                (maxwellEnergyDensity3 ε₀ μ₀ F)
+                p‖) '' K) :=
+    hKCompact.bddAbove_image
+      hDerivativeNormContinuous.continuousOn
+
+  rcases hBounded with ⟨C, hC⟩
+
+  have hEnergyMeasurable :
+      ∀ᶠ τ in nhds t,
+        AEStronglyMeasurable
+          (fun x : MaxwellVector3 =>
+            maxwellEnergyDensity3
+              ε₀ μ₀ F (τ, x))
+          (volume.restrict
+            (Set.Icc D.lower D.upper)) := by
+    filter_upwards [] with τ
+
+    have hEmbedding :
+        Continuous
+          (fun x : MaxwellVector3 =>
+            ((τ, x) : MaxwellSpacetime3)) :=
+      continuous_const.prodMk
+        continuous_id
+
+    exact
+      (hEnergy.continuous.comp
+        hEmbedding).aestronglyMeasurable
+
+  have hEnergySliceContinuous :
+      Continuous
+        (fun x : MaxwellVector3 =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x)) := by
+    have hEmbedding :
+        Continuous
+          (fun x : MaxwellVector3 =>
+            ((t, x) : MaxwellSpacetime3)) :=
+      continuous_const.prodMk
+        continuous_id
+
+    exact hEnergy.continuous.comp hEmbedding
+
+  have hEnergyIntegrable :
+      Integrable
+        (fun x : MaxwellVector3 =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x))
+        (volume.restrict
+          (Set.Icc D.lower D.upper)) :=
+    hEnergySliceContinuous.integrableOn_Icc
+
+  have hDerivativeSliceContinuous :
+      Continuous
+        (fun x : MaxwellVector3 =>
+          maxwellTimeDerivative3
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (t, x)) := by
+    have hEmbedding :
+        Continuous
+          (fun x : MaxwellVector3 =>
+            ((t, x) : MaxwellSpacetime3)) :=
+      continuous_const.prodMk
+        continuous_id
+
+    exact
+      (maxwellEnergyDensity3_timeDerivative_continuous
+        ε₀
+        μ₀
+        F).comp hEmbedding
+
+  have hTimeDerivativeMeasurable :
+      AEStronglyMeasurable
+        (fun x : MaxwellVector3 =>
+          maxwellTimeDerivative3
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (t, x))
+        (volume.restrict
+          (Set.Icc D.lower D.upper)) :=
+    hDerivativeSliceContinuous.aestronglyMeasurable
+
+  have hDerivativeBound :
+      ∀ᵐ x ∂
+        volume.restrict
+          (Set.Icc D.lower D.upper),
+        ∀ τ ∈ s,
+          ‖maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x)‖ ≤
+            C := by
+    filter_upwards [
+      MeasureTheory.ae_restrict_mem
+        (measurableSet_Icc :
+          MeasurableSet
+            (Set.Icc D.lower D.upper))
+    ] with x hx
+
+    intro τ hτ
+
+    apply hC
+
+    refine ⟨((τ, x) : MaxwellSpacetime3), ?_, rfl⟩
+    exact ⟨hτ, hx⟩
+
+  have hBoundContinuous :
+      Continuous
+        (fun _ : MaxwellVector3 => C) :=
+    continuous_const
+
+  have hBoundIntegrable :
+      Integrable
+        (fun _ : MaxwellVector3 => C)
+        (volume.restrict
+          (Set.Icc D.lower D.upper)) :=
+    hBoundContinuous.integrableOn_Icc
+
+  have hEnergyDifferentiable :
+      Differentiable ℝ
+        (maxwellEnergyDensity3 ε₀ μ₀ F) :=
+    hEnergy.differentiable
+      (by norm_num)
+
+  have hPointwiseDerivative :
+      ∀ᵐ x ∂
+        volume.restrict
+          (Set.Icc D.lower D.upper),
+        ∀ τ ∈ s,
+          HasDerivAt
+            (fun σ =>
+              maxwellEnergyDensity3
+                ε₀ μ₀ F (σ, x))
+            (maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x))
+            τ := by
+    filter_upwards [] with x
+
+    intro τ hτ
+
+    have hOuter :
+        HasFDerivAt
+          (maxwellEnergyDensity3 ε₀ μ₀ F)
+          (fderiv ℝ
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (τ, x))
+          (τ, x) :=
+      (hEnergyDifferentiable
+        (τ, x)).hasFDerivAt
+
+    have hInner :
+        HasDerivAt
+          (fun σ : ℝ =>
+            ((σ, x) : MaxwellSpacetime3))
+          maxwellTimeDirection3
+          τ := by
+      simpa [maxwellTimeDirection3] using
+        (hasFDerivAt_prodMk_left
+          τ
+          x).hasDerivAt
+
+    have hComposition :=
+      hOuter.comp_hasDerivAt
+        τ
+        hInner
+
+    simpa [
+      Function.comp_def,
+      maxwellTimeDerivative3
+    ] using hComposition
+
+  exact
+    (maxwellTotalElectromagneticEnergy3_hasDerivAt_of_dominated
+      (ε₀ := ε₀)
+      (μ₀ := μ₀)
+      (F := F)
+      (D := D)
+      (t := t)
+      (s := s)
+      (bound := fun _ : MaxwellVector3 => C)
+      hs
+      hEnergyMeasurable
+      hEnergyIntegrable
+      hTimeDerivativeMeasurable
+      hDerivativeBound
+      hBoundIntegrable
+      hPointwiseDerivative).2
+
+/-
+PROVED := total_electromagnetic_energy_HasDerivAt_from_smoothness
+PROVED := local_uniform_domination_derived_from_compactness
+PROVED := differentiation_under_rectangular_spatial_integral_fully_derived
+BOUNDARY := ¬ boundary_flux_interval_integrability_derived
+BOUNDARY := ¬ unconditional_integrated_rectangular_balance_packaged
+-/
 end Chronos.Frontier
