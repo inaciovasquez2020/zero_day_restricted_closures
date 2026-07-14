@@ -4040,4 +4040,97 @@ BOUNDARY := ¬ total_energy_derivative_FTC_hypotheses_fully_derived
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
+/--
+The spatial integral of the electromagnetic energy-density time
+derivative is interval integrable in time.
+
+The proof uses continuity on the compact time-space rectangle followed
+by Fubini integrability.
+-/
+theorem maxwellSpatiallyIntegratedEnergyDerivative_intervalIntegrable
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t₀ t₁ : ℝ) :
+    IntervalIntegrable
+      (fun τ =>
+        ∫ x in Set.Icc D.lower D.upper,
+          maxwellTimeDerivative3
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (τ, x))
+      volume
+      t₀
+      t₁ := by
+  have hCompactTime :
+      IsCompact (Set.uIcc t₀ t₁) :=
+    isCompact_uIcc
+
+  have hCompactSpace :
+      IsCompact (Set.Icc D.lower D.upper) :=
+    isCompact_Icc
+
+  have hCompactProduct :
+      IsCompact
+        (Set.uIcc t₀ t₁ ×ˢ
+          Set.Icc D.lower D.upper) :=
+    hCompactTime.prod hCompactSpace
+
+  have hSpacetimeIntegrableOn :
+      IntegrableOn
+        (maxwellTimeDerivative3
+          (maxwellEnergyDensity3 ε₀ μ₀ F))
+        (Set.uIcc t₀ t₁ ×ˢ
+          Set.Icc D.lower D.upper)
+        (volume : Measure MaxwellSpacetime3) :=
+    ContinuousOn.integrableOn_compact
+      hCompactProduct
+      (maxwellEnergyDensity3_timeDerivative_continuous
+        ε₀
+        μ₀
+        F).continuousOn
+
+  have hSpacetimeIntegrable :
+      Integrable
+        (maxwellTimeDerivative3
+          (maxwellEnergyDensity3 ε₀ μ₀ F))
+        (((volume : Measure ℝ).restrict
+              (Set.uIcc t₀ t₁)).prod
+          ((volume : Measure MaxwellVector3).restrict
+              (Set.Icc D.lower D.upper))) := by
+    rw [Measure.prod_restrict]
+    exact hSpacetimeIntegrableOn
+
+  have hIntegratedTime :
+      Integrable
+        (fun τ =>
+          ∫ x,
+            maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x)
+            ∂((volume : Measure MaxwellVector3).restrict
+              (Set.Icc D.lower D.upper)))
+        ((volume : Measure ℝ).restrict
+          (Set.uIcc t₀ t₁)) :=
+    hSpacetimeIntegrable.integral_prod_left
+
+  have hIntegratedOnTimeInterval :
+      IntegrableOn
+        (fun τ =>
+          ∫ x in Set.Icc D.lower D.upper,
+            maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x))
+        (Set.uIcc t₀ t₁)
+        volume := by
+    simpa only [IntegrableOn] using hIntegratedTime
+
+  exact hIntegratedOnTimeInterval.intervalIntegrable
+
+/-
+PROVED := spatially_integrated_energy_derivative_interval_integrable
+PROVED := spacetime_compact_product_integrability
+BOUNDARY := ¬ total_energy_derivative_HasDerivAt_fully_derived
+BOUNDARY := ¬ boundary_flux_interval_integrability_derived
+BOUNDARY := ¬ unconditional_integrated_rectangular_balance_packaged
+-/
 end Chronos.Frontier
