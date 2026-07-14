@@ -3992,4 +3992,52 @@ BOUNDARY := ¬ unconditional_integrated_rectangular_balance_packaged
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
+/--
+For a smooth Maxwell field satisfying the uncontracted Maxwell
+evolution equations, the fixed-time rectangular Poynting balance
+requires no separately supplied spatial analytic hypotheses.
+-/
+theorem maxwellFixedTimeRectangularPoyntingBalance3_of_smooth_evolution
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (t : ℝ)
+    (D : MaxwellRectangularDomain3)
+    (hEvolution :
+      ∀ x : MaxwellVector3,
+        UncontractedMaxwellEvolutionAt3
+          ε₀ μ₀ F (t, x)) :
+    (∫ x in Set.Icc D.lower D.upper,
+        maxwellTimeDerivative3
+          (maxwellEnergyDensity3 ε₀ μ₀ F)
+          (t, x)) +
+      maxwellRectangularBoundaryFlux3
+        D
+        (maxwellPoyntingSpatialSlice3 μ₀ F t) =
+    -(∫ x in Set.Icc D.lower D.upper,
+        maxwellDot3
+          (F.current (t, x))
+          (F.electric (t, x))) := by
+  exact
+    maxwellFixedTimeRectangularPoyntingBalance3_of_smooth
+      ε₀
+      μ₀
+      F
+      t
+      D
+      hEvolution
+      (maxwellEnergyDensity3_timeDerivative_integrableOn_rectangularDomain
+        ε₀
+        μ₀
+        F
+        t
+        D)
+
+/-
+PROVED := fixed_time_rectangular_Poynting_balance_from_smooth_Maxwell_evolution
+PROVED := fixed_time_energy_derivative_integrability_premise_eliminated
+BOUNDARY := ¬ time_interval_integrability_derived_from_smoothness
+BOUNDARY := ¬ total_energy_derivative_FTC_hypotheses_fully_derived
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
 end Chronos.Frontier
