@@ -4483,4 +4483,150 @@ PROVED := differentiation_under_rectangular_spatial_integral_fully_derived
 BOUNDARY := ¬ boundary_flux_interval_integrability_derived
 BOUNDARY := ¬ unconditional_integrated_rectangular_balance_packaged
 -/
+/--
+The electromagnetic work density `J · E` of a smooth Maxwell field is
+continuous on spacetime.
+-/
+theorem maxwellWorkDensity3_continuous
+    (F : SmoothMaxwellField3) :
+    Continuous
+      (fun p : MaxwellSpacetime3 =>
+        maxwellDot3
+          (F.current p)
+          (F.electric p)) := by
+  have hCurrent :
+      ∀ i : Fin 3,
+        ContDiff ℝ 1
+          (fun p : MaxwellSpacetime3 =>
+            F.current p i) :=
+    fun i =>
+      (contDiff_pi.mp F.current_contDiff) i
+
+  have hElectric :
+      ∀ i : Fin 3,
+        ContDiff ℝ 1
+          (fun p : MaxwellSpacetime3 =>
+            F.electric p i) :=
+    fun i =>
+      (contDiff_pi.mp F.electric_contDiff) i
+
+  have hExpanded :
+      ContDiff ℝ 1
+        (fun p : MaxwellSpacetime3 =>
+          F.current p (0 : Fin 3) *
+              F.electric p (0 : Fin 3) +
+            (F.current p (1 : Fin 3) *
+                F.electric p (1 : Fin 3) +
+              F.current p (2 : Fin 3) *
+                F.electric p (2 : Fin 3))) :=
+    ((hCurrent (0 : Fin 3)).mul
+        (hElectric (0 : Fin 3))).add
+      (((hCurrent (1 : Fin 3)).mul
+          (hElectric (1 : Fin 3))).add
+        ((hCurrent (2 : Fin 3)).mul
+          (hElectric (2 : Fin 3))))
+
+  have hWork :
+      ContDiff ℝ 1
+        (fun p : MaxwellSpacetime3 =>
+          maxwellDot3
+            (F.current p)
+            (F.electric p)) := by
+    simpa [
+      maxwellDot3,
+      Fin.sum_univ_succ
+    ] using hExpanded
+
+  exact hWork.continuous
+
+/--
+The rectangular spatial integral of electromagnetic work density is
+interval integrable in time.
+-/
+theorem maxwellSpatiallyIntegratedWork_intervalIntegrable
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t₀ t₁ : ℝ) :
+    IntervalIntegrable
+      (fun τ =>
+        ∫ x in Set.Icc D.lower D.upper,
+          maxwellDot3
+            (F.current (τ, x))
+            (F.electric (τ, x)))
+      volume
+      t₀
+      t₁ := by
+  have hCompactTime :
+      IsCompact (Set.uIcc t₀ t₁) :=
+    isCompact_uIcc
+
+  have hCompactSpace :
+      IsCompact (Set.Icc D.lower D.upper) :=
+    isCompact_Icc
+
+  have hCompactProduct :
+      IsCompact
+        (Set.uIcc t₀ t₁ ×ˢ
+          Set.Icc D.lower D.upper) :=
+    hCompactTime.prod hCompactSpace
+
+  have hSpacetimeIntegrableOn :
+      IntegrableOn
+        (fun p : MaxwellSpacetime3 =>
+          maxwellDot3
+            (F.current p)
+            (F.electric p))
+        (Set.uIcc t₀ t₁ ×ˢ
+          Set.Icc D.lower D.upper)
+        (volume : Measure MaxwellSpacetime3) :=
+    ContinuousOn.integrableOn_compact
+      hCompactProduct
+      (maxwellWorkDensity3_continuous
+        F).continuousOn
+
+  have hSpacetimeIntegrable :
+      Integrable
+        (fun p : MaxwellSpacetime3 =>
+          maxwellDot3
+            (F.current p)
+            (F.electric p))
+        (((volume : Measure ℝ).restrict
+              (Set.uIcc t₀ t₁)).prod
+          ((volume : Measure MaxwellVector3).restrict
+              (Set.Icc D.lower D.upper))) := by
+    rw [Measure.prod_restrict]
+    exact hSpacetimeIntegrableOn
+
+  have hIntegratedTime :
+      Integrable
+        (fun τ =>
+          ∫ x,
+            maxwellDot3
+              (F.current (τ, x))
+              (F.electric (τ, x))
+            ∂((volume : Measure MaxwellVector3).restrict
+              (Set.Icc D.lower D.upper)))
+        ((volume : Measure ℝ).restrict
+          (Set.uIcc t₀ t₁)) :=
+    hSpacetimeIntegrable.integral_prod_left
+
+  have hIntegratedOnTimeInterval :
+      IntegrableOn
+        (fun τ =>
+          ∫ x in Set.Icc D.lower D.upper,
+            maxwellDot3
+              (F.current (τ, x))
+              (F.electric (τ, x)))
+        (Set.uIcc t₀ t₁)
+        volume := by
+    simpa only [IntegrableOn] using hIntegratedTime
+
+  exact hIntegratedOnTimeInterval.intervalIntegrable
+
+/-
+PROVED := electromagnetic_work_density_continuous
+PROVED := spatially_integrated_electromagnetic_work_interval_integrable
+BOUNDARY := ¬ boundary_flux_interval_integrability_derived
+BOUNDARY := ¬ unconditional_integrated_rectangular_balance_packaged
+-/
 end Chronos.Frontier
