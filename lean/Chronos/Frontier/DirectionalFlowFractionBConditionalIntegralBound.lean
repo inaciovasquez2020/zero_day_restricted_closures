@@ -878,12 +878,35 @@ theorem maxwellSpatialDerivative3_sub
 /-
 PROVED := spatial_Frechet_product_rule
 PROVED := spatial_Frechet_subtraction_rule
-BOUNDARY := ¬ coordinate_cross_product_expansion_proved
+PROVED := coordinate_cross_product_expansion
 BOUNDARY := ¬ divergence_cross_product_identity_from_fderiv_proved
 BOUNDARY := ¬ uncontracted_Maxwell_evolution_equations_formalized
 BOUNDARY := ¬ energy_density_time_derivative_from_fderiv_proved
 BOUNDARY := ¬ divergence_theorem_instantiated_for_the_electromagnetic_domain
 BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
+
+/--
+The three coordinate formulas for the Mathlib cross product on
+`Fin 3 → ℝ`.
+-/
+theorem maxwellCross3_coordinate_expansion
+    (u v : MaxwellVector3) :
+    maxwellCross3 u v (0 : Fin 3) =
+        u 1 * v 2 - u 2 * v 1 ∧
+      maxwellCross3 u v (1 : Fin 3) =
+        u 2 * v 0 - u 0 * v 2 ∧
+      maxwellCross3 u v (2 : Fin 3) =
+        u 0 * v 1 - u 1 * v 0 := by
+  simp [maxwellCross3, cross_apply]
+
+/-
+PROVED := coordinate_cross_product_expansion
+BOUNDARY := ¬ differentiated_cross_product_coordinates_proved
+BOUNDARY := ¬ divergence_cross_product_identity_from_fderiv_proved
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
