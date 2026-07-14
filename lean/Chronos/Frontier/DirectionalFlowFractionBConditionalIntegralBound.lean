@@ -2768,4 +2768,584 @@ BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
 
+
+/--
+At a fixed time, integration of the local Poynting conservation law
+over a spatial set gives the volume balance between the time derivative
+of electromagnetic energy density, the spatial divergence of the
+Poynting vector, and the work density `J · E`.
+-/
+theorem maxwellFixedTimeSpatiallyIntegratedLocalPoyntingIdentity3
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (t : ℝ)
+    (Ω : Set MaxwellVector3)
+    (hEvolution :
+      ∀ x : MaxwellVector3,
+        UncontractedMaxwellEvolutionAt3
+          ε₀ μ₀ F (t, x))
+    (hE0 :
+      ∀ x : MaxwellVector3,
+        DifferentiableAt ℝ
+          (fun q =>
+            F.electric q (0 : Fin 3))
+          (t, x))
+    (hE1 :
+      ∀ x : MaxwellVector3,
+        DifferentiableAt ℝ
+          (fun q =>
+            F.electric q (1 : Fin 3))
+          (t, x))
+    (hE2 :
+      ∀ x : MaxwellVector3,
+        DifferentiableAt ℝ
+          (fun q =>
+            F.electric q (2 : Fin 3))
+          (t, x))
+    (hB0 :
+      ∀ x : MaxwellVector3,
+        DifferentiableAt ℝ
+          (fun q =>
+            F.magnetic q (0 : Fin 3))
+          (t, x))
+    (hB1 :
+      ∀ x : MaxwellVector3,
+        DifferentiableAt ℝ
+          (fun q =>
+            F.magnetic q (1 : Fin 3))
+          (t, x))
+    (hB2 :
+      ∀ x : MaxwellVector3,
+        DifferentiableAt ℝ
+          (fun q =>
+            F.magnetic q (2 : Fin 3))
+          (t, x))
+    (hTimeIntegrable :
+      IntegrableOn
+        (fun x =>
+          maxwellTimeDerivative3
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (t, x))
+        Ω)
+    (hDivergenceIntegrable :
+      IntegrableOn
+        (
+          maxwellSpatialSliceDivergence3
+            (maxwellPoyntingSpatialSlice3
+              μ₀ F t)
+        )
+        Ω) :
+    (
+      ∫ x in Ω,
+        maxwellTimeDerivative3
+          (maxwellEnergyDensity3 ε₀ μ₀ F)
+          (t, x)
+    ) +
+      (
+        ∫ x in Ω,
+          maxwellSpatialSliceDivergence3
+            (maxwellPoyntingSpatialSlice3
+              μ₀ F t)
+            x
+      ) =
+    -(
+      ∫ x in Ω,
+        maxwellDot3
+          (F.current (t, x))
+          (F.electric (t, x))
+    ) := by
+  have hAE :
+      (
+        fun x =>
+          maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (t, x) +
+            maxwellSpatialSliceDivergence3
+              (maxwellPoyntingSpatialSlice3
+                μ₀ F t)
+              x
+      ) =ᵐ[volume.restrict Ω]
+      (
+        fun x =>
+          -maxwellDot3
+            (F.current (t, x))
+            (F.electric (t, x))
+      ) :=
+    Filter.Eventually.of_forall
+      (fun x => by
+        have hLocal :=
+          localPoyntingConservation_fieldLevel3_of_uncontracted
+            ε₀
+            μ₀
+            F
+            (t, x)
+            (hEvolution x)
+            (hE0 x)
+            (hE1 x)
+            (hE2 x)
+            (hB0 x)
+            (hB1 x)
+            (hB2 x)
+
+        have hBridge :=
+          maxwellPoyntingSpatialSliceDivergence_eq_spacetimeDivergence
+            μ₀
+            F
+            t
+            x
+            (hE0 x)
+            (hE1 x)
+            (hE2 x)
+            (hB0 x)
+            (hB1 x)
+            (hB2 x)
+
+        calc
+          maxwellTimeDerivative3
+                (maxwellEnergyDensity3 ε₀ μ₀ F)
+                (t, x) +
+              maxwellSpatialSliceDivergence3
+                (maxwellPoyntingSpatialSlice3
+                  μ₀ F t)
+                x =
+            maxwellTimeDerivative3
+                (maxwellEnergyDensity3 ε₀ μ₀ F)
+                (t, x) +
+              (1 / μ₀) *
+                maxwellDivergence3
+                  (fun q =>
+                    maxwellCross3
+                      (F.electric q)
+                      (F.magnetic q))
+                  (t, x) := by
+                    rw [hBridge]
+          _ =
+            -maxwellDot3
+              (F.current (t, x))
+              (F.electric (t, x)) :=
+                hLocal)
+
+  have hIntegral :=
+    integral_congr_ae hAE
+
+  rw [
+    integral_add
+      hTimeIntegrable
+      hDivergenceIntegrable
+  ] at hIntegral
+
+  rw [integral_neg] at hIntegral
+
+  exact hIntegral
+
+/-
+PROVED := fixed_time_spatially_integrated_local_Poynting_identity
+BOUNDARY := ¬ differentiation_under_spatial_integral_instantiated
+BOUNDARY := ¬ rectangular_boundary_flux_substituted_into_fixed_time_balance
+BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
+BOUNDARY := ¬ integrated_rectangular_Poynting_energy_balance
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
+/--
+Total electromagnetic energy stored in a rectangular spatial domain
+at time `t`.
+-/
+noncomputable def maxwellTotalElectromagneticEnergy3
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t : ℝ) :
+    ℝ :=
+  ∫ x in Set.Icc D.lower D.upper,
+    maxwellEnergyDensity3 ε₀ μ₀ F (t, x)
+/--
+Differentiation under the rectangular spatial integral under explicit
+local domination, measurability, integrability, and pointwise
+derivative hypotheses.
+-/
+theorem maxwellTotalElectromagneticEnergy3_hasDerivAt_of_dominated
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t : ℝ)
+    (s : Set ℝ)
+    (bound : MaxwellVector3 → ℝ)
+    (hs : s ∈ nhds t)
+    (hEnergyMeasurable :
+      ∀ᶠ τ in nhds t,
+        AEStronglyMeasurable
+          (fun x =>
+            maxwellEnergyDensity3
+              ε₀ μ₀ F (τ, x))
+          (volume.restrict
+            (Set.Icc D.lower D.upper)))
+    (hEnergyIntegrable :
+      Integrable
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x))
+        (volume.restrict
+          (Set.Icc D.lower D.upper)))
+    (hTimeDerivativeMeasurable :
+      AEStronglyMeasurable
+        (fun x =>
+          maxwellTimeDerivative3
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (t, x))
+        (volume.restrict
+          (Set.Icc D.lower D.upper)))
+    (hDerivativeBound :
+      ∀ᵐ x ∂
+        volume.restrict
+          (Set.Icc D.lower D.upper),
+        ∀ τ ∈ s,
+          ‖maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x)‖ ≤
+            bound x)
+    (hBoundIntegrable :
+      Integrable
+        bound
+        (volume.restrict
+          (Set.Icc D.lower D.upper)))
+    (hPointwiseDerivative :
+      ∀ᵐ x ∂
+        volume.restrict
+          (Set.Icc D.lower D.upper),
+        ∀ τ ∈ s,
+          HasDerivAt
+            (fun σ =>
+              maxwellEnergyDensity3
+                ε₀ μ₀ F (σ, x))
+            (maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x))
+            τ) :
+    Integrable
+        (fun x =>
+          maxwellTimeDerivative3
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (t, x))
+        (volume.restrict
+          (Set.Icc D.lower D.upper)) ∧
+      HasDerivAt
+        (maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D)
+        (∫ x in Set.Icc D.lower D.upper,
+          maxwellTimeDerivative3
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (t, x))
+        t := by
+  simpa [
+    maxwellTotalElectromagneticEnergy3
+  ] using
+    (hasDerivAt_integral_of_dominated_loc_of_deriv_le
+      (μ :=
+        volume.restrict
+          (Set.Icc D.lower D.upper))
+      (F :=
+        fun τ x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (τ, x))
+      (F' :=
+        fun τ x =>
+          maxwellTimeDerivative3
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (τ, x))
+      (x₀ := t)
+      (s := s)
+      (bound := bound)
+      hs
+      hEnergyMeasurable
+      hEnergyIntegrable
+      hTimeDerivativeMeasurable
+      hDerivativeBound
+      hBoundIntegrable
+      hPointwiseDerivative)
+/--
+The fixed-time rectangular Poynting balance obtained by replacing the
+volume integral of the divergence with the signed six-face flux.
+-/
+theorem maxwellFixedTimeRectangularPoyntingBalance3
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (t : ℝ)
+    (D : MaxwellRectangularDomain3)
+    (hIntegratedLocal :
+      (∫ x in Set.Icc D.lower D.upper,
+          maxwellTimeDerivative3
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (t, x)) +
+        (∫ x in Set.Icc D.lower D.upper,
+          maxwellSpatialSliceDivergence3
+            (maxwellPoyntingSpatialSlice3 μ₀ F t)
+            x) =
+      -(∫ x in Set.Icc D.lower D.upper,
+          maxwellDot3
+            (F.current (t, x))
+            (F.electric (t, x))))
+    (hContinuous :
+      ContinuousOn
+        (maxwellPoyntingSpatialSlice3 μ₀ F t)
+        (Set.Icc D.lower D.upper))
+    (hDifferentiable :
+      ∀ x ∈
+        Set.pi
+          Set.univ
+          (fun i =>
+            Set.Ioo
+              (D.lower i)
+              (D.upper i)),
+        DifferentiableAt ℝ
+          (maxwellPoyntingSpatialSlice3 μ₀ F t)
+          x)
+    (hDivergenceIntegrable :
+      IntegrableOn
+        (maxwellSpatialSliceDivergence3
+          (maxwellPoyntingSpatialSlice3 μ₀ F t))
+        (Set.Icc D.lower D.upper)) :
+    (∫ x in Set.Icc D.lower D.upper,
+        maxwellTimeDerivative3
+          (maxwellEnergyDensity3 ε₀ μ₀ F)
+          (t, x)) +
+      maxwellRectangularBoundaryFlux3
+        D
+        (maxwellPoyntingSpatialSlice3 μ₀ F t) =
+    -(∫ x in Set.Icc D.lower D.upper,
+        maxwellDot3
+          (F.current (t, x))
+          (F.electric (t, x))) := by
+  rw [
+    ← maxwellPoyntingRectangularDivergenceTheorem3
+      μ₀
+      F
+      t
+      D
+      hContinuous
+      hDifferentiable
+      hDivergenceIntegrable
+  ]
+
+  exact hIntegratedLocal
+/--
+The time fundamental theorem of calculus for total electromagnetic
+energy in the rectangular domain.
+-/
+theorem maxwellTotalElectromagneticEnergy3_timeFTC
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t₀ t₁ : ℝ)
+    (hDerivative :
+      ∀ τ ∈ Set.uIcc t₀ t₁,
+        HasDerivAt
+          (maxwellTotalElectromagneticEnergy3
+            ε₀ μ₀ F D)
+          (∫ x in Set.Icc D.lower D.upper,
+            maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x))
+          τ)
+    (hDerivativeIntervalIntegrable :
+      IntervalIntegrable
+        (fun τ =>
+          ∫ x in Set.Icc D.lower D.upper,
+            maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x))
+        volume
+        t₀
+        t₁) :
+    maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D t₁ -
+        maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D t₀ =
+      ∫ τ in t₀..t₁,
+        ∫ x in Set.Icc D.lower D.upper,
+          maxwellTimeDerivative3
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (τ, x) := by
+  have hFTC :=
+    intervalIntegral.integral_eq_sub_of_hasDerivAt
+      (f :=
+        maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D)
+      (f' :=
+        fun τ =>
+          ∫ x in Set.Icc D.lower D.upper,
+            maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x))
+      hDerivative
+      hDerivativeIntervalIntegrable
+
+  exact hFTC.symm
+/--
+Integrated rectangular Poynting balance obtained from the already
+established fixed-time balance and the total-energy time FTC.
+
+The fixed-time balance is an explicit premise so this theorem performs
+only the final temporal integration and algebraic packaging.
+-/
+theorem maxwellIntegratedRectangularPoyntingBalance3
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t₀ t₁ : ℝ)
+    (hDerivative :
+      ∀ τ ∈ Set.uIcc t₀ t₁,
+        HasDerivAt
+          (maxwellTotalElectromagneticEnergy3
+            ε₀ μ₀ F D)
+          (∫ x in Set.Icc D.lower D.upper,
+            maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x))
+          τ)
+    (hDerivativeIntervalIntegrable :
+      IntervalIntegrable
+        (fun τ =>
+          ∫ x in Set.Icc D.lower D.upper,
+            maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x))
+        volume
+        t₀
+        t₁)
+    (hFluxIntervalIntegrable :
+      IntervalIntegrable
+        (fun τ =>
+          maxwellRectangularBoundaryFlux3
+            D
+            (maxwellPoyntingSpatialSlice3 μ₀ F τ))
+        volume
+        t₀
+        t₁)
+    (hFixedTimeBalance :
+      ∀ τ : ℝ,
+        (∫ x in Set.Icc D.lower D.upper,
+            maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x)) +
+          maxwellRectangularBoundaryFlux3
+            D
+            (maxwellPoyntingSpatialSlice3 μ₀ F τ) =
+        -(∫ x in Set.Icc D.lower D.upper,
+            maxwellDot3
+              (F.current (τ, x))
+              (F.electric (τ, x)))) :
+    maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D t₁ -
+        maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D t₀ +
+        (∫ τ in t₀..t₁,
+          maxwellRectangularBoundaryFlux3
+            D
+            (maxwellPoyntingSpatialSlice3 μ₀ F τ)) =
+      -(∫ τ in t₀..t₁,
+          ∫ x in Set.Icc D.lower D.upper,
+            maxwellDot3
+              (F.current (τ, x))
+              (F.electric (τ, x))) := by
+  have hFTC :=
+    maxwellTotalElectromagneticEnergy3_timeFTC
+      ε₀
+      μ₀
+      F
+      D
+      t₀
+      t₁
+      hDerivative
+      hDerivativeIntervalIntegrable
+
+  have hIntegratedLocal :
+      (∫ τ in t₀..t₁,
+          ∫ x in Set.Icc D.lower D.upper,
+            maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x)) +
+        (∫ τ in t₀..t₁,
+          maxwellRectangularBoundaryFlux3
+            D
+            (maxwellPoyntingSpatialSlice3 μ₀ F τ)) =
+      -(∫ τ in t₀..t₁,
+          ∫ x in Set.Icc D.lower D.upper,
+            maxwellDot3
+              (F.current (τ, x))
+              (F.electric (τ, x))) := by
+    calc
+      (∫ τ in t₀..t₁,
+          ∫ x in Set.Icc D.lower D.upper,
+            maxwellTimeDerivative3
+              (maxwellEnergyDensity3 ε₀ μ₀ F)
+              (τ, x)) +
+          (∫ τ in t₀..t₁,
+            maxwellRectangularBoundaryFlux3
+              D
+              (maxwellPoyntingSpatialSlice3 μ₀ F τ)) =
+        ∫ τ in t₀..t₁,
+          ((∫ x in Set.Icc D.lower D.upper,
+              maxwellTimeDerivative3
+                (maxwellEnergyDensity3 ε₀ μ₀ F)
+                (τ, x)) +
+            maxwellRectangularBoundaryFlux3
+              D
+              (maxwellPoyntingSpatialSlice3 μ₀ F τ)) := by
+            exact
+              (intervalIntegral.integral_add
+                hDerivativeIntervalIntegrable
+                hFluxIntervalIntegrable).symm
+      _ =
+        ∫ τ in t₀..t₁,
+          -(∫ x in Set.Icc D.lower D.upper,
+              maxwellDot3
+                (F.current (τ, x))
+                (F.electric (τ, x))) := by
+            apply intervalIntegral.integral_congr
+            intro τ hτ
+            exact hFixedTimeBalance τ
+      _ =
+        -(∫ τ in t₀..t₁,
+            ∫ x in Set.Icc D.lower D.upper,
+              maxwellDot3
+                (F.current (τ, x))
+                (F.electric (τ, x))) := by
+            rw [intervalIntegral.integral_neg]
+
+  exact
+    integratedSpacetimeEnergyBalance_from_FTC_and_divergence
+      (maxwellTotalElectromagneticEnergy3
+        ε₀ μ₀ F D t₀)
+      (maxwellTotalElectromagneticEnergy3
+        ε₀ μ₀ F D t₁)
+      (∫ τ in t₀..t₁,
+        ∫ x in Set.Icc D.lower D.upper,
+          maxwellTimeDerivative3
+            (maxwellEnergyDensity3 ε₀ μ₀ F)
+            (τ, x))
+      (∫ τ in t₀..t₁,
+        maxwellRectangularBoundaryFlux3
+          D
+          (maxwellPoyntingSpatialSlice3 μ₀ F τ))
+      (∫ τ in t₀..t₁,
+        maxwellRectangularBoundaryFlux3
+          D
+          (maxwellPoyntingSpatialSlice3 μ₀ F τ))
+      (∫ τ in t₀..t₁,
+        ∫ x in Set.Icc D.lower D.upper,
+          maxwellDot3
+            (F.current (τ, x))
+            (F.electric (τ, x)))
+      hFTC
+      rfl
+      hIntegratedLocal
+
+/-
+PROVED := integrated_rectangular_Poynting_balance_from_fixed_time_balance_and_FTC
+BOUNDARY := ¬ analytic_hypotheses_derived_for_every_Maxwell_field
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
 end Chronos.Frontier
