@@ -2495,7 +2495,273 @@ theorem maxwellFixedTimeSpatialDerivative3
 
 /-
 PROVED := fixed_time_spatial_derivative_composition
-BOUNDARY := ¬ spacetime_divergence_identified_with_spatial_slice_divergence
+PROVED := spacetime_divergence_identified_with_spatial_slice_divergence
+BOUNDARY := ¬ spatially_integrated_local_Poynting_balance
+BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
+
+/--
+Evaluation of a differentiable Pi-valued Fréchet derivative at one
+output coordinate agrees with the derivative of that coordinate
+function.
+-/
+theorem maxwellSpatialSliceFDeriv_apply
+    (S : MaxwellVector3 → MaxwellVector3)
+    (x : MaxwellVector3)
+    (hS : DifferentiableAt ℝ S x)
+    (i : Fin 3)
+    (v : MaxwellVector3) :
+    (fderiv ℝ S x) v i =
+      (fderiv ℝ
+        (fun y =>
+          S y i)
+        x)
+        v := by
+  have hi :=
+    (hasFDerivAt_pi'.mp
+      hS.hasFDerivAt) i
+
+  have h :=
+    congrArg
+      (fun L : MaxwellVector3 →L[ℝ] ℝ =>
+        L v)
+      hi.fderiv
+
+  simpa using h.symm
+
+/--
+A constant real factor passes through a scalar-valued Fréchet
+derivative evaluated in any spatial direction.
+-/
+theorem maxwellFDeriv_const_mul
+    (a : ℝ)
+    (f : MaxwellVector3 → ℝ)
+    (x v : MaxwellVector3)
+    (hf : DifferentiableAt ℝ f x) :
+    (fderiv ℝ
+        (fun y =>
+          a * f y)
+        x)
+        v =
+      a *
+        (fderiv ℝ f x) v := by
+  have hConst :
+      DifferentiableAt ℝ
+        (fun _ : MaxwellVector3 =>
+          a)
+        x :=
+    differentiableAt_const a
+
+  have h :=
+    congrArg
+      (fun L : MaxwellVector3 →L[ℝ] ℝ =>
+        L v)
+      (fderiv_fun_mul hConst hf)
+
+  simpa [smul_eq_mul] using h
+
+/--
+At a fixed time and spatial point, the Fréchet divergence of the
+Poynting spatial slice equals the scaled spacetime divergence used by
+the local Poynting conservation theorem.
+-/
+theorem maxwellPoyntingSpatialSliceDivergence_eq_spacetimeDivergence
+    (μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (t : ℝ)
+    (x : MaxwellVector3)
+    (hE0 :
+      DifferentiableAt ℝ
+        (fun q =>
+          F.electric q (0 : Fin 3))
+        (t, x))
+    (hE1 :
+      DifferentiableAt ℝ
+        (fun q =>
+          F.electric q (1 : Fin 3))
+        (t, x))
+    (hE2 :
+      DifferentiableAt ℝ
+        (fun q =>
+          F.electric q (2 : Fin 3))
+        (t, x))
+    (hB0 :
+      DifferentiableAt ℝ
+        (fun q =>
+          F.magnetic q (0 : Fin 3))
+        (t, x))
+    (hB1 :
+      DifferentiableAt ℝ
+        (fun q =>
+          F.magnetic q (1 : Fin 3))
+        (t, x))
+    (hB2 :
+      DifferentiableAt ℝ
+        (fun q =>
+          F.magnetic q (2 : Fin 3))
+        (t, x)) :
+    maxwellSpatialSliceDivergence3
+        (maxwellPoyntingSpatialSlice3
+          μ₀ F t)
+        x =
+      (1 / μ₀) *
+        maxwellDivergence3
+          (fun q =>
+            maxwellCross3
+              (F.electric q)
+              (F.magnetic q))
+          (t, x) := by
+  have hCross :
+      ∀ i : Fin 3,
+        DifferentiableAt ℝ
+          (fun q =>
+            maxwellCross3
+              (F.electric q)
+              (F.magnetic q)
+              i)
+          (t, x) :=
+    maxwellCross3_component_differentiableAt
+      F.electric
+      F.magnetic
+      (t, x)
+      hE0
+      hE1
+      hE2
+      hB0
+      hB1
+      hB2
+
+  have hEmbedding :
+      DifferentiableAt ℝ
+        (fun y : MaxwellVector3 =>
+          ((t, y) : MaxwellSpacetime3))
+        x :=
+    (
+      hasFDerivAt_prodMk_right
+        t
+        x
+    ).differentiableAt
+
+  have hSlice :
+      DifferentiableAt ℝ
+        (maxwellPoyntingSpatialSlice3
+          μ₀ F t)
+        x := by
+    rw [differentiableAt_pi]
+    intro i
+
+    have hFixed :
+        DifferentiableAt ℝ
+          (fun y : MaxwellVector3 =>
+            maxwellCross3
+              (F.electric (t, y))
+              (F.magnetic (t, y))
+              i)
+          x :=
+      (hCross i).comp
+        x
+        hEmbedding
+
+    have hConst :
+        DifferentiableAt ℝ
+          (fun _ : MaxwellVector3 =>
+            (1 / μ₀ : ℝ))
+          x :=
+      differentiableAt_const (1 / μ₀)
+
+    simpa [
+      maxwellPoyntingSpatialSlice3,
+      Pi.smul_apply,
+      smul_eq_mul
+    ] using
+      hConst.mul hFixed
+
+  unfold
+    maxwellSpatialSliceDivergence3
+    maxwellDivergence3
+
+  rw [Finset.mul_sum]
+
+  apply Finset.sum_congr rfl
+
+  intro i _
+
+  have hFixed :
+      DifferentiableAt ℝ
+        (fun y : MaxwellVector3 =>
+          maxwellCross3
+            (F.electric (t, y))
+            (F.magnetic (t, y))
+            i)
+        x :=
+    (hCross i).comp
+      x
+      hEmbedding
+
+  rw [
+    maxwellSpatialSliceFDeriv_apply
+      (maxwellPoyntingSpatialSlice3
+        μ₀ F t)
+      x
+      hSlice
+      i
+      (Pi.single i 1)
+  ]
+
+  change
+    (fderiv ℝ
+        (fun y : MaxwellVector3 =>
+          (1 / μ₀) *
+            maxwellCross3
+              (F.electric (t, y))
+              (F.magnetic (t, y))
+              i)
+        x)
+        (Pi.single i 1) =
+      (1 / μ₀) *
+        maxwellSpatialDerivative3
+          (fun q =>
+            maxwellCross3
+              (F.electric q)
+              (F.magnetic q)
+              i)
+          i
+          (t, x)
+
+  rw [
+    maxwellFDeriv_const_mul
+      (1 / μ₀)
+      (fun y : MaxwellVector3 =>
+        maxwellCross3
+          (F.electric (t, y))
+          (F.magnetic (t, y))
+          i)
+      x
+      (Pi.single i 1)
+      hFixed
+  ]
+
+  rw [
+    maxwellFixedTimeSpatialDerivative3
+      (fun q =>
+        maxwellCross3
+          (F.electric q)
+          (F.magnetic q)
+          i)
+      t
+      x
+      i
+      (hCross i)
+  ]
+
+/-
+PROVED := Pi_valued_Frechet_coordinate_projection
+PROVED := constant_factor_passes_through_spatial_Frechet_derivative
+PROVED := three_coordinate_derivative_identities_summed
+PROVED := spacetime_divergence_identified_with_spatial_slice_divergence
 BOUNDARY := ¬ spatially_integrated_local_Poynting_balance
 BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
 BOUNDARY := ¬ external_measurement_receipt_present
