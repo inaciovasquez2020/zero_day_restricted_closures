@@ -5511,4 +5511,45 @@ theorem maxwellTotalElectromagneticEnergy3_conserved_of_isolatedSourceFreeSoluti
       solution.upperFaceZeroNormalFlux
       solution.lowerFaceZeroNormalFlux
 
+
+/--
+The total electromagnetic energy of every packaged isolated
+source-free Maxwell solution has derivative zero at every time.
+-/
+theorem maxwellTotalElectromagneticEnergy3_hasDerivAt_zero_of_isolatedSourceFreeSolution
+    {ε₀ μ₀ : ℝ}
+    {D : MaxwellRectangularDomain3}
+    (solution : IsolatedSourceFreeMaxwellSolution3 ε₀ μ₀ D)
+    (t : ℝ) :
+    HasDerivAt
+      (maxwellTotalElectromagneticEnergy3
+        ε₀ μ₀ solution.maxwellField D)
+      0
+      t := by
+  have hBoundaryFluxZero :
+      ∀ τ : ℝ,
+        maxwellRectangularBoundaryFlux3 D
+            (maxwellPoyntingSpatialSlice3
+              μ₀ solution.maxwellField τ) =
+          0 := by
+    intro τ
+    exact
+      maxwellRectangularBoundaryFlux3_eq_zero_of_facewise_zero_normalFlux
+        D
+        (maxwellPoyntingSpatialSlice3
+          μ₀ solution.maxwellField τ)
+        (solution.upperFaceZeroNormalFlux τ)
+        (solution.lowerFaceZeroNormalFlux τ)
+
+  exact
+    maxwellTotalElectromagneticEnergy3_hasDerivAt_zero_of_sourceFree_zeroBoundaryFlux
+      ε₀
+      μ₀
+      solution.maxwellField
+      D
+      t
+      solution.evolution
+      solution.currentZero
+      hBoundaryFluxZero
+
 end Chronos.Frontier
