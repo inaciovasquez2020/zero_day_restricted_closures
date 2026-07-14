@@ -2328,4 +2328,85 @@ BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
 
+
+/--
+Each coordinate of the Maxwell cross-product field is differentiable
+when the six electric and magnetic coordinate functions are
+differentiable.
+-/
+theorem maxwellCross3_component_differentiableAt
+    (E B : MaxwellVectorField3)
+    (p : MaxwellSpacetime3)
+    (hE0 :
+      DifferentiableAt ℝ
+        (fun q => E q (0 : Fin 3))
+        p)
+    (hE1 :
+      DifferentiableAt ℝ
+        (fun q => E q (1 : Fin 3))
+        p)
+    (hE2 :
+      DifferentiableAt ℝ
+        (fun q => E q (2 : Fin 3))
+        p)
+    (hB0 :
+      DifferentiableAt ℝ
+        (fun q => B q (0 : Fin 3))
+        p)
+    (hB1 :
+      DifferentiableAt ℝ
+        (fun q => B q (1 : Fin 3))
+        p)
+    (hB2 :
+      DifferentiableAt ℝ
+        (fun q => B q (2 : Fin 3))
+        p) :
+    ∀ i : Fin 3,
+      DifferentiableAt ℝ
+        (fun q =>
+          maxwellCross3
+            (E q)
+            (B q)
+            i)
+        p := by
+  intro i
+  fin_cases i
+  ·
+    simpa [
+      maxwellCross3,
+      cross_apply
+    ] using
+      (
+        (hE1.mul hB2).sub
+          (hE2.mul hB1)
+      )
+  ·
+    simpa [
+      maxwellCross3,
+      cross_apply
+    ] using
+      (
+        (hE2.mul hB0).sub
+          (hE0.mul hB2)
+      )
+  ·
+    simpa [
+      maxwellCross3,
+      cross_apply
+    ] using
+      (
+        (hE0.mul hB1).sub
+          (hE1.mul hB0)
+      )
+
+/-
+PROVED := cross_product_component_differentiability
+BOUNDARY := ¬ fixed_time_spatial_derivative_composition
+BOUNDARY := ¬ spacetime_divergence_identified_with_spatial_slice_divergence
+BOUNDARY := ¬ spatially_integrated_local_Poynting_balance
+BOUNDARY := ¬ time_FTC_instantiated_for_total_electromagnetic_energy
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
 end Chronos.Frontier
