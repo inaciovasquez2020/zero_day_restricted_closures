@@ -1256,7 +1256,72 @@ theorem maxwellSpatialDerivative3_cross_coordinate_two
 PROVED := differentiated_cross_product_coordinate_zero
 PROVED := differentiated_cross_product_coordinate_one
 PROVED := differentiated_cross_product_coordinate_two
-BOUNDARY := ¬ divergence_cross_product_identity_from_fderiv_proved
+PROVED := divergence_cross_product_identity_from_fderiv
+BOUNDARY := ¬ external_measurement_receipt_present
+BOUNDARY := ¬ universal_physical_law_E_eq_mc3
+-/
+
+
+/--
+Field-level divergence-of-cross-product identity:
+
+`div (E × B) = B · curl E - E · curl B`.
+-/
+theorem maxwellDivergence3_cross_eq_dot_curl_sub_dot_curl
+    (E B : MaxwellVectorField3)
+    (p : MaxwellSpacetime3)
+    (hE0 :
+      DifferentiableAt ℝ
+        (fun q => E q (0 : Fin 3)) p)
+    (hE1 :
+      DifferentiableAt ℝ
+        (fun q => E q (1 : Fin 3)) p)
+    (hE2 :
+      DifferentiableAt ℝ
+        (fun q => E q (2 : Fin 3)) p)
+    (hB0 :
+      DifferentiableAt ℝ
+        (fun q => B q (0 : Fin 3)) p)
+    (hB1 :
+      DifferentiableAt ℝ
+        (fun q => B q (1 : Fin 3)) p)
+    (hB2 :
+      DifferentiableAt ℝ
+        (fun q => B q (2 : Fin 3)) p) :
+    maxwellDivergence3
+        (fun q => maxwellCross3 (E q) (B q))
+        p =
+      maxwellDot3 (B p) (maxwellCurl3 E p) -
+        maxwellDot3 (E p) (maxwellCurl3 B p) := by
+  have h0 :=
+    maxwellSpatialDerivative3_cross_coordinate_zero
+      E B p hE1 hE2 hB1 hB2
+
+  have h1 :=
+    maxwellSpatialDerivative3_cross_coordinate_one
+      E B p hE0 hE2 hB0 hB2
+
+  have h2 :=
+    maxwellSpatialDerivative3_cross_coordinate_two
+      E B p hE0 hE1 hB0 hB1
+
+  unfold maxwellDivergence3
+
+  simp [Fin.sum_univ_succ]
+
+  rw [h0, h1, h2]
+
+  simp [
+    maxwellDot3,
+    maxwellCurl3,
+    Fin.sum_univ_succ
+  ]
+
+  ring
+
+/-
+PROVED := divergence_cross_product_identity_from_fderiv
+BOUNDARY := ¬ contracted_Maxwell_structure_uses_derived_divergence_identity
 BOUNDARY := ¬ external_measurement_receipt_present
 BOUNDARY := ¬ universal_physical_law_E_eq_mc3
 -/
