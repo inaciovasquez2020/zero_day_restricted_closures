@@ -3025,6 +3025,133 @@ theorem maxwellTotalElectromagneticEnergy3_nonneg
 
 
 /--
+`TxE2` is a `Fin 3`-indexed collection of interior spatial points.
+
+If the fixed-time Maxwell energy density is continuous and positive at
+each TxE2 point, then its support has positive volume after restriction
+to the closed rectangular domain.
+-/
+theorem maxwellPositiveSupportMeasure3_of_continuous_TxE2
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t : ℝ)
+    (TxE2 : Fin 3 → MaxwellVector3)
+    (hEnergyContinuous :
+      Continuous
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x)))
+    (hTxE2Interior :
+      ∀ i,
+        TxE2 i ∈
+          interior
+            (Set.Icc D.lower D.upper))
+    (hTxE2Positive :
+      ∀ i,
+        0 <
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, TxE2 i)) :
+    0 <
+      (volume.restrict
+        (Set.Icc D.lower D.upper))
+        (Function.support
+          (fun x =>
+            maxwellEnergyDensity3
+              ε₀ μ₀ F (t, x))) := by
+  let energy : MaxwellVector3 → ℝ :=
+    fun x =>
+      maxwellEnergyDensity3
+        ε₀ μ₀ F (t, x)
+
+  change
+    0 <
+      (volume.restrict
+        (Set.Icc D.lower D.upper))
+        (Function.support energy)
+
+  have hEnergyContinuous' :
+      Continuous energy := by
+    simpa only [energy] using hEnergyContinuous
+
+  let U : Set MaxwellVector3 :=
+    {x | 0 < energy x} ∩
+      interior
+        (Set.Icc D.lower D.upper)
+
+  have hPositiveOpen :
+      IsOpen {x | 0 < energy x} :=
+    isOpen_lt continuous_const hEnergyContinuous'
+
+  have hUOpen :
+      IsOpen U := by
+    simpa only [U] using
+      hPositiveOpen.inter isOpen_interior
+
+  have hTxE2Subset :
+      Set.range TxE2 ⊆ U := by
+    rintro x ⟨i, rfl⟩
+    change
+      0 < energy (TxE2 i) ∧
+        TxE2 i ∈
+          interior
+            (Set.Icc D.lower D.upper)
+    exact
+      ⟨by
+        simpa only [energy] using
+          hTxE2Positive i,
+       hTxE2Interior i⟩
+
+  have hUNonempty :
+      U.Nonempty := by
+    refine ⟨TxE2 (0 : Fin 3), ?_⟩
+    exact
+      hTxE2Subset
+        ⟨(0 : Fin 3), rfl⟩
+
+  have hUPositive :
+      0 <
+        (volume : Measure MaxwellVector3) U := by
+    exact
+      IsOpen.measure_pos
+        (volume : Measure MaxwellVector3)
+        hUOpen
+        hUNonempty
+
+  have hUSubset :
+      U ⊆
+        Function.support energy ∩
+          Set.Icc D.lower D.upper := by
+    intro x hx
+    change
+      0 < energy x ∧
+        x ∈ interior
+          (Set.Icc D.lower D.upper)
+      at hx
+    exact
+      ⟨ne_of_gt hx.1,
+       interior_subset hx.2⟩
+
+  have hRestrictedSupportPositive :
+      0 <
+        (volume : Measure MaxwellVector3)
+          (Function.support energy ∩
+            Set.Icc D.lower D.upper) :=
+    lt_of_lt_of_le
+      hUPositive
+      (measure_mono hUSubset)
+
+  rw [
+    Measure.restrict_apply'
+      (measurableSet_Icc :
+        MeasurableSet
+          (Set.Icc D.lower D.upper))
+  ]
+
+  exact hRestrictedSupportPositive
+
+
+/--
 Total electromagnetic energy is strictly positive when its
 nonnegative energy density is integrable and has support of positive
 restricted spatial volume.
