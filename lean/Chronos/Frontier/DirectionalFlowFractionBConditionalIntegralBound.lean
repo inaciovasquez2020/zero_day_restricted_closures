@@ -3257,6 +3257,192 @@ theorem maxwellTotalElectromagneticEnergy3_pos_of_continuous_TxE2
 
 
 /--
+Quantitative `TxE2` lower bound from three pairwise-disjoint open
+neighborhoods.
+
+Each neighborhood `U i` contains its corresponding TxE2 point, lies
+inside the rectangular domain, and carries the pointwise energy floor
+`energyFloor i`. Pairwise disjointness makes the three local integral
+contributions additive.
+-/
+theorem maxwellTotalElectromagneticEnergy3_quantitative_lowerBound_TxE2
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t : ℝ)
+    (U : Fin 3 → Set MaxwellVector3)
+    (energyFloor : Fin 3 → ℝ)
+    (hε₀ : 0 ≤ ε₀)
+    (hμ₀ : 0 < μ₀)
+    (hUOpen :
+      ∀ i,
+        IsOpen (U i))
+    (hUDisjoint :
+      Pairwise
+        (fun i j =>
+          Disjoint (U i) (U j)))
+    (hUSubset :
+      ∀ i,
+        U i ⊆
+          Set.Icc D.lower D.upper)
+    (hUFinite :
+      ∀ i,
+        volume (U i) ≠ ⊤)
+    (hEnergyFloor :
+      ∀ i x,
+        x ∈ U i →
+          energyFloor i ≤
+            maxwellEnergyDensity3
+              ε₀ μ₀ F (t, x))
+    (hEnergyIntegrable :
+      Integrable
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x))
+        (volume.restrict
+          (Set.Icc D.lower D.upper))) :
+    (∑ i : Fin 3,
+        energyFloor i *
+          volume.real (U i)) ≤
+      maxwellTotalElectromagneticEnergy3
+        ε₀ μ₀ F D t := by
+  let energy : MaxwellVector3 → ℝ :=
+    fun x =>
+      maxwellEnergyDensity3
+        ε₀ μ₀ F (t, x)
+
+  have hUMeasurable :
+      ∀ i,
+        MeasurableSet (U i) :=
+    fun i =>
+      (hUOpen i).measurableSet
+
+  have hEnergyNonnegative :
+      0 ≤ᵐ[
+        volume.restrict
+          (Set.Icc D.lower D.upper)]
+        energy :=
+    Filter.Eventually.of_forall
+      (fun x =>
+        maxwellEnergyDensity3_nonneg
+          ε₀ μ₀ F (t, x) hε₀ hμ₀)
+
+  have hEnergyIntegrableOnU :
+      ∀ i,
+        IntegrableOn energy (U i) volume := by
+    intro i
+    exact
+      hEnergyIntegrable.mono_measure
+        (Measure.restrict_mono
+          (hUSubset i)
+          le_rfl)
+
+  have hLocalIntegralLower :
+      ∀ i,
+        energyFloor i *
+            volume.real (U i) ≤
+          ∫ x in U i, energy x := by
+    intro i
+
+    have hConstantIntegrable :
+        IntegrableOn
+          (fun _ : MaxwellVector3 =>
+            energyFloor i)
+          (U i)
+          volume :=
+      integrableOn_const
+        (hUFinite i)
+
+    have hLocalAE :
+        (fun _ : MaxwellVector3 =>
+          energyFloor i) ≤ᵐ[
+            volume.restrict (U i)]
+          energy :=
+      (ae_restrict_iff'
+        (hUMeasurable i)).2
+        (Filter.Eventually.of_forall
+          (fun x hx =>
+            hEnergyFloor i x hx))
+
+    calc
+      energyFloor i *
+          volume.real (U i) =
+          ∫ _ in U i,
+            energyFloor i := by
+              simp [mul_comm]
+      _ ≤
+          ∫ x in U i,
+            energy x :=
+        integral_mono_ae
+          hConstantIntegrable
+          (hEnergyIntegrableOnU i)
+          hLocalAE
+
+  have hSumLocalLower :
+      (∑ i : Fin 3,
+          energyFloor i *
+            volume.real (U i)) ≤
+        ∑ i : Fin 3,
+          ∫ x in U i, energy x := by
+    apply Finset.sum_le_sum
+    intro i _
+    exact hLocalIntegralLower i
+
+  have hUnionIntegral :
+      (∫ x in ⋃ i, U i,
+          energy x) =
+        ∑ i : Fin 3,
+          ∫ x in U i,
+            energy x :=
+    integral_iUnion_fintype
+      hUMeasurable
+      hUDisjoint
+      hEnergyIntegrableOnU
+
+  have hUnionSubset :
+      (⋃ i, U i) ⊆
+        Set.Icc D.lower D.upper := by
+    intro x hx
+    simp only [Set.mem_iUnion] at hx
+    rcases hx with ⟨i, hxi⟩
+    exact hUSubset i hxi
+
+  have hUnionIntegralLeTotal :
+      (∫ x in ⋃ i, U i,
+          energy x) ≤
+        ∫ x in
+          Set.Icc D.lower D.upper,
+          energy x := by
+    exact
+      integral_mono_measure
+        (Measure.restrict_mono
+          hUnionSubset
+          le_rfl)
+        hEnergyNonnegative
+        hEnergyIntegrable
+
+  unfold maxwellTotalElectromagneticEnergy3
+
+  calc
+    (∑ i : Fin 3,
+        energyFloor i *
+          volume.real (U i)) ≤
+        ∑ i : Fin 3,
+          ∫ x in U i,
+            energy x :=
+      hSumLocalLower
+    _ =
+        ∫ x in ⋃ i, U i,
+          energy x :=
+      hUnionIntegral.symm
+    _ ≤
+        ∫ x in
+          Set.Icc D.lower D.upper,
+          energy x :=
+      hUnionIntegralLeTotal
+
+
+/--
 Differentiation under the rectangular spatial integral under explicit
 local domination, measurability, integrability, and pointwise
 derivative hypotheses.
