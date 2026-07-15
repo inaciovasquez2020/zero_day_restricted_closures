@@ -3514,6 +3514,141 @@ theorem maxwellTotalElectromagneticEnergy3_quantitative_lowerBound_TxE2_centered
 
 
 /--
+Three distinct interior TxE2 points with positive continuous Maxwell
+energy admit pairwise-disjoint open neighborhoods contained in the
+rectangular domain.
+
+On the neighborhood centered at `TxE2 i`, the energy density is bounded
+below by one half of its value at that center.
+-/
+theorem maxwellTxE2_exists_disjoint_half_energy_neighborhoods
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t : ℝ)
+    (TxE2 : Fin 3 → MaxwellVector3)
+    (hTxE2Injective :
+      Function.Injective TxE2)
+    (hEnergyContinuous :
+      Continuous
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x)))
+    (hTxE2Interior :
+      ∀ i,
+        TxE2 i ∈
+          interior
+            (Set.Icc D.lower D.upper))
+    (hTxE2Positive :
+      ∀ i,
+        0 <
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, TxE2 i)) :
+    ∃ U : Fin 3 → Set MaxwellVector3,
+      (∀ i, IsOpen (U i)) ∧
+      Pairwise
+        (fun i j =>
+          Disjoint (U i) (U j)) ∧
+      (∀ i, TxE2 i ∈ U i) ∧
+      (∀ i,
+        U i ⊆
+          Set.Icc D.lower D.upper) ∧
+      (∀ i x,
+        x ∈ U i →
+          maxwellEnergyDensity3
+              ε₀ μ₀ F (t, TxE2 i) / 2 ≤
+            maxwellEnergyDensity3
+              ε₀ μ₀ F (t, x)) := by
+  classical
+
+  let energy : MaxwellVector3 → ℝ :=
+    fun x =>
+      maxwellEnergyDensity3
+        ε₀ μ₀ F (t, x)
+
+  have hEnergyContinuous' :
+      Continuous energy := by
+    simpa only [energy] using hEnergyContinuous
+
+  obtain ⟨base, hBaseOpenMem, hBaseDisjoint⟩ :=
+    (Set.finite_range TxE2).t2_separation
+
+  let U : Fin 3 → Set MaxwellVector3 :=
+    fun i =>
+      (base (TxE2 i) ∩
+        {x |
+          energy (TxE2 i) / 2 <
+            energy x}) ∩
+        interior
+          (Set.Icc D.lower D.upper)
+
+  refine ⟨U, ?_, ?_, ?_, ?_, ?_⟩
+
+  · intro i
+    dsimp only [U]
+    exact
+      ((hBaseOpenMem (TxE2 i)).2.inter
+        (isOpen_lt
+          continuous_const
+          hEnergyContinuous')).inter
+        isOpen_interior
+
+  · intro i j hij
+
+    have hCentersNe :
+        TxE2 i ≠ TxE2 j := by
+      intro hCentersEq
+      exact hij (hTxE2Injective hCentersEq)
+
+    have hBaseIJ :
+        Disjoint
+          (base (TxE2 i))
+          (base (TxE2 j)) := by
+      apply hBaseDisjoint
+      · exact ⟨i, rfl⟩
+      · exact ⟨j, rfl⟩
+      · exact hCentersNe
+
+    apply hBaseIJ.mono
+    · intro x hx
+      exact hx.1.1
+    · intro x hx
+      exact hx.1.1
+
+  · intro i
+    change
+      TxE2 i ∈
+        (base (TxE2 i) ∩
+          {x |
+            energy (TxE2 i) / 2 <
+              energy x}) ∩
+          interior
+            (Set.Icc D.lower D.upper)
+
+    refine
+      ⟨⟨(hBaseOpenMem (TxE2 i)).1, ?_⟩,
+        hTxE2Interior i⟩
+
+    exact
+      half_lt_self
+        (by
+          simpa only [energy] using
+            hTxE2Positive i)
+
+  · intro i x hx
+    exact interior_subset hx.2
+
+  · intro i x hx
+
+    have hFloor :
+        energy (TxE2 i) / 2 <
+          energy x :=
+      hx.1.2
+
+    simpa only [energy] using hFloor.le
+
+
+/--
 Differentiation under the rectangular spatial integral under explicit
 local domination, measurability, integrability, and pointwise
 derivative hypotheses.
