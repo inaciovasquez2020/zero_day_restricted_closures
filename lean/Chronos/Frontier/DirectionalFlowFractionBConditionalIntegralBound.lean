@@ -3003,6 +3003,28 @@ noncomputable def maxwellTotalElectromagneticEnergy3
   ∫ x in Set.Icc D.lower D.upper,
     maxwellEnergyDensity3 ε₀ μ₀ F (t, x)
 /--
+Total electromagnetic energy on a rectangular spatial domain is
+nonnegative when the electric coefficient is nonnegative and the
+magnetic permeability is strictly positive.
+-/
+theorem maxwellTotalElectromagneticEnergy3_nonneg
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t : ℝ)
+    (hε₀ : 0 ≤ ε₀)
+    (hμ₀ : 0 < μ₀) :
+    0 ≤ maxwellTotalElectromagneticEnergy3 ε₀ μ₀ F D t := by
+  unfold maxwellTotalElectromagneticEnergy3
+  exact
+    integral_nonneg_of_ae
+      (Filter.Eventually.of_forall
+        (fun x =>
+          maxwellEnergyDensity3_nonneg
+            ε₀ μ₀ F (t, x) hε₀ hμ₀))
+
+
+/--
 Differentiation under the rectangular spatial integral under explicit
 local domination, measurability, integrability, and pointwise
 derivative hypotheses.
