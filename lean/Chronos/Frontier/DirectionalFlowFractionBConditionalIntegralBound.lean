@@ -3025,6 +3025,60 @@ theorem maxwellTotalElectromagneticEnergy3_nonneg
 
 
 /--
+Total electromagnetic energy is strictly positive when its
+nonnegative energy density is integrable and has support of positive
+restricted spatial volume.
+
+The positive-support hypothesis is the exact measure-theoretic gap
+between nonnegativity and strict positivity.
+-/
+theorem maxwellTotalElectromagneticEnergy3_pos_of_positive_support_measure
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t : ℝ)
+    (hε₀ : 0 ≤ ε₀)
+    (hμ₀ : 0 < μ₀)
+    (hEnergyIntegrable :
+      Integrable
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x))
+        (volume.restrict
+          (Set.Icc D.lower D.upper)))
+    (hPositiveSupportMeasure :
+      0 <
+        (volume.restrict
+          (Set.Icc D.lower D.upper))
+          (Function.support
+            (fun x =>
+              maxwellEnergyDensity3
+                ε₀ μ₀ F (t, x)))) :
+    0 <
+      maxwellTotalElectromagneticEnergy3
+        ε₀ μ₀ F D t := by
+  have hEnergyNonnegative :
+      0 ≤ᵐ[
+        volume.restrict
+          (Set.Icc D.lower D.upper)]
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x)) :=
+    Filter.Eventually.of_forall
+      (fun x =>
+        maxwellEnergyDensity3_nonneg
+          ε₀ μ₀ F (t, x) hε₀ hμ₀)
+
+  unfold maxwellTotalElectromagneticEnergy3
+
+  exact
+    (integral_pos_iff_support_of_nonneg_ae
+      hEnergyNonnegative
+      hEnergyIntegrable).2
+        hPositiveSupportMeasure
+
+
+/--
 Differentiation under the rectangular spatial integral under explicit
 local domination, measurability, integrability, and pointwise
 derivative hypotheses.
