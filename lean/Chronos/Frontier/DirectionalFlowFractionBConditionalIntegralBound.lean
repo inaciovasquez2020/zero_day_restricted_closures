@@ -3443,6 +3443,77 @@ theorem maxwellTotalElectromagneticEnergy3_quantitative_lowerBound_TxE2
 
 
 /--
+TxE2-centered quantitative corollary.
+
+Each of the three neighborhoods contains its named TxE2 center. The
+result packages those three nonempty-neighborhood witnesses together
+with the additive quantitative Maxwell total-energy lower bound.
+-/
+theorem maxwellTotalElectromagneticEnergy3_quantitative_lowerBound_TxE2_centered
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t : ℝ)
+    (TxE2 : Fin 3 → MaxwellVector3)
+    (U : Fin 3 → Set MaxwellVector3)
+    (energyFloor : Fin 3 → ℝ)
+    (hε₀ : 0 ≤ ε₀)
+    (hμ₀ : 0 < μ₀)
+    (hUOpen :
+      ∀ i,
+        IsOpen (U i))
+    (hUDisjoint :
+      Pairwise
+        (fun i j =>
+          Disjoint (U i) (U j)))
+    (hTxE2Mem :
+      ∀ i,
+        TxE2 i ∈ U i)
+    (hUSubset :
+      ∀ i,
+        U i ⊆
+          Set.Icc D.lower D.upper)
+    (hUFinite :
+      ∀ i,
+        volume (U i) ≠ ⊤)
+    (hEnergyFloor :
+      ∀ i x,
+        x ∈ U i →
+          energyFloor i ≤
+            maxwellEnergyDensity3
+              ε₀ μ₀ F (t, x))
+    (hEnergyIntegrable :
+      Integrable
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x))
+        (volume.restrict
+          (Set.Icc D.lower D.upper))) :
+    (∀ i, (U i).Nonempty) ∧
+      (∑ i : Fin 3,
+          energyFloor i *
+            volume.real (U i)) ≤
+        maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D t := by
+  constructor
+  · intro i
+    exact ⟨TxE2 i, hTxE2Mem i⟩
+  · exact
+      maxwellTotalElectromagneticEnergy3_quantitative_lowerBound_TxE2
+        ε₀ μ₀ F D t
+        U
+        energyFloor
+        hε₀
+        hμ₀
+        hUOpen
+        hUDisjoint
+        hUSubset
+        hUFinite
+        hEnergyFloor
+        hEnergyIntegrable
+
+
+/--
 Differentiation under the rectangular spatial integral under explicit
 local domination, measurability, integrability, and pointwise
 derivative hypotheses.
