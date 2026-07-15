@@ -3649,6 +3649,124 @@ theorem maxwellTxE2_exists_disjoint_half_energy_neighborhoods
 
 
 /--
+The derived quantitative `TxE2` theorem.
+
+Distinct positive interior TxE2 centers and continuity produce three
+pairwise-disjoint neighborhoods. Containment in the rectangular domain
+makes every neighborhood finite-volume, so the centered quantitative
+lower-bound theorem applies with the half-center-energy floors.
+-/
+theorem maxwellTotalElectromagneticEnergy3_exists_quantitative_TxE2_lowerBound
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t : ℝ)
+    (TxE2 : Fin 3 → MaxwellVector3)
+    (hε₀ : 0 ≤ ε₀)
+    (hμ₀ : 0 < μ₀)
+    (hTxE2Injective :
+      Function.Injective TxE2)
+    (hEnergyContinuous :
+      Continuous
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x)))
+    (hTxE2Interior :
+      ∀ i,
+        TxE2 i ∈
+          interior
+            (Set.Icc D.lower D.upper))
+    (hTxE2Positive :
+      ∀ i,
+        0 <
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, TxE2 i))
+    (hEnergyIntegrable :
+      Integrable
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x))
+        (volume.restrict
+          (Set.Icc D.lower D.upper))) :
+    ∃ U : Fin 3 → Set MaxwellVector3,
+      (∀ i, IsOpen (U i)) ∧
+      Pairwise
+        (fun i j =>
+          Disjoint (U i) (U j)) ∧
+      (∀ i, TxE2 i ∈ U i) ∧
+      (∀ i,
+        U i ⊆
+          Set.Icc D.lower D.upper) ∧
+      (∀ i,
+        volume (U i) ≠ ⊤) ∧
+      (∀ i,
+        (U i).Nonempty) ∧
+      (∑ i : Fin 3,
+          (maxwellEnergyDensity3
+              ε₀ μ₀ F (t, TxE2 i) / 2) *
+            volume.real (U i)) ≤
+        maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D t := by
+  obtain
+    ⟨U,
+      hUOpen,
+      hUDisjoint,
+      hTxE2Mem,
+      hUSubset,
+      hEnergyFloor⟩ :=
+    maxwellTxE2_exists_disjoint_half_energy_neighborhoods
+      ε₀ μ₀ F D t TxE2
+      hTxE2Injective
+      hEnergyContinuous
+      hTxE2Interior
+      hTxE2Positive
+
+  have hDomainFinite :
+      volume
+          (Set.Icc D.lower D.upper) <
+        ⊤ :=
+    measure_Icc_lt_top
+
+  have hUFinite :
+      ∀ i,
+        volume (U i) ≠ ⊤ := by
+    intro i
+    exact
+      (lt_of_le_of_lt
+        (measure_mono
+          (hUSubset i))
+        hDomainFinite).ne
+
+  have hQuantitative :=
+    maxwellTotalElectromagneticEnergy3_quantitative_lowerBound_TxE2_centered
+      ε₀ μ₀ F D t
+      TxE2
+      U
+      (fun i =>
+        maxwellEnergyDensity3
+          ε₀ μ₀ F (t, TxE2 i) / 2)
+      hε₀
+      hμ₀
+      hUOpen
+      hUDisjoint
+      hTxE2Mem
+      hUSubset
+      hUFinite
+      hEnergyFloor
+      hEnergyIntegrable
+
+  exact
+    ⟨U,
+      hUOpen,
+      hUDisjoint,
+      hTxE2Mem,
+      hUSubset,
+      hUFinite,
+      hQuantitative.1,
+      hQuantitative.2⟩
+
+
+/--
 Differentiation under the rectangular spatial integral under explicit
 local domination, measurability, integrability, and pointwise
 derivative hypotheses.
