@@ -3206,6 +3206,57 @@ theorem maxwellTotalElectromagneticEnergy3_pos_of_positive_support_measure
 
 
 /--
+The packaged `TxE2` theorem: continuity and positivity at the three
+interior TxE2 points, together with integrability and positive physical
+coefficients, imply strictly positive total electromagnetic energy.
+-/
+theorem maxwellTotalElectromagneticEnergy3_pos_of_continuous_TxE2
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t : ℝ)
+    (TxE2 : Fin 3 → MaxwellVector3)
+    (hε₀ : 0 ≤ ε₀)
+    (hμ₀ : 0 < μ₀)
+    (hEnergyContinuous :
+      Continuous
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x)))
+    (hTxE2Interior :
+      ∀ i,
+        TxE2 i ∈
+          interior
+            (Set.Icc D.lower D.upper))
+    (hTxE2Positive :
+      ∀ i,
+        0 <
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, TxE2 i))
+    (hEnergyIntegrable :
+      Integrable
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x))
+        (volume.restrict
+          (Set.Icc D.lower D.upper))) :
+    0 <
+      maxwellTotalElectromagneticEnergy3
+        ε₀ μ₀ F D t := by
+  exact
+    maxwellTotalElectromagneticEnergy3_pos_of_positive_support_measure
+      ε₀ μ₀ F D t
+      hε₀
+      hμ₀
+      hEnergyIntegrable
+      (maxwellPositiveSupportMeasure3_of_continuous_TxE2
+        ε₀ μ₀ F D t TxE2
+        hEnergyContinuous
+        hTxE2Interior
+        hTxE2Positive)
+
+
+/--
 Differentiation under the rectangular spatial integral under explicit
 local domination, measurability, integrability, and pointwise
 derivative hypotheses.
