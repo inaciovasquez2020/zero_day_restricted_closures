@@ -1939,6 +1939,48 @@ noncomputable def maxwellEnergyDensity3
           (F.magnetic p)
 
 /--
+Field-level electromagnetic energy density is pointwise nonnegative
+when the electric coefficient is nonnegative and the magnetic
+permeability is strictly positive.
+-/
+theorem maxwellEnergyDensity3_nonneg
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (p : MaxwellSpacetime3)
+    (hε₀ : 0 ≤ ε₀)
+    (hμ₀ : 0 < μ₀) :
+    0 ≤ maxwellEnergyDensity3 ε₀ μ₀ F p := by
+  have hDotSelfNonnegative
+      (v : MaxwellVector3) :
+      0 ≤ maxwellDot3 v v := by
+    unfold maxwellDot3
+    apply Finset.sum_nonneg
+    intro i _
+    exact mul_self_nonneg (v i)
+
+  have hElectricCoefficient :
+      0 ≤ ε₀ / 2 := by
+    exact div_nonneg hε₀ (by norm_num)
+
+  have hMagneticCoefficient :
+      0 ≤ 1 / (2 * μ₀) := by
+    exact
+      div_nonneg
+        zero_le_one
+        (mul_nonneg (by norm_num) (le_of_lt hμ₀))
+
+  unfold maxwellEnergyDensity3
+  exact
+    add_nonneg
+      (mul_nonneg
+        hElectricCoefficient
+        (hDotSelfNonnegative (F.electric p)))
+      (mul_nonneg
+        hMagneticCoefficient
+        (hDotSelfNonnegative (F.magnetic p)))
+
+
+/--
 The Fréchet time derivative of electromagnetic energy density is the
 sum of the electric and magnetic contraction terms.
 -/
