@@ -3515,7 +3515,7 @@ theorem maxwellTotalElectromagneticEnergy3_quantitative_lowerBound_TxE2_centered
 
 /--
 Three distinct interior TxE2 points with positive continuous Maxwell
-energy admit pairwise-disjoint open neighborhoods contained in the
+energy have pairwise-disjoint open neighborhoods contained in the
 rectangular domain.
 
 On the neighborhood centered at `TxE2 i`, the energy density is bounded
