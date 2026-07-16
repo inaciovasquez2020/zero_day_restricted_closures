@@ -574,6 +574,22 @@ three-dimensional coordinate type required by `crossProduct`.
 abbrev MaxwellVector3 :=
   Fin 3 → ℝ
 
+/--
+The inherited metric on `MaxwellVector3 = Fin 3 → ℝ` is the
+finite-product supremum metric.
+-/
+theorem maxwellVector3_mem_ball_iff_coordinate
+    (x y : MaxwellVector3)
+    {r : ℝ}
+    (hr : 0 < r) :
+    y ∈ Metric.ball x r ↔
+      ∀ i : Fin 3, |y i - x i| < r := by
+  rw [Metric.mem_ball, dist_eq_norm]
+  simpa only [Pi.sub_apply, Real.norm_eq_abs] using
+    (pi_norm_lt_iff hr :
+      ‖y - x‖ < r ↔
+        ∀ i : Fin 3, ‖(y - x) i‖ < r)
+
 /-- A space-time point consisting of time and three spatial coordinates. -/
 abbrev MaxwellSpacetime3 :=
   ℝ × MaxwellVector3
