@@ -574,6 +574,22 @@ three-dimensional coordinate type required by `crossProduct`.
 abbrev MaxwellVector3 :=
   Fin 3 → ℝ
 
+/--
+The inherited metric on `MaxwellVector3 = Fin 3 → ℝ` is the
+finite-product supremum metric.
+-/
+theorem maxwellVector3_mem_ball_iff_coordinate
+    (x y : MaxwellVector3)
+    {r : ℝ}
+    (hr : 0 < r) :
+    y ∈ Metric.ball x r ↔
+      ∀ i : Fin 3, |y i - x i| < r := by
+  rw [Metric.mem_ball, dist_eq_norm]
+  simpa only [Pi.sub_apply, Real.norm_eq_abs] using
+    (pi_norm_lt_iff hr :
+      ‖y - x‖ < r ↔
+        ∀ i : Fin 3, ‖(y - x) i‖ < r)
+
 /-- A space-time point consisting of time and three spatial coordinates. -/
 abbrev MaxwellSpacetime3 :=
   ℝ × MaxwellVector3
@@ -3511,6 +3527,543 @@ theorem maxwellTotalElectromagneticEnergy3_quantitative_lowerBound_TxE2_centered
         hUFinite
         hEnergyFloor
         hEnergyIntegrable
+
+
+/--
+Three distinct interior TxE2 points with positive continuous Maxwell
+energy have pairwise-disjoint open neighborhoods contained in the
+rectangular domain.
+
+On the neighborhood centered at `TxE2 i`, the energy density is bounded
+below by one half of its value at that center.
+-/
+theorem maxwellTxE2_exists_disjoint_half_energy_neighborhoods
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t : ℝ)
+    (TxE2 : Fin 3 → MaxwellVector3)
+    (hTxE2Injective :
+      Function.Injective TxE2)
+    (hEnergyContinuous :
+      Continuous
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x)))
+    (hTxE2Interior :
+      ∀ i,
+        TxE2 i ∈
+          interior
+            (Set.Icc D.lower D.upper))
+    (hTxE2Positive :
+      ∀ i,
+        0 <
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, TxE2 i)) :
+    ∃ U : Fin 3 → Set MaxwellVector3,
+      (∀ i, IsOpen (U i)) ∧
+      Pairwise
+        (fun i j =>
+          Disjoint (U i) (U j)) ∧
+      (∀ i, TxE2 i ∈ U i) ∧
+      (∀ i,
+        U i ⊆
+          Set.Icc D.lower D.upper) ∧
+      (∀ i x,
+        x ∈ U i →
+          maxwellEnergyDensity3
+              ε₀ μ₀ F (t, TxE2 i) / 2 ≤
+            maxwellEnergyDensity3
+              ε₀ μ₀ F (t, x)) := by
+  classical
+
+  let energy : MaxwellVector3 → ℝ :=
+    fun x =>
+      maxwellEnergyDensity3
+        ε₀ μ₀ F (t, x)
+
+  have hEnergyContinuous' :
+      Continuous energy := by
+    simpa only [energy] using hEnergyContinuous
+
+  obtain ⟨base, hBaseOpenMem, hBaseDisjoint⟩ :=
+    (Set.finite_range TxE2).t2_separation
+
+  let U : Fin 3 → Set MaxwellVector3 :=
+    fun i =>
+      (base (TxE2 i) ∩
+        {x |
+          energy (TxE2 i) / 2 <
+            energy x}) ∩
+        interior
+          (Set.Icc D.lower D.upper)
+
+  refine ⟨U, ?_, ?_, ?_, ?_, ?_⟩
+
+  · intro i
+    dsimp only [U]
+    exact
+      ((hBaseOpenMem (TxE2 i)).2.inter
+        (isOpen_lt
+          continuous_const
+          hEnergyContinuous')).inter
+        isOpen_interior
+
+  · intro i j hij
+
+    have hCentersNe :
+        TxE2 i ≠ TxE2 j := by
+      intro hCentersEq
+      exact hij (hTxE2Injective hCentersEq)
+
+    have hBaseIJ :
+        Disjoint
+          (base (TxE2 i))
+          (base (TxE2 j)) := by
+      apply hBaseDisjoint
+      · exact ⟨i, rfl⟩
+      · exact ⟨j, rfl⟩
+      · exact hCentersNe
+
+    apply hBaseIJ.mono
+    · intro x hx
+      exact hx.1.1
+    · intro x hx
+      exact hx.1.1
+
+  · intro i
+    change
+      TxE2 i ∈
+        (base (TxE2 i) ∩
+          {x |
+            energy (TxE2 i) / 2 <
+              energy x}) ∩
+          interior
+            (Set.Icc D.lower D.upper)
+
+    refine
+      ⟨⟨(hBaseOpenMem (TxE2 i)).1, ?_⟩,
+        hTxE2Interior i⟩
+
+    exact
+      half_lt_self
+        (by
+          simpa only [energy] using
+            hTxE2Positive i)
+
+  · intro i x hx
+    exact interior_subset hx.2
+
+  · intro i x hx
+
+    have hFloor :
+        energy (TxE2 i) / 2 <
+          energy x :=
+      hx.1.2
+
+    simpa only [energy] using hFloor.le
+
+
+/--
+The derived quantitative `TxE2` theorem.
+
+Distinct positive interior TxE2 centers and continuity produce three
+pairwise-disjoint neighborhoods. Containment in the rectangular domain
+makes every neighborhood finite-volume, so the centered quantitative
+lower-bound theorem applies with the half-center-energy floors.
+-/
+theorem maxwellTotalElectromagneticEnergy3_exists_quantitative_TxE2_lowerBound
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t : ℝ)
+    (TxE2 : Fin 3 → MaxwellVector3)
+    (hε₀ : 0 ≤ ε₀)
+    (hμ₀ : 0 < μ₀)
+    (hTxE2Injective :
+      Function.Injective TxE2)
+    (hEnergyContinuous :
+      Continuous
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x)))
+    (hTxE2Interior :
+      ∀ i,
+        TxE2 i ∈
+          interior
+            (Set.Icc D.lower D.upper))
+    (hTxE2Positive :
+      ∀ i,
+        0 <
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, TxE2 i))
+    (hEnergyIntegrable :
+      Integrable
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x))
+        (volume.restrict
+          (Set.Icc D.lower D.upper))) :
+    ∃ U : Fin 3 → Set MaxwellVector3,
+      (∀ i, IsOpen (U i)) ∧
+      Pairwise
+        (fun i j =>
+          Disjoint (U i) (U j)) ∧
+      (∀ i, TxE2 i ∈ U i) ∧
+      (∀ i,
+        U i ⊆
+          Set.Icc D.lower D.upper) ∧
+      (∀ i,
+        volume (U i) ≠ ⊤) ∧
+      (∀ i,
+        (U i).Nonempty) ∧
+      (∑ i : Fin 3,
+          (maxwellEnergyDensity3
+              ε₀ μ₀ F (t, TxE2 i) / 2) *
+            volume.real (U i)) ≤
+        maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D t := by
+  obtain
+    ⟨U,
+      hUOpen,
+      hUDisjoint,
+      hTxE2Mem,
+      hUSubset,
+      hEnergyFloor⟩ :=
+    maxwellTxE2_exists_disjoint_half_energy_neighborhoods
+      ε₀ μ₀ F D t TxE2
+      hTxE2Injective
+      hEnergyContinuous
+      hTxE2Interior
+      hTxE2Positive
+
+  have hDomainFinite :
+      volume
+          (Set.Icc D.lower D.upper) <
+        ⊤ :=
+    measure_Icc_lt_top
+
+  have hUFinite :
+      ∀ i,
+        volume (U i) ≠ ⊤ := by
+    intro i
+    exact
+      (lt_of_le_of_lt
+        (measure_mono
+          (hUSubset i))
+        hDomainFinite).ne
+
+  have hQuantitative :=
+    maxwellTotalElectromagneticEnergy3_quantitative_lowerBound_TxE2_centered
+      ε₀ μ₀ F D t
+      TxE2
+      U
+      (fun i =>
+        maxwellEnergyDensity3
+          ε₀ μ₀ F (t, TxE2 i) / 2)
+      hε₀
+      hμ₀
+      hUOpen
+      hUDisjoint
+      hTxE2Mem
+      hUSubset
+      hUFinite
+      hEnergyFloor
+      hEnergyIntegrable
+
+  exact
+    ⟨U,
+      hUOpen,
+      hUDisjoint,
+      hTxE2Mem,
+      hUSubset,
+      hUFinite,
+      hQuantitative.1,
+      hQuantitative.2⟩
+
+
+/--
+Metric-ball form of the quantitative `TxE2` theorem.
+
+The separated open neighborhoods supplied by the TxE2 neighborhood
+theorem contain explicit positive-radius metric balls around their
+three centers. These balls remain pairwise disjoint, stay inside the
+rectangular domain, retain the half-center-energy floors, and have
+positive finite real volume bounded above by the domain volume.
+-/
+theorem maxwellTotalElectromagneticEnergy3_exists_ball_quantitative_TxE2_lowerBound
+    (ε₀ μ₀ : ℝ)
+    (F : SmoothMaxwellField3)
+    (D : MaxwellRectangularDomain3)
+    (t : ℝ)
+    (TxE2 : Fin 3 → MaxwellVector3)
+    (hε₀ : 0 ≤ ε₀)
+    (hμ₀ : 0 < μ₀)
+    (hTxE2Injective :
+      Function.Injective TxE2)
+    (hEnergyContinuous :
+      Continuous
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x)))
+    (hTxE2Interior :
+      ∀ i,
+        TxE2 i ∈
+          interior
+            (Set.Icc D.lower D.upper))
+    (hTxE2Positive :
+      ∀ i,
+        0 <
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, TxE2 i))
+    (hEnergyIntegrable :
+      Integrable
+        (fun x =>
+          maxwellEnergyDensity3
+            ε₀ μ₀ F (t, x))
+        (volume.restrict
+          (Set.Icc D.lower D.upper))) :
+    ∃ radius : Fin 3 → ℝ,
+      (∀ i, 0 < radius i) ∧
+      (∀ i,
+        IsOpen
+          (Metric.ball
+            (TxE2 i)
+            (radius i))) ∧
+      Pairwise
+        (fun i j =>
+          Disjoint
+            (Metric.ball
+              (TxE2 i)
+              (radius i))
+            (Metric.ball
+              (TxE2 j)
+              (radius j))) ∧
+      (∀ i,
+        TxE2 i ∈
+          Metric.ball
+            (TxE2 i)
+            (radius i)) ∧
+      (∀ i,
+        Metric.ball
+            (TxE2 i)
+            (radius i) ⊆
+          Set.Icc D.lower D.upper) ∧
+      (∀ i x,
+        x ∈
+            Metric.ball
+              (TxE2 i)
+              (radius i) →
+          maxwellEnergyDensity3
+                ε₀ μ₀ F (t, TxE2 i) / 2 ≤
+            maxwellEnergyDensity3
+              ε₀ μ₀ F (t, x)) ∧
+      (∀ i,
+        volume
+            (Metric.ball
+              (TxE2 i)
+              (radius i)) ≠
+          ⊤) ∧
+      (∀ i,
+        0 <
+            volume.real
+              (Metric.ball
+                (TxE2 i)
+                (radius i)) ∧
+          volume.real
+              (Metric.ball
+                (TxE2 i)
+                (radius i)) ≤
+            volume.real
+              (Set.Icc D.lower D.upper)) ∧
+      (∑ i : Fin 3,
+          (maxwellEnergyDensity3
+              ε₀ μ₀ F (t, TxE2 i) / 2) *
+            volume.real
+              (Metric.ball
+                (TxE2 i)
+                (radius i))) ≤
+        maxwellTotalElectromagneticEnergy3
+          ε₀ μ₀ F D t := by
+  obtain
+    ⟨U,
+      hUOpen,
+      hUDisjoint,
+      hTxE2Mem,
+      hUSubset,
+      hEnergyFloor⟩ :=
+    maxwellTxE2_exists_disjoint_half_energy_neighborhoods
+      ε₀ μ₀ F D t TxE2
+      hTxE2Injective
+      hEnergyContinuous
+      hTxE2Interior
+      hTxE2Positive
+
+  have hRadiusExists :
+      ∀ i,
+        ∃ r > 0,
+          Metric.ball (TxE2 i) r ⊆ U i := by
+    intro i
+    exact
+      (Metric.isOpen_iff.mp
+        (hUOpen i))
+        (TxE2 i)
+        (hTxE2Mem i)
+
+  choose radius hRadiusPositive hBallSubsetU
+    using hRadiusExists
+
+  have hBallOpen :
+      ∀ i,
+        IsOpen
+          (Metric.ball
+            (TxE2 i)
+            (radius i)) :=
+    fun _ =>
+      Metric.isOpen_ball
+
+  have hBallDisjoint :
+      Pairwise
+        (fun i j =>
+          Disjoint
+            (Metric.ball
+              (TxE2 i)
+              (radius i))
+            (Metric.ball
+              (TxE2 j)
+              (radius j))) := by
+    intro i j hij
+    exact
+      (hUDisjoint hij).mono
+        (hBallSubsetU i)
+        (hBallSubsetU j)
+
+  have hBallCenterMem :
+      ∀ i,
+        TxE2 i ∈
+          Metric.ball
+            (TxE2 i)
+            (radius i) :=
+    fun i =>
+      Metric.mem_ball_self
+        (hRadiusPositive i)
+
+  have hBallSubsetDomain :
+      ∀ i,
+        Metric.ball
+            (TxE2 i)
+            (radius i) ⊆
+          Set.Icc D.lower D.upper := by
+    intro i x hx
+    exact
+      hUSubset i
+        (hBallSubsetU i hx)
+
+  have hBallEnergyFloor :
+      ∀ i x,
+        x ∈
+            Metric.ball
+              (TxE2 i)
+              (radius i) →
+          maxwellEnergyDensity3
+                ε₀ μ₀ F (t, TxE2 i) / 2 ≤
+            maxwellEnergyDensity3
+              ε₀ μ₀ F (t, x) := by
+    intro i x hx
+    exact
+      hEnergyFloor i x
+        (hBallSubsetU i hx)
+
+  have hDomainFinite :
+      volume
+          (Set.Icc D.lower D.upper) <
+        ⊤ :=
+    measure_Icc_lt_top
+
+  have hBallFinite :
+      ∀ i,
+        volume
+            (Metric.ball
+              (TxE2 i)
+              (radius i)) ≠
+          ⊤ := by
+    intro i
+    exact
+      (lt_of_le_of_lt
+        (measure_mono
+          (hBallSubsetDomain i))
+        hDomainFinite).ne
+
+  have hBallVolumeBounds :
+      ∀ i,
+        0 <
+            volume.real
+              (Metric.ball
+                (TxE2 i)
+                (radius i)) ∧
+          volume.real
+              (Metric.ball
+                (TxE2 i)
+                (radius i)) ≤
+            volume.real
+              (Set.Icc D.lower D.upper) := by
+    intro i
+
+    have hBallMeasurePositive :
+        0 <
+          volume
+            (Metric.ball
+              (TxE2 i)
+              (radius i)) := by
+      exact
+        IsOpen.measure_pos
+          (volume : Measure MaxwellVector3)
+          Metric.isOpen_ball
+          ⟨TxE2 i, hBallCenterMem i⟩
+
+    constructor
+    · simpa only [measureReal_def] using
+        ENNReal.toReal_pos
+          hBallMeasurePositive.ne'
+          (hBallFinite i)
+    · simpa only [measureReal_def] using
+        ENNReal.toReal_mono
+          hDomainFinite.ne
+          (measure_mono
+            (hBallSubsetDomain i))
+
+  have hQuantitative :=
+    maxwellTotalElectromagneticEnergy3_quantitative_lowerBound_TxE2_centered
+      ε₀ μ₀ F D t
+      TxE2
+      (fun i =>
+        Metric.ball
+          (TxE2 i)
+          (radius i))
+      (fun i =>
+        maxwellEnergyDensity3
+          ε₀ μ₀ F (t, TxE2 i) / 2)
+      hε₀
+      hμ₀
+      hBallOpen
+      hBallDisjoint
+      hBallCenterMem
+      hBallSubsetDomain
+      hBallFinite
+      hBallEnergyFloor
+      hEnergyIntegrable
+
+  exact
+    ⟨radius,
+      hRadiusPositive,
+      hBallOpen,
+      hBallDisjoint,
+      hBallCenterMem,
+      hBallSubsetDomain,
+      hBallEnergyFloor,
+      hBallFinite,
+      hBallVolumeBounds,
+      hQuantitative.2⟩
 
 
 /--
