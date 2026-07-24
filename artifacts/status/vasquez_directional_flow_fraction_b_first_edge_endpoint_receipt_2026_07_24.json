@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org",
+  "endpoint_receipt": {
+    "current_endpoint": "first_bounded_edge_instance_only",
+    "first_edge_instance_verified": true,
+    "object_name": "VasquezDirectionalFlowFractionBFirstEdgeEndpointReceipt",
+    "safe_to_stop_here": true,
+    "scope": "bounded_directional_flow_fraction_b_first_edge_only"
+  },
+  "id": "vasquez_directional_flow_fraction_b_first_edge_endpoint_receipt_2026_07_24.json",
+  "metadata": {
+    "boundary": "\u00ac vasquez_directional_flow_first_edge_instance_closes_zero_day",
+    "commit_base": "0d955a58f802b76363c61bbfd2b26186c2af3233",
+    "parent_surface": "core/vasquez_directional_flow_fraction_b_first_edge_instance_surface.json",
+    "parent_verifier": "verification/verify_vasquez_directional_flow_fraction_b_first_edge_instance.py",
+    "status": "first_edge_endpoint_receipt_only",
+    "timestamp": "2026-07-24T21:05:00Z"
+  },
+  "non_claims": {
+    "restricted_target_to_zero_day_closure_rule_proved": false,
+    "second_bounded_edge_instance_constructed": false,
+    "terminal_composition_extracted": false,
+    "unrestricted_zero_day_closure_proved": false,
+    "zero_day_closure_claimed": false
+  },
+  "ranked_remaining_gaps": [
+    {
+      "gap": "second_bounded_edge_instance",
+      "rank": 1,
+      "status": "not_constructed"
+    },
+    {
+      "gap": "downstream_terminal_composition_extraction",
+      "rank": 2,
+      "status": "not_extracted"
+    },
+    {
+      "gap": "restricted_target_to_zero_day_closure_rule",
+      "rank": 3,
+      "status": "not_proved"
+    },
+    {
+      "gap": "unrestricted_zero_day_closure",
+      "rank": 4,
+      "status": "blocked"
+    }
+  ],
+  "verifier_enforced_lockouts": {
+    "first_edge_endpoint_receipt_constructs_second_edge": false,
+    "first_edge_endpoint_receipt_extracts_terminal_composition": false,
+    "first_edge_endpoint_receipt_proves_restricted_target_to_zero_day": false,
+    "first_edge_endpoint_receipt_proves_unrestricted_zero_day": false,
+    "vasquez_directional_flow_first_edge_instance_closes_zero_day": false
+  }
+}
