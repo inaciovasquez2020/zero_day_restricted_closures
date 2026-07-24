@@ -1,0 +1,15 @@
+name: vasquez-directional-flow-first-edge-endpoint-receipt
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify anti-unconditional rule
+        run: python3 verification/anti_unconditional_rule.py
+      - name: Verify Vasquez directional flow first edge endpoint receipt
+        run: python3 verification/verify_vasquez_directional_flow_fraction_b_first_edge_endpoint_receipt.py
