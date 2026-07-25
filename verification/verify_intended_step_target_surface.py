@@ -10,7 +10,7 @@ required = {
     "scope": "step_target_only",
     "target": "IntendedStep : IntendedUnrestrictedState -> IntendedUnrestrictedState",
     "definition_target": "IntendedStep(x) := fromProductForm(UnrestrictedStep(toProductForm(x)))",
-    "status": "STEP_TARGET_NOT_DEFINED",
+    "status": "TARGET_IMPLEMENTED",
     "downstream_use": "IntendedUnrestrictedStateClosure",
     "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure outside transported intended-state model",
 }
@@ -31,7 +31,6 @@ if required_deps - set(depends_on):
     raise SystemExit("MISSING_OBJECT := intended step dependency")
 
 required_non_claims = {
-    "does not define IntendedStep",
     "does not prove IntendedUnrestrictedStateClosure",
     "does not transport ProductFormRestrictedLiftClosure",
     "does not prove unrestricted ZeroDayClosure",

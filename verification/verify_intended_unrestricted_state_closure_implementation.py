@@ -20,15 +20,20 @@ def iterate_step(state: IntendedUnrestrictedState, n: int) -> IntendedUnrestrict
 
 
 def main() -> None:
-    samples = [
-        IntendedUnrestrictedState(encoded=0, payload=None),
-        IntendedUnrestrictedState(encoded=1, payload={"x": 1}),
-        IntendedUnrestrictedState(encoded=255, payload=("payload", 3)),
+    states = [
+        IntendedUnrestrictedState(
+            encoded=encoded,
+            payload=("exhaustive-encoded-state", encoded),
+        )
+        for encoded in range(256)
     ]
 
-    for state in samples:
-        n = (256 - state.encoded) % 256
-        assert n <= 255
+    assert len(states) == 256
+    assert {state.encoded for state in states} == set(range(256))
+
+    for state in states:
+        n = 255 - state.encoded
+        assert 0 <= n <= 255
         assert iterate_step(state, n) == intended_closed_state(state)
 
     print("INTENDED_UNRESTRICTED_STATE_CLOSURE_IMPLEMENTATION_OK")

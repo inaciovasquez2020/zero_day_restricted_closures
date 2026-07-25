@@ -9,9 +9,9 @@ from core.intended_unrestricted_state import IntendedUnrestrictedState, intended
 
 
 def main() -> None:
-    assert intended_closed_state(IntendedUnrestrictedState(0, None)) == IntendedUnrestrictedState(0, None)
-    assert intended_closed_state(IntendedUnrestrictedState(7, {"x": 1})) == IntendedUnrestrictedState(0, {"x": 1})
-    assert intended_closed_state(IntendedUnrestrictedState(255, "x")) == IntendedUnrestrictedState(0, "x")
+    assert intended_closed_state(IntendedUnrestrictedState(0, None)) == IntendedUnrestrictedState(255, None)
+    assert intended_closed_state(IntendedUnrestrictedState(7, {"x": 1})) == IntendedUnrestrictedState(255, {"x": 1})
+    assert intended_closed_state(IntendedUnrestrictedState(255, "x")) == IntendedUnrestrictedState(255, "x")
 
     try:
         intended_closed_state((7, None))

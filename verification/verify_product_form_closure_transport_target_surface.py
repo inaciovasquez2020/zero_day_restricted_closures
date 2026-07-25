@@ -11,7 +11,7 @@ required = {
     "source_theorem": "ProductFormRestrictedLiftClosure",
     "target_theorem": "IntendedUnrestrictedStateClosure",
     "transport_statement": "ProductFormRestrictedLiftClosure -> IntendedUnrestrictedStateClosure",
-    "status": "TRANSPORT_TARGET_NOT_PROVED",
+    "status": "TARGET_IMPLEMENTED",
     "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure outside transported intended-state model",
 }
 
@@ -30,8 +30,6 @@ if required_deps - set(depends_on):
     raise SystemExit("MISSING_OBJECT := closure transport dependency")
 
 required_non_claims = {
-    "does not prove IntendedUnrestrictedStateClosure",
-    "does not prove ProductFormRestrictedLiftClosure -> IntendedUnrestrictedStateClosure",
     "does not prove unrestricted ZeroDayClosure",
     "does not erase product-form boundary",
 }

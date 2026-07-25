@@ -8,6 +8,9 @@ payload = json.loads(path.read_text())
 required = {
     "surface": "ProductFormRestrictedLiftClosure",
     "scope": "product_form_only",
+    "status": "LEAN_THEOREM_INHABITED",
+    "lean_source": "core/intended_unrestricted_state_closure.lean",
+    "lean_theorem": "ProductFormRestrictedLiftClosure",
     "state_model": "UnrestrictedStateModel := Fin 256 × Payload",
     "restricted_state_model": "StateModel := Fin 256",
     "closed_state": "ClosedState(x) := (255, x.2)",

@@ -8,14 +8,14 @@
     "IntendedStep : IntendedUnrestrictedState -> IntendedUnrestrictedState",
     "IntendedClosedState : IntendedUnrestrictedState -> IntendedUnrestrictedState"
   ],
-  "status": "PREDICATE_TARGET_NOT_DEFINED",
+  "status": "TARGET_IMPLEMENTED",
   "downstream_use": "target predicate for ProductFormRestrictedLiftClosure transport",
   "non_claims": [
-    "does not define IntendedStep",
-    "does not define IntendedClosedState",
-    "does not prove IntendedUnrestrictedStateClosure",
     "does not transport ProductFormRestrictedLiftClosure",
     "does not prove unrestricted ZeroDayClosure"
   ],
-  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure outside transported intended-state model"
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure outside transported intended-state model",
+  "lean_source": "core/intended_unrestricted_state_closure.lean",
+  "lean_theorem": "intendedUnrestrictedStateClosure",
+  "proof_status": "LEAN_THEOREM_INHABITED"
 }

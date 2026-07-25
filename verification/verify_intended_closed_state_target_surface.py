@@ -10,7 +10,7 @@ required = {
     "scope": "closed_state_target_only",
     "target": "IntendedClosedState : IntendedUnrestrictedState -> IntendedUnrestrictedState",
     "definition_target": "IntendedClosedState(x) := fromProductForm(ClosedState(toProductForm(x)))",
-    "status": "CLOSED_STATE_TARGET_NOT_DEFINED",
+    "status": "TARGET_IMPLEMENTED",
     "downstream_use": "IntendedUnrestrictedStateClosure",
     "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure outside transported intended-state model",
 }
@@ -31,7 +31,6 @@ if required_deps - set(depends_on):
     raise SystemExit("MISSING_OBJECT := intended closed-state dependency")
 
 required_non_claims = {
-    "does not define IntendedClosedState",
     "does not prove IntendedUnrestrictedStateClosure",
     "does not transport ProductFormRestrictedLiftClosure",
     "does not prove unrestricted ZeroDayClosure",

@@ -31,7 +31,7 @@ def intended_step(state: IntendedUnrestrictedState) -> IntendedUnrestrictedState
     if not isinstance(state, IntendedUnrestrictedState):
         raise TypeError("state must be IntendedUnrestrictedState")
     return IntendedUnrestrictedState(
-        encoded=(state.encoded + 1) % 256,
+        encoded=min(state.encoded + 1, 255),
         payload=state.payload,
     )
 
@@ -40,6 +40,6 @@ def intended_closed_state(state: IntendedUnrestrictedState) -> IntendedUnrestric
     if not isinstance(state, IntendedUnrestrictedState):
         raise TypeError("state must be IntendedUnrestrictedState")
     return IntendedUnrestrictedState(
-        encoded=0,
+        encoded=255,
         payload=state.payload,
     )

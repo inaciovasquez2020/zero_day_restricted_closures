@@ -10,7 +10,10 @@ required = {
     "scope": "predicate_target_only",
     "predicate": "IntendedUnrestrictedStateClosure",
     "definition_target": "forall x : IntendedUnrestrictedState, exists n <= 255, IntendedStep^[n](x) = IntendedClosedState(x)",
-    "status": "PREDICATE_TARGET_NOT_DEFINED",
+    "status": "TARGET_IMPLEMENTED",
+    "lean_source": "core/intended_unrestricted_state_closure.lean",
+    "lean_theorem": "intendedUnrestrictedStateClosure",
+    "proof_status": "LEAN_THEOREM_INHABITED",
     "downstream_use": "target predicate for ProductFormRestrictedLiftClosure transport",
     "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure outside transported intended-state model",
 }
@@ -31,9 +34,6 @@ if required_deps - set(depends_on):
     raise SystemExit("MISSING_OBJECT := intended closure predicate dependency")
 
 required_non_claims = {
-    "does not define IntendedStep",
-    "does not define IntendedClosedState",
-    "does not prove IntendedUnrestrictedStateClosure",
     "does not transport ProductFormRestrictedLiftClosure",
     "does not prove unrestricted ZeroDayClosure",
 }

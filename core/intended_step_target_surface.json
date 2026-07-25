@@ -4,17 +4,16 @@
   "target": "IntendedStep : IntendedUnrestrictedState -> IntendedUnrestrictedState",
   "definition_target": "IntendedStep(x) := fromProductForm(UnrestrictedStep(toProductForm(x)))",
   "depends_on": [
-    "toProductForm : IntendedUnrestrictedState -> Fin 256 × Payload",
-    "fromProductForm : Fin 256 × Payload -> IntendedUnrestrictedState",
-    "UnrestrictedStep : Fin 256 × Payload -> Fin 256 × Payload"
+    "toProductForm : IntendedUnrestrictedState -> Fin 256 \u00d7 Payload",
+    "fromProductForm : Fin 256 \u00d7 Payload -> IntendedUnrestrictedState",
+    "UnrestrictedStep : Fin 256 \u00d7 Payload -> Fin 256 \u00d7 Payload"
   ],
-  "status": "STEP_TARGET_NOT_DEFINED",
+  "status": "TARGET_IMPLEMENTED",
   "downstream_use": "IntendedUnrestrictedStateClosure",
   "non_claims": [
-    "does not define IntendedStep",
     "does not prove IntendedUnrestrictedStateClosure",
     "does not transport ProductFormRestrictedLiftClosure",
     "does not prove unrestricted ZeroDayClosure"
   ],
-  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure outside transported intended-state model"
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure outside transported intended-state model"
 }

@@ -11,7 +11,7 @@ from core.intended_unrestricted_state import IntendedUnrestrictedState, intended
 def main() -> None:
     assert intended_step(IntendedUnrestrictedState(0, None)) == IntendedUnrestrictedState(1, None)
     assert intended_step(IntendedUnrestrictedState(7, {"x": 1})) == IntendedUnrestrictedState(8, {"x": 1})
-    assert intended_step(IntendedUnrestrictedState(255, "x")) == IntendedUnrestrictedState(0, "x")
+    assert intended_step(IntendedUnrestrictedState(255, "x")) == IntendedUnrestrictedState(255, "x")
 
     try:
         intended_step((0, None))

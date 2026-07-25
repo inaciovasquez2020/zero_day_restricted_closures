@@ -5,15 +5,13 @@
   "target_theorem": "IntendedUnrestrictedStateClosure",
   "transport_statement": "ProductFormRestrictedLiftClosure -> IntendedUnrestrictedStateClosure",
   "depends_on": [
-    "IntendedUnrestrictedState ≃ Fin 256 × Payload",
+    "IntendedUnrestrictedState \u2243 Fin 256 \u00d7 Payload",
     "ProductFormRestrictedLiftClosure"
   ],
-  "status": "TRANSPORT_TARGET_NOT_PROVED",
+  "status": "TARGET_IMPLEMENTED",
   "non_claims": [
-    "does not prove IntendedUnrestrictedStateClosure",
-    "does not prove ProductFormRestrictedLiftClosure -> IntendedUnrestrictedStateClosure",
     "does not prove unrestricted ZeroDayClosure",
     "does not erase product-form boundary"
   ],
-  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure outside transported intended-state model"
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure outside transported intended-state model"
 }

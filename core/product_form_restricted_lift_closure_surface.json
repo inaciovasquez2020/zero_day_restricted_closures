@@ -1,7 +1,10 @@
 {
   "surface": "ProductFormRestrictedLiftClosure",
   "scope": "product_form_only",
-  "state_model": "UnrestrictedStateModel := Fin 256 × Payload",
+  "status": "LEAN_THEOREM_INHABITED",
+  "lean_source": "core/intended_unrestricted_state_closure.lean",
+  "lean_theorem": "ProductFormRestrictedLiftClosure",
+  "state_model": "UnrestrictedStateModel := Fin 256 \u00d7 Payload",
   "restricted_state_model": "StateModel := Fin 256",
   "transition": {
     "restricted": "tau(s) := min(s + 1, 255)",
@@ -10,7 +13,7 @@
   "closed_state": "ClosedState(x) := (255, x.2)",
   "closure_predicate": "ZeroDayClosureState(x) := exists n <= 255, UnrestrictedStep^[n](x) = ClosedState(x)",
   "rank": "255 - x.1",
-  "theorem": "forall x : Fin 256 × Payload, ZeroDayClosureState(x)",
+  "theorem": "forall x : Fin 256 \u00d7 Payload, ZeroDayClosureState(x)",
   "proof_obligations": [
     "tau(255) = 255",
     "s < 255 -> tau(s) = s + 1",
@@ -22,7 +25,7 @@
     "does not prove unrestricted ZeroDayClosure outside product-form model",
     "does not prove every intended unrestricted state has product form",
     "does not erase restricted boundary",
-    "does not prove IntendedUnrestrictedState ≃ Fin 256 × Payload"
+    "does not prove IntendedUnrestrictedState \u2243 Fin 256 \u00d7 Payload"
   ],
-  "boundary": "BOUNDARY := ¬ unrestricted ZeroDayClosure outside product-form model"
+  "boundary": "BOUNDARY := \u00ac unrestricted ZeroDayClosure outside product-form model"
 }
