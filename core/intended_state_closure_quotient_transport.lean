@@ -51,4 +51,20 @@ theorem intendedUnrestrictedStateClosure_iff_pointwiseEncodedClosure
         (hEncoded state)
 
 
+
+/-- For a nonempty payload carrier, global intended-state closure is exactly
+closure of every encoded quotient state. -/
+theorem intendedUnrestrictedStateClosure_iff_allEncodedClosure
+    {Payload : Type u} [Nonempty Payload] :
+    IntendedUnrestrictedStateClosure (Payload := Payload) ↔
+      ∀ encoded : Fin 256, IntendedEncodedClosureAt encoded := by
+  rw [intendedUnrestrictedStateClosure_iff_pointwiseEncodedClosure]
+  constructor
+  · intro h encoded
+    exact h
+      ⟨encoded, Classical.choice (inferInstance : Nonempty Payload)⟩
+  · intro h state
+    exact h state.encoded
+
+
 end ZeroDayRestrictedClosures
