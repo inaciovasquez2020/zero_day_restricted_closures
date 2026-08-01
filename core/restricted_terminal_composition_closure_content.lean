@@ -129,3 +129,125 @@ theorem restrictedCompositionTargetModelClosureContent_restricted
     (restrictedCompositionTargetModelClosureContent target).restrictedScopeProof
 
 end ZeroDayRestrictedClosures
+
+namespace ZeroDayRestrictedClosures
+
+universe g
+
+/--
+Formal restricted input model containing exactly the data required to construct
+the existing restricted composition target model.
+-/
+structure RestrictedLiftSourceChainCompositionInputModel
+    (TerminalComposite : Type g) where
+  terminalComposite : TerminalComposite
+  restrictedBoundaryInvariant : Prop
+  restrictedBoundaryInvariantProof : restrictedBoundaryInvariant
+  restrictedChainRealization : Prop
+  restrictedChainRealizationProof : restrictedChainRealization
+  restrictedScopeGuard : Prop
+  restrictedScopeGuardProof : restrictedScopeGuard
+
+namespace RestrictedLiftSourceChainCompositionInputModel
+
+/--
+Construct the restricted composition target model directly from the packaged
+restricted lift-source-chain inputs.
+-/
+def toTarget
+    {TerminalComposite : Type g}
+    (input :
+      RestrictedLiftSourceChainCompositionInputModel TerminalComposite) :
+    RestrictedCompositionTargetModel TerminalComposite where
+  terminalRestrictedComposite := input.terminalComposite
+  restrictedBoundaryInvariant := input.restrictedBoundaryInvariant
+  restrictedBoundaryInvariantProof :=
+    input.restrictedBoundaryInvariantProof
+  restrictedChainRealization := input.restrictedChainRealization
+  restrictedChainRealizationProof :=
+    input.restrictedChainRealizationProof
+  restrictedScopeGuard := input.restrictedScopeGuard
+  restrictedScopeGuardProof := input.restrictedScopeGuardProof
+
+end RestrictedLiftSourceChainCompositionInputModel
+
+/--
+The restricted lift-source-chain composition gap is discharged when a packaged
+input constructs a target preserving all source fields and the extracted target
+retains its restricted-scope proof.
+-/
+def LiftSourceChainCompositionGap
+    {TerminalComposite : Type g}
+    (input :
+      RestrictedLiftSourceChainCompositionInputModel TerminalComposite) :
+    Prop :=
+  ∃ target : RestrictedCompositionTargetModel TerminalComposite,
+    target.terminalRestrictedComposite =
+        input.terminalComposite ∧
+    target.restrictedBoundaryInvariant =
+        input.restrictedBoundaryInvariant ∧
+    target.restrictedChainRealization =
+        input.restrictedChainRealization ∧
+    target.restrictedScopeGuard =
+        input.restrictedScopeGuard ∧
+    (restrictedCompositionTargetModelClosureContent target).restrictedScope
+
+/--
+Every formal restricted lift-source-chain input model discharges the restricted
+composition gap by constructing its target and extracting restricted content.
+-/
+theorem dischargeLiftSourceChainCompositionGap
+    {TerminalComposite : Type g}
+    (input :
+      RestrictedLiftSourceChainCompositionInputModel TerminalComposite) :
+    LiftSourceChainCompositionGap input := by
+  refine ⟨input.toTarget, ?_⟩
+  constructor
+  · rfl
+  constructor
+  · rfl
+  constructor
+  · rfl
+  constructor
+  · rfl
+  exact
+    restrictedCompositionTargetModelClosureContent_restricted
+      input.toTarget
+
+/-- The constructed target preserves the terminal-composite input exactly. -/
+theorem dischargeLiftSourceChainCompositionGap_terminalComposite
+    {TerminalComposite : Type g}
+    (input :
+      RestrictedLiftSourceChainCompositionInputModel TerminalComposite) :
+    input.toTarget.terminalRestrictedComposite =
+      input.terminalComposite := by
+  rfl
+
+/-- The constructed target preserves the boundary invariant exactly. -/
+theorem dischargeLiftSourceChainCompositionGap_boundaryInvariant
+    {TerminalComposite : Type g}
+    (input :
+      RestrictedLiftSourceChainCompositionInputModel TerminalComposite) :
+    input.toTarget.restrictedBoundaryInvariant =
+      input.restrictedBoundaryInvariant := by
+  rfl
+
+/-- The constructed target preserves chain realization exactly. -/
+theorem dischargeLiftSourceChainCompositionGap_chainRealization
+    {TerminalComposite : Type g}
+    (input :
+      RestrictedLiftSourceChainCompositionInputModel TerminalComposite) :
+    input.toTarget.restrictedChainRealization =
+      input.restrictedChainRealization := by
+  rfl
+
+/-- The constructed target preserves the restricted-scope guard exactly. -/
+theorem dischargeLiftSourceChainCompositionGap_scopeGuard
+    {TerminalComposite : Type g}
+    (input :
+      RestrictedLiftSourceChainCompositionInputModel TerminalComposite) :
+    input.toTarget.restrictedScopeGuard =
+      input.restrictedScopeGuard := by
+  rfl
+
+end ZeroDayRestrictedClosures
