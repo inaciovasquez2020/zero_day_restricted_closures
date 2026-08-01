@@ -251,3 +251,40 @@ theorem dischargeLiftSourceChainCompositionGap_scopeGuard
   rfl
 
 end ZeroDayRestrictedClosures
+
+namespace ZeroDayRestrictedClosures
+
+universe terminalContractUniverse terminalTargetUniverse
+
+/--
+The actual restricted terminal-composite field type.
+
+`C` records the input-contract type and `T` records the bounded target-object
+type. The terminal object must carry direct evidence that it remains within the
+specified restricted zero-day instance predicate.
+
+This declaration does not construct a terminal composite and does not imply
+`ZeroDayClosure`.
+-/
+structure TerminalComposite
+    (C : Type terminalContractUniverse)
+    (T : Type terminalTargetUniverse)
+    (restricted_zero_day_instance_only : T → Prop) where
+  terminal_object : T
+  restricted_scope_guard :
+    restricted_zero_day_instance_only terminal_object
+
+/--
+The restricted-scope evidence carried by a terminal composite is available
+without any unrestricted promotion.
+-/
+theorem TerminalComposite.restricted_scope
+    {C : Type terminalContractUniverse}
+    {T : Type terminalTargetUniverse}
+    {restricted_zero_day_instance_only : T → Prop}
+    (terminal :
+      TerminalComposite C T restricted_zero_day_instance_only) :
+    restricted_zero_day_instance_only terminal.terminal_object := by
+  exact terminal.restricted_scope_guard
+
+end ZeroDayRestrictedClosures
