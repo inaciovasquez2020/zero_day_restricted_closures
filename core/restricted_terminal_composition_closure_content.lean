@@ -370,3 +370,142 @@ theorem restrictedClosureSurface_suppliesTerminalComposite
     ⟨terminalCompositeOfRestrictedClosureSurface source⟩
 
 end ZeroDayRestrictedClosures
+
+namespace ZeroDayRestrictedClosures
+
+universe zeroDayBoundaryStateUniverse
+
+/--
+The actual Lean form of the repository's zero-day boundary surface.
+
+`ReachableBy` and `TerminalClosed` remain explicit semantic parameters. This
+avoids inventing meanings for those repository-level predicates while retaining
+the exact boundary fields recorded by the theorem surface.
+-/
+structure ZeroDayBoundarySurface
+    (State : Type zeroDayBoundaryStateUniverse)
+    (ReachableBy :
+      (State → State → Prop) → State → State → Prop)
+    (TerminalClosed : State → Prop) where
+  BoundaryOrder : State → State → Prop
+  ExistsAt : State → Prop
+  Initial : State
+  Terminal : State
+  AdmissibleStep : State → State → Prop
+  initial_exists :
+    ExistsAt Initial
+  initial_minimal :
+    ∀ state, BoundaryOrder state Initial → ¬ ExistsAt state
+  terminal_exists :
+    ExistsAt Terminal
+  terminal_reachable :
+    ReachableBy AdmissibleStep Initial Terminal
+  terminal_closed :
+    TerminalClosed Terminal
+  no_terminal_extension :
+    ∀ state, AdmissibleStep Terminal state → state = Terminal
+
+/--
+Construct the actual restricted-closure surface carried by a zero-day boundary
+surface.
+
+The terminal projection is the boundary's `Terminal` field, and the local
+restricted predicate is exactly the supplied `TerminalClosed` predicate.
+-/
+def zero_day_boundary_surface_implies_restricted_closure
+    {State : Type zeroDayBoundaryStateUniverse}
+    {ReachableBy :
+      (State → State → Prop) → State → State → Prop}
+    {TerminalClosed : State → Prop}
+    (boundary :
+      ZeroDayBoundarySurface State ReachableBy TerminalClosed) :
+    RestrictedClosureSurface
+      (ZeroDayBoundarySurface State ReachableBy TerminalClosed)
+      State
+      (fun source => source.Terminal) where
+  boundary := boundary
+  local_closure_predicate := TerminalClosed
+  closure_from_boundary := boundary.terminal_closed
+
+/--
+The boundary-to-restricted-closure bridge preserves the terminal object
+definitionally.
+-/
+theorem zero_day_boundary_surface_restricted_closure_terminal
+    {State : Type zeroDayBoundaryStateUniverse}
+    {ReachableBy :
+      (State → State → Prop) → State → State → Prop}
+    {TerminalClosed : State → Prop}
+    (boundary :
+      ZeroDayBoundarySurface State ReachableBy TerminalClosed) :
+    (zero_day_boundary_surface_implies_restricted_closure boundary).boundary.Terminal =
+      boundary.Terminal := by
+  rfl
+
+/--
+Compose the completed restricted-closure bridge with the existing
+restricted-closure-to-terminal-composite bridge.
+-/
+def zero_day_boundary_surface_implies_terminal_composite
+    {State : Type zeroDayBoundaryStateUniverse}
+    {ReachableBy :
+      (State → State → Prop) → State → State → Prop}
+    {TerminalClosed : State → Prop}
+    (boundary :
+      ZeroDayBoundarySurface State ReachableBy TerminalClosed) :
+    TerminalComposite
+      (ZeroDayBoundarySurface State ReachableBy TerminalClosed)
+      State
+      TerminalClosed :=
+  terminalCompositeOfRestrictedClosureSurface
+    (zero_day_boundary_surface_implies_restricted_closure boundary)
+
+/--
+The composed bridge preserves the boundary terminal exactly.
+-/
+theorem zero_day_boundary_surface_terminal_composite_object
+    {State : Type zeroDayBoundaryStateUniverse}
+    {ReachableBy :
+      (State → State → Prop) → State → State → Prop}
+    {TerminalClosed : State → Prop}
+    (boundary :
+      ZeroDayBoundarySurface State ReachableBy TerminalClosed) :
+    (zero_day_boundary_surface_implies_terminal_composite boundary).terminal_object =
+      boundary.Terminal := by
+  rfl
+
+/--
+The composed terminal composite carries the original terminal-closure proof.
+-/
+theorem zero_day_boundary_surface_terminal_composite_scope
+    {State : Type zeroDayBoundaryStateUniverse}
+    {ReachableBy :
+      (State → State → Prop) → State → State → Prop}
+    {TerminalClosed : State → Prop}
+    (boundary :
+      ZeroDayBoundarySurface State ReachableBy TerminalClosed) :
+    TerminalClosed
+      (zero_day_boundary_surface_implies_terminal_composite boundary).terminal_object := by
+  exact
+    (zero_day_boundary_surface_implies_terminal_composite boundary).restricted_scope_guard
+
+/--
+Every supplied zero-day boundary surface therefore inhabits the corresponding
+restricted terminal-composite type.
+-/
+theorem zero_day_boundary_surface_supplies_terminal_composite
+    {State : Type zeroDayBoundaryStateUniverse}
+    {ReachableBy :
+      (State → State → Prop) → State → State → Prop}
+    {TerminalClosed : State → Prop}
+    (boundary :
+      ZeroDayBoundarySurface State ReachableBy TerminalClosed) :
+    Nonempty
+      (TerminalComposite
+        (ZeroDayBoundarySurface State ReachableBy TerminalClosed)
+        State
+        TerminalClosed) := by
+  exact
+    ⟨zero_day_boundary_surface_implies_terminal_composite boundary⟩
+
+end ZeroDayRestrictedClosures
