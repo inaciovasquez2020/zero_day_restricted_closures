@@ -288,3 +288,85 @@ theorem TerminalComposite.restricted_scope
   exact terminal.restricted_scope_guard
 
 end ZeroDayRestrictedClosures
+
+namespace ZeroDayRestrictedClosures
+
+universe restrictedClosureContractUniverse
+  restrictedClosureTargetUniverse
+
+/--
+The actual restricted-closure source described by the repository surface.
+
+`terminalObject` supplies the terminal projection belonging to the boundary
+carrier. The source then provides a local closure predicate and direct evidence
+that the projected terminal object satisfies it.
+
+This structure does not contain a `TerminalComposite` field and therefore does
+not assume the bridge that will be proved below.
+-/
+structure RestrictedClosureSurface
+    (C : Type restrictedClosureContractUniverse)
+    (T : Type restrictedClosureTargetUniverse)
+    (terminalObject : C → T) where
+  boundary : C
+  local_closure_predicate : T → Prop
+  closure_from_boundary :
+    local_closure_predicate (terminalObject boundary)
+
+/--
+Bridge 1: every actual restricted-closure source constructs an actual
+`TerminalComposite`.
+
+The restricted predicate of the resulting terminal composite is exactly the
+source's local closure predicate.
+-/
+def terminalCompositeOfRestrictedClosureSurface
+    {C : Type restrictedClosureContractUniverse}
+    {T : Type restrictedClosureTargetUniverse}
+    {terminalObject : C → T}
+    (source : RestrictedClosureSurface C T terminalObject) :
+    TerminalComposite C T source.local_closure_predicate where
+  terminal_object :=
+    terminalObject source.boundary
+  restricted_scope_guard :=
+    source.closure_from_boundary
+
+/--
+The bridge preserves the boundary's projected terminal object definitionally.
+-/
+theorem terminalCompositeOfRestrictedClosureSurface_terminal_object
+    {C : Type restrictedClosureContractUniverse}
+    {T : Type restrictedClosureTargetUniverse}
+    {terminalObject : C → T}
+    (source : RestrictedClosureSurface C T terminalObject) :
+    (terminalCompositeOfRestrictedClosureSurface source).terminal_object =
+      terminalObject source.boundary := by
+  rfl
+
+/--
+The bridge carries the source's restricted local-closure evidence into the
+terminal composite.
+-/
+theorem terminalCompositeOfRestrictedClosureSurface_restricted_scope
+    {C : Type restrictedClosureContractUniverse}
+    {T : Type restrictedClosureTargetUniverse}
+    {terminalObject : C → T}
+    (source : RestrictedClosureSurface C T terminalObject) :
+    source.local_closure_predicate
+      (terminalCompositeOfRestrictedClosureSurface source).terminal_object := by
+  exact
+    (terminalCompositeOfRestrictedClosureSurface source).restricted_scope_guard
+
+/--
+Executable inhabitation statement for the completed source-field bridge.
+-/
+theorem restrictedClosureSurface_suppliesTerminalComposite
+    {C : Type restrictedClosureContractUniverse}
+    {T : Type restrictedClosureTargetUniverse}
+    {terminalObject : C → T}
+    (source : RestrictedClosureSurface C T terminalObject) :
+    Nonempty (TerminalComposite C T source.local_closure_predicate) := by
+  exact
+    ⟨terminalCompositeOfRestrictedClosureSurface source⟩
+
+end ZeroDayRestrictedClosures
