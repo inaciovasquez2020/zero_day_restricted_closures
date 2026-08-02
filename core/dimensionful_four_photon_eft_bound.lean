@@ -471,6 +471,206 @@ paper source archive or embedded as text in the official vector figure.
 def cmsTotemExactJointContourImported : Prop :=
   False
 
+/--
+A diagonal positive quadratic form with threshold `a^2 * b^2`
+and coordinate-axis intercepts `±a` and `±b`.
+-/
+def axisMatchedDiagonalQuadratic
+    (a b x y : ℝ) : ℝ :=
+  b ^ 2 * x ^ 2 + a ^ 2 * y ^ 2
+
+/--
+A correlated quadratic form with the same coordinate-axis intercepts.
+-/
+def axisMatchedCorrelatedQuadratic
+    (a b x y : ℝ) : ℝ :=
+  b ^ 2 * x ^ 2 + a * b * x * y + a ^ 2 * y ^ 2
+
+theorem axisMatchedCorrelatedQuadratic_four_mul
+    (a b x y : ℝ) :
+    4 * axisMatchedCorrelatedQuadratic a b x y =
+      (2 * b * x + a * y) ^ 2 + 3 * (a * y) ^ 2 := by
+  unfold axisMatchedCorrelatedQuadratic
+  ring
+
+theorem axisMatchedDiagonalQuadratic_pos
+    (a b x y : ℝ)
+    (ha : 0 < a)
+    (hb : 0 < b)
+    (hNonzero : x ≠ 0 ∨ y ≠ 0) :
+    0 < axisMatchedDiagonalQuadratic a b x y := by
+  unfold axisMatchedDiagonalQuadratic
+  rcases hNonzero with hx | hy
+  · have hBX : 0 < b ^ 2 * x ^ 2 :=
+      mul_pos
+        (sq_pos_of_ne_zero (ne_of_gt hb))
+        (sq_pos_of_ne_zero hx)
+    nlinarith [sq_nonneg (a * y)]
+  · have hAY : 0 < a ^ 2 * y ^ 2 :=
+      mul_pos
+        (sq_pos_of_ne_zero (ne_of_gt ha))
+        (sq_pos_of_ne_zero hy)
+    nlinarith [sq_nonneg (b * x)]
+
+theorem axisMatchedCorrelatedQuadratic_pos
+    (a b x y : ℝ)
+    (ha : 0 < a)
+    (hb : 0 < b)
+    (hNonzero : x ≠ 0 ∨ y ≠ 0) :
+    0 < axisMatchedCorrelatedQuadratic a b x y := by
+  by_cases hy : y = 0
+  · subst y
+    have hx : x ≠ 0 := by
+      simpa using hNonzero
+    have hBX : 0 < b ^ 2 * x ^ 2 :=
+      mul_pos
+        (sq_pos_of_ne_zero (ne_of_gt hb))
+        (sq_pos_of_ne_zero hx)
+    simpa [axisMatchedCorrelatedQuadratic] using hBX
+  · have hAY : 0 < (a * y) ^ 2 :=
+      sq_pos_of_ne_zero (mul_ne_zero (ne_of_gt ha) hy)
+    have hDecomposition :=
+      axisMatchedCorrelatedQuadratic_four_mul a b x y
+    nlinarith [sq_nonneg (2 * b * x + a * y)]
+
+def PositiveAxisMatchedContour
+    (a b : ℝ)
+    (F : ℝ → ℝ → ℝ) : Prop :=
+  (∀ x y, x ≠ 0 ∨ y ≠ 0 → 0 < F x y) ∧
+    F a 0 = a ^ 2 * b ^ 2 ∧
+    F (-a) 0 = a ^ 2 * b ^ 2 ∧
+    F 0 b = a ^ 2 * b ^ 2 ∧
+    F 0 (-b) = a ^ 2 * b ^ 2
+
+theorem axisMatchedDiagonal_isPositiveAxisMatchedContour
+    (a b : ℝ)
+    (ha : 0 < a)
+    (hb : 0 < b) :
+    PositiveAxisMatchedContour a b
+      (fun x y => axisMatchedDiagonalQuadratic a b x y) := by
+  unfold PositiveAxisMatchedContour
+  constructor
+  · intro x y hNonzero
+    exact axisMatchedDiagonalQuadratic_pos a b x y ha hb hNonzero
+  constructor
+  · unfold axisMatchedDiagonalQuadratic
+    ring
+  constructor
+  · unfold axisMatchedDiagonalQuadratic
+    ring
+  constructor
+  · unfold axisMatchedDiagonalQuadratic
+    ring
+  · unfold axisMatchedDiagonalQuadratic
+    ring
+
+theorem axisMatchedCorrelated_isPositiveAxisMatchedContour
+    (a b : ℝ)
+    (ha : 0 < a)
+    (hb : 0 < b) :
+    PositiveAxisMatchedContour a b
+      (fun x y => axisMatchedCorrelatedQuadratic a b x y) := by
+  unfold PositiveAxisMatchedContour
+  constructor
+  · intro x y hNonzero
+    exact axisMatchedCorrelatedQuadratic_pos a b x y ha hb hNonzero
+  constructor
+  · unfold axisMatchedCorrelatedQuadratic
+    ring
+  constructor
+  · unfold axisMatchedCorrelatedQuadratic
+    ring
+  constructor
+  · unfold axisMatchedCorrelatedQuadratic
+    ring
+  · unfold axisMatchedCorrelatedQuadratic
+    ring
+
+theorem axisMatchedQuadratics_midpoint_values
+    (a b : ℝ) :
+    axisMatchedDiagonalQuadratic a b (a / 2) (b / 2) =
+        (1 / 2 : ℝ) * (a ^ 2 * b ^ 2) ∧
+      axisMatchedCorrelatedQuadratic a b (a / 2) (b / 2) =
+        (3 / 4 : ℝ) * (a ^ 2 * b ^ 2) := by
+  constructor
+  · unfold axisMatchedDiagonalQuadratic
+    ring
+  · unfold axisMatchedCorrelatedQuadratic
+    ring
+
+/--
+Positive axis intercepts do not identify a unique positive quadratic
+joint contour. The witnesses agree on all four axis intercepts and
+disagree at the common axis-box midpoint.
+-/
+theorem positiveAxisLimits_jointContour_nonidentifiable
+    (a b : ℝ)
+    (ha : 0 < a)
+    (hb : 0 < b) :
+    ∃ F G : ℝ → ℝ → ℝ,
+      PositiveAxisMatchedContour a b F ∧
+      PositiveAxisMatchedContour a b G ∧
+      F (a / 2) (b / 2) ≠ G (a / 2) (b / 2) := by
+  refine ⟨
+    fun x y => axisMatchedDiagonalQuadratic a b x y,
+    fun x y => axisMatchedCorrelatedQuadratic a b x y,
+    axisMatchedDiagonal_isPositiveAxisMatchedContour a b ha hb,
+    axisMatchedCorrelated_isPositiveAxisMatchedContour a b ha hb,
+    ?_
+  ⟩
+  change
+    axisMatchedDiagonalQuadratic
+        a b (a / 2) (b / 2) ≠
+      axisMatchedCorrelatedQuadratic
+        a b (a / 2) (b / 2)
+  have hMidpoint :=
+    axisMatchedQuadratics_midpoint_values a b
+  rw [hMidpoint.1, hMidpoint.2]
+  have haSquare : 0 < a ^ 2 :=
+    sq_pos_of_ne_zero (ne_of_gt ha)
+  have hbSquare : 0 < b ^ 2 :=
+    sq_pos_of_ne_zero (ne_of_gt hb)
+  have hProduct : 0 < a ^ 2 * b ^ 2 :=
+    mul_pos haSquare hbSquare
+  nlinarith
+
+theorem cmsTotemObservedAxisLimits_jointContour_nonidentifiable :
+    ∃ F G : ℝ → ℝ → ℝ,
+      PositiveAxisMatchedContour
+          cmsTotemZetaOne95BoundTeVInv4
+          cmsTotemObservedZetaTwo95BoundTeVInv4 F ∧
+      PositiveAxisMatchedContour
+          cmsTotemZetaOne95BoundTeVInv4
+          cmsTotemObservedZetaTwo95BoundTeVInv4 G ∧
+      F
+          (cmsTotemZetaOne95BoundTeVInv4 / 2)
+          (cmsTotemObservedZetaTwo95BoundTeVInv4 / 2) ≠
+        G
+          (cmsTotemZetaOne95BoundTeVInv4 / 2)
+          (cmsTotemObservedZetaTwo95BoundTeVInv4 / 2) := by
+  apply positiveAxisLimits_jointContour_nonidentifiable
+  · norm_num [cmsTotemZetaOne95BoundTeVInv4]
+  · norm_num [cmsTotemObservedZetaTwo95BoundTeVInv4]
+
+theorem cmsTotemExpectedAxisLimits_jointContour_nonidentifiable :
+    ∃ F G : ℝ → ℝ → ℝ,
+      PositiveAxisMatchedContour
+          cmsTotemExpectedZetaOne95BoundTeVInv4
+          cmsTotemExpectedZetaTwo95BoundTeVInv4 F ∧
+      PositiveAxisMatchedContour
+          cmsTotemExpectedZetaOne95BoundTeVInv4
+          cmsTotemExpectedZetaTwo95BoundTeVInv4 G ∧
+      F
+          (cmsTotemExpectedZetaOne95BoundTeVInv4 / 2)
+          (cmsTotemExpectedZetaTwo95BoundTeVInv4 / 2) ≠
+        G
+          (cmsTotemExpectedZetaOne95BoundTeVInv4 / 2)
+          (cmsTotemExpectedZetaTwo95BoundTeVInv4 / 2) := by
+  apply positiveAxisLimits_jointContour_nonidentifiable
+  · norm_num [cmsTotemExpectedZetaOne95BoundTeVInv4]
+  · norm_num [cmsTotemExpectedZetaTwo95BoundTeVInv4]
+
+
 end
 
 end ZeroDayRestrictedClosures
