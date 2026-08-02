@@ -362,13 +362,114 @@ theorem cmsTotemTwoOperatorDifferentialCrossSection_nonneg
   · positivity
 
 /--
-The official HEPData record publishes the observed and expected Figure 9
-two-dimensional contours separately.  No reconstructed contour is asserted
-here from rounded one-dimensional limits.
+Published CMS–TOTEM expected 95% confidence limit on `|zeta1|`,
+in units of `TeV⁻⁴`, with `zeta2 = 0`.
 -/
-theorem cmsTotemTwoOperatorExactContourBoundary :
-    True := by
-  trivial
+def cmsTotemExpectedZetaOne95BoundTeVInv4 : ℝ :=
+  71 / 1000
+
+/--
+Published CMS–TOTEM observed 95% confidence limit on `|zeta2|`,
+in units of `TeV⁻⁴`, with `zeta1 = 0`.
+-/
+def cmsTotemObservedZetaTwo95BoundTeVInv4 : ℝ :=
+  3 / 20
+
+/--
+Published CMS–TOTEM expected 95% confidence limit on `|zeta2|`,
+in units of `TeV⁻⁴`, with `zeta1 = 0`.
+-/
+def cmsTotemExpectedZetaTwo95BoundTeVInv4 : ℝ :=
+  3 / 20
+
+/--
+The observed one-parameter limits, encoded only on the two coordinate axes.
+
+This is deliberately not a two-dimensional joint exclusion region:
+the publication obtains each bound by setting the other coupling to zero.
+-/
+def cmsTotemObservedOneParameterAxisEnvelope
+    (zeta1 zeta2 : ℝ) : Prop :=
+  (zeta2 = 0 ∧
+      abs zeta1 ≤ cmsTotemZetaOne95BoundTeVInv4) ∨
+    (zeta1 = 0 ∧
+      abs zeta2 ≤ cmsTotemObservedZetaTwo95BoundTeVInv4)
+
+/--
+The expected one-parameter limits, encoded only on the two coordinate axes.
+-/
+def cmsTotemExpectedOneParameterAxisEnvelope
+    (zeta1 zeta2 : ℝ) : Prop :=
+  (zeta2 = 0 ∧
+      abs zeta1 ≤ cmsTotemExpectedZetaOne95BoundTeVInv4) ∨
+    (zeta1 = 0 ∧
+      abs zeta2 ≤ cmsTotemExpectedZetaTwo95BoundTeVInv4)
+
+/--
+The expected `zeta1` axis limit is stronger than the observed limit,
+while the observed and expected `zeta2` axis limits coincide at the
+published precision.
+-/
+theorem cmsTotem_oneParameterAxisLimit_calibration :
+    cmsTotemExpectedZetaOne95BoundTeVInv4 ≤
+        cmsTotemZetaOne95BoundTeVInv4 ∧
+      cmsTotemObservedZetaTwo95BoundTeVInv4 =
+        cmsTotemExpectedZetaTwo95BoundTeVInv4 := by
+  norm_num [
+    cmsTotemExpectedZetaOne95BoundTeVInv4,
+    cmsTotemZetaOne95BoundTeVInv4,
+    cmsTotemObservedZetaTwo95BoundTeVInv4,
+    cmsTotemExpectedZetaTwo95BoundTeVInv4
+  ]
+
+/--
+Every point in the expected one-parameter axis envelope also lies in
+the observed one-parameter axis envelope.
+-/
+theorem cmsTotem_expectedAxisEnvelope_subset_observed
+    (zeta1 zeta2 : ℝ)
+    (hExpected :
+      cmsTotemExpectedOneParameterAxisEnvelope zeta1 zeta2) :
+    cmsTotemObservedOneParameterAxisEnvelope zeta1 zeta2 := by
+  rcases hExpected with hZetaOne | hZetaTwo
+  · left
+    refine ⟨hZetaOne.1, ?_⟩
+    exact le_trans hZetaOne.2 (by
+      norm_num [
+        cmsTotemExpectedZetaOne95BoundTeVInv4,
+        cmsTotemZetaOne95BoundTeVInv4
+      ])
+  · right
+    refine ⟨hZetaTwo.1, ?_⟩
+    simpa [
+      cmsTotemObservedZetaTwo95BoundTeVInv4,
+      cmsTotemExpectedZetaTwo95BoundTeVInv4
+    ] using hZetaTwo.2
+
+/--
+The Standard-Model point belongs to both published one-parameter
+axis envelopes.
+-/
+theorem cmsTotem_zero_mem_observed_and_expected_axis_envelopes :
+    cmsTotemObservedOneParameterAxisEnvelope 0 0 ∧
+      cmsTotemExpectedOneParameterAxisEnvelope 0 0 := by
+  constructor <;>
+    left <;>
+    constructor <;>
+    norm_num [
+      cmsTotemObservedOneParameterAxisEnvelope,
+      cmsTotemExpectedOneParameterAxisEnvelope,
+      cmsTotemZetaOne95BoundTeVInv4,
+      cmsTotemExpectedZetaOne95BoundTeVInv4
+    ]
+
+/--
+The exact observed and expected Figure 9 joint contours are intentionally
+not encoded here because their ellipse coefficients were not present in the
+paper source archive or embedded as text in the official vector figure.
+-/
+def cmsTotemExactJointContourImported : Prop :=
+  False
 
 end
 
