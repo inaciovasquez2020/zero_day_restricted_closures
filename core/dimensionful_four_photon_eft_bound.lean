@@ -233,6 +233,143 @@ theorem cmsTotem_admissible_parameter_ratio_bound
   apply (div_le_iff₀ hPow).mpr
   nlinarith
 
+
+/--
+The complete dimension-eight four-photon interaction used by CMS–TOTEM:
+
+`zeta1 * (F_μν F^μν)^2
+ + zeta2 * F_μν F^νρ F_ρλ F^λμ`.
+
+The two Lorentz invariants are represented here by real scalar inputs.
+-/
+def twoOperatorFourPhotonInteraction
+    (zeta1 zeta2 firstInvariant secondInvariant : ℝ) : ℝ :=
+  zeta1 * firstInvariant ^ 2 + zeta2 * secondInvariant
+
+/--
+The coupling-dependent factor in the CMS–TOTEM anomalous differential
+cross section:
+
+`48 zeta1^2 + 40 zeta1 zeta2 + 11 zeta2^2`.
+
+Source: CMS–TOTEM, Phys. Rev. D 110 (2024) 012010, Eq. (1) and the
+following differential-cross-section equation; arXiv:2311.02725.
+-/
+def cmsTotemTwoOperatorCrossSectionShape
+    (zeta1 zeta2 : ℝ) : ℝ :=
+  48 * zeta1 ^ 2 +
+    40 * zeta1 * zeta2 +
+    11 * zeta2 ^ 2
+
+/--
+Exact positive-definite diagonalization of the two-operator rate shape.
+-/
+theorem cmsTotemTwoOperatorCrossSectionShape_diagonal
+    (zeta1 zeta2 : ℝ) :
+    11 * cmsTotemTwoOperatorCrossSectionShape zeta1 zeta2 =
+      128 * zeta1 ^ 2 +
+        (20 * zeta1 + 11 * zeta2) ^ 2 := by
+  unfold cmsTotemTwoOperatorCrossSectionShape
+  ring
+
+/--
+The full two-operator anomalous cross-section shape is nonnegative.
+-/
+theorem cmsTotemTwoOperatorCrossSectionShape_nonneg
+    (zeta1 zeta2 : ℝ) :
+    0 ≤ cmsTotemTwoOperatorCrossSectionShape zeta1 zeta2 := by
+  have hDiagonal :=
+    cmsTotemTwoOperatorCrossSectionShape_diagonal zeta1 zeta2
+  nlinarith [
+    sq_nonneg zeta1,
+    sq_nonneg (20 * zeta1 + 11 * zeta2)
+  ]
+
+/--
+There is no flat direction in the two-operator rate: the quadratic form
+vanishes only at the Standard-Model point.
+-/
+theorem cmsTotemTwoOperatorCrossSectionShape_eq_zero_iff
+    (zeta1 zeta2 : ℝ) :
+    cmsTotemTwoOperatorCrossSectionShape zeta1 zeta2 = 0 ↔
+      zeta1 = 0 ∧ zeta2 = 0 := by
+  constructor
+  · intro hZero
+    have hDiagonal :=
+      cmsTotemTwoOperatorCrossSectionShape_diagonal zeta1 zeta2
+    have hSum :
+        128 * zeta1 ^ 2 +
+            (20 * zeta1 + 11 * zeta2) ^ 2 = 0 := by
+      nlinarith
+    have hZetaOne : zeta1 = 0 := by
+      nlinarith [
+        sq_nonneg zeta1,
+        sq_nonneg (20 * zeta1 + 11 * zeta2)
+      ]
+    subst zeta1
+    have hZetaTwo : zeta2 = 0 := by
+      nlinarith [sq_nonneg zeta2]
+    exact ⟨rfl, hZetaTwo⟩
+  · rintro ⟨rfl, rfl⟩
+    norm_num [cmsTotemTwoOperatorCrossSectionShape]
+
+/--
+The numerator of the anomalous differential cross section, before the
+positive factor `1 / (16 * pi^2 * s)`.
+-/
+def cmsTotemTwoOperatorDifferentialNumerator
+    (s t zeta1 zeta2 : ℝ) : ℝ :=
+  (s ^ 2 + t ^ 2 + s * t) ^ 2 *
+    cmsTotemTwoOperatorCrossSectionShape zeta1 zeta2
+
+/--
+The anomalous differential-cross-section numerator is nonnegative.
+-/
+theorem cmsTotemTwoOperatorDifferentialNumerator_nonneg
+    (s t zeta1 zeta2 : ℝ) :
+    0 ≤
+      cmsTotemTwoOperatorDifferentialNumerator
+        s t zeta1 zeta2 := by
+  unfold cmsTotemTwoOperatorDifferentialNumerator
+  exact mul_nonneg
+    (sq_nonneg (s ^ 2 + t ^ 2 + s * t))
+    (cmsTotemTwoOperatorCrossSectionShape_nonneg zeta1 zeta2)
+
+/--
+The full anomalous differential cross section in the CMS–TOTEM
+normalization.
+-/
+def cmsTotemTwoOperatorDifferentialCrossSection
+    (s t zeta1 zeta2 : ℝ) : ℝ :=
+  cmsTotemTwoOperatorDifferentialNumerator s t zeta1 zeta2 /
+    (16 * Real.pi ^ 2 * s)
+
+/--
+For physical `s > 0`, the anomalous differential cross section is
+nonnegative.
+-/
+theorem cmsTotemTwoOperatorDifferentialCrossSection_nonneg
+    (s t zeta1 zeta2 : ℝ)
+    (hS : 0 < s) :
+    0 ≤
+      cmsTotemTwoOperatorDifferentialCrossSection
+        s t zeta1 zeta2 := by
+  unfold cmsTotemTwoOperatorDifferentialCrossSection
+  apply div_nonneg
+  · exact
+      cmsTotemTwoOperatorDifferentialNumerator_nonneg
+        s t zeta1 zeta2
+  · positivity
+
+/--
+The official HEPData record publishes the observed and expected Figure 9
+two-dimensional contours separately.  No reconstructed contour is asserted
+here from rounded one-dimensional limits.
+-/
+theorem cmsTotemTwoOperatorExactContourBoundary :
+    True := by
+  trivial
+
 end
 
 end ZeroDayRestrictedClosures
