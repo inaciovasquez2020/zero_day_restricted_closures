@@ -887,6 +887,174 @@ theorem
     ring
 
 /--
+The ordinary magnetic-coordinate derivative of one candidate-density
+component.
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent_magneticDerivative_exact
+    (ε₀ μ₀
+      electric magnetic
+      electricTime magneticTime
+      electricCurl magneticCurl
+      current : ℝ) :
+    deriv
+        (fun currentMagnetic : ℝ =>
+          hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent
+            ε₀
+            μ₀
+            electric
+            currentMagnetic
+            electricTime
+            magneticTime
+            electricCurl
+            magneticCurl
+            current)
+        magnetic =
+      -(ε₀ / 2) * electricTime +
+        (1 / (2 * μ₀)) * magneticCurl -
+        current := by
+  let coefficient : ℝ :=
+    -(ε₀ / 2) * electricTime +
+      (1 / (2 * μ₀)) * magneticCurl -
+      current
+
+  let constantTerm : ℝ :=
+    (ε₀ / 2) *
+        electric *
+        magneticTime +
+      (ε₀ / 2) *
+        electric *
+        electricCurl
+
+  have hAffine :
+      HasDerivAt
+          (fun currentMagnetic : ℝ =>
+            coefficient * currentMagnetic +
+              constantTerm)
+          coefficient
+          magnetic := by
+    convert
+      ((hasDerivAt_id magnetic).const_mul
+          coefficient).add
+        (hasDerivAt_const
+          (x := magnetic)
+          constantTerm)
+      using 1 <;>
+      simp
+
+  have hFunction :
+      (fun currentMagnetic : ℝ =>
+        hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent
+          ε₀
+          μ₀
+          electric
+          currentMagnetic
+          electricTime
+          magneticTime
+          electricCurl
+          magneticCurl
+          current) =
+        (fun currentMagnetic : ℝ =>
+          coefficient * currentMagnetic +
+            constantTerm) := by
+    funext currentMagnetic
+
+    dsimp [coefficient, constantTerm]
+
+    unfold
+      hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent
+
+    ring
+
+  rw [hFunction]
+
+  simpa [coefficient] using hAffine.deriv
+
+/--
+The magnetic Euler–Lagrange component of the candidate first-jet density.
+
+The second term is minus the time derivative of the magnetic temporal
+momentum `(ε₀ / 2) E`. The third term is the formal self-adjoint curl
+contribution from `(1 / (2 * μ₀)) B`.
+-/
+noncomputable def
+    hiddenSectorReducedJointMaxwellCandidateMagneticEulerLagrangeComponent
+    (ε₀ μ₀ : ℝ)
+    (field : SmoothMaxwellField3)
+    (point : MaxwellSpacetime3) :
+    MaxwellVector3 :=
+  fun i : Fin 3 =>
+    deriv
+        (fun currentMagnetic : ℝ =>
+          hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent
+            ε₀
+            μ₀
+            (field.electric point i)
+            currentMagnetic
+            (maxwellTimeDerivative3
+              field.electric
+              point
+              i)
+            (maxwellTimeDerivative3
+              field.magnetic
+              point
+              i)
+            (maxwellCurl3
+              field.electric
+              point
+              i)
+            (maxwellCurl3
+              field.magnetic
+              point
+              i)
+            (field.current point i))
+        (field.magnetic point i) -
+      (ε₀ / 2) *
+        maxwellTimeDerivative3
+          field.electric
+          point
+          i +
+      (1 / (2 * μ₀)) *
+        maxwellCurl3
+          field.magnetic
+          point
+          i
+
+/--
+The magnetic Euler–Lagrange component of the candidate density is exactly the
+second component of the diagonal-multiplied Maxwell residual.
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidateMagneticEulerLagrange_exact
+    (ε₀ μ₀ : ℝ)
+    (field : SmoothMaxwellField3)
+    (point : MaxwellSpacetime3) :
+    hiddenSectorReducedJointMaxwellCandidateMagneticEulerLagrangeComponent
+        ε₀
+        μ₀
+        field
+        point =
+      (hiddenSectorReducedJointMaxwellDiagonalMultipliedResidual
+        ε₀
+        μ₀
+        field
+        point).2 := by
+  funext i
+
+  unfold
+    hiddenSectorReducedJointMaxwellCandidateMagneticEulerLagrangeComponent
+
+  rw [
+    hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent_magneticDerivative_exact
+  ]
+
+  simp [
+    hiddenSectorReducedJointMaxwellDiagonalMultipliedResidual,
+    hiddenSectorReducedJointMaxwellResidual
+  ] <;>
+    ring
+
+/--
 The reduced joint equations before substituting either the stationary source
 amplitude or the explicit static-curl Maxwell field.
 -/
