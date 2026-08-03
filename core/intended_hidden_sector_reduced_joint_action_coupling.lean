@@ -1055,6 +1055,62 @@ theorem
     ring
 
 /--
+The complete electric/magnetic Euler–Lagrange residual reconstructed from the
+candidate local first-jet density.
+-/
+noncomputable def
+    hiddenSectorReducedJointMaxwellCandidateEulerLagrangeResidual
+    (ε₀ μ₀ : ℝ)
+    (field : SmoothMaxwellField3)
+    (point : MaxwellSpacetime3) :
+    MaxwellVector3 × MaxwellVector3 :=
+  (hiddenSectorReducedJointMaxwellCandidateElectricEulerLagrangeComponent
+      ε₀
+      μ₀
+      field
+      point,
+    hiddenSectorReducedJointMaxwellCandidateMagneticEulerLagrangeComponent
+      ε₀
+      μ₀
+      field
+      point)
+
+/--
+Both Euler–Lagrange components of the candidate local density agree exactly
+with the diagonal-multiplied Maxwell residual.
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidateEulerLagrangeResidual_exact
+    (ε₀ μ₀ : ℝ)
+    (field : SmoothMaxwellField3)
+    (point : MaxwellSpacetime3) :
+    hiddenSectorReducedJointMaxwellCandidateEulerLagrangeResidual
+        ε₀
+        μ₀
+        field
+        point =
+      hiddenSectorReducedJointMaxwellDiagonalMultipliedResidual
+        ε₀
+        μ₀
+        field
+        point := by
+  apply Prod.ext
+
+  · exact
+      hiddenSectorReducedJointMaxwellCandidateElectricEulerLagrange_exact
+        ε₀
+        μ₀
+        field
+        point
+
+  · exact
+      hiddenSectorReducedJointMaxwellCandidateMagneticEulerLagrange_exact
+        ε₀
+        μ₀
+        field
+        point
+
+/--
 The reduced joint equations before substituting either the stationary source
 amplitude or the explicit static-curl Maxwell field.
 -/
