@@ -667,6 +667,226 @@ theorem hiddenSectorReducedJointMaxwellSpatialHelmholtz_curlCoefficient
         simp
 
 /--
+One coordinate contribution to the candidate local first-jet Maxwell density.
+
+Its terms are, respectively, the antisymmetric electric/magnetic temporal
+pairing, the electric curl term, the magnetic curl term, and the current
+coupling.
+-/
+noncomputable def
+    hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent
+    (ε₀ μ₀
+      electric magnetic
+      electricTime magneticTime
+      electricCurl magneticCurl
+      current : ℝ) :
+    ℝ :=
+  (ε₀ / 2) *
+      (electric * magneticTime -
+        magnetic * electricTime) +
+    (ε₀ / 2) *
+      electric *
+      electricCurl +
+    (1 / (2 * μ₀)) *
+      magnetic *
+      magneticCurl -
+    current *
+      magnetic
+
+/--
+The candidate local density obtained by summing the three coordinate
+contributions.
+
+This is a first-jet density. No spacetime integration or boundary-term theorem
+is asserted here.
+-/
+noncomputable def hiddenSectorReducedJointMaxwellCandidateLocalDensity
+    (ε₀ μ₀ : ℝ)
+    (electric magnetic
+      electricTime magneticTime
+      electricCurl magneticCurl
+      current : MaxwellVector3) :
+    ℝ :=
+  ∑ i : Fin 3,
+    hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent
+      ε₀
+      μ₀
+      (electric i)
+      (magnetic i)
+      (electricTime i)
+      (magneticTime i)
+      (electricCurl i)
+      (magneticCurl i)
+      (current i)
+
+/--
+The ordinary electric-coordinate derivative of one density component.
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent_electricDerivative_exact
+    (ε₀ μ₀
+      electric magnetic
+      electricTime magneticTime
+      electricCurl magneticCurl
+      current : ℝ) :
+    deriv
+        (fun currentElectric : ℝ =>
+          hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent
+            ε₀
+            μ₀
+            currentElectric
+            magnetic
+            electricTime
+            magneticTime
+            electricCurl
+            magneticCurl
+            current)
+        electric =
+      (ε₀ / 2) * magneticTime +
+        (ε₀ / 2) * electricCurl := by
+  let coefficient : ℝ :=
+    (ε₀ / 2) * magneticTime +
+      (ε₀ / 2) * electricCurl
+
+  let constantTerm : ℝ :=
+    -(ε₀ / 2) *
+          magnetic *
+          electricTime +
+      (1 / (2 * μ₀)) *
+          magnetic *
+          magneticCurl -
+      current *
+          magnetic
+
+  have hAffine :
+      HasDerivAt
+          (fun currentElectric : ℝ =>
+            coefficient * currentElectric +
+              constantTerm)
+          coefficient
+          electric := by
+    convert
+      ((hasDerivAt_id electric).const_mul
+          coefficient).add
+        (hasDerivAt_const
+          (x := electric)
+          constantTerm)
+      using 1 <;>
+      simp [id]
+
+  have hFunction :
+      (fun currentElectric : ℝ =>
+        hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent
+          ε₀
+          μ₀
+          currentElectric
+          magnetic
+          electricTime
+          magneticTime
+          electricCurl
+          magneticCurl
+          current) =
+        (fun currentElectric : ℝ =>
+          coefficient * currentElectric +
+            constantTerm) := by
+    funext currentElectric
+
+    dsimp [coefficient, constantTerm]
+
+    unfold
+      hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent
+
+    ring
+
+  rw [hFunction]
+
+  simpa [coefficient] using hAffine.deriv
+
+/--
+The electric Euler–Lagrange component of the candidate first-jet density.
+
+The second term is minus the time derivative of the electric temporal
+momentum `-(ε₀ / 2) B`. The third term is the formal self-adjoint curl
+contribution from `(ε₀ / 2) E`.
+-/
+noncomputable def
+    hiddenSectorReducedJointMaxwellCandidateElectricEulerLagrangeComponent
+    (ε₀ μ₀ : ℝ)
+    (field : SmoothMaxwellField3)
+    (point : MaxwellSpacetime3) :
+    MaxwellVector3 :=
+  fun i : Fin 3 =>
+    deriv
+        (fun currentElectric : ℝ =>
+          hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent
+            ε₀
+            μ₀
+            currentElectric
+            (field.magnetic point i)
+            (maxwellTimeDerivative3
+              field.electric
+              point
+              i)
+            (maxwellTimeDerivative3
+              field.magnetic
+              point
+              i)
+            (maxwellCurl3
+              field.electric
+              point
+              i)
+            (maxwellCurl3
+              field.magnetic
+              point
+              i)
+            (field.current point i))
+        (field.electric point i) -
+      (-(ε₀ / 2) *
+        maxwellTimeDerivative3
+          field.magnetic
+          point
+          i) +
+      (ε₀ / 2) *
+        maxwellCurl3
+          field.electric
+          point
+          i
+
+/--
+The electric Euler–Lagrange component of the candidate density is exactly the
+first component of the diagonal-multiplied Maxwell residual.
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidateElectricEulerLagrange_exact
+    (ε₀ μ₀ : ℝ)
+    (field : SmoothMaxwellField3)
+    (point : MaxwellSpacetime3) :
+    hiddenSectorReducedJointMaxwellCandidateElectricEulerLagrangeComponent
+        ε₀
+        μ₀
+        field
+        point =
+      (hiddenSectorReducedJointMaxwellDiagonalMultipliedResidual
+        ε₀
+        μ₀
+        field
+        point).1 := by
+  funext i
+
+  unfold
+    hiddenSectorReducedJointMaxwellCandidateElectricEulerLagrangeComponent
+
+  rw [
+    hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent_electricDerivative_exact
+  ]
+
+  simp [
+    hiddenSectorReducedJointMaxwellDiagonalMultipliedResidual,
+    hiddenSectorReducedJointMaxwellResidual
+  ] <;>
+    ring
+
+/--
 The reduced joint equations before substituting either the stationary source
 amplitude or the explicit static-curl Maxwell field.
 -/
