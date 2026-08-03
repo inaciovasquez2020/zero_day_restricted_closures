@@ -294,6 +294,484 @@ noncomputable def hiddenSectorReducedJointHiddenEulerLagrangeResidual
     time
 
 /--
+The uncontracted Maxwell equations represented as a vector-valued off-shell
+residual rather than as a proposition.
+-/
+noncomputable def hiddenSectorReducedJointMaxwellResidual
+    (ε₀ μ₀ : ℝ)
+    (field : SmoothMaxwellField3)
+    (point : MaxwellSpacetime3) :
+    MaxwellVector3 × MaxwellVector3 :=
+  (maxwellTimeDerivative3
+        field.magnetic
+        point -
+      (fun i : Fin 3 =>
+        -maxwellCurl3
+          field.electric
+          point
+          i),
+    (fun i : Fin 3 =>
+      ε₀ *
+        maxwellTimeDerivative3
+          field.electric
+          point
+          i) -
+      (fun i : Fin 3 =>
+        (1 / μ₀) *
+            maxwellCurl3
+              field.magnetic
+              point
+              i -
+          field.current point i))
+
+/--
+The vector-valued Maxwell residual vanishes exactly when the two
+uncontracted Maxwell evolution equations hold.
+-/
+theorem hiddenSectorReducedJointMaxwellResidual_eq_zero_iff
+    (ε₀ μ₀ : ℝ)
+    (field : SmoothMaxwellField3)
+    (point : MaxwellSpacetime3) :
+    hiddenSectorReducedJointMaxwellResidual
+        ε₀
+        μ₀
+        field
+        point =
+      (0, 0) ↔
+    UncontractedMaxwellEvolutionAt3
+      ε₀
+      μ₀
+      field
+      point := by
+  constructor
+  · intro hResidual
+
+    have hFaradayResidual :
+        maxwellTimeDerivative3
+              field.magnetic
+              point -
+            (fun i : Fin 3 =>
+              -maxwellCurl3
+                field.electric
+                point
+                i) =
+          0 := by
+      simpa [
+        hiddenSectorReducedJointMaxwellResidual
+      ] using
+        congrArg Prod.fst hResidual
+
+    have hAmpereResidual :
+        (fun i : Fin 3 =>
+            ε₀ *
+              maxwellTimeDerivative3
+                field.electric
+                point
+                i) -
+            (fun i : Fin 3 =>
+              (1 / μ₀) *
+                    maxwellCurl3
+                      field.magnetic
+                      point
+                      i -
+                field.current point i) =
+          0 := by
+      simpa [
+        hiddenSectorReducedJointMaxwellResidual
+      ] using
+        congrArg Prod.snd hResidual
+
+    refine
+      {
+        faraday := ?_
+        ampereMaxwell := ?_
+      }
+
+    · exact
+        sub_eq_zero.mp hFaradayResidual
+
+    · exact
+        sub_eq_zero.mp hAmpereResidual
+
+  · intro hEvolution
+
+    apply Prod.ext
+
+    · simpa [
+        hiddenSectorReducedJointMaxwellResidual
+      ] using
+        (sub_eq_zero.mpr hEvolution.faraday)
+
+    · simpa [
+        hiddenSectorReducedJointMaxwellResidual
+      ] using
+        (sub_eq_zero.mpr hEvolution.ampereMaxwell)
+
+/--
+The time-principal coefficient of the exact electric/magnetic Maxwell
+residual is not skew-symmetric when the permittivity is nonnegative.
+
+For a first-order Euler–Lagrange operator written directly in the declared
+`electric` and `magnetic` variables with identity multiplier, formal
+self-adjointness requires the time-derivative coefficient matrix to be
+skew-symmetric. The displayed residual has temporal coefficient matrix
+
+  [[0, 1],
+   [ε₀, 0]],
+
+so its `(0, 1)` Helmholtz condition would require `1 = -ε₀`.
+-/
+theorem hiddenSectorReducedJointMaxwellTemporalHelmholtz_obstruction
+    (ε₀ : ℝ)
+    (hε₀ : 0 ≤ ε₀) :
+    ¬ ∀ i j : Fin 2,
+      (if i = (0 : Fin 2) ∧ j = (1 : Fin 2) then
+          (1 : ℝ)
+        else if i = (1 : Fin 2) ∧ j = (0 : Fin 2) then
+          ε₀
+        else
+          0) =
+        -(if j = (0 : Fin 2) ∧ i = (1 : Fin 2) then
+            (1 : ℝ)
+          else if j = (1 : Fin 2) ∧ i = (0 : Fin 2) then
+            ε₀
+          else
+            0) := by
+  intro hSkew
+
+  have hZeroOne :=
+    hSkew
+      (0 : Fin 2)
+      (1 : Fin 2)
+
+  norm_num at hZeroOne
+  linarith
+
+/--
+Multiplying the Faraday residual by `ε₀` and the Ampère–Maxwell residual
+by `-1` repairs the temporal Helmholtz skew-symmetry condition.
+
+The resulting temporal principal matrix is
+
+  [[0, ε₀],
+   [-ε₀, 0]].
+-/
+theorem hiddenSectorReducedJointMaxwellTemporalHelmholtz_diagonalMultiplier
+    (ε₀ : ℝ) :
+    ∀ i j : Fin 2,
+      (if i = (0 : Fin 2) ∧ j = (1 : Fin 2) then
+          ε₀
+        else if i = (1 : Fin 2) ∧ j = (0 : Fin 2) then
+          -ε₀
+        else
+          0) =
+        -(if j = (0 : Fin 2) ∧ i = (1 : Fin 2) then
+            ε₀
+          else if j = (1 : Fin 2) ∧ i = (0 : Fin 2) then
+            -ε₀
+          else
+            0) := by
+  intro i j
+  fin_cases i <;>
+    fin_cases j <;>
+      norm_num
+
+/--
+The exact Maxwell residual after applying the temporal Helmholtz multiplier
+`diag(ε₀, -1)`.
+-/
+noncomputable def hiddenSectorReducedJointMaxwellDiagonalMultipliedResidual
+    (ε₀ μ₀ : ℝ)
+    (field : SmoothMaxwellField3)
+    (point : MaxwellSpacetime3) :
+    MaxwellVector3 × MaxwellVector3 :=
+  let residual :=
+    hiddenSectorReducedJointMaxwellResidual
+      ε₀
+      μ₀
+      field
+      point
+  (fun i : Fin 3 =>
+      ε₀ * residual.1 i,
+    fun i : Fin 3 =>
+      -residual.2 i)
+
+/--
+For nonzero permittivity, the diagonal Helmholtz multiplier preserves exactly
+the zero set of the Maxwell residual.
+-/
+theorem hiddenSectorReducedJointMaxwellDiagonalMultipliedResidual_eq_zero_iff
+    (ε₀ μ₀ : ℝ)
+    (hε₀ : ε₀ ≠ 0)
+    (field : SmoothMaxwellField3)
+    (point : MaxwellSpacetime3) :
+    hiddenSectorReducedJointMaxwellDiagonalMultipliedResidual
+        ε₀
+        μ₀
+        field
+        point =
+      (0, 0) ↔
+    hiddenSectorReducedJointMaxwellResidual
+        ε₀
+        μ₀
+        field
+        point =
+      (0, 0) := by
+  constructor
+
+  · intro hMultiplied
+
+    apply Prod.ext
+
+    · funext i
+
+      have hFirst :
+          ε₀ *
+              (hiddenSectorReducedJointMaxwellResidual
+                ε₀
+                μ₀
+                field
+                point).1 i =
+            0 := by
+        simpa [
+          hiddenSectorReducedJointMaxwellDiagonalMultipliedResidual
+        ] using
+          congrArg
+            (fun pair => pair.1 i)
+            hMultiplied
+
+      exact
+        (mul_eq_zero.mp hFirst).resolve_left hε₀
+
+    · funext i
+
+      have hSecond :
+          -(hiddenSectorReducedJointMaxwellResidual
+              ε₀
+              μ₀
+              field
+              point).2 i =
+            0 := by
+        simpa [
+          hiddenSectorReducedJointMaxwellDiagonalMultipliedResidual
+        ] using
+          congrArg
+            (fun pair => pair.2 i)
+            hMultiplied
+
+      exact
+        neg_eq_zero.mp hSecond
+
+  · intro hResidual
+
+    apply Prod.ext
+
+    · funext i
+
+      have hFirst :
+          (hiddenSectorReducedJointMaxwellResidual
+              ε₀
+              μ₀
+              field
+              point).1 i =
+            0 := by
+        simpa using
+          congrArg
+            (fun pair => pair.1 i)
+            hResidual
+
+      simp [
+        hiddenSectorReducedJointMaxwellDiagonalMultipliedResidual,
+        hFirst
+      ]
+
+    · funext i
+
+      have hSecond :
+          (hiddenSectorReducedJointMaxwellResidual
+              ε₀
+              μ₀
+              field
+              point).2 i =
+            0 := by
+        simpa using
+          congrArg
+            (fun pair => pair.2 i)
+            hResidual
+
+      simp [
+        hiddenSectorReducedJointMaxwellDiagonalMultipliedResidual,
+        hSecond
+      ]
+
+/--
+For every spatial derivative direction, the component coefficient matrix of
+`maxwellCurl3` is skew-symmetric. Multiplication by an arbitrary real scalar
+preserves this spatial first-order Helmholtz condition.
+
+This covers both diagonal curl blocks of the multiplied Maxwell residual:
+the electric block scaled by `ε₀` and the magnetic block scaled by `1 / μ₀`.
+-/
+theorem hiddenSectorReducedJointMaxwellSpatialHelmholtz_curlCoefficient
+    (scale : ℝ) :
+    ∀ direction output input : Fin 3,
+      scale *
+          (if direction = (0 : Fin 3) then
+              if output = (1 : Fin 3) ∧ input = (2 : Fin 3) then
+                (-1 : ℝ)
+              else if output = (2 : Fin 3) ∧ input = (1 : Fin 3) then
+                1
+              else
+                0
+            else if direction = (1 : Fin 3) then
+              if output = (0 : Fin 3) ∧ input = (2 : Fin 3) then
+                1
+              else if output = (2 : Fin 3) ∧ input = (0 : Fin 3) then
+                -1
+              else
+                0
+            else
+              if output = (0 : Fin 3) ∧ input = (1 : Fin 3) then
+                -1
+              else if output = (1 : Fin 3) ∧ input = (0 : Fin 3) then
+                1
+              else
+                0) =
+        -(scale *
+          (if direction = (0 : Fin 3) then
+              if input = (1 : Fin 3) ∧ output = (2 : Fin 3) then
+                (-1 : ℝ)
+              else if input = (2 : Fin 3) ∧ output = (1 : Fin 3) then
+                1
+              else
+                0
+            else if direction = (1 : Fin 3) then
+              if input = (0 : Fin 3) ∧ output = (2 : Fin 3) then
+                1
+              else if input = (2 : Fin 3) ∧ output = (0 : Fin 3) then
+                -1
+              else
+                0
+            else
+              if input = (0 : Fin 3) ∧ output = (1 : Fin 3) then
+                -1
+              else if input = (1 : Fin 3) ∧ output = (0 : Fin 3) then
+                1
+              else
+                0)) := by
+  intro direction output input
+
+  fin_cases direction <;>
+    fin_cases output <;>
+      fin_cases input <;>
+        simp
+
+/--
+The reduced joint equations before substituting either the stationary source
+amplitude or the explicit static-curl Maxwell field.
+-/
+noncomputable def hiddenSectorReducedJointOffShellEquationTuple
+    (trajectory : ℝ → ℝ)
+    (sourceAmplitude ε₀ μ₀ : ℝ)
+    (field : SmoothMaxwellField3)
+    (time : ℝ)
+    (point : MaxwellSpacetime3) :
+    ℝ × ℝ × Prop :=
+  (hiddenSectorReducedJointSourceResidual
+      (deriv trajectory time)
+      sourceAmplitude,
+    hiddenSectorReducedJointHiddenEulerLagrangeResidual
+      trajectory
+      sourceAmplitude
+      time,
+    UncontractedMaxwellEvolutionAt3
+      ε₀
+      μ₀
+      field
+      point)
+
+
+
+/--
+The first reduced Helmholtz mixed condition: differentiating the source
+Euler–Lagrange residual with respect to hidden velocity equals
+differentiating the hidden canonical momentum with respect to source
+amplitude.
+-/
+theorem hiddenSectorReducedJoint_firstHelmholtzMixedSymmetry
+    (velocity sourceAmplitude : ℝ) :
+    deriv
+        (fun currentVelocity : ℝ =>
+          hiddenSectorReducedJointSourceResidual
+            currentVelocity
+            sourceAmplitude)
+        velocity =
+      deriv
+        (fun currentAmplitude : ℝ =>
+          hiddenSectorReducedJointHiddenMomentum
+            velocity
+            currentAmplitude)
+        sourceAmplitude := by
+  have hSourceVelocity :
+      HasDerivAt
+          (fun currentVelocity : ℝ =>
+            hiddenSectorReducedJointSourceResidual
+              currentVelocity
+              sourceAmplitude)
+          (-2 * velocity)
+          velocity := by
+    unfold hiddenSectorReducedJointSourceResidual
+    convert
+      (hasDerivAt_const
+          (x := velocity)
+          sourceAmplitude).sub
+        ((hasDerivAt_id velocity).pow 2)
+      using 1 <;>
+      simp [id]
+
+  have hMomentumSource :
+      HasDerivAt
+          (fun currentAmplitude : ℝ =>
+            hiddenSectorReducedJointHiddenMomentum
+              velocity
+              currentAmplitude)
+          (-2 * velocity)
+          sourceAmplitude := by
+    have hInner :
+        HasDerivAt
+            (fun currentAmplitude : ℝ =>
+              currentAmplitude - velocity ^ 2)
+            1
+            sourceAmplitude := by
+      exact
+        (hasDerivAt_id sourceAmplitude).sub_const
+          (velocity ^ 2)
+
+    have hScaled :
+        HasDerivAt
+            (fun currentAmplitude : ℝ =>
+              2 * velocity *
+                (currentAmplitude - velocity ^ 2))
+            (2 * velocity)
+            sourceAmplitude := by
+      convert
+        hInner.const_mul (2 * velocity)
+        using 1 <;>
+        ring
+
+    unfold hiddenSectorReducedJointHiddenMomentum
+    convert
+      (hasDerivAt_const
+          (x := sourceAmplitude)
+          velocity).sub hScaled
+      using 1 <;>
+      ring
+
+  exact
+    hSourceVelocity.deriv.trans
+      hMomentumSource.deriv.symm
+
+/--
 The reduced hidden canonical momentum is constant along the affine
 stationary trajectory.
 -/
