@@ -1111,6 +1111,44 @@ theorem
         point
 
 /--
+For nonzero permittivity, the candidate Euler–Lagrange residual vanishes
+exactly when the repository's uncontracted Maxwell evolution equations hold.
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidateEulerLagrangeResidual_eq_zero_iff
+    (ε₀ μ₀ : ℝ)
+    (hε₀ : ε₀ ≠ 0)
+    (field : SmoothMaxwellField3)
+    (point : MaxwellSpacetime3) :
+    hiddenSectorReducedJointMaxwellCandidateEulerLagrangeResidual
+        ε₀
+        μ₀
+        field
+        point =
+      (0, 0) ↔
+    UncontractedMaxwellEvolutionAt3
+      ε₀
+      μ₀
+      field
+      point := by
+  rw [
+    hiddenSectorReducedJointMaxwellCandidateEulerLagrangeResidual_exact
+  ]
+
+  exact
+    (hiddenSectorReducedJointMaxwellDiagonalMultipliedResidual_eq_zero_iff
+      ε₀
+      μ₀
+      hε₀
+      field
+      point).trans
+      (hiddenSectorReducedJointMaxwellResidual_eq_zero_iff
+        ε₀
+        μ₀
+        field
+        point)
+
+/--
 The reduced joint equations before substituting either the stationary source
 amplitude or the explicit static-curl Maxwell field.
 -/
