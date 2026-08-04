@@ -3597,6 +3597,948 @@ def hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
     sourcePair.1)
 
 /--
+The general componentwise bilinear coupling between one electric-magnetic
+field pair and one electric-magnetic source-current pair.
+
+The four coefficients respectively multiply the aligned electric term, the
+electric-source/magnetic-field crossed term, the
+magnetic-source/electric-field crossed term, and the aligned magnetic term.
+No invariance assumption is built into this definition.
+-/
+def hiddenSectorReducedJointMaxwellCandidate_dualSourceBilinearComponent
+    (alignedElectric crossedElectric crossedMagnetic alignedMagnetic
+      electric magnetic electricCurrent magneticCurrent : ℝ) :
+    ℝ :=
+  alignedElectric * electricCurrent * electric +
+    crossedElectric * electricCurrent * magnetic +
+    crossedMagnetic * magneticCurrent * electric +
+    alignedMagnetic * magneticCurrent * magnetic
+
+/--
+Complete classification of componentwise bilinear source couplings invariant
+under the simultaneous electric-magnetic quarter-turn
+
+  (E, B) ↦ (-B, E),   (Jₑ, Jₘ) ↦ (-Jₘ, Jₑ).
+
+Such a coupling is invariant for every field and source component exactly when
+the two aligned coefficients agree and the two crossed coefficients are
+opposites.  Thus the invariant space is two-dimensional before any additional
+grading or normalization is imposed.
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidate_dualSourceBilinear_quarterTurnInvariant_iff
+    (alignedElectric crossedElectric crossedMagnetic alignedMagnetic : ℝ) :
+    (∀ electric magnetic electricCurrent magneticCurrent : ℝ,
+      hiddenSectorReducedJointMaxwellCandidate_dualSourceBilinearComponent
+          alignedElectric
+          crossedElectric
+          crossedMagnetic
+          alignedMagnetic
+          (-magnetic)
+          electric
+          (-magneticCurrent)
+          electricCurrent =
+        hiddenSectorReducedJointMaxwellCandidate_dualSourceBilinearComponent
+          alignedElectric
+          crossedElectric
+          crossedMagnetic
+          alignedMagnetic
+          electric
+          magnetic
+          electricCurrent
+          magneticCurrent) ↔
+      alignedMagnetic = alignedElectric ∧
+        crossedMagnetic = -crossedElectric := by
+  constructor
+
+  · intro hInvariant
+
+    have hAligned :=
+      hInvariant
+        1
+        0
+        1
+        0
+
+    have hCrossed :=
+      hInvariant
+        0
+        1
+        1
+        0
+
+    constructor
+
+    · simpa [
+        hiddenSectorReducedJointMaxwellCandidate_dualSourceBilinearComponent
+      ] using hAligned
+
+    · unfold
+        hiddenSectorReducedJointMaxwellCandidate_dualSourceBilinearComponent
+        at hCrossed
+
+      linarith
+
+  · rintro ⟨hAligned, hCrossed⟩
+    intro electric magnetic electricCurrent magneticCurrent
+
+    unfold
+      hiddenSectorReducedJointMaxwellCandidate_dualSourceBilinearComponent
+
+    rw [hAligned, hCrossed]
+
+    ring
+
+/--
+The existing reduced candidate density couples the electric source through the
+crossed term `-Jₑ B` and contains no aligned `Jₑ E` term.
+
+After fixing those two coefficients, simultaneous field-source quarter-turn
+invariance uniquely forces the magnetic completion to be `+Jₘ E`, with no
+aligned `Jₘ B` term.  Thus the source sector is no longer a chosen
+two-parameter family once the already-present electric coupling is retained.
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidate_existingElectricSourceCoupling_uniqueMagneticCompletion
+    (crossedMagnetic alignedMagnetic : ℝ) :
+    (∀ electric magnetic electricCurrent magneticCurrent : ℝ,
+      hiddenSectorReducedJointMaxwellCandidate_dualSourceBilinearComponent
+          0
+          (-1)
+          crossedMagnetic
+          alignedMagnetic
+          (-magnetic)
+          electric
+          (-magneticCurrent)
+          electricCurrent =
+        hiddenSectorReducedJointMaxwellCandidate_dualSourceBilinearComponent
+          0
+          (-1)
+          crossedMagnetic
+          alignedMagnetic
+          electric
+          magnetic
+          electricCurrent
+          magneticCurrent) ↔
+      crossedMagnetic = 1 ∧
+        alignedMagnetic = 0 := by
+  rw [
+    hiddenSectorReducedJointMaxwellCandidate_dualSourceBilinear_quarterTurnInvariant_iff
+  ]
+
+  constructor
+
+  · rintro ⟨hAlignedMagnetic, hCrossedMagnetic⟩
+
+    constructor
+
+    · linarith
+
+    · exact hAlignedMagnetic
+
+  · rintro ⟨hCrossedMagnetic, hAlignedMagnetic⟩
+
+    constructor
+
+    · exact hAlignedMagnetic
+
+    · linarith
+
+/--
+The uniquely completed componentwise dual-source coupling obtained by retaining
+the existing electric source term and imposing simultaneous quarter-turn
+invariance.
+
+Its explicit form is
+
+  -Jₑ B + Jₘ E.
+-/
+def hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceComponent
+    (electric magnetic electricCurrent magneticCurrent : ℝ) :
+    ℝ :=
+  hiddenSectorReducedJointMaxwellCandidate_dualSourceBilinearComponent
+    0
+    (-1)
+    1
+    0
+    electric
+    magnetic
+    electricCurrent
+    magneticCurrent
+
+/--
+The uniquely completed dual-source component is exactly invariant under the
+simultaneous field-source quarter-turn
+
+  (E, B) ↦ (-B, E),   (Jₑ, Jₘ) ↦ (-Jₘ, Jₑ).
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceComponent_quarterTurn_invariant
+    (electric magnetic electricCurrent magneticCurrent : ℝ) :
+    hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceComponent
+        (-magnetic)
+        electric
+        (-magneticCurrent)
+        electricCurrent =
+      hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceComponent
+        electric
+        magnetic
+        electricCurrent
+        magneticCurrent := by
+  unfold
+    hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceComponent
+    hiddenSectorReducedJointMaxwellCandidate_dualSourceBilinearComponent
+
+  ring
+
+/--
+The complete three-component local dual-source density obtained by summing the
+uniquely forced component coupling over the spatial Maxwell coordinates.
+-/
+def hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceLocalDensity
+    (electric magnetic electricCurrent magneticCurrent : MaxwellVector3) :
+    ℝ :=
+  hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceComponent
+      (electric (0 : Fin 3))
+      (magnetic (0 : Fin 3))
+      (electricCurrent (0 : Fin 3))
+      (magneticCurrent (0 : Fin 3)) +
+    hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceComponent
+      (electric (1 : Fin 3))
+      (magnetic (1 : Fin 3))
+      (electricCurrent (1 : Fin 3))
+      (magneticCurrent (1 : Fin 3)) +
+    hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceComponent
+      (electric (2 : Fin 3))
+      (magnetic (2 : Fin 3))
+      (electricCurrent (2 : Fin 3))
+      (magneticCurrent (2 : Fin 3))
+
+/--
+The complete three-component uniquely completed source density is exactly
+invariant under the simultaneous field-source quarter-turn.
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceLocalDensity_quarterTurn_invariant
+    (electric magnetic electricCurrent magneticCurrent : MaxwellVector3) :
+    hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceLocalDensity
+        (fun i : Fin 3 =>
+          -magnetic i)
+        electric
+        (fun i : Fin 3 =>
+          -magneticCurrent i)
+        electricCurrent =
+      hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceLocalDensity
+        electric
+        magnetic
+        electricCurrent
+        magneticCurrent := by
+  unfold
+    hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceLocalDensity
+    hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceComponent
+    hiddenSectorReducedJointMaxwellCandidate_dualSourceBilinearComponent
+
+  ring
+
+/--
+The dual-sourced completion of the existing reduced Maxwell candidate local
+density.
+
+The original verified density is retained unchanged.  The additional term is
+the uniquely forced magnetic-current contribution obtained by evaluating the
+classified source density with zero electric current:
+
+  Jₘ · E.
+
+Consequently the complete source sector is exactly
+
+  -Jₑ · B + Jₘ · E.
+-/
+noncomputable def
+    hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensity
+    (ε₀ μ₀ : ℝ)
+    (electric magnetic
+      electricTime magneticTime
+      electricCurl magneticCurl
+      electricCurrent magneticCurrent : MaxwellVector3) :
+    ℝ :=
+  hiddenSectorReducedJointMaxwellCandidateLocalDensity
+      ε₀
+      μ₀
+      electric
+      magnetic
+      electricTime
+      magneticTime
+      electricCurl
+      magneticCurl
+      electricCurrent +
+    hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceLocalDensity
+      electric
+      magnetic
+      (fun _ : Fin 3 => 0)
+      magneticCurrent
+
+/--
+The dual-sourced candidate density is a conservative extension of the original
+verified candidate density: setting magnetic current identically to zero
+recovers the original expression exactly.
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensity_zeroMagneticCurrent
+    (ε₀ μ₀ : ℝ)
+    (electric magnetic
+      electricTime magneticTime
+      electricCurl magneticCurl
+      electricCurrent : MaxwellVector3) :
+    hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensity
+        ε₀
+        μ₀
+        electric
+        magnetic
+        electricTime
+        magneticTime
+        electricCurl
+        magneticCurl
+        electricCurrent
+        (fun _ : Fin 3 => 0) =
+      hiddenSectorReducedJointMaxwellCandidateLocalDensity
+        ε₀
+        μ₀
+        electric
+        magnetic
+        electricTime
+        magneticTime
+        electricCurl
+        magneticCurl
+        electricCurrent := by
+  unfold
+    hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensity
+    hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceLocalDensity
+    hiddenSectorReducedJointMaxwellCandidate_uniqueDualSourceComponent
+    hiddenSectorReducedJointMaxwellCandidate_dualSourceBilinearComponent
+
+  ring
+
+/--
+The one-component dual-sourced completion of the existing reduced Maxwell
+candidate density.
+
+The electric-current contribution remains `-Jₑ B`; the uniquely forced
+magnetic-current contribution is `+Jₘ E`.
+-/
+noncomputable def
+    hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensityComponent
+    (ε₀ μ₀
+      electric magnetic
+      electricTime magneticTime
+      electricCurl magneticCurl
+      electricCurrent magneticCurrent : ℝ) :
+    ℝ :=
+  hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent
+      ε₀
+      μ₀
+      electric
+      magnetic
+      electricTime
+      magneticTime
+      electricCurl
+      magneticCurl
+      electricCurrent +
+    magneticCurrent * electric
+
+/--
+The exact source derivatives of one completed candidate-density component are
+the quarter-turned field pair:
+
+  ∂L/∂Jₑ = -B,   ∂L/∂Jₘ = E.
+
+This theorem treats both currents as independent scalar source coordinates.  It
+does not yet impose stationarity with respect to those sources.
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensityComponent_sourceDerivatives_exact
+    (ε₀ μ₀
+      electric magnetic
+      electricTime magneticTime
+      electricCurl magneticCurl
+      electricCurrent magneticCurrent : ℝ) :
+    (deriv
+        (fun currentElectricCurrent : ℝ =>
+          hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensityComponent
+            ε₀
+            μ₀
+            electric
+            magnetic
+            electricTime
+            magneticTime
+            electricCurl
+            magneticCurl
+            currentElectricCurrent
+            magneticCurrent)
+        electricCurrent =
+      -magnetic) ∧
+      (deriv
+          (fun currentMagneticCurrent : ℝ =>
+            hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensityComponent
+              ε₀
+              μ₀
+              electric
+              magnetic
+              electricTime
+              magneticTime
+              electricCurl
+              magneticCurl
+              electricCurrent
+              currentMagneticCurrent)
+          magneticCurrent =
+        electric) := by
+  constructor
+
+  · let coefficient : ℝ :=
+      -magnetic
+
+    let constantTerm : ℝ :=
+      (ε₀ / 2) *
+            electric *
+            magneticTime -
+        (ε₀ / 2) *
+            magnetic *
+            electricTime +
+        (ε₀ / 2) *
+            electric *
+            electricCurl +
+        (1 / (2 * μ₀)) *
+            magnetic *
+            magneticCurl +
+        magneticCurrent *
+            electric
+
+    have hAffine :
+        HasDerivAt
+            (fun currentElectricCurrent : ℝ =>
+              coefficient * currentElectricCurrent +
+                constantTerm)
+            coefficient
+            electricCurrent := by
+      convert
+        ((hasDerivAt_id electricCurrent).const_mul
+            coefficient).add
+          (hasDerivAt_const
+            (x := electricCurrent)
+            constantTerm)
+        using 1 <;>
+        simp [id]
+
+    have hFunction :
+        (fun currentElectricCurrent : ℝ =>
+          hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensityComponent
+            ε₀
+            μ₀
+            electric
+            magnetic
+            electricTime
+            magneticTime
+            electricCurl
+            magneticCurl
+            currentElectricCurrent
+            magneticCurrent) =
+          (fun currentElectricCurrent : ℝ =>
+            coefficient * currentElectricCurrent +
+              constantTerm) := by
+      funext currentElectricCurrent
+
+      dsimp [coefficient, constantTerm]
+
+      unfold
+        hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensityComponent
+        hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent
+
+      ring
+
+    rw [hFunction]
+
+    simpa [coefficient] using hAffine.deriv
+
+  · let coefficient : ℝ :=
+      electric
+
+    let constantTerm : ℝ :=
+      hiddenSectorReducedJointMaxwellCandidateLocalDensityComponent
+        ε₀
+        μ₀
+        electric
+        magnetic
+        electricTime
+        magneticTime
+        electricCurl
+        magneticCurl
+        electricCurrent
+
+    have hAffine :
+        HasDerivAt
+            (fun currentMagneticCurrent : ℝ =>
+              coefficient * currentMagneticCurrent +
+                constantTerm)
+            coefficient
+            magneticCurrent := by
+      convert
+        ((hasDerivAt_id magneticCurrent).const_mul
+            coefficient).add
+          (hasDerivAt_const
+            (x := magneticCurrent)
+            constantTerm)
+        using 1 <;>
+        simp [id]
+
+    have hFunction :
+        (fun currentMagneticCurrent : ℝ =>
+          hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensityComponent
+            ε₀
+            μ₀
+            electric
+            magnetic
+            electricTime
+            magneticTime
+            electricCurl
+            magneticCurl
+            electricCurrent
+            currentMagneticCurrent) =
+          (fun currentMagneticCurrent : ℝ =>
+            coefficient * currentMagneticCurrent +
+              constantTerm) := by
+      funext currentMagneticCurrent
+
+      dsimp [coefficient, constantTerm]
+
+      unfold
+        hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensityComponent
+
+      ring
+
+    rw [hFunction]
+
+    simpa [coefficient] using hAffine.deriv
+
+/--
+Simultaneous stationarity of one completed density component with respect to
+both source currents is equivalent to vanishing electric and magnetic field
+components.
+
+Thus the symmetry-completed currents cannot both be treated as unconstrained
+dynamical coordinates without collapsing the local electromagnetic field.
+They must instead remain external sources or acquire an additional dynamical
+sector whose Euler–Lagrange equations modify these algebraic stationarity
+conditions.
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensityComponent_sourceStationary_iff_fieldZero
+    (ε₀ μ₀
+      electric magnetic
+      electricTime magneticTime
+      electricCurl magneticCurl
+      electricCurrent magneticCurrent : ℝ) :
+    ((deriv
+          (fun currentElectricCurrent : ℝ =>
+            hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensityComponent
+              ε₀
+              μ₀
+              electric
+              magnetic
+              electricTime
+              magneticTime
+              electricCurl
+              magneticCurl
+              currentElectricCurrent
+              magneticCurrent)
+          electricCurrent =
+        0) ∧
+      (deriv
+          (fun currentMagneticCurrent : ℝ =>
+            hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensityComponent
+              ε₀
+              μ₀
+              electric
+              magnetic
+              electricTime
+              magneticTime
+              electricCurl
+              magneticCurl
+              electricCurrent
+              currentMagneticCurrent)
+          magneticCurrent =
+        0)) ↔
+      electric = 0 ∧
+        magnetic = 0 := by
+  have hDerivatives :=
+    hiddenSectorReducedJointMaxwellCandidateDualSourcedLocalDensityComponent_sourceDerivatives_exact
+      ε₀
+      μ₀
+      electric
+      magnetic
+      electricTime
+      magneticTime
+      electricCurl
+      magneticCurl
+      electricCurrent
+      magneticCurrent
+
+  constructor
+
+  · rintro ⟨hElectricStationary, hMagneticStationary⟩
+
+    constructor
+
+    · rw [hDerivatives.2] at hMagneticStationary
+
+      exact hMagneticStationary
+
+    · rw [hDerivatives.1] at hElectricStationary
+
+      linarith
+
+  · rintro ⟨hElectricZero, hMagneticZero⟩
+
+    constructor
+
+    · rw [hDerivatives.1, hMagneticZero]
+
+      norm_num
+
+    · rw [hDerivatives.2, hElectricZero]
+
+/--
+The complete local first-order jet residual for the dual-sourced external-current
+Maxwell candidate.
+
+The input pairs are ordered as
+
+  timePair   = (∂ₜE, ∂ₜB),
+  curlPair   = (curl E, curl B),
+  sourcePair = (Jₑ, Jₘ).
+
+The residual pair is ordered as the electric-coordinate and magnetic-coordinate
+Euler–Lagrange equations:
+
+  (ε₀ ∂ₜB + ε₀ curl E + Jₘ,
+   -ε₀ ∂ₜE + (1 / μ₀) curl B - Jₑ).
+-/
+def hiddenSectorReducedJointMaxwellCandidate_dualSourcedJetResidual
+    (ε₀ μ₀ : ℝ)
+    (timePair curlPair sourcePair :
+      MaxwellVector3 × MaxwellVector3) :
+    MaxwellVector3 × MaxwellVector3 :=
+  ((fun i : Fin 3 =>
+      ε₀ * timePair.2 i +
+        ε₀ * curlPair.1 i +
+        sourcePair.2 i),
+    fun i : Fin 3 =>
+      -ε₀ * timePair.1 i +
+        (1 / μ₀) * curlPair.2 i -
+        sourcePair.1 i)
+
+/--
+At the duality-matched coefficient relation `ε₀ = 1 / μ₀`, the complete
+dual-sourced local jet residual is exactly covariant under the simultaneous
+quarter-turn of temporal jets, spatial curls, and external source currents.
+
+The transformed residual is the same quarter-turn of the original residual.
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidate_dualSourcedJetResidual_quarterTurn_covariant_of_dualityMatched
+    (μ₀ : ℝ)
+    (timePair curlPair sourcePair :
+      MaxwellVector3 × MaxwellVector3) :
+    hiddenSectorReducedJointMaxwellCandidate_dualSourcedJetResidual
+        (1 / μ₀)
+        μ₀
+        (hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+          timePair)
+        (hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+          curlPair)
+        (hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+          sourcePair) =
+      hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+        (hiddenSectorReducedJointMaxwellCandidate_dualSourcedJetResidual
+          (1 / μ₀)
+          μ₀
+          timePair
+          curlPair
+          sourcePair) := by
+  apply Prod.ext
+
+  · funext i
+
+    dsimp [
+      hiddenSectorReducedJointMaxwellCandidate_dualSourcedJetResidual,
+      hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+    ]
+
+    ring
+
+  · funext i
+
+    dsimp [
+      hiddenSectorReducedJointMaxwellCandidate_dualSourcedJetResidual,
+      hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+    ]
+
+    ring
+
+/--
+Complete coefficient classification for external-source quarter-turn covariance.
+
+The dual-sourced local jet residual is covariant for every temporal jet, curl
+jet, and source pair exactly when
+
+  ε₀ = 1 / μ₀.
+
+Thus the coefficient relation is not merely sufficient: it is forced by exact
+quarter-turn covariance of the sourced field equations.
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidate_dualSourcedJetResidual_quarterTurn_covariant_iff_dualityMatched
+    (ε₀ μ₀ : ℝ) :
+    (∀ timePair curlPair sourcePair :
+        MaxwellVector3 × MaxwellVector3,
+      hiddenSectorReducedJointMaxwellCandidate_dualSourcedJetResidual
+          ε₀
+          μ₀
+          (hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+            timePair)
+          (hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+            curlPair)
+          (hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+            sourcePair) =
+        hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+          (hiddenSectorReducedJointMaxwellCandidate_dualSourcedJetResidual
+            ε₀
+            μ₀
+            timePair
+            curlPair
+            sourcePair)) ↔
+      ε₀ = 1 / μ₀ := by
+  constructor
+
+  · intro hCovariant
+
+    let zeroVector : MaxwellVector3 :=
+      fun _ : Fin 3 =>
+        0
+
+    let unitVector : MaxwellVector3 :=
+      fun _ : Fin 3 =>
+        1
+
+    have hTest :=
+      hCovariant
+        (zeroVector, zeroVector)
+        (zeroVector, unitVector)
+        (zeroVector, zeroVector)
+
+    have hFirst :=
+      congrArg
+        Prod.fst
+        hTest
+
+    have hComponent :=
+      congrFun
+        hFirst
+        (0 : Fin 3)
+
+    dsimp [
+      zeroVector,
+      unitVector,
+      hiddenSectorReducedJointMaxwellCandidate_dualSourcedJetResidual,
+      hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+    ] at hComponent
+
+    linarith
+
+  · intro hMatched
+    intro timePair curlPair sourcePair
+
+    rw [hMatched]
+
+    exact
+      hiddenSectorReducedJointMaxwellCandidate_dualSourcedJetResidual_quarterTurn_covariant_of_dualityMatched
+        μ₀
+        timePair
+        curlPair
+        sourcePair
+
+/--
+The four-coefficient dimension-split dual-sourced local jet residual.
+
+The temporal and spatial derivative weights are initially allowed to differ
+between the electric and magnetic equations:
+
+  R_E =
+    magneticTemporalWeight * ∂ₜB +
+      electricSpatialWeight * curl E +
+      Jₘ,
+
+  R_B =
+    -electricTemporalWeight * ∂ₜE +
+      magneticSpatialWeight * curl B -
+      Jₑ.
+
+This is a classification carrier.  No covariance relation among the four
+weights is built into the definition.
+-/
+def
+    hiddenSectorReducedJointMaxwellCandidate_dimensionSplitDualSourcedJetResidual
+    (electricTemporalWeight magneticTemporalWeight
+      electricSpatialWeight magneticSpatialWeight : ℝ)
+    (timePair curlPair sourcePair :
+      MaxwellVector3 × MaxwellVector3) :
+    MaxwellVector3 × MaxwellVector3 :=
+  ((fun i : Fin 3 =>
+      magneticTemporalWeight * timePair.2 i +
+        electricSpatialWeight * curlPair.1 i +
+        sourcePair.2 i),
+    fun i : Fin 3 =>
+      -electricTemporalWeight * timePair.1 i +
+        magneticSpatialWeight * curlPair.2 i -
+        sourcePair.1 i)
+
+/--
+Complete dimension-split covariance classification.
+
+The four-coefficient residual is covariant under the simultaneous
+electric-magnetic quarter-turn for every temporal jet, spatial-curl jet, and
+external source pair exactly when
+
+  magneticTemporalWeight = electricTemporalWeight
+
+and
+
+  magneticSpatialWeight = electricSpatialWeight.
+
+Therefore duality forbids an electric-versus-magnetic dimensional mismatch,
+but it does not force the common temporal weight to equal the common spatial
+weight.  The surviving temporal/spatial ratio is the only coefficient-level
+dimension split left by quarter-turn covariance.
+-/
+theorem
+    hiddenSectorReducedJointMaxwellCandidate_dimensionSplitDualSourcedJetResidual_quarterTurn_covariant_iff
+    (electricTemporalWeight magneticTemporalWeight
+      electricSpatialWeight magneticSpatialWeight : ℝ) :
+    (∀ timePair curlPair sourcePair :
+        MaxwellVector3 × MaxwellVector3,
+      hiddenSectorReducedJointMaxwellCandidate_dimensionSplitDualSourcedJetResidual
+          electricTemporalWeight
+          magneticTemporalWeight
+          electricSpatialWeight
+          magneticSpatialWeight
+          (hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+            timePair)
+          (hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+            curlPair)
+          (hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+            sourcePair) =
+        hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+          (hiddenSectorReducedJointMaxwellCandidate_dimensionSplitDualSourcedJetResidual
+            electricTemporalWeight
+            magneticTemporalWeight
+            electricSpatialWeight
+            magneticSpatialWeight
+            timePair
+            curlPair
+            sourcePair)) ↔
+      magneticTemporalWeight = electricTemporalWeight ∧
+        magneticSpatialWeight = electricSpatialWeight := by
+  constructor
+
+  · intro hCovariant
+
+    let zeroVector : MaxwellVector3 :=
+      fun _ : Fin 3 =>
+        0
+
+    let unitVector : MaxwellVector3 :=
+      fun _ : Fin 3 =>
+        1
+
+    have hTemporalTest :=
+      hCovariant
+        (unitVector, zeroVector)
+        (zeroVector, zeroVector)
+        (zeroVector, zeroVector)
+
+    have hTemporalFirst :=
+      congrArg
+        Prod.fst
+        hTemporalTest
+
+    have hTemporalComponent :=
+      congrFun
+        hTemporalFirst
+        (0 : Fin 3)
+
+    have hSpatialTest :=
+      hCovariant
+        (zeroVector, zeroVector)
+        (zeroVector, unitVector)
+        (zeroVector, zeroVector)
+
+    have hSpatialFirst :=
+      congrArg
+        Prod.fst
+        hSpatialTest
+
+    have hSpatialComponent :=
+      congrFun
+        hSpatialFirst
+        (0 : Fin 3)
+
+    constructor
+
+    · dsimp [
+        zeroVector,
+        unitVector,
+        hiddenSectorReducedJointMaxwellCandidate_dimensionSplitDualSourcedJetResidual,
+        hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+      ] at hTemporalComponent
+
+      linarith
+
+    · dsimp [
+        zeroVector,
+        unitVector,
+        hiddenSectorReducedJointMaxwellCandidate_dimensionSplitDualSourcedJetResidual,
+        hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+      ] at hSpatialComponent
+
+      linarith
+
+  · rintro ⟨hTemporal, hSpatial⟩
+    intro timePair curlPair sourcePair
+
+    apply Prod.ext
+
+    · funext i
+
+      dsimp [
+        hiddenSectorReducedJointMaxwellCandidate_dimensionSplitDualSourcedJetResidual,
+        hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+      ]
+
+      rw [hTemporal, hSpatial]
+
+      ring
+
+    · funext i
+
+      dsimp [
+        hiddenSectorReducedJointMaxwellCandidate_dimensionSplitDualSourcedJetResidual,
+        hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+      ]
+
+      rw [hTemporal, hSpatial]
+
+      ring
+
+/--
 A concrete real four-dimensional vector carrier for the Tri construction.
 -/
 structure HiddenSectorVector4 where
@@ -3604,6 +4546,903 @@ structure HiddenSectorVector4 where
   c1 : ℝ
   c2 : ℝ
   c3 : ℝ
+
+
+/--
+The Minkowski bilinear pairing with signature `(+,-,-,-)` on the concrete
+four-dimensional carrier.
+-/
+def hiddenSectorMinkowskiPair
+    (first second : HiddenSectorVector4) :
+    ℝ :=
+  first.c0 * second.c0 -
+    first.c1 * second.c1 -
+    first.c2 * second.c2 -
+    first.c3 * second.c3
+
+/--
+A physical unit timelike observer. This observer supplies the preferred local
+rest frame needed by an observer-covariant dimension-split effective theory.
+-/
+structure HiddenSectorUnitTimelikeObserver4 where
+  vector : HiddenSectorVector4
+  unitTimelike :
+    hiddenSectorMinkowskiPair vector vector = 1
+
+/--
+The canonical inertial observer in the selected local Minkowski chart.
+-/
+def hiddenSectorRestObserver4 :
+    HiddenSectorUnitTimelikeObserver4 :=
+  {
+    vector :=
+      {
+        c0 := 1
+        c1 := 0
+        c2 := 0
+        c3 := 0
+      }
+    unitTimelike := by
+      norm_num [hiddenSectorMinkowskiPair]
+  }
+
+/--
+A four-dimensional observer-covariant linear effective action carrier.
+
+The temporal weight controls observer-time derivatives. The spatial weight
+controls observer-orthogonal derivatives.
+-/
+structure HiddenSectorCovariantDimensionSplitAction where
+  observer : HiddenSectorUnitTimelikeObserver4
+  temporalWeight : ℝ
+  spatialWeight : ℝ
+
+/--
+The observer-measured temporal covector component.
+-/
+def hiddenSectorObserverTemporalCovectorComponent
+    (observer : HiddenSectorUnitTimelikeObserver4)
+    (covector : HiddenSectorVector4) :
+    ℝ :=
+  hiddenSectorMinkowskiPair
+    observer.vector
+    covector
+
+/--
+The squared observer-orthogonal spatial covector magnitude:
+
+  (u · p)^2 - p · p.
+-/
+def hiddenSectorObserverSpatialCovectorNormSq
+    (observer : HiddenSectorUnitTimelikeObserver4)
+    (covector : HiddenSectorVector4) :
+    ℝ :=
+  hiddenSectorObserverTemporalCovectorComponent
+      observer
+      covector ^ 2 -
+    hiddenSectorMinkowskiPair
+      covector
+      covector
+
+/--
+In the canonical rest frame, the observer-orthogonal squared covector norm is
+the ordinary three-dimensional spatial square.
+-/
+theorem
+    hiddenSectorRestObserver4_spatialCovectorNormSq_exact
+    (covector : HiddenSectorVector4) :
+    hiddenSectorObserverSpatialCovectorNormSq
+        hiddenSectorRestObserver4
+        covector =
+      covector.c1 ^ 2 +
+        covector.c2 ^ 2 +
+        covector.c3 ^ 2 := by
+  unfold
+    hiddenSectorObserverSpatialCovectorNormSq
+    hiddenSectorObserverTemporalCovectorComponent
+    hiddenSectorRestObserver4
+    hiddenSectorMinkowskiPair
+
+  ring
+
+/--
+The action-derived principal characteristic quadratic:
+
+  temporalWeight * (u · p)^2
+    - spatialWeight * ((u · p)^2 - p · p).
+-/
+def hiddenSectorCovariantDimensionSplitPrincipalQuadratic
+    (action : HiddenSectorCovariantDimensionSplitAction)
+    (covector : HiddenSectorVector4) :
+    ℝ :=
+  action.temporalWeight *
+      hiddenSectorObserverTemporalCovectorComponent
+          action.observer
+          covector ^ 2 -
+    action.spatialWeight *
+      hiddenSectorObserverSpatialCovectorNormSq
+        action.observer
+        covector
+
+/--
+The canonical-rest-frame action with the supplied temporal and spatial
+weights.
+-/
+def hiddenSectorRestDimensionSplitAction
+    (temporalWeight spatialWeight : ℝ) :
+    HiddenSectorCovariantDimensionSplitAction :=
+  {
+    observer := hiddenSectorRestObserver4
+    temporalWeight := temporalWeight
+    spatialWeight := spatialWeight
+  }
+
+/--
+Exact `3+1` reduction of the observer-covariant principal quadratic.
+-/
+theorem
+    hiddenSectorRestDimensionSplitAction_principalQuadratic_exact
+    (temporalWeight spatialWeight : ℝ)
+    (covector : HiddenSectorVector4) :
+    hiddenSectorCovariantDimensionSplitPrincipalQuadratic
+        (hiddenSectorRestDimensionSplitAction
+          temporalWeight
+          spatialWeight)
+        covector =
+      temporalWeight * covector.c0 ^ 2 -
+        spatialWeight *
+          (covector.c1 ^ 2 +
+            covector.c2 ^ 2 +
+            covector.c3 ^ 2) := by
+  unfold
+    hiddenSectorCovariantDimensionSplitPrincipalQuadratic
+    hiddenSectorRestDimensionSplitAction
+    hiddenSectorObserverTemporalCovectorComponent
+    hiddenSectorObserverSpatialCovectorNormSq
+    hiddenSectorRestObserver4
+    hiddenSectorMinkowskiPair
+
+  ring
+
+/--
+The transverse plane-wave principal action density.
+-/
+def hiddenSectorCovariantDimensionSplitPlaneWaveActionDensity
+    (action : HiddenSectorCovariantDimensionSplitAction)
+    (covector : HiddenSectorVector4)
+    (amplitude : ℝ) :
+    ℝ :=
+  hiddenSectorCovariantDimensionSplitPrincipalQuadratic
+      action
+      covector *
+    amplitude *
+    amplitude
+
+/--
+The exact amplitude derivative of the principal plane-wave action density.
+-/
+theorem
+    hiddenSectorCovariantDimensionSplitPlaneWaveActionDensity_amplitudeDerivative_exact
+    (action : HiddenSectorCovariantDimensionSplitAction)
+    (covector : HiddenSectorVector4)
+    (amplitude : ℝ) :
+    deriv
+        (fun currentAmplitude : ℝ =>
+          hiddenSectorCovariantDimensionSplitPlaneWaveActionDensity
+            action
+            covector
+            currentAmplitude)
+        amplitude =
+      2 *
+        hiddenSectorCovariantDimensionSplitPrincipalQuadratic
+          action
+          covector *
+        amplitude := by
+  let coefficient : ℝ :=
+    hiddenSectorCovariantDimensionSplitPrincipalQuadratic
+      action
+      covector
+
+  have hDerivative :
+      HasDerivAt
+          (fun currentAmplitude : ℝ =>
+            coefficient *
+              currentAmplitude *
+              currentAmplitude)
+          (2 * coefficient * amplitude)
+          amplitude := by
+    convert
+      (((hasDerivAt_id amplitude).const_mul
+          coefficient).mul
+        (hasDerivAt_id amplitude))
+      using 1 <;>
+      ring
+
+  simpa [
+    hiddenSectorCovariantDimensionSplitPlaneWaveActionDensity,
+    coefficient
+  ] using hDerivative.deriv
+
+/--
+For a nonzero plane-wave amplitude, action stationarity is exactly the
+characteristic-cone equation.
+-/
+theorem
+    hiddenSectorCovariantDimensionSplitPlaneWaveActionDensity_stationary_iff_characteristic
+    (action : HiddenSectorCovariantDimensionSplitAction)
+    (covector : HiddenSectorVector4)
+    (amplitude : ℝ)
+    (hAmplitude : amplitude ≠ 0) :
+    deriv
+        (fun currentAmplitude : ℝ =>
+          hiddenSectorCovariantDimensionSplitPlaneWaveActionDensity
+            action
+            covector
+            currentAmplitude)
+        amplitude =
+      0 ↔
+    hiddenSectorCovariantDimensionSplitPrincipalQuadratic
+        action
+        covector =
+      0 := by
+  rw [
+    hiddenSectorCovariantDimensionSplitPlaneWaveActionDensity_amplitudeDerivative_exact
+  ]
+
+  constructor
+
+  · intro hStationary
+
+    have hProduct :
+        hiddenSectorCovariantDimensionSplitPrincipalQuadratic
+              action
+              covector *
+            amplitude =
+          0 := by
+      nlinarith
+
+    exact
+      (mul_eq_zero.mp hProduct).resolve_right
+        hAmplitude
+
+  · intro hCharacteristic
+
+    rw [hCharacteristic]
+
+    ring
+
+/--
+The visible-sector Minkowski characteristic quadratic.
+-/
+def hiddenSectorVisibleMinkowskiCharacteristicQuadratic
+    (covector : HiddenSectorVector4) :
+    ℝ :=
+  hiddenSectorMinkowskiPair
+    covector
+    covector
+
+/--
+A concrete visible-null covector used to separate the hidden and visible
+characteristic cones.
+-/
+def hiddenSectorVisibleUnitNullCovector4 :
+    HiddenSectorVector4 :=
+  {
+    c0 := 1
+    c1 := 1
+    c2 := 0
+    c3 := 0
+  }
+
+/--
+The test covector is exactly null for the visible Minkowski cone.
+-/
+theorem
+    hiddenSectorVisibleUnitNullCovector4_visibleNull :
+    hiddenSectorVisibleMinkowskiCharacteristicQuadratic
+        hiddenSectorVisibleUnitNullCovector4 =
+      0 := by
+  norm_num [
+    hiddenSectorVisibleMinkowskiCharacteristicQuadratic,
+    hiddenSectorVisibleUnitNullCovector4,
+    hiddenSectorMinkowskiPair
+  ]
+
+/--
+If the temporal and spatial action weights differ, the visible-null test
+covector is not hidden-null.
+-/
+theorem
+    hiddenSectorRestDimensionSplitAction_explicitConeSeparation
+    (temporalWeight spatialWeight : ℝ)
+    (hSplit : spatialWeight ≠ temporalWeight) :
+    hiddenSectorVisibleMinkowskiCharacteristicQuadratic
+          hiddenSectorVisibleUnitNullCovector4 =
+        0 ∧
+      hiddenSectorCovariantDimensionSplitPrincipalQuadratic
+          (hiddenSectorRestDimensionSplitAction
+            temporalWeight
+            spatialWeight)
+          hiddenSectorVisibleUnitNullCovector4 ≠
+        0 := by
+  constructor
+
+  · exact
+      hiddenSectorVisibleUnitNullCovector4_visibleNull
+
+  · intro hHiddenNull
+
+    apply hSplit
+
+    have hExact :=
+      hiddenSectorRestDimensionSplitAction_principalQuadratic_exact
+        temporalWeight
+        spatialWeight
+        hiddenSectorVisibleUnitNullCovector4
+
+    rw [hHiddenNull] at hExact
+
+    norm_num [hiddenSectorVisibleUnitNullCovector4] at hExact
+
+    linarith
+
+/--
+At nonzero temporal weight, the hidden and visible characteristic cones
+coincide for every covector exactly when both weights are equal.
+-/
+theorem
+    hiddenSectorRestDimensionSplitAction_coneCoincidence_iff_weightsEqual
+    (temporalWeight spatialWeight : ℝ)
+    (hTemporalWeight : temporalWeight ≠ 0) :
+    (∀ covector : HiddenSectorVector4,
+      hiddenSectorCovariantDimensionSplitPrincipalQuadratic
+          (hiddenSectorRestDimensionSplitAction
+            temporalWeight
+            spatialWeight)
+          covector =
+        0 ↔
+      hiddenSectorVisibleMinkowskiCharacteristicQuadratic
+          covector =
+        0) ↔
+      spatialWeight = temporalWeight := by
+  constructor
+
+  · intro hConeCoincidence
+
+    have hVisibleNull :=
+      hiddenSectorVisibleUnitNullCovector4_visibleNull
+
+    have hHiddenNull :=
+      (hConeCoincidence
+        hiddenSectorVisibleUnitNullCovector4).2
+        hVisibleNull
+
+    have hExact :=
+      hiddenSectorRestDimensionSplitAction_principalQuadratic_exact
+        temporalWeight
+        spatialWeight
+        hiddenSectorVisibleUnitNullCovector4
+
+    rw [hHiddenNull] at hExact
+
+    norm_num [hiddenSectorVisibleUnitNullCovector4] at hExact
+
+    linarith
+
+  · intro hWeights
+    intro covector
+
+    have hExact :=
+      hiddenSectorRestDimensionSplitAction_principalQuadratic_exact
+        temporalWeight
+        spatialWeight
+        covector
+
+    rw [hWeights] at hExact
+
+    have hFactor :
+        hiddenSectorCovariantDimensionSplitPrincipalQuadratic
+            (hiddenSectorRestDimensionSplitAction
+              temporalWeight
+              temporalWeight)
+            covector =
+          temporalWeight *
+            hiddenSectorVisibleMinkowskiCharacteristicQuadratic
+              covector := by
+      rw [hExact]
+
+      unfold
+        hiddenSectorVisibleMinkowskiCharacteristicQuadratic
+        hiddenSectorMinkowskiPair
+
+      ring
+
+    rw [hWeights]
+    rw [hFactor]
+
+    constructor
+
+    · intro hProduct
+
+      exact
+        (mul_eq_zero.mp hProduct).resolve_left
+          hTemporalWeight
+
+    · intro hVisible
+
+      rw [hVisible]
+
+      ring
+
+/--
+The squared propagation-speed ratio selected by the action.
+-/
+def hiddenSectorCovariantDimensionSplitPropagationSpeedSq
+    (action : HiddenSectorCovariantDimensionSplitAction) :
+    ℝ :=
+  action.spatialWeight /
+    action.temporalWeight
+
+/--
+For positive temporal and spatial weights, every nonnegative spatial
+wave-number square has a real nonnegative characteristic frequency.
+-/
+theorem
+    hiddenSectorRestDimensionSplitAction_realCharacteristicFrequency
+    (temporalWeight spatialWeight spatialWaveNumberSq : ℝ)
+    (hTemporalPositive : 0 < temporalWeight)
+    (hSpatialPositive : 0 < spatialWeight)
+    (hWaveNumber : 0 ≤ spatialWaveNumberSq) :
+    ∃ frequency : ℝ,
+      0 ≤ frequency ∧
+      temporalWeight * frequency ^ 2 =
+        spatialWeight * spatialWaveNumberSq := by
+  let frequency : ℝ :=
+    Real.sqrt
+      ((spatialWeight / temporalWeight) *
+        spatialWaveNumberSq)
+
+  have hRatioNonnegative :
+      0 ≤
+        (spatialWeight / temporalWeight) *
+          spatialWaveNumberSq := by
+    exact
+      mul_nonneg
+        (div_nonneg
+          (le_of_lt hSpatialPositive)
+          (le_of_lt hTemporalPositive))
+        hWaveNumber
+
+  refine
+    ⟨frequency,
+      Real.sqrt_nonneg _,
+      ?_⟩
+
+  dsimp [frequency]
+
+  rw [Real.sq_sqrt hRatioNonnegative]
+
+  field_simp [ne_of_gt hTemporalPositive]
+
+/--
+The action-derived first-order residual in the observer rest frame.
+-/
+def hiddenSectorCovariantDimensionSplitAction_restJetResidual
+    (action : HiddenSectorCovariantDimensionSplitAction)
+    (timePair curlPair sourcePair :
+      MaxwellVector3 × MaxwellVector3) :
+    MaxwellVector3 × MaxwellVector3 :=
+  hiddenSectorReducedJointMaxwellCandidate_dimensionSplitDualSourcedJetResidual
+    action.temporalWeight
+    action.temporalWeight
+    action.spatialWeight
+    action.spatialWeight
+    timePair
+    curlPair
+    sourcePair
+
+/--
+The action-derived rest-frame first-order residual is exactly quarter-turn
+covariant for all jets and external sources.
+-/
+theorem
+    hiddenSectorCovariantDimensionSplitAction_restJetResidual_quarterTurn_covariant
+    (action : HiddenSectorCovariantDimensionSplitAction)
+    (timePair curlPair sourcePair :
+      MaxwellVector3 × MaxwellVector3) :
+    hiddenSectorCovariantDimensionSplitAction_restJetResidual
+        action
+        (hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+          timePair)
+        (hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+          curlPair)
+        (hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+          sourcePair) =
+      hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+        (hiddenSectorCovariantDimensionSplitAction_restJetResidual
+          action
+          timePair
+          curlPair
+          sourcePair) := by
+  unfold
+    hiddenSectorCovariantDimensionSplitAction_restJetResidual
+
+  exact
+    (hiddenSectorReducedJointMaxwellCandidate_dimensionSplitDualSourcedJetResidual_quarterTurn_covariant_iff
+      action.temporalWeight
+      action.temporalWeight
+      action.spatialWeight
+      action.spatialWeight).2
+      ⟨rfl, rfl⟩
+      timePair
+      curlPair
+      sourcePair
+
+/--
+Reality gate for the observer-covariant dimension-split effective action.
+
+Positive weights give real characteristic frequencies. Unequal weights give
+an explicit hidden-visible cone separation. The action-derived sourced
+first-order residual remains exactly quarter-turn covariant.
+-/
+theorem
+    hiddenSectorCovariantDimensionSplitAction_realityGate
+    (temporalWeight spatialWeight : ℝ)
+    (hTemporalPositive : 0 < temporalWeight)
+    (hSpatialPositive : 0 < spatialWeight)
+    (hSplit : spatialWeight ≠ temporalWeight) :
+    (∀ spatialWaveNumberSq : ℝ,
+      0 ≤ spatialWaveNumberSq →
+      ∃ frequency : ℝ,
+        0 ≤ frequency ∧
+        temporalWeight * frequency ^ 2 =
+          spatialWeight * spatialWaveNumberSq) ∧
+      (hiddenSectorVisibleMinkowskiCharacteristicQuadratic
+            hiddenSectorVisibleUnitNullCovector4 =
+          0 ∧
+        hiddenSectorCovariantDimensionSplitPrincipalQuadratic
+            (hiddenSectorRestDimensionSplitAction
+              temporalWeight
+              spatialWeight)
+            hiddenSectorVisibleUnitNullCovector4 ≠
+          0) ∧
+      (∀ timePair curlPair sourcePair :
+          MaxwellVector3 × MaxwellVector3,
+        hiddenSectorCovariantDimensionSplitAction_restJetResidual
+            (hiddenSectorRestDimensionSplitAction
+              temporalWeight
+              spatialWeight)
+            (hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+              timePair)
+            (hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+              curlPair)
+            (hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+              sourcePair) =
+          hiddenSectorReducedJointMaxwellCandidate_dualSourceQuarterTurn
+            (hiddenSectorCovariantDimensionSplitAction_restJetResidual
+              (hiddenSectorRestDimensionSplitAction
+                temporalWeight
+                spatialWeight)
+              timePair
+              curlPair
+              sourcePair)) := by
+  constructor
+
+  · intro spatialWaveNumberSq
+    intro hWaveNumber
+
+    exact
+      hiddenSectorRestDimensionSplitAction_realCharacteristicFrequency
+        temporalWeight
+        spatialWeight
+        spatialWaveNumberSq
+        hTemporalPositive
+        hSpatialPositive
+        hWaveNumber
+
+  · constructor
+
+    · exact
+        hiddenSectorRestDimensionSplitAction_explicitConeSeparation
+          temporalWeight
+          spatialWeight
+          hSplit
+
+    · intro timePair curlPair sourcePair
+
+      exact
+        hiddenSectorCovariantDimensionSplitAction_restJetResidual_quarterTurn_covariant
+          (hiddenSectorRestDimensionSplitAction
+            temporalWeight
+            spatialWeight)
+          timePair
+          curlPair
+          sourcePair
+
+/--
+An admissible invertible covector redefinition that preserves the visible
+Minkowski characteristic quadratic exactly.
+
+This is the formal class of coordinate/field-momentum redefinitions allowed in
+the non-removability test.  Such a redefinition cannot change which covectors
+are visible-null.
+-/
+structure HiddenSectorVisibleMetricPreservingCovectorEquiv where
+  toFun : HiddenSectorVector4 → HiddenSectorVector4
+  invFun : HiddenSectorVector4 → HiddenSectorVector4
+  leftInverse :
+    ∀ covector : HiddenSectorVector4,
+      invFun (toFun covector) = covector
+  rightInverse :
+    ∀ covector : HiddenSectorVector4,
+      toFun (invFun covector) = covector
+  preservesVisibleQuadratic :
+    ∀ covector : HiddenSectorVector4,
+      hiddenSectorVisibleMinkowskiCharacteristicQuadratic
+          (toFun covector) =
+        hiddenSectorVisibleMinkowskiCharacteristicQuadratic
+          covector
+
+/--
+The claim that an admissible visible-metric-preserving redefinition removes
+the hidden cone split.
+-/
+def hiddenSectorDimensionSplitConeRemovedBy
+    (temporalWeight spatialWeight : ℝ)
+    (redefinition :
+      HiddenSectorVisibleMetricPreservingCovectorEquiv) :
+    Prop :=
+  ∀ covector : HiddenSectorVector4,
+    hiddenSectorCovariantDimensionSplitPrincipalQuadratic
+          (hiddenSectorRestDimensionSplitAction
+            temporalWeight
+            spatialWeight)
+          covector =
+        0 ↔
+      hiddenSectorVisibleMinkowskiCharacteristicQuadratic
+          (redefinition.toFun covector) =
+        0
+
+/--
+A genuine temporal/spatial weight split cannot be removed by any invertible
+redefinition that preserves the visible Minkowski metric.
+
+The proof uses the explicit covector that is visible-null but hidden-nonnull.
+Every admissible redefinition keeps that covector visible-null, contradicting
+any attempted cone identification.
+-/
+theorem
+    hiddenSectorRestDimensionSplitAction_coneSplit_nonremovable
+    (temporalWeight spatialWeight : ℝ)
+    (hSplit : spatialWeight ≠ temporalWeight)
+    (redefinition :
+      HiddenSectorVisibleMetricPreservingCovectorEquiv) :
+    ¬ hiddenSectorDimensionSplitConeRemovedBy
+        temporalWeight
+        spatialWeight
+        redefinition := by
+  intro hRemoved
+
+  have hSeparation :=
+    hiddenSectorRestDimensionSplitAction_explicitConeSeparation
+      temporalWeight
+      spatialWeight
+      hSplit
+
+  have hMappedVisibleNull :
+      hiddenSectorVisibleMinkowskiCharacteristicQuadratic
+          (redefinition.toFun
+            hiddenSectorVisibleUnitNullCovector4) =
+        0 := by
+    rw [
+      redefinition.preservesVisibleQuadratic
+        hiddenSectorVisibleUnitNullCovector4
+    ]
+
+    exact hSeparation.1
+
+  have hHiddenNull :
+      hiddenSectorCovariantDimensionSplitPrincipalQuadratic
+          (hiddenSectorRestDimensionSplitAction
+            temporalWeight
+            spatialWeight)
+          hiddenSectorVisibleUnitNullCovector4 =
+        0 :=
+    (hRemoved
+      hiddenSectorVisibleUnitNullCovector4).2
+      hMappedVisibleNull
+
+  exact hSeparation.2 hHiddenNull
+
+/--
+The hidden-sector travel time across a visible-rest-frame distance.
+
+Visible propagation speed is normalized to one.  Since the hidden squared
+speed is `spatialWeight / temporalWeight`, its travel time is
+
+  distance * sqrt (temporalWeight / spatialWeight).
+-/
+def hiddenSectorRestDimensionSplitArrivalTime
+    (temporalWeight spatialWeight distance : ℝ) :
+    ℝ :=
+  distance *
+    Real.sqrt
+      (temporalWeight / spatialWeight)
+
+/--
+The visible-sector arrival time in units where the visible Minkowski speed is
+one.
+-/
+def hiddenSectorVisibleArrivalTime
+    (distance : ℝ) :
+    ℝ :=
+  distance
+
+/--
+The visible-relative arrival-time shift predicted by the dimension split.
+-/
+def hiddenSectorRestDimensionSplitArrivalTimeShift
+    (temporalWeight spatialWeight distance : ℝ) :
+    ℝ :=
+  hiddenSectorRestDimensionSplitArrivalTime
+      temporalWeight
+      spatialWeight
+      distance -
+    hiddenSectorVisibleArrivalTime
+      distance
+
+/--
+For positive weights and nonzero propagation distance, equality of hidden and
+visible arrival times forces equality of the temporal and spatial action
+weights.
+-/
+theorem
+    hiddenSectorRestDimensionSplitArrivalTime_eq_visible_forces_weightsEqual
+    (temporalWeight spatialWeight distance : ℝ)
+    (hTemporalPositive : 0 < temporalWeight)
+    (hSpatialPositive : 0 < spatialWeight)
+    (hDistance : distance ≠ 0)
+    (hArrival :
+      hiddenSectorRestDimensionSplitArrivalTime
+          temporalWeight
+          spatialWeight
+          distance =
+        hiddenSectorVisibleArrivalTime
+          distance) :
+    spatialWeight = temporalWeight := by
+  have hSqrt :
+      Real.sqrt
+          (temporalWeight / spatialWeight) =
+        1 := by
+    unfold
+      hiddenSectorRestDimensionSplitArrivalTime
+      hiddenSectorVisibleArrivalTime
+      at hArrival
+
+    apply
+      (mul_left_cancel₀ hDistance)
+
+    simpa using hArrival
+
+  have hRatioNonnegative :
+      0 ≤ temporalWeight / spatialWeight := by
+    exact
+      div_nonneg
+        (le_of_lt hTemporalPositive)
+        (le_of_lt hSpatialPositive)
+
+  have hSquare :
+      temporalWeight / spatialWeight = 1 := by
+    calc
+      temporalWeight / spatialWeight =
+          (Real.sqrt
+            (temporalWeight / spatialWeight)) ^ 2 := by
+            symm
+            exact
+              Real.sq_sqrt
+                hRatioNonnegative
+      _ = 1 := by
+        rw [hSqrt]
+        norm_num
+
+  field_simp [ne_of_gt hSpatialPositive] at hSquare
+
+  linarith
+
+/--
+A genuine positive dimension split predicts a nonzero arrival-time shift at
+every nonzero visible-rest-frame distance.
+-/
+theorem
+    hiddenSectorRestDimensionSplitArrivalTimeShift_ne_zero
+    (temporalWeight spatialWeight distance : ℝ)
+    (hTemporalPositive : 0 < temporalWeight)
+    (hSpatialPositive : 0 < spatialWeight)
+    (hSplit : spatialWeight ≠ temporalWeight)
+    (hDistance : distance ≠ 0) :
+    hiddenSectorRestDimensionSplitArrivalTimeShift
+        temporalWeight
+        spatialWeight
+        distance ≠
+      0 := by
+  intro hShiftZero
+
+  have hArrival :
+      hiddenSectorRestDimensionSplitArrivalTime
+          temporalWeight
+          spatialWeight
+          distance =
+        hiddenSectorVisibleArrivalTime
+          distance := by
+    unfold
+      hiddenSectorRestDimensionSplitArrivalTimeShift
+      at hShiftZero
+
+    linarith
+
+  exact
+    hSplit
+      (hiddenSectorRestDimensionSplitArrivalTime_eq_visible_forces_weightsEqual
+        temporalWeight
+        spatialWeight
+        distance
+        hTemporalPositive
+        hSpatialPositive
+        hDistance
+        hArrival)
+
+/--
+Combined non-removability and observable gate.
+
+For positive unequal temporal and spatial weights:
+
+1. no invertible visible-Minkowski-metric-preserving redefinition can identify
+   the hidden characteristic cone with the visible cone;
+2. every nonzero propagation distance has a nonzero hidden-minus-visible
+   arrival-time shift.
+
+This establishes a comparative mathematical observable for the linear
+effective theory.  It does not establish that the sector exists in nature or
+that the coefficients satisfy experimental constraints.
+-/
+theorem
+    hiddenSectorCovariantDimensionSplitAction_nonremovable_arrivalTimeGate
+    (temporalWeight spatialWeight distance : ℝ)
+    (hTemporalPositive : 0 < temporalWeight)
+    (hSpatialPositive : 0 < spatialWeight)
+    (hSplit : spatialWeight ≠ temporalWeight)
+    (hDistance : distance ≠ 0) :
+    (∀ redefinition :
+        HiddenSectorVisibleMetricPreservingCovectorEquiv,
+      ¬ hiddenSectorDimensionSplitConeRemovedBy
+          temporalWeight
+          spatialWeight
+          redefinition) ∧
+      hiddenSectorRestDimensionSplitArrivalTimeShift
+          temporalWeight
+          spatialWeight
+          distance ≠
+        0 := by
+  constructor
+
+  · intro redefinition
+
+    exact
+      hiddenSectorRestDimensionSplitAction_coneSplit_nonremovable
+        temporalWeight
+        spatialWeight
+        hSplit
+        redefinition
+
+  · exact
+      hiddenSectorRestDimensionSplitArrivalTimeShift_ne_zero
+        temporalWeight
+        spatialWeight
+        distance
+        hTemporalPositive
+        hSpatialPositive
+        hSplit
+        hDistance
 
 /--
 The Euclidean bilinear pairing on the concrete four-dimensional carrier.
