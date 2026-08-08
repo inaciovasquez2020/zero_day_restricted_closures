@@ -130,6 +130,22 @@ Boundary:
   future n >= 3 work must test required classes against SH and its complement directly
 
 
+K3ThreeTypeDegreeFourInputSurface(X) :=
+  type : IsK3ThreeType(X)
+  ambient : H^4(X,Q)
+  verbitzky_component : SH^4(X,Q)
+  quotient : H^4(X,Q) / SH^4(X,Q)
+  ambient_dimension : dim_Q H^4(X,Q) = 299
+  verbitzky_dimension : dim_Q SH^4(X,Q) = 276
+  quotient_dimension : dim_Q (H^4(X,Q) / SH^4(X,Q)) = 23
+
+Boundary:
+  no required class is selected
+  no quotient projection of a required class is asserted
+  no basis of the 23-dimensional quotient is chosen
+  this surface records only the exact ambient degree-four obstruction data
+
+
 
 Theorem k3_two_type_one_required_class_in_SH:
   IsK3TwoType(X) ->
