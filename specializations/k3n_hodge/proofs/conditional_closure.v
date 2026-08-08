@@ -87,3 +87,20 @@ Boundary:
   depends on BottiniK3TwoTypeVerbitskyExhaustion(X)
   K3^[n]-type with n >= 3 is not discharged
   ZeroDayClosure(X) is not invoked
+
+
+Theorem k3_two_type_zero_day_closure:
+  IsK3TwoType(X) ->
+  ZeroDayClosure(X)
+
+Proof:
+  Let X be of K3^[2]-type.
+  Apply required_classes_subset_SH_implies_zero_day_closure(X).
+  Apply k3_two_type_required_classes_subset_SH(X).
+Qed.
+
+Boundary:
+  K3^[2]-type closure depends on BottiniK3TwoTypeVerbitskyExhaustion(X)
+  the Bottini result is imported from external literature
+  no K3^[n]-type closure for n >= 3 is claimed
+  not UnconditionalCompletenessSourceForZeroDayRequiredK3nHodgeClasses
