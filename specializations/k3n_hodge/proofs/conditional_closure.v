@@ -4,6 +4,33 @@ ZeroDayDefectWitnessRequires(X,c) :=
   exists i : ZeroDayRequiredK3nHodgeClasses(X).I,
     ZeroDayRequiredK3nHodgeClasses(X).class(i) = c
 
+
+ZeroDayDefectWitnessConstruction(X) :=
+  required_index : ZeroDayRequiredK3nHodgeClasses(X).I
+  required_class :
+    H^(2 * degree(required_index))(X,Q)
+  required_class :=
+    ZeroDayRequiredK3nHodgeClasses(X).class(required_index)
+
+Theorem defect_witness_construction_requires_its_class:
+  forall w : ZeroDayDefectWitnessConstruction(X),
+    ZeroDayDefectWitnessRequires(X,w.required_class)
+
+Proof:
+  Let w : ZeroDayDefectWitnessConstruction(X).
+  Unfold ZeroDayDefectWitnessRequires(X,w.required_class).
+  Witness w.required_index.
+  Exact w.required_class =
+    ZeroDayRequiredK3nHodgeClasses(X).class(w.required_index).
+Qed.
+
+Boundary:
+  construction chooses exactly one existing required-class index
+  construction existence is not asserted
+  degree(required_index) = 2 is not asserted
+  no geometric class is introduced
+  no quotient projection is asserted
+
 Boundary:
   requirement means membership in the declared finite required-class inventory
   it does not assert minimality, uniqueness, causal necessity, or completeness
