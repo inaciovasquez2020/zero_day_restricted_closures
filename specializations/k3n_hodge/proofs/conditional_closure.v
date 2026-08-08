@@ -37,3 +37,53 @@ Boundary:
   not an internal derivation of Bottini's theorem
   not a claim for K3^[n]-type with n >= 3
   not yet RequiredClassesSubsetSH(X)
+
+
+Theorem k3_two_type_one_required_class_in_SH:
+  IsK3TwoType(X) ->
+  forall i : ZeroDayRequiredK3nHodgeClasses(X).I,
+    ZeroDayRequiredK3nHodgeClasses(X).class(i)
+      in SH^(2 * degree(i))(X,Q)
+
+Proof:
+  Let X be of K3^[2]-type.
+  Let i : ZeroDayRequiredK3nHodgeClasses(X).I.
+
+  By ZeroDayRequiredK3nHodgeClasses.class,
+      ZeroDayRequiredK3nHodgeClasses(X).class(i)
+        in H^(2 * degree(i))(X,Q).
+
+  By BottiniK3TwoTypeVerbitskyExhaustion(X),
+      H^*(X,Q) = SH(X,Q).
+
+  Taking the degree-(2 * degree(i)) graded component gives
+      H^(2 * degree(i))(X,Q)
+        = SH^(2 * degree(i))(X,Q).
+
+  Therefore
+      ZeroDayRequiredK3nHodgeClasses(X).class(i)
+        in SH^(2 * degree(i))(X,Q).
+Qed.
+
+Boundary:
+  one arbitrary required-class membership only
+  RequiredClassesSubsetSH(X) not yet derived
+  K3^[n]-type with n >= 3 not discharged
+
+
+Theorem k3_two_type_required_classes_subset_SH:
+  IsK3TwoType(X) ->
+  RequiredClassesSubsetSH(X)
+
+Proof:
+  Let X be of K3^[2]-type.
+  Unfold RequiredClassesSubsetSH(X).
+  Let i : ZeroDayRequiredK3nHodgeClasses(X).I.
+  Apply k3_two_type_one_required_class_in_SH(X,i).
+Qed.
+
+Boundary:
+  this is only forall-i closure of the proved one-class membership
+  depends on BottiniK3TwoTypeVerbitskyExhaustion(X)
+  K3^[n]-type with n >= 3 is not discharged
+  ZeroDayClosure(X) is not invoked
