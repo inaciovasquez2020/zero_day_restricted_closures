@@ -729,6 +729,132 @@ Boundary:
   no ZeroDayClosure theorem for n >= 3 is claimed
 
 
+Theorem k3_n_type_degree_four_c2_hodge_jump:
+  For n >= 4 and X of K3^[n]-type, let
+
+    Q4_Q(X) :=
+      H^4(X,Q) / Sym^2 H^2(X,Q)
+
+  and let
+
+    gamma_X := (1/2) [c2(X)] in Q4_Q(X).
+
+  Then gamma_X has degree-four Hodge type (2,2),
+
+    Q4_Q(X)
+      =
+    Q * gamma_X
+      direct_sum
+    e_X(H^2(X,Q)),
+
+  and the shifted Hodge decomposition of the second summand is
+
+    e_X(H^(2,0)(X)) subset Q4_Q^(3,1)(X),
+    e_X(H^(1,1)(X)) subset Q4_Q^(2,2)(X),
+    e_X(H^(0,2)(X)) subset Q4_Q^(1,3)(X).
+
+  Consequently
+
+    Q4_Q^(2,2)(X)
+      =
+    Q * gamma_X
+      direct_sum
+    e_X(H^(1,1)(X,Q))
+
+  with
+
+    dim_Q Q4_Q^(2,2)(X) = 1 + 21 = 22.
+
+Proof:
+  The second Chern class c2(X) is a Hodge class of type (2,2).
+  Therefore its nonzero quotient class gamma_X is also of type (2,2).
+
+  Apply
+    k3_n_type_degree_four_quotient_representation_profile.
+
+  Its n >= 4 decomposition gives
+
+    Q4_Q(X)
+      =
+    Q * gamma_X
+      direct_sum
+    e_X(H^2(X,Q)).
+
+  Apply
+    k3_n_type_degree_four_quotient_hodge_profile.
+
+  The quotient Hodge profile is
+
+    (h_Q^(3,1), h_Q^(2,2), h_Q^(1,3))
+      =
+    (1,22,1).
+
+  The H^2 factor has Hodge profile
+
+    (h^(2,0), h^(1,1), h^(0,2))
+      =
+    (1,21,1).
+
+  Since gamma_X contributes one additional (2,2) line,
+  the H^2 factor occurs in degree four with Hodge shift (1,1).
+
+  Hence
+
+    dim_Q e_X(H^(1,1)(X,Q)) = 21
+
+  and
+
+    dim_Q Q4_Q^(2,2)(X)
+      =
+    1 + 21
+      =
+    22.
+Qed.
+
+
+Corollary k3_three_to_four_degree_four_hodge_jump_is_c2_line:
+  Comparing the rational degree-four quotient structures,
+
+    K3^[3] :
+      standard shifted H^2 factor only,
+
+    K3^[n], n >= 4 :
+      Q * gamma_X direct_sum shifted H^2 factor,
+
+  where
+
+    gamma_X = (1/2) [c2(X)]
+
+  is of Hodge type (2,2).
+
+  Therefore the unique Hodge-number jump
+
+    h_Q^(2,2) : 21 -> 22
+
+  from n = 3 to the stabilized n >= 4 profile is exactly
+  the appearance of the distinguished gamma_X line.
+
+  No new quotient (3,1) or (1,3) direction appears.
+
+Proof:
+  Combine
+    k3_n_type_degree_four_quotient_representation_profile
+  with
+    k3_n_type_degree_four_quotient_hodge_jump
+  and
+    k3_n_type_degree_four_c2_hodge_jump.
+Qed.
+
+Boundary:
+  the c2/2 line is identified only in the degree-four quotient for n >= 4
+  gamma_X is not declared a required-class inventory element
+  no individual vector in the 21-dimensional shifted H^(1,1) factor is selected
+  no required-class index is constructed
+  no required-class quotient projection is evaluated
+  the stopped K3^[3] inventory branch remains stopped
+  no ZeroDayClosure theorem for n >= 3 is claimed
+
+
 K3ThreeTypeDegreeFourInputSurface(X) :=
   type : IsK3ThreeType(X)
   ambient : H^4(X,Q)
