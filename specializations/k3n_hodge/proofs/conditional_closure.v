@@ -146,6 +146,27 @@ Boundary:
   this surface records only the exact ambient degree-four obstruction data
 
 
+K3ThreeTypeDegreeFourRequiredClassSelection(X) :=
+  I4 :=
+    { i : ZeroDayRequiredK3nHodgeClasses(X).I
+      // degree(i) = 2 }
+  selected_class :
+    forall i : I4,
+      H^4(X,Q)
+  selected_class(i) :=
+    ZeroDayRequiredK3nHodgeClasses(X).class(i.val)
+
+SelectionRule:
+  select exactly those existing required-class indices whose degree is 2
+
+Boundary:
+  does not assert I4 is nonempty
+  does not introduce a new required class
+  does not choose an arbitrary element of H^4(X,Q)
+  does not assert selected_class(i) lies outside SH^4(X,Q)
+  does not define or evaluate any quotient projection
+
+
 
 Theorem k3_two_type_one_required_class_in_SH:
   IsK3TwoType(X) ->
