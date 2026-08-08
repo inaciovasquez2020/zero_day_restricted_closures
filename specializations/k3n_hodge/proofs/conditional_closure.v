@@ -331,6 +331,100 @@ Boundary:
   novelty is not asserted for the Kapfer-Markman input
 
 
+ExternalResult K3nIntegralCohomologyRingDeformationTransport(X,S,n) :=
+  If X is of K3^[n]-type and S is a K3 surface, then deformation
+  equivalence from S^[n] to X induces a graded integral cohomology-ring
+  isomorphism
+
+    Phi : H^*(S^[n],Z) ~= H^*(X,Z)
+
+  satisfying
+
+    Phi(H^2(S^[n],Z)) = H^2(X,Z)
+
+  and therefore
+
+    Phi(Sym^2 H^2(S^[n],Z))
+      = Sym^2 H^2(X,Z).
+
+Sources:
+  Ehresmann deformation transport for smooth proper families.
+  Markman, monodromy operators on the integral cohomology ring of
+  manifolds deformation equivalent to Hilbert schemes of K3 surfaces.
+
+Boundary:
+  the transport is not asserted canonical
+  no preferred quotient basis or generator is transported
+  only the isomorphism type of the integral cup-product cokernel is used
+
+
+Theorem k3_n_type_integral_degree_four_saturation_profile:
+  For n >= 2 and X of K3^[n]-type,
+
+    n = 2 ->
+      H^4(X,Z) / Sym^2 H^2(X,Z)
+        ~= (Z/2Z)^23 direct_sum Z/5Z
+      and
+      Sym^2 H^2(X,Z) is not saturated in H^4(X,Z)
+      and
+      Sym^2 H^2(X,Q) = H^4(X,Q)
+
+    n = 3 ->
+      H^4(X,Z) / Sym^2 H^2(X,Z)
+        ~= Z/3Z direct_sum Z^23
+      and
+      Sym^2 H^2(X,Z) is not saturated in H^4(X,Z)
+      and
+      dim_Q (
+        H^4(X,Q) / Sym^2 H^2(X,Q)
+      ) = 23
+
+    n >= 4 ->
+      H^4(X,Z) / Sym^2 H^2(X,Z)
+        ~= Z^24
+      and
+      Sym^2 H^2(X,Z) is saturated in H^4(X,Z)
+      and
+      dim_Q (
+        H^4(X,Q) / Sym^2 H^2(X,Q)
+      ) = 24
+
+Proof:
+  Choose a K3 surface S and a deformation from S^[n] to X.
+
+  Apply K3nIntegralCohomologyRingDeformationTransport(X,S,n).
+
+  The resulting graded ring isomorphism identifies
+    H^4(S^[n],Z) with H^4(X,Z)
+  and identifies
+    Sym^2 H^2(S^[n],Z)
+  with
+    Sym^2 H^2(X,Z).
+
+  Hence it induces an isomorphism of cokernels
+
+    H^4(S^[n],Z) / Sym^2 H^2(S^[n],Z)
+      ~=
+    H^4(X,Z) / Sym^2 H^2(X,Z).
+
+  Transfer the three cases of
+    k3_hilbert_degree_four_integral_saturation_profile.
+
+  Saturation is preserved under the integral group isomorphism,
+  and tensoring the transported cokernel with Q gives the stated
+  rational quotient dimensions.
+Qed.
+
+Boundary:
+  the former Hilbert-scheme-only restriction is removed
+  no canonical deformation transport is claimed
+  no quotient basis or geometric generator is selected
+  no required-class index is constructed
+  no required-class quotient projection is evaluated
+  the stopped K3^[3] inventory branch remains stopped
+  no ZeroDayClosure theorem for n >= 3 is claimed
+
+
 K3ThreeTypeDegreeFourInputSurface(X) :=
   type : IsK3ThreeType(X)
   ambient : H^4(X,Q)
