@@ -1010,6 +1010,170 @@ Boundary:
   no ZeroDayClosure theorem for n >= 3 is claimed
 
 
+Theorem k3_n_type_degree_four_finite_monodromy_orbit_classification:
+  For n >= 4 and X of K3^[n]-type, let
+
+    Q4_Q(X) :=
+      H^4(X,Q) / Sym^2 H^2(X,Q)
+
+  and
+
+    gamma_X := (1/2) [c2(X)] in Q4_Q(X).
+
+  Then for every v in Q4_Q(X),
+
+    FiniteOrbit_Mon(X)(v)
+      iff
+    exists a : Q,
+      v = a * gamma_X.
+
+  Equivalently, the vectors with finite full-monodromy orbit
+  are exactly the distinguished rational line
+
+    Q * gamma_X.
+
+Proof:
+  Apply
+    MarkmanK3nDegreeFourQuotientLatticeStructure(X,n).
+
+  Write uniquely
+
+    v
+      =
+    a * gamma_X + e_X(alpha)
+
+  with
+
+    a in Q
+    and
+    alpha in H^2(X,Q).
+
+  If alpha = 0, then
+
+    v = a * gamma_X.
+
+  Since every monodromy operator fixes gamma_X pointwise,
+  the orbit of v is a singleton and hence finite.
+
+  Conversely, suppose
+
+    FiniteOrbit_Mon(X)(v).
+
+  Then the stabilizer
+
+    Gamma_v :=
+      { sigma in Mon(X) // sigma_Q(v) = v }
+
+  has finite index in Mon(X).
+
+  Since gamma_X is fixed by every monodromy operator,
+  every sigma in Gamma_v also satisfies
+
+    sigma_Q(e_X(alpha))
+      =
+    e_X(alpha).
+
+  Complexify.
+
+  By
+    MarkmanK3nMonodromyZariskiClosure(X,n),
+
+  the Zariski closure of Mon(X) is
+
+    G :=
+      O(H^2(X,C)) x Z/2Z.
+
+  Because Gamma_v has finite index in Mon(X),
+  the Zariski closure of Gamma_v contains the identity component
+
+    G^0
+      =
+    SO(H^2(X,C)) x {1}.
+
+  Indeed a finite-index subgroup has Zariski closure of the
+  same dimension as the ambient Zariski closure, hence contains
+  its identity component.
+
+  On the twisted H^2 summand the restriction to G^0 is the
+  ordinary standard representation
+
+    g |-> g
+
+  of SO(H^2(X,C)).
+
+  The standard representation has no nonzero invariant vector.
+
+  Therefore
+
+    alpha = 0.
+
+  Hence
+
+    v = a * gamma_X.
+
+  This proves both implications.
+Qed.
+
+
+Corollary k3_n_type_rank23_quotient_factor_has_no_nonzero_finite_orbit:
+  For n >= 4 and X of K3^[n]-type and every
+
+    alpha in H^2(X,Q),
+
+  the vector
+
+    e_X(alpha)
+
+  has finite full-monodromy orbit if and only if
+
+    alpha = 0.
+
+  In particular every nonzero rational vector in the
+  remaining rank-23 quotient factor has infinite monodromy orbit.
+
+Proof:
+  Apply
+    k3_n_type_degree_four_finite_monodromy_orbit_classification.
+
+  The direct-sum decomposition
+
+    Q4_Q(X)
+      =
+    Q * gamma_X direct_sum e_X(H^2(X,Q))
+
+  has zero intersection between its two summands.
+
+  Thus e_X(alpha) belongs to Q * gamma_X exactly when alpha = 0.
+Qed.
+
+
+Corollary k3_n_type_finite_orbit_equals_fixed_subspace:
+  For n >= 4 and X of K3^[n]-type,
+
+    { v in Q4_Q(X) // FiniteOrbit_Mon(X)(v) }
+      =
+    Q4_Q(X)^Mon(X)
+      =
+    Q * (1/2)[c2(X)].
+
+Proof:
+  Combine
+    k3_n_type_degree_four_finite_monodromy_orbit_classification
+  with
+    k3_n_type_degree_four_monodromy_fixed_line.
+Qed.
+
+Boundary:
+  finite-orbit classification is for the full monodromy action
+  every nonzero vector in the rank-23 factor has infinite orbit
+  the only finite-orbit vectors form the c2/2 line
+  no required-class inventory element is inferred from finite orbit behavior
+  no required-class index is constructed
+  no required-class quotient projection is evaluated
+  the stopped K3^[3] inventory branch remains stopped
+  no ZeroDayClosure theorem for n >= 3 is claimed
+
+
 K3ThreeTypeDegreeFourInputSurface(X) :=
   type : IsK3ThreeType(X)
   ambient : H^4(X,Q)
