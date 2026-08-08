@@ -855,6 +855,161 @@ Boundary:
   no ZeroDayClosure theorem for n >= 3 is claimed
 
 
+ExternalResult MarkmanK3nMonodromyZariskiClosure(X,n) :=
+  For n >= 3 and X of K3^[n]-type,
+
+    Mon(X) ~= Mon^2(X)
+      = tilde_O^+(H^2(X,Z)),
+
+  and the Zariski closure of Mon(X) in the complex
+  cohomology representation is
+
+    O(H^2(X,C)) x Z/2Z.
+
+  The second factor records the discriminant character
+
+    tau : Mon^2(X) -> {+1,-1}.
+
+Sources:
+  Markman, monodromy of moduli spaces of sheaves on K3 surfaces,
+  Lemma 4.11.
+  Markman, integral constraints on the monodromy group of
+  K3 Hilbert schemes.
+
+Boundary:
+  this is an external monodromy input
+  no Hodge class is declared required
+  no required-class inventory element is introduced
+
+
+Theorem k3_n_type_degree_four_monodromy_fixed_line:
+  For n >= 4 and X of K3^[n]-type, let
+
+    Q4_Q(X) :=
+      H^4(X,Q) / Sym^2 H^2(X,Q)
+
+  and
+
+    gamma_X := (1/2) [c2(X)] in Q4_Q(X).
+
+  Then
+
+    Q4_Q(X)^Mon(X)
+      =
+    Q * gamma_X.
+
+  Since gamma_X has Hodge type (2,2),
+
+    Q4_Q^(2,2)(X) intersection Q4_Q(X)^Mon(X)
+      =
+    Q * gamma_X.
+
+  Hence Q * gamma_X is the unique nonzero rational line
+  whose vectors are fixed pointwise by every monodromy operator
+  in the degree-four quotient.
+
+Proof:
+  Apply
+    MarkmanK3nDegreeFourQuotientLatticeStructure(X,n).
+
+  Over Q,
+
+    Q4_Q(X)
+      =
+    Q * gamma_X
+      direct_sum
+    e_X(H^2(X,Q)).
+
+  For every monodromy operator sigma,
+
+    sigma_Q(gamma_X) = gamma_X
+
+  and
+
+    sigma_Q(e_X(alpha))
+      =
+    tau(sigma) * e_X(sigma_2(alpha)).
+
+  Thus Q * gamma_X is fixed pointwise.
+
+  Now let
+
+    e_X(alpha) in e_X(H^2(X,Q))
+
+  be fixed by every monodromy operator.
+
+  Then for every sigma in Mon(X),
+
+    tau(sigma) * sigma_2(alpha) = alpha.
+
+  Complexify this relation.
+
+  By MarkmanK3nMonodromyZariskiClosure(X,n),
+  Mon(X) is Zariski dense in
+
+    O(H^2(X,C)) x Z/2Z.
+
+  Therefore alpha is fixed by the algebraic representation
+
+    (g,epsilon) |-> epsilon * g
+
+  on H^2(X,C).
+
+  The standard representation of O(H^2(X,C))
+  has no nonzero fixed vector.
+
+  Hence
+
+    alpha = 0.
+
+  Therefore the twisted H^2 summand contributes no
+  monodromy-fixed vector, and
+
+    Q4_Q(X)^Mon(X)
+      =
+    Q * gamma_X.
+
+  Finally apply
+    k3_n_type_degree_four_c2_hodge_jump
+
+  to obtain that gamma_X has Hodge type (2,2).
+Qed.
+
+
+Corollary k3_n_type_degree_four_unique_monodromy_fixed_hodge_line:
+  For n >= 4 and X of K3^[n]-type, the distinguished line
+
+    Q * (1/2)[c2(X)]
+
+  is the complete pointwise monodromy-fixed rational subspace
+  of the degree-four quotient and is contained in Hodge type (2,2).
+
+  The remaining quotient dimensions
+
+    one (3,1),
+    twenty-one (2,2),
+    one (1,3)
+
+  lie in the twisted standard H^2 factor and contribute
+  no nonzero vector fixed by the full monodromy group.
+
+Proof:
+  Combine
+    k3_n_type_degree_four_monodromy_fixed_line
+  with
+    k3_n_type_degree_four_c2_hodge_jump.
+Qed.
+
+Boundary:
+  uniqueness means pointwise fixed under the full monodromy group
+  it does not identify gamma_X as a required-class inventory element
+  it does not select any vector in the remaining 23-dimensional factor
+  no required-class index is constructed
+  no required-class quotient projection is evaluated
+  the stopped K3^[3] inventory branch remains stopped
+  no ZeroDayClosure theorem for n >= 3 is claimed
+
+
 K3ThreeTypeDegreeFourInputSurface(X) :=
   type : IsK3ThreeType(X)
   ambient : H^4(X,Q)
