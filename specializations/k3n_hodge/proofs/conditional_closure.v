@@ -259,6 +259,78 @@ Boundary:
   of the stated Göttsche and Verbitsky inputs
 
 
+ExternalResult KapferDegreeFourIntegralCupCokernelProfile(S,n) :=
+  For S a projective K3 surface,
+
+    n = 2 ->
+      H^4(S^[2],Z) / Sym^2 H^2(S^[2],Z)
+        ~= (Z/2Z)^23 direct_sum Z/5Z
+
+    n = 3 ->
+      H^4(S^[3],Z) / Sym^2 H^2(S^[3],Z)
+        ~= Z/3Z direct_sum Z^23
+
+    n >= 4 ->
+      H^4(S^[n],Z) / Sym^2 H^2(S^[n],Z)
+        ~= Z^24
+
+Source:
+  Simon Kapfer,
+  Computing cup products in integral cohomology of Hilbert schemes
+  of points on K3 surfaces,
+  LMS J. Comput. Math. 19 (2016), Proposition 2.2.
+  For n >= 4, Kapfer also records Markman's independent freeness result.
+
+Theorem k3_hilbert_degree_four_integral_saturation_profile:
+  For S a projective K3 surface,
+
+    n = 2 ->
+      Sym^2 H^2(S^[2],Z) is not saturated in H^4(S^[2],Z)
+      and
+      Sym^2 H^2(S^[2],Q) = H^4(S^[2],Q)
+
+    n = 3 ->
+      Sym^2 H^2(S^[3],Z) is not saturated in H^4(S^[3],Z)
+      and
+      dim_Q (
+        H^4(S^[3],Q) / Sym^2 H^2(S^[3],Q)
+      ) = 23
+
+    n >= 4 ->
+      Sym^2 H^2(S^[n],Z) is saturated in H^4(S^[n],Z)
+      and
+      dim_Q (
+        H^4(S^[n],Q) / Sym^2 H^2(S^[n],Q)
+      ) = 24
+
+Proof:
+  Apply KapferDegreeFourIntegralCupCokernelProfile.
+
+  For n = 2, the cokernel is finite and nonzero.
+  Therefore the integral image is not saturated,
+  while tensoring with Q kills the entire cokernel.
+
+  For n = 3, the cokernel is
+    Z/3Z direct_sum Z^23.
+  Its nonzero torsion proves non-saturation,
+  and tensoring with Q leaves Q^23.
+
+  For n >= 4, the cokernel is Z^24.
+  A free quotient is torsion-free, hence the image is saturated,
+  and tensoring with Q gives Q^24.
+Qed.
+
+Boundary:
+  this theorem concerns the integral cup-product lattice
+  it does not select any required-class index
+  it does not identify a geometric generator of the free quotient
+  it does not evaluate a required-class quotient projection
+  it does not reopen the stopped K3^[3] inventory branch
+  deformation transfer from S^[n] to an arbitrary K3^[n]-type X
+  is not asserted here
+  novelty is not asserted for the Kapfer-Markman input
+
+
 K3ThreeTypeDegreeFourInputSurface(X) :=
   type : IsK3ThreeType(X)
   ambient : H^4(X,Q)
