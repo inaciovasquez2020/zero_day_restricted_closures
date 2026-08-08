@@ -1,5 +1,15 @@
 Conditional
 
+ZeroDayDefectWitnessRequires(X,c) :=
+  exists i : ZeroDayRequiredK3nHodgeClasses(X).I,
+    ZeroDayRequiredK3nHodgeClasses(X).class(i) = c
+
+Boundary:
+  requirement means membership in the declared finite required-class inventory
+  it does not assert minimality, uniqueness, causal necessity, or completeness
+  a concrete class c is required only after an index i with class(i) = c is exhibited
+
+
 RequiredClassesSubsetSH(X) :=
   forall i : ZeroDayRequiredK3nHodgeClasses(X).I,
     ZeroDayRequiredK3nHodgeClasses(X).class(i) in SH^(2 * degree(i))(X,Q)
