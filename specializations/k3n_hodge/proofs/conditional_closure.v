@@ -184,6 +184,81 @@ Boundary:
   future n >= 3 work must test required classes against SH and its complement directly
 
 
+Theorem k3_n_type_degree_four_SH_complement_dimensions:
+  For n >= 2 and X of K3^[n]-type,
+    dim_Q SH^4(X,Q) = 276
+    and
+    (n = 2 ->
+      dim_Q (H^4(X,Q) / SH^4(X,Q)) = 0)
+    and
+    (n = 3 ->
+      dim_Q (H^4(X,Q) / SH^4(X,Q)) = 23)
+    and
+    (n >= 4 ->
+      dim_Q (H^4(X,Q) / SH^4(X,Q)) = 24)
+
+Proof:
+  Start from the K3 Betti numbers
+    b_0 = 1, b_1 = 0, b_2 = 22, b_3 = 0, b_4 = 1.
+
+  Göttsche's Hilbert-scheme Poincare generating function is
+    sum_{n >= 0} P_t(K3^[n]) q^n
+      =
+    product_{m >= 1}
+      1 /
+      ((1 - t^(2m-2) q^m)
+       (1 - t^(2m) q^m)^22
+       (1 - t^(2m+2) q^m)).
+
+  Extracting the coefficient of t^4 gives
+    sum_{n >= 0} b_4(K3^[n]) q^n
+      =
+    (q + 275 q^2 + 23 q^3 + q^4) / (1 - q).
+
+  Hence
+    b_4(K3^[2]) = 276,
+    b_4(K3^[3]) = 299,
+    and b_4(K3^[n]) = 300 for every n >= 4.
+
+  For every K3^[n]-type manifold with n >= 2,
+    dim_Q H^2(X,Q) = 23.
+
+  Verbitsky's degree-four component gives
+    SH^4(X,Q) ~= Sym^2 H^2(X,Q).
+
+  Therefore
+    dim_Q SH^4(X,Q)
+      = dim_Q Sym^2(Q^23)
+      = binomial(24,2)
+      = 276.
+
+  Since SH^4(X,Q) is a subspace of H^4(X,Q),
+    dim_Q (H^4(X,Q) / SH^4(X,Q))
+      = dim_Q H^4(X,Q) - dim_Q SH^4(X,Q).
+
+  Thus the quotient dimensions are
+    276 - 276 = 0 for n = 2,
+    299 - 276 = 23 for n = 3,
+    300 - 276 = 24 for n >= 4.
+Qed.
+
+Sources:
+  Göttsche, The Betti numbers of the Hilbert scheme of points
+  on a smooth projective surface, Math. Ann. 286 (1990), 193-207.
+  Verbitsky theorem for the H^2-generated component,
+  as organized in Bottini's LLV/Verbitsky treatment.
+
+Boundary:
+  this is a dimension theorem only
+  no basis of the complementary quotient is selected
+  no required-class index is constructed
+  no geometric H^4 class is declared required
+  no quotient projection of a required class is evaluated
+  no ZeroDayClosure theorem for n >= 3 is claimed
+  novelty is not asserted; this is an exact structural consequence
+  of the stated Göttsche and Verbitsky inputs
+
+
 K3ThreeTypeDegreeFourInputSurface(X) :=
   type : IsK3ThreeType(X)
   ambient : H^4(X,Q)
