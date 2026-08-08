@@ -31,6 +31,23 @@ Boundary:
   no geometric class is introduced
   no quotient projection is asserted
 
+
+K3ThreeTypeDegreeFourDefectExtractionInterface(X,W) :=
+  extract_index :
+    W -> ZeroDayRequiredK3nHodgeClasses(X).I
+  extract_degree_four :
+    forall w : W,
+      degree(extract_index(w)) = 2
+
+Boundary:
+  W is a supplied defect-witness type
+  no inhabitant of W is asserted
+  no extraction map is asserted to exist
+  no geometric H^4 class is selected
+  no quotient projection is defined
+  this interface is exactly the missing bridge from supplied defect data
+  to an existing degree-four required-class index
+
 Boundary:
   requirement means membership in the declared finite required-class inventory
   it does not assert minimality, uniqueness, causal necessity, or completeness
