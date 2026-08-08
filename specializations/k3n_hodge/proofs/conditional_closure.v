@@ -1334,6 +1334,219 @@ Boundary:
   unconditional ZeroDayClosure for n >= 4 is not claimed
 
 
+K3nDegreeFourQuotientBilinearForm(X,u,v) :=
+  B_Q(u,v)
+    :=
+  (q_Q(u + v) - q_Q(u) - q_Q(v)) / 2
+
+
+K3nDegreeFourC2ScalarObstruction(X,n,c) :=
+  let gamma_X :=
+    (1/2) [c2(X)] in K3nDegreeFourQuotient(X)
+
+  B_Q(
+    pi4_X(c),
+    gamma_X
+  ) / (2n - 2)
+
+
+Theorem k3_n_type_degree_four_c2_scalar_recovers_finite_orbit_coefficient:
+  For n >= 4 and X of K3^[n]-type and c in H^4(X,Q), let
+
+    gamma_X :=
+      (1/2) [c2(X)] in K3nDegreeFourQuotient(X).
+
+  If
+
+    FiniteOrbit_Mon(X)(pi4_X(c)),
+
+  then
+
+    pi4_X(c)
+      =
+    K3nDegreeFourC2ScalarObstruction(X,n,c) * gamma_X.
+
+Proof:
+  By
+    k3_n_type_degree_four_finite_monodromy_orbit_classification,
+
+  there exists a : Q such that
+
+    pi4_X(c) = a * gamma_X.
+
+  By
+    MarkmanK3nDegreeFourQuotientLatticeStructure(X,n),
+
+    q_Q(gamma_X) = 2n - 2.
+
+  Hence the associated bilinear form satisfies
+
+    B_Q(gamma_X,gamma_X)
+      =
+    2n - 2.
+
+  Therefore
+
+    B_Q(pi4_X(c),gamma_X)
+      =
+    B_Q(a * gamma_X,gamma_X)
+      =
+    a * (2n - 2).
+
+  Since n >= 4,
+
+    2n - 2 != 0.
+
+  Dividing gives
+
+    K3nDegreeFourC2ScalarObstruction(X,n,c)
+      =
+    a.
+
+  Substitute this identity into
+
+    pi4_X(c) = a * gamma_X.
+Qed.
+
+
+Theorem k3_n_type_degree_four_finite_orbit_scalar_SH_criterion:
+  For n >= 4 and X of K3^[n]-type and c in H^4(X,Q),
+
+    FiniteOrbit_Mon(X)(pi4_X(c))
+      ->
+    (
+      c in SH^4(X,Q)
+        iff
+      K3nDegreeFourC2ScalarObstruction(X,n,c) = 0
+    ).
+
+Proof:
+  Assume
+
+    FiniteOrbit_Mon(X)(pi4_X(c)).
+
+  Apply
+    k3_n_type_degree_four_c2_scalar_recovers_finite_orbit_coefficient.
+
+  Then
+
+    pi4_X(c)
+      =
+    K3nDegreeFourC2ScalarObstruction(X,n,c) * gamma_X.
+
+  If c lies in SH^4(X,Q), then
+
+    pi4_X(c) = 0.
+
+  Pair with gamma_X.
+
+  Since
+
+    B_Q(gamma_X,gamma_X) = 2n - 2 != 0,
+
+  the scalar obstruction must vanish.
+
+  Conversely, if
+
+    K3nDegreeFourC2ScalarObstruction(X,n,c) = 0,
+
+  then the recovered quotient formula gives
+
+    pi4_X(c) = 0,
+
+  hence
+
+    c in SH^4(X,Q).
+Qed.
+
+
+K3nComputableDegreeFourClosureReduction(X,n) :=
+  non_degree_four_required_classes_in_SH :
+    forall i : ZeroDayRequiredK3nHodgeClasses(X).I,
+      degree(i) != 2 ->
+      ZeroDayRequiredK3nHodgeClasses(X).class(i)
+        in SH^(2 * degree(i))(X,Q)
+
+  degree_four_required_quotients_have_finite_orbit :
+    forall i : ZeroDayRequiredK3nHodgeClasses(X).I,
+      degree(i) = 2 ->
+      FiniteOrbit_Mon(X)(
+        pi4_X(
+          ZeroDayRequiredK3nHodgeClasses(X).class(i)
+        )
+      )
+
+  degree_four_required_scalar_obstruction_vanishes :
+    forall i : ZeroDayRequiredK3nHodgeClasses(X).I,
+      degree(i) = 2 ->
+      K3nDegreeFourC2ScalarObstruction(
+        X,
+        n,
+        ZeroDayRequiredK3nHodgeClasses(X).class(i)
+      ) = 0
+
+
+Theorem k3_n_type_computable_degree_four_reduction_implies_required_subset_SH:
+  For n >= 4 and X of K3^[n]-type,
+
+    K3nComputableDegreeFourClosureReduction(X,n)
+      ->
+    RequiredClassesSubsetSH(X).
+
+Proof:
+  Let R : K3nComputableDegreeFourClosureReduction(X,n).
+
+  Let i : ZeroDayRequiredK3nHodgeClasses(X).I.
+
+  Split on degree(i) = 2.
+
+  Case degree(i) != 2:
+    apply R.non_degree_four_required_classes_in_SH(i).
+
+  Case degree(i) = 2:
+    apply
+      k3_n_type_degree_four_finite_orbit_scalar_SH_criterion
+    to
+      ZeroDayRequiredK3nHodgeClasses(X).class(i).
+
+    Use
+      R.degree_four_required_quotients_have_finite_orbit(i).
+
+    Use
+      R.degree_four_required_scalar_obstruction_vanishes(i).
+
+  Therefore every required class lies in its corresponding
+  Verbitsky component.
+Qed.
+
+
+Theorem k3_n_type_computable_degree_four_reduction_implies_zero_day_closure:
+  For n >= 4 and X of K3^[n]-type,
+
+    K3nComputableDegreeFourClosureReduction(X,n)
+      ->
+    ZeroDayClosure(X).
+
+Proof:
+  Apply
+    required_classes_subset_SH_implies_zero_day_closure.
+
+  Apply
+    k3_n_type_computable_degree_four_reduction_implies_required_subset_SH.
+Qed.
+
+Boundary:
+  the former abstract c2/2 coefficient is replaced by an explicit pairing scalar
+  finite-orbit degree-four SH membership is now a zero-test for one rational number
+  no degree-four required class is asserted to exist
+  finite monodromy orbit of any required quotient remains unproved
+  vanishing of the scalar for any required class remains unproved
+  non-degree-four required classes are not proved to lie in SH
+  no required-class inventory element is manufactured
+  the stopped K3^[3] inventory branch remains stopped
+  unconditional ZeroDayClosure for n >= 4 is not claimed
+
+
 K3ThreeTypeDegreeFourInputSurface(X) :=
   type : IsK3ThreeType(X)
   ambient : H^4(X,Q)
