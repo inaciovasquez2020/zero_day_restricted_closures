@@ -1174,6 +1174,166 @@ Boundary:
   no ZeroDayClosure theorem for n >= 3 is claimed
 
 
+K3nDegreeFourQuotient(X) :=
+  H^4(X,Q) / SH^4(X,Q)
+
+K3nDegreeFourQuotientProjection(X,c) :=
+  pi4_X(c) in K3nDegreeFourQuotient(X)
+
+
+Theorem k3_n_type_degree_four_finite_orbit_SH_dichotomy:
+  For n >= 4 and X of K3^[n]-type and c in H^4(X,Q), let
+
+    gamma_X := (1/2) [c2(X)]
+      in K3nDegreeFourQuotient(X).
+
+  If
+
+    FiniteOrbit_Mon(X)(pi4_X(c)),
+
+  then exactly one of the following holds:
+
+    c in SH^4(X,Q)
+
+  or
+
+    exists a : Q,
+      a != 0
+      and
+      pi4_X(c) = a * gamma_X.
+
+Proof:
+  In degree four, Verbitsky gives
+
+    SH^4(X,Q)
+      =
+    Sym^2 H^2(X,Q).
+
+  Therefore K3nDegreeFourQuotient(X) is the same rational
+  quotient used in
+    k3_n_type_degree_four_finite_monodromy_orbit_classification.
+
+  Apply that classification to pi4_X(c).
+
+  There exists a : Q such that
+
+    pi4_X(c) = a * gamma_X.
+
+  If a = 0, then
+
+    pi4_X(c) = 0,
+
+  hence c belongs to the kernel of the quotient projection,
+
+    c in SH^4(X,Q).
+
+  If a != 0, the second alternative holds.
+
+  The alternatives are mutually exclusive:
+  if c lies in SH^4(X,Q), then pi4_X(c) = 0.
+  Since gamma_X is nonzero, an identity
+
+    0 = a * gamma_X
+
+  forces a = 0.
+Qed.
+
+
+K3nFiniteOrbitDegreeFourClosureReduction(X) :=
+  non_degree_four_required_classes_in_SH :
+    forall i : ZeroDayRequiredK3nHodgeClasses(X).I,
+      degree(i) != 2 ->
+      ZeroDayRequiredK3nHodgeClasses(X).class(i)
+        in SH^(2 * degree(i))(X,Q)
+
+  degree_four_required_quotients_have_finite_orbit :
+    forall i : ZeroDayRequiredK3nHodgeClasses(X).I,
+      degree(i) = 2 ->
+      FiniteOrbit_Mon(X)(
+        pi4_X(
+          ZeroDayRequiredK3nHodgeClasses(X).class(i)
+        )
+      )
+
+  degree_four_required_classes_have_zero_c2_obstruction :
+    forall i : ZeroDayRequiredK3nHodgeClasses(X).I,
+      degree(i) = 2 ->
+      forall a : Q,
+        pi4_X(
+          ZeroDayRequiredK3nHodgeClasses(X).class(i)
+        ) = a * gamma_X ->
+        a = 0
+
+
+Theorem k3_n_type_finite_orbit_degree_four_reduction_implies_required_subset_SH:
+  For n >= 4 and X of K3^[n]-type,
+
+    K3nFiniteOrbitDegreeFourClosureReduction(X)
+      ->
+    RequiredClassesSubsetSH(X).
+
+Proof:
+  Let R : K3nFiniteOrbitDegreeFourClosureReduction(X).
+
+  Let i : ZeroDayRequiredK3nHodgeClasses(X).I.
+
+  Split on degree(i) = 2.
+
+  Case degree(i) != 2:
+    apply R.non_degree_four_required_classes_in_SH(i).
+
+  Case degree(i) = 2:
+    apply
+      k3_n_type_degree_four_finite_orbit_SH_dichotomy
+    to
+      ZeroDayRequiredK3nHodgeClasses(X).class(i)
+    using
+      R.degree_four_required_quotients_have_finite_orbit(i).
+
+    The non-SH alternative would provide a != 0 with
+
+      pi4_X(
+        ZeroDayRequiredK3nHodgeClasses(X).class(i)
+      ) = a * gamma_X.
+
+    But
+      R.degree_four_required_classes_have_zero_c2_obstruction(i,a)
+    forces a = 0, contradiction.
+
+    Hence the class lies in SH^4(X,Q).
+
+  Therefore every required class lies in its corresponding
+  Verbitsky component.
+Qed.
+
+
+Theorem k3_n_type_finite_orbit_degree_four_reduction_implies_zero_day_closure:
+  For n >= 4 and X of K3^[n]-type,
+
+    K3nFiniteOrbitDegreeFourClosureReduction(X)
+      ->
+    ZeroDayClosure(X).
+
+Proof:
+  Apply
+    required_classes_subset_SH_implies_zero_day_closure.
+
+  Apply
+    k3_n_type_finite_orbit_degree_four_reduction_implies_required_subset_SH.
+Qed.
+
+Boundary:
+  this is a genuine closure reduction, not a new quotient classification
+  degree-four required classes are reduced to one scalar c2/2 obstruction
+  no degree-four required class is asserted to exist
+  finite monodromy orbit of a required quotient is not asserted
+  zero c2/2 obstruction for any required class is not asserted
+  non-degree-four required classes are not proved to lie in SH
+  no required-class inventory element is manufactured
+  the stopped K3^[3] inventory branch remains stopped
+  unconditional ZeroDayClosure for n >= 4 is not claimed
+
+
 K3ThreeTypeDegreeFourInputSurface(X) :=
   type : IsK3ThreeType(X)
   ambient : H^4(X,Q)
