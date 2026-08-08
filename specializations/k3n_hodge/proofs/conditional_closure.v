@@ -75,6 +75,61 @@ Boundary:
   the underlying Göttsche and Verbitsky theorems remain external inputs
   no K3^[n]-type exhaustion for n >= 3 is claimed
 
+Theorem k3_three_type_degree_four_SH_obstruction:
+  For X of K3^[3]-type,
+    dim_Q H^4(X,Q) = 299
+    and dim_Q SH^4(X,Q) = 276
+    and dim_Q (H^4(X,Q) / SH^4(X,Q)) = 23
+    and H^*(X,Q) != SH(X,Q)
+
+Proof:
+  Let X be of K3^[3]-type.
+
+  Applying the Göttsche Hilbert-scheme Poincare-polynomial
+  generating formula and extracting the q^3 coefficient gives
+      P_X(t)
+        = 1
+          + 23 t^2
+          + 299 t^4
+          + 2554 t^6
+          + 299 t^8
+          + 23 t^10
+          + t^12.
+
+  Therefore
+      dim_Q H^2(X,Q) = 23
+  and
+      dim_Q H^4(X,Q) = 299.
+
+  By Verbitsky's theorem, since 2 <= 3,
+      SH^4(X,Q) ~= Sym^2 H^2(X,Q).
+
+  Hence
+      dim_Q SH^4(X,Q)
+        = dim_Q Sym^2(Q^23)
+        = 23 * 24 / 2
+        = 276.
+
+  By definition
+      SH^4(X,Q) subset H^4(X,Q).
+
+  Therefore
+      dim_Q (H^4(X,Q) / SH^4(X,Q))
+        = 299 - 276
+        = 23.
+
+  In particular SH^4(X,Q) is a proper subspace of H^4(X,Q),
+  so
+      H^*(X,Q) != SH(X,Q).
+Qed.
+
+Boundary:
+  exact first obstruction to Verbitsky-component exhaustion occurs at K3^[3] degree 4
+  the missing quotient has rational dimension exactly 23
+  H^*(X,Q) = SH(X,Q) is abandoned as the closure route for n >= 3
+  future n >= 3 work must test required classes against SH and its complement directly
+
+
 
 Theorem k3_two_type_one_required_class_in_SH:
   IsK3TwoType(X) ->
