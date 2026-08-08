@@ -567,6 +567,168 @@ Boundary:
   no ZeroDayClosure theorem for n >= 3 is claimed
 
 
+ExternalResult GottScheSoergelK3nDegreeFourHodgeProfile(X,n) :=
+  For n >= 2 and X of K3^[n]-type, the degree-four Hodge numbers,
+  ordered as
+
+    (h^(4,0), h^(3,1), h^(2,2), h^(1,3), h^(0,4)),
+
+  are
+
+    n = 2 : (1,21,232,21,1)
+    n = 3 : (1,22,253,22,1)
+    n >= 4 : (1,22,254,22,1).
+
+Proof datum:
+  Apply the Göttsche-Soergel Hilbert-scheme Hodge generating formula
+  to the K3 Hodge diamond
+
+    h^(0,0) = 1,
+    h^(2,0) = 1,
+    h^(1,1) = 20,
+    h^(0,2) = 1,
+    h^(2,2) = 1,
+
+  and use deformation invariance of Hodge numbers for K3^[n]-type.
+
+  In total cohomological degree four the relevant generating series are
+
+    sum h^(4,0)(K3^[n]) q^n
+      = q^2 / (1-q),
+
+    sum h^(3,1)(K3^[n]) q^n
+      = (21 q^2 + q^3) / (1-q),
+
+    sum h^(2,2)(K3^[n]) q^n
+      = (q + 231 q^2 + 21 q^3 + q^4) / (1-q),
+
+  together with Hodge symmetry for h^(1,3) and h^(0,4).
+
+Sources:
+  Göttsche-Soergel Hilbert-scheme Hodge-number formula.
+  Deformation invariance of Hodge numbers in smooth proper families.
+
+Boundary:
+  this records Hodge multiplicities only
+  no individual quotient class is selected
+
+
+Theorem sym2_h2_degree_four_hodge_profile:
+  For n >= 2 and X of K3^[n]-type,
+
+    Sym^2 H^2(X,Q)
+
+  has degree-four Hodge profile
+
+    (1,21,232,21,1).
+
+Proof:
+  H^2(X,Q) has Hodge profile
+
+    h^(2,0) = 1,
+    h^(1,1) = 21,
+    h^(0,2) = 1.
+
+  Therefore Sym^2 H^2 has
+
+    h^(4,0) = 1,
+    h^(3,1) = 21,
+    h^(2,2) = binomial(22,2) + 1 = 232,
+    h^(1,3) = 21,
+    h^(0,4) = 1.
+Qed.
+
+
+Theorem k3_n_type_degree_four_quotient_hodge_profile:
+  For n >= 2 and X of K3^[n]-type, let
+
+    Q4_Q(X) :=
+      H^4(X,Q) / Sym^2 H^2(X,Q).
+
+  Then the quotient Hodge profile
+
+    (h_Q^(4,0), h_Q^(3,1), h_Q^(2,2),
+     h_Q^(1,3), h_Q^(0,4))
+
+  is
+
+    n = 2 :
+      (0,0,0,0,0)
+
+    n = 3 :
+      (0,1,21,1,0)
+
+    n >= 4 :
+      (0,1,22,1,0).
+
+Proof:
+  Apply GottScheSoergelK3nDegreeFourHodgeProfile(X,n).
+
+  Apply sym2_h2_degree_four_hodge_profile.
+
+  Since Sym^2 H^2(X,Q) is a Hodge substructure of H^4(X,Q),
+  quotient Hodge multiplicities are obtained degree-by-degree
+  by subtraction.
+
+  For n = 2,
+
+    (1,21,232,21,1)
+      -
+    (1,21,232,21,1)
+      =
+    (0,0,0,0,0).
+
+  For n = 3,
+
+    (1,22,253,22,1)
+      -
+    (1,21,232,21,1)
+      =
+    (0,1,21,1,0).
+
+  For n >= 4,
+
+    (1,22,254,22,1)
+      -
+    (1,21,232,21,1)
+      =
+    (0,1,22,1,0).
+Qed.
+
+Corollary k3_n_type_degree_four_quotient_hodge_jump:
+  The first rational degree-four quotient appears at n = 3.
+
+  At n = 3 it contains exactly
+
+    one (3,1) direction,
+    twenty-one (2,2) directions,
+    one (1,3) direction.
+
+  For every n >= 4 the stabilized quotient contains exactly
+
+    one (3,1) direction,
+    twenty-two (2,2) directions,
+    one (1,3) direction.
+
+  Thus the transition n = 3 -> n = 4 adds exactly one
+  quotient (2,2) direction and no new off-diagonal Hodge direction.
+
+Proof:
+  Immediate from k3_n_type_degree_four_quotient_hodge_profile.
+Qed.
+
+Boundary:
+  the quotient Hodge multiplicities are exact
+  the n = 3 quotient has rank 23
+  the n >= 4 quotient has rank 24
+  stabilization from n = 3 to n = 4 adds exactly one (2,2) direction
+  no geometric representative of that direction is selected here
+  no required-class index is constructed
+  no required-class quotient projection is evaluated
+  the stopped K3^[3] inventory branch remains stopped
+  no ZeroDayClosure theorem for n >= 3 is claimed
+
+
 K3ThreeTypeDegreeFourInputSurface(X) :=
   type : IsK3ThreeType(X)
   ambient : H^4(X,Q)
