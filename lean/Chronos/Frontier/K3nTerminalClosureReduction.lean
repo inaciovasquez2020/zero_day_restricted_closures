@@ -4,6 +4,26 @@ namespace Frontier
 universe u
 
 /--
+A machine-checkable defect-extraction surface matching the repository's
+pseudo-formal K3^[n] interface.  It does not assert that `Witness` is inhabited.
+-/
+structure K3nDegreeFourDefectExtraction
+    (Witness RequiredIndex : Type u)
+    (DegreeFour : RequiredIndex → Prop) where
+  extractIndex : Witness → RequiredIndex
+  extractDegreeFour : ∀ w, DegreeFour (extractIndex w)
+
+theorem k3n_inhabited_defect_extraction_gives_degree_four_required_index
+    {Witness RequiredIndex : Type u}
+    {DegreeFour : RequiredIndex → Prop}
+    (e : K3nDegreeFourDefectExtraction Witness RequiredIndex DegreeFour)
+    (hWitness : Nonempty Witness) :
+    ∃ i, DegreeFour i := by
+  cases hWitness with
+  | intro w =>
+      exact ⟨e.extractIndex w, e.extractDegreeFour w⟩
+
+/--
 A machine-checkable terminal reduction surface for the K3^[n] restricted
 closure argument.
 
@@ -71,8 +91,9 @@ theorem k3n_terminal_hypotheses_imply_zero_day_closure
 BOUNDARY:
 This module proves no unconditional `ZeroDayClosure` theorem.  In particular,
 it does not construct the required-class inventory, prove monodromy stability,
-classify concrete quotient orbits, or prove vanishing of a concrete c2/2
-scalar obstruction.  Those remain explicit inputs.
+classify concrete quotient orbits, prove that the defect-witness type is
+inhabited, or prove vanishing of a concrete c2/2 scalar obstruction.  Those
+remain explicit inputs.
 -/
 
 end Frontier
