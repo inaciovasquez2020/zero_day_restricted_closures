@@ -202,6 +202,96 @@ structure K3nRequiredSubsetSHHypotheses
     ∀ i, DegreeFour i → ScalarObstructionVanishes i
 
 /--
+A weaker geometric reduction surface that imposes SH, finite-orbit, and scalar
+vanishing obligations only on inventory entries whose represented classes are
+actually required.  Extra inventory entries may be irrelevant and need not
+satisfy the K3^[n] obstruction hypotheses.
+
+This avoids demanding c2/2 scalar vanishing for degree-four classes that happen
+to be present in the declared inventory but are not required by the underlying
+problem.
+-/
+structure K3nActualRequiredSubsetSHHypotheses
+    (ActualClass RequiredIndex : Type u)
+    (ActuallyRequired InSH : ActualClass → Prop)
+    (classOf : RequiredIndex → ActualClass)
+    (DegreeFour FiniteOrbitQuotient ScalarObstructionVanishes : RequiredIndex → Prop) where
+  nonDegreeFourInSH :
+    ∀ i, ActuallyRequired (classOf i) → ¬ DegreeFour i → InSH (classOf i)
+  degreeFourFiniteOrbit :
+    ∀ i, ActuallyRequired (classOf i) → DegreeFour i → FiniteOrbitQuotient i
+  finiteOrbitScalarCriterion :
+    ∀ i,
+      ActuallyRequired (classOf i) →
+      DegreeFour i →
+      FiniteOrbitQuotient i →
+      ScalarObstructionVanishes i →
+      InSH (classOf i)
+  degreeFourScalarVanishes :
+    ∀ i,
+      ActuallyRequired (classOf i) →
+      DegreeFour i →
+      ScalarObstructionVanishes i
+
+/--
+The relevant-index reduction proves SH only for entries representing actually
+required classes.  No property of irrelevant inventory entries is needed.
+-/
+theorem k3n_actual_required_subset_hypotheses_imply_required_inventory_SH
+    {ActualClass RequiredIndex : Type u}
+    {ActuallyRequired InSH : ActualClass → Prop}
+    {classOf : RequiredIndex → ActualClass}
+    {DegreeFour FiniteOrbitQuotient ScalarObstructionVanishes : RequiredIndex → Prop}
+    (h : K3nActualRequiredSubsetSHHypotheses
+      ActualClass
+      RequiredIndex
+      ActuallyRequired
+      InSH
+      classOf
+      DegreeFour
+      FiniteOrbitQuotient
+      ScalarObstructionVanishes) :
+    ∀ i, ActuallyRequired (classOf i) → InSH (classOf i) := by
+  intro i hRequired
+  by_cases hDegreeFour : DegreeFour i
+  · exact h.finiteOrbitScalarCriterion
+      i
+      hRequired
+      hDegreeFour
+      (h.degreeFourFiniteOrbit i hRequired hDegreeFour)
+      (h.degreeFourScalarVanishes i hRequired hDegreeFour)
+  · exact h.nonDegreeFourInSH i hRequired hDegreeFour
+
+/--
+Coverage converts the relevant-index reduction into SH membership for every
+actually required class, without proving anything about irrelevant inventory
+entries.
+-/
+theorem k3n_actual_required_reduction_plus_coverage_implies_actual_required_SH
+    {ActualClass RequiredIndex : Type u}
+    {ActuallyRequired InSH : ActualClass → Prop}
+    {DegreeFour FiniteOrbitQuotient ScalarObstructionVanishes : RequiredIndex → Prop}
+    (coverage : K3nActualRequiredCoverage ActualClass RequiredIndex ActuallyRequired)
+    (hReduction : K3nActualRequiredSubsetSHHypotheses
+      ActualClass
+      RequiredIndex
+      ActuallyRequired
+      InSH
+      coverage.classOf
+      DegreeFour
+      FiniteOrbitQuotient
+      ScalarObstructionVanishes) :
+    ∀ c, ActuallyRequired c → InSH c := by
+  intro c hc
+  obtain ⟨i, hi⟩ := coverage.cover c hc
+  have hiRequired : ActuallyRequired (coverage.classOf i) := by
+    rw [hi]
+    exact hc
+  rw [← hi]
+  exact k3n_actual_required_subset_hypotheses_imply_required_inventory_SH
+    hReduction i hiRequired
+
+/--
 The semantic bridge is intentionally stated over classes that are actually
 required, not merely over entries of the declared inventory.  Therefore a
 terminal closure proof must separately establish inventory coverage before the
@@ -270,6 +360,36 @@ theorem k3n_reduction_plus_coverage_plus_semantic_bridge_imply_zero_day_closure
     (k3n_required_subset_hypotheses_imply_required_subset_SH hReduction)
 
 /--
+Strictly weaker terminal route: only actually required represented classes must
+satisfy the geometric K3^[n] reduction.  Irrelevant inventory entries can carry
+nonvanishing obstructions without blocking closure.
+-/
+theorem k3n_actual_required_reduction_plus_coverage_plus_semantic_bridge_imply_zero_day_closure
+    {ActualClass RequiredIndex : Type u}
+    {ActuallyRequired InSH : ActualClass → Prop}
+    {DegreeFour FiniteOrbitQuotient ScalarObstructionVanishes : RequiredIndex → Prop}
+    {ZeroDayClosure : Prop}
+    (coverage : K3nActualRequiredCoverage ActualClass RequiredIndex ActuallyRequired)
+    (hReduction : K3nActualRequiredSubsetSHHypotheses
+      ActualClass
+      RequiredIndex
+      ActuallyRequired
+      InSH
+      coverage.classOf
+      DegreeFour
+      FiniteOrbitQuotient
+      ScalarObstructionVanishes)
+    (hBridge : K3nActualSemanticClosureBridge
+      ActualClass
+      ActuallyRequired
+      InSH
+      ZeroDayClosure) :
+    ZeroDayClosure := by
+  apply hBridge.closureFromActualRequiredSubsetSH
+  exact k3n_actual_required_reduction_plus_coverage_implies_actual_required_SH
+    coverage hReduction
+
+/--
 The geometric SH reduction does not determine an arbitrary semantic closure,
 even when the required-class inventory is inhabited.  The concrete index type
 `Unit` has one element; all of its required classes satisfy `InSH`; and the
@@ -314,20 +434,23 @@ it does not define an independent K3^[n] actual-requirement predicate, prove
 that an actual required class exists, prove that actual required classes are
 covered by the finite inventory, construct any concrete required-class
 inventory element, prove monodromy stability, classify concrete quotient
-orbits, prove that a degree-four required-class index exists, prove vanishing
-of a concrete c2/2 scalar obstruction, define a K3^[n]-specific semantic
-`ZeroDayClosure`, prove the actual-required semantic closure bridge, or derive
-K3^[n] semantics from the generic payload-blind intended-state closure.  The
-terminal theorem above now requires coverage explicitly, so proving SH for an
-incomplete declared inventory cannot by itself reach `ZeroDayClosure`.  The
-coverage countermodel above machine-checks that coverage itself cannot
-manufacture an actual required class, even over inhabited class and index
-types.  The inhabited-extractor equivalence machine-checks that the current
-defect-extraction interface itself contributes no degree-four existence beyond
-`exists i, DegreeFour i`; a genuine geometric source must supply more.  The
-nonempty `Unit` model machine-checks that the geometric SH reduction alone does
-not determine an arbitrary semantic closure.  Those semantic and geometric
-inputs remain explicit boundaries.
+orbits, prove that a degree-four actual required class exists, prove vanishing
+of a concrete c2/2 scalar obstruction for any actual required degree-four
+class, define a K3^[n]-specific semantic `ZeroDayClosure`, prove the
+actual-required semantic closure bridge, or derive K3^[n] semantics from the
+generic payload-blind intended-state closure.  The stronger terminal theorem
+still proves SH for every inventory entry; the weaker terminal theorem now
+shows that this is unnecessary and requires the geometric obstruction
+hypotheses only on represented classes that are actually required.  Coverage
+remains explicit, so an incomplete inventory cannot by itself reach
+`ZeroDayClosure`.  The coverage countermodel machine-checks that coverage
+itself cannot manufacture an actual required class, even over inhabited class
+and index types.  The inhabited-extractor equivalence machine-checks that the
+current defect-extraction interface itself contributes no degree-four
+existence beyond `exists i, DegreeFour i`; a genuine geometric source must
+supply more.  The nonempty `Unit` model machine-checks that the geometric SH
+reduction alone does not determine an arbitrary semantic closure.  Those
+semantic and geometric inputs remain explicit boundaries.
 -/
 
 end Frontier
