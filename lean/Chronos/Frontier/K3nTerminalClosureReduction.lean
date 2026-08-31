@@ -42,6 +42,28 @@ theorem k3n_inhabited_defect_extraction_gives_degree_four_required_index
   | intro w =>
       exact ⟨e.extractIndex w, e.extractDegreeFour w⟩
 
+/--
+Once the witness type is inhabited, the current defect-extraction interface
+contains exactly the same existence content as a degree-four required index.
+Thus the interface is not yet an independent geometric source for such an
+index: a degree-four index can manufacture the extractor by a constant map,
+and an inhabited extractor yields such an index.
+-/
+theorem k3n_nonempty_defect_extraction_iff_degree_four_required_index
+    {Witness RequiredIndex : Type u}
+    {DegreeFour : RequiredIndex → Prop}
+    (hWitness : Nonempty Witness) :
+    Nonempty (K3nDegreeFourDefectExtraction Witness RequiredIndex DegreeFour) ↔
+      ∃ i, DegreeFour i := by
+  constructor
+  · rintro ⟨e⟩
+    exact k3n_inhabited_defect_extraction_gives_degree_four_required_index e hWitness
+  · rintro ⟨i, hi⟩
+    exact ⟨
+      { extractIndex := fun _ => i
+        extractDegreeFour := fun _ => hi }
+    ⟩
+
 def k3n_defect_witness_extracts_degree_four_required_subtype
     {Witness RequiredIndex : Type u}
     {DegreeFour : RequiredIndex → Prop}
@@ -221,9 +243,12 @@ classify concrete quotient orbits, prove that a degree-four required-class
 index exists, prove vanishing of a concrete c2/2 scalar obstruction, define a
 K3^[n]-specific semantic `ZeroDayClosure`, prove the separate semantic closure
 bridge, or derive K3^[n] semantics from the generic payload-blind intended-state
-closure.  The nonempty `Unit` model above machine-checks that the geometric SH
-reduction alone does not determine an arbitrary semantic closure.  Those
-semantic and geometric inputs remain explicit boundaries.
+closure.  The inhabited-extractor equivalence above machine-checks that the
+current defect-extraction interface itself contributes no degree-four existence
+beyond `exists i, DegreeFour i`; a genuine geometric source must supply more.
+The nonempty `Unit` model above machine-checks that the geometric SH reduction
+alone does not determine an arbitrary semantic closure.  Those semantic and
+geometric inputs remain explicit boundaries.
 -/
 
 end Frontier
