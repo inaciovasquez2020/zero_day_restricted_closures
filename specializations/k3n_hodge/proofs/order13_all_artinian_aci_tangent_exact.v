@@ -13,8 +13,8 @@ This is pseudo-formal mathematical documentation.  It is not Coq and does not as
 Setup:
   k := C,
   P is a regular local/analytic k-algebra of embedding dimension m>=2,
-  I subset P is m_P-primary,
-  A := P/I is Artinian of length N,
+  I subset m_P^2 is m_P-primary,
+  A := P/I is Artinian of length N and embedding dimension m,
   I is an almost-complete-intersection ideal:
 
     height(I)=m,
@@ -88,7 +88,12 @@ Proof:
 Qed.
 
 Corollary codim4_five_generator_tangent_dimension_exact:
-  Let R=C[[x1,x2,x3,x4]] and let I be any m-primary ideal with exactly five minimal generators.  Then I has height four and mu(I)=5=height(I)+1, so A=R/I is a zero-dimensional almost complete intersection of embedding dimension four.  Hence
+  Let R=C[[x1,x2,x3,x4]], let I subset m_R^2 be m_R-primary with exactly five minimal generators, and put A=R/I.  Equivalently, R -> A is a minimal Cohen presentation and embdim(A)=4.  Then
+
+    height(I)=4,
+    mu(I)=5=height(I)+1,
+
+  so A is a zero-dimensional almost complete intersection of embedding dimension four.  Hence
 
     dim_C Hom_R(I,A) = 4*length_C(A).
 Qed.
@@ -100,7 +105,7 @@ Corollary entire_mu5_order13_repair_branch_closed:
 
   in order to pass the necessary ideal-sheaf semiregularity dimension gate.
 
-  Every embedding-dimension-four five-generator local algebra satisfies instead
+  Every embedding-dimension-four five-generator local algebra, written in its minimal Cohen presentation, satisfies instead
 
     t(A)=4N.
 
@@ -108,7 +113,7 @@ Corollary entire_mu5_order13_repair_branch_closed:
 
     4N > N-20.
 
-  Therefore NO codimension-four Artinian almost complete intersection can supply positive tangent deficit.  This conclusion is independent of whether the ideal is monomial, homogeneous, smoothable, or non-smoothable.
+  Therefore NO embedding-dimension-four codimension-four Artinian almost complete intersection can supply positive tangent deficit.  This conclusion is independent of whether the ideal is monomial, homogeneous, smoothable, or non-smoothable.
 Qed.
 
 Corollary strengthened_structure_of_any_dangerous_local_component:
@@ -123,7 +128,9 @@ Corollary strengthened_structure_of_any_dangerous_local_component:
     embedding dimension(A) = 4,
     A is non-Gorenstein,
     socle dimension s >= 2,
-    mu(I) >= 6.
+    mu(I) >= 6
+
+  in its minimal embedding-dimension-four Cohen presentation.
 
   The socle-generator estimate
 
@@ -142,7 +149,7 @@ Relation to the preceding monomial computation:
   by an explicit Taylor-syzygy/monomial-kernel count for monomial ACIs.  The present theorem subsumes that result and shows that the equality is a structural property of ALL zero-dimensional ACIs, via cotangent cohomology.
 
 Boundary:
-  The mu(I)=5 branch is closed completely.
+  The mu(I)=5 branch in embedding dimension four is closed completely.
 
   Any surviving local zero-dimensional decoration capable of supplying the required tangent deficit 20 must now be a genuinely higher-deviation Artin algebra:
 
