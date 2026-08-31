@@ -70,6 +70,39 @@ theorem intendedStep_iterate {Payload : Type u} (n : Nat)
   | succ n ih =>
       simp [iterate, intendedStep, ih]
 
+/-- Every finite intended transition preserves the payload exactly. -/
+theorem intendedStep_iterate_payload
+    {Payload : Type u}
+    (n : Nat)
+    (state : IntendedUnrestrictedState Payload) :
+    (iterate intendedStep n state).payload = state.payload := by
+  simpa using
+    congrArg
+      IntendedUnrestrictedState.payload
+      (intendedStep_iterate n state)
+
+/-- A proposition depending only on the payload is invariant under every
+finite intended transition. -/
+theorem intendedStep_iterate_payload_property_iff
+    {Payload : Type u}
+    (P : Payload → Prop)
+    (n : Nat)
+    (state : IntendedUnrestrictedState Payload) :
+    P (iterate intendedStep n state).payload ↔ P state.payload := by
+  rw [intendedStep_iterate_payload n state]
+
+/-- If a payload property is false initially, no finite intended transition can
+make it true. -/
+theorem intendedStep_cannot_create_payload_property
+    {Payload : Type u}
+    (P : Payload → Prop)
+    (state : IntendedUnrestrictedState Payload)
+    (hNot : ¬ P state.payload) :
+    ∀ n : Nat, ¬ P (iterate intendedStep n state).payload := by
+  intro n hProperty
+  exact hNot
+    ((intendedStep_iterate_payload_property_iff P n state).mp hProperty)
+
 /-- Every one of the `256` encoded states reaches `255` in its exact
 remaining rank. -/
 theorem intendedEncodedStep_reaches_closed :
@@ -97,6 +130,32 @@ theorem intendedUnrestrictedStateClosure {Payload : Type u} :
       (fun encoded =>
         IntendedUnrestrictedState.mk encoded state.payload)
       h
+
+/-- The bounded closure can witness a payload property at a reachable closed
+state exactly when that property was already true of the initial payload.
+
+In particular, the finite-state closure dynamics cannot manufacture any new
+semantic fact carried solely by `Payload`.
+-/
+theorem intendedUnrestrictedStateClosure_payload_property_iff_initial
+    {Payload : Type u}
+    (P : Payload → Prop)
+    (state : IntendedUnrestrictedState Payload) :
+    (∃ n : Nat,
+        n ≤ 255 ∧
+        iterate intendedStep n state = intendedClosedState state ∧
+        P (iterate intendedStep n state).payload) ↔
+      P state.payload := by
+  constructor
+  · rintro ⟨n, _, _, hProperty⟩
+    exact
+      (intendedStep_iterate_payload_property_iff P n state).mp hProperty
+  · intro hProperty
+    obtain ⟨n, hn, hClosed⟩ :=
+      intendedUnrestrictedStateClosure state
+    refine ⟨n, hn, hClosed, ?_⟩
+    exact
+      (intendedStep_iterate_payload_property_iff P n state).mpr hProperty
 
 /-- Product-form transition on `Fin 256 × Payload`. -/
 def productFormStep {Payload : Type u}
