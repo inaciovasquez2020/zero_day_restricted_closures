@@ -49,6 +49,41 @@ def k3n_defect_witness_extracts_degree_four_required_subtype
   ⟨e.extractIndex w, e.extractDegreeFour w⟩
 
 /--
+An independent actual-requirement predicate is deliberately kept separate
+from the declared finite inventory.  Coverage is the missing bridge: every
+actually required class must be represented by some inventory index.
+
+This structure does not define which classes are actually required and does
+not assert coverage for the repository's K3^[n] specialization.
+-/
+structure K3nActualRequiredCoverage
+    (ActualClass RequiredIndex : Type u)
+    (ActuallyRequired : ActualClass → Prop) where
+  classOf : RequiredIndex → ActualClass
+  cover : ∀ c, ActuallyRequired c → ∃ i, classOf i = c
+
+theorem k3n_actual_requirement_and_coverage_give_nonempty_inventory
+    {ActualClass RequiredIndex : Type u}
+    {ActuallyRequired : ActualClass → Prop}
+    (coverage : K3nActualRequiredCoverage ActualClass RequiredIndex ActuallyRequired)
+    {c : ActualClass}
+    (hc : ActuallyRequired c) :
+    Nonempty RequiredIndex := by
+  obtain ⟨i, _⟩ := coverage.cover c hc
+  exact ⟨i⟩
+
+theorem k3n_inventory_SH_plus_coverage_implies_actual_required_SH
+    {ActualClass RequiredIndex : Type u}
+    {ActuallyRequired InSH : ActualClass → Prop}
+    (coverage : K3nActualRequiredCoverage ActualClass RequiredIndex ActuallyRequired)
+    (hInventory : ∀ i, InSH (coverage.classOf i)) :
+    ∀ c, ActuallyRequired c → InSH c := by
+  intro c hc
+  obtain ⟨i, hi⟩ := coverage.cover c hc
+  rw [← hi]
+  exact hInventory i
+
+/--
 A machine-checkable terminal reduction surface for the K3^[n] restricted
 closure argument.
 
@@ -118,10 +153,12 @@ theorem k3n_terminal_hypotheses_imply_zero_day_closure
 /-
 BOUNDARY:
 This module proves no unconditional `ZeroDayClosure` theorem.  In particular,
-it does not construct the nonempty required-class inventory, prove monodromy
-stability, classify concrete quotient orbits, prove that a degree-four
-required-class index exists, or prove vanishing of a concrete c2/2 scalar
-obstruction.  Those remain explicit inputs.
+it does not define an independent K3^[n] actual-requirement predicate, prove
+that actual required classes are covered by the finite inventory, construct
+the nonempty required-class inventory, prove monodromy stability, classify
+concrete quotient orbits, prove that a degree-four required-class index exists,
+or prove vanishing of a concrete c2/2 scalar obstruction.  Those remain
+explicit inputs.
 -/
 
 end Frontier
