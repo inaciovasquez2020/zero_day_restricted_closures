@@ -4,6 +4,23 @@ namespace Frontier
 universe u
 
 /--
+The repository's pseudo-formal K3^[n] defect-witness construction contains
+exactly one substantive datum: a selected required-class index.  This wrapper
+machine-checks that shape without asserting that the index type is inhabited.
+-/
+structure K3nDefectWitnessConstruction (RequiredIndex : Type u) where
+  requiredIndex : RequiredIndex
+
+theorem k3n_defect_witness_construction_nonempty_iff_required_index_nonempty
+    {RequiredIndex : Type u} :
+    Nonempty (K3nDefectWitnessConstruction RequiredIndex) ↔ Nonempty RequiredIndex := by
+  constructor
+  · rintro ⟨w⟩
+    exact ⟨w.requiredIndex⟩
+  · rintro ⟨i⟩
+    exact ⟨⟨i⟩⟩
+
+/--
 A machine-checkable defect-extraction surface matching the repository's
 pseudo-formal K3^[n] interface.  It does not assert that `Witness` is inhabited.
 -/
