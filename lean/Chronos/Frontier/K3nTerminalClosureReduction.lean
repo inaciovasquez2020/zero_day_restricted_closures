@@ -175,6 +175,42 @@ theorem k3n_required_subset_plus_semantic_bridge_imply_zero_day_closure
   apply hBridge.closureFromRequiredSubsetSH
   exact k3n_required_subset_hypotheses_imply_required_subset_SH hReduction
 
+/--
+The geometric SH reduction does not determine an arbitrary semantic closure,
+even when the required-class inventory is inhabited.  The concrete index type
+`Unit` has one element; all of its required classes satisfy `InSH`; and the
+geometric reduction hypotheses hold.  Nevertheless there can be no semantic
+bridge to the false proposition.
+-/
+theorem k3n_nonempty_geometric_reduction_does_not_force_arbitrary_semantic_closure :
+    ∃ (DegreeFour InSH FiniteOrbitQuotient ScalarObstructionVanishes : Unit → Prop),
+      K3nRequiredSubsetSHHypotheses
+          Unit
+          DegreeFour
+          InSH
+          FiniteOrbitQuotient
+          ScalarObstructionVanishes ∧
+      ¬ K3nSemanticClosureBridge Unit InSH False := by
+  refine ⟨
+    (fun _ => False),
+    (fun _ => True),
+    (fun _ => True),
+    (fun _ => True),
+    ?_,
+    ?_
+  ⟩
+  · refine ⟨?_, ?_, ?_, ?_⟩
+    · intro _ _
+      exact True.intro
+    · intro _ hDegreeFour
+      exact False.elim hDegreeFour
+    · intro _ _ _ _
+      exact True.intro
+    · intro _ hDegreeFour
+      exact False.elim hDegreeFour
+  · intro hBridge
+    exact hBridge.closureFromRequiredSubsetSH (fun _ => True.intro)
+
 /-
 BOUNDARY:
 This module proves no unconditional `ZeroDayClosure` theorem.  In particular,
@@ -185,7 +221,9 @@ classify concrete quotient orbits, prove that a degree-four required-class
 index exists, prove vanishing of a concrete c2/2 scalar obstruction, define a
 K3^[n]-specific semantic `ZeroDayClosure`, prove the separate semantic closure
 bridge, or derive K3^[n] semantics from the generic payload-blind intended-state
-closure.  Those remain explicit boundaries.
+closure.  The nonempty `Unit` model above machine-checks that the geometric SH
+reduction alone does not determine an arbitrary semantic closure.  Those
+semantic and geometric inputs remain explicit boundaries.
 -/
 
 end Frontier
