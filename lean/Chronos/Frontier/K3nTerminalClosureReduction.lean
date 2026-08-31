@@ -108,20 +108,13 @@ theorem generic_intended_closure_does_not_force_payload_property
   exact hp (hAll p)
 
 /--
-A machine-checkable terminal reduction surface for the K3^[n] restricted
-closure argument.
-
-All geometric, monodromy, quotient-classification, and scalar-vanishing
-content enters through explicit hypotheses below.  Inventory nonemptiness is
-not imposed here: when an independently actual required class exists, the
-coverage bridge above derives nonemptiness from that class.  This file proves
-only the logical composition of supplied inputs; it does not construct any of
-them for a concrete K3^[n]-type manifold.
+Machine-checkable geometric reduction hypotheses for the K3^[n] required-class
+surface.  This structure stops exactly at `forall i, InSH i`; it deliberately
+contains no `ZeroDayClosure` proposition and no closure implication.
 -/
-structure K3nTerminalClosureHypotheses
+structure K3nRequiredSubsetSHHypotheses
     (RequiredIndex : Type u)
-    (DegreeFour InSH FiniteOrbitQuotient ScalarObstructionVanishes : RequiredIndex → Prop)
-    (ZeroDayClosure : Prop) where
+    (DegreeFour InSH FiniteOrbitQuotient ScalarObstructionVanishes : RequiredIndex → Prop) where
   nonDegreeFourInSH :
     ∀ i, ¬ DegreeFour i → InSH i
   degreeFourFiniteOrbit :
@@ -134,20 +127,29 @@ structure K3nTerminalClosureHypotheses
       InSH i
   degreeFourScalarVanishes :
     ∀ i, DegreeFour i → ScalarObstructionVanishes i
+
+/--
+The semantic bridge is intentionally separate from the geometric SH reduction.
+For the current K3^[n] specialization this bridge remains an input: the
+repository does not independently define the mathematical meaning of
+`ZeroDayClosure` or derive this implication from that meaning.
+-/
+structure K3nSemanticClosureBridge
+    (RequiredIndex : Type u)
+    (InSH : RequiredIndex → Prop)
+    (ZeroDayClosure : Prop) where
   closureFromRequiredSubsetSH :
     (∀ i, InSH i) → ZeroDayClosure
 
-theorem k3n_terminal_hypotheses_imply_required_subset_SH
+theorem k3n_required_subset_hypotheses_imply_required_subset_SH
     {RequiredIndex : Type u}
     {DegreeFour InSH FiniteOrbitQuotient ScalarObstructionVanishes : RequiredIndex → Prop}
-    {ZeroDayClosure : Prop}
-    (h : K3nTerminalClosureHypotheses
+    (h : K3nRequiredSubsetSHHypotheses
       RequiredIndex
       DegreeFour
       InSH
       FiniteOrbitQuotient
-      ScalarObstructionVanishes
-      ZeroDayClosure) :
+      ScalarObstructionVanishes) :
     ∀ i, InSH i := by
   intro i
   by_cases hDegreeFour : DegreeFour i
@@ -158,20 +160,20 @@ theorem k3n_terminal_hypotheses_imply_required_subset_SH
       (h.degreeFourScalarVanishes i hDegreeFour)
   · exact h.nonDegreeFourInSH i hDegreeFour
 
-theorem k3n_terminal_hypotheses_imply_zero_day_closure
+theorem k3n_required_subset_plus_semantic_bridge_imply_zero_day_closure
     {RequiredIndex : Type u}
     {DegreeFour InSH FiniteOrbitQuotient ScalarObstructionVanishes : RequiredIndex → Prop}
     {ZeroDayClosure : Prop}
-    (h : K3nTerminalClosureHypotheses
+    (hReduction : K3nRequiredSubsetSHHypotheses
       RequiredIndex
       DegreeFour
       InSH
       FiniteOrbitQuotient
-      ScalarObstructionVanishes
-      ZeroDayClosure) :
+      ScalarObstructionVanishes)
+    (hBridge : K3nSemanticClosureBridge RequiredIndex InSH ZeroDayClosure) :
     ZeroDayClosure := by
-  apply h.closureFromRequiredSubsetSH
-  exact k3n_terminal_hypotheses_imply_required_subset_SH h
+  apply hBridge.closureFromRequiredSubsetSH
+  exact k3n_required_subset_hypotheses_imply_required_subset_SH hReduction
 
 /-
 BOUNDARY:
@@ -180,9 +182,10 @@ it does not define an independent K3^[n] actual-requirement predicate, prove
 that actual required classes are covered by the finite inventory, construct
 any concrete required-class inventory element, prove monodromy stability,
 classify concrete quotient orbits, prove that a degree-four required-class
-index exists, prove vanishing of a concrete c2/2 scalar obstruction, or derive
-a K3^[n] semantic closure predicate from the generic payload-blind intended
-state closure.  Those remain explicit inputs.
+index exists, prove vanishing of a concrete c2/2 scalar obstruction, define a
+K3^[n]-specific semantic `ZeroDayClosure`, prove the separate semantic closure
+bridge, or derive K3^[n] semantics from the generic payload-blind intended-state
+closure.  Those remain explicit boundaries.
 -/
 
 end Frontier
