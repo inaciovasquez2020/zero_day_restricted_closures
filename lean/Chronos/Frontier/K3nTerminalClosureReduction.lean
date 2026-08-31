@@ -23,6 +23,14 @@ theorem k3n_inhabited_defect_extraction_gives_degree_four_required_index
   | intro w =>
       exact ⟨e.extractIndex w, e.extractDegreeFour w⟩
 
+theorem k3n_defect_witness_extracts_degree_four_required_subtype
+    {Witness RequiredIndex : Type u}
+    {DegreeFour : RequiredIndex → Prop}
+    (e : K3nDegreeFourDefectExtraction Witness RequiredIndex DegreeFour)
+    (w : Witness) :
+    { i : RequiredIndex // DegreeFour i } :=
+  ⟨e.extractIndex w, e.extractDegreeFour w⟩
+
 /--
 A machine-checkable terminal reduction surface for the K3^[n] restricted
 closure argument.
