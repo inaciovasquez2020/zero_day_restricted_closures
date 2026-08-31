@@ -86,6 +86,25 @@ structure K3nActualRequiredCoverage
   classOf : RequiredIndex → ActualClass
   cover : ∀ c, ActuallyRequired c → ∃ i, classOf i = c
 
+/--
+Coverage alone does not create an actually required class, even when both the
+actual-class type and the inventory-index type are inhabited.  With `Unit` on
+both sides and an empty `ActuallyRequired` predicate, a total coverage map
+exists vacuously while no actually required class exists.
+-/
+theorem k3n_coverage_does_not_create_actual_requirement :
+    ∃ (ActuallyRequired : Unit → Prop),
+      K3nActualRequiredCoverage Unit Unit ActuallyRequired ∧
+      ¬ ∃ c, ActuallyRequired c := by
+  refine ⟨(fun _ => False), ?_, ?_⟩
+  · exact
+      { classOf := fun i => i
+        cover := by
+          intro c hc
+          exact False.elim hc }
+  · rintro ⟨c, hc⟩
+    exact hc
+
 theorem k3n_actual_requirement_and_coverage_give_nonempty_inventory
     {ActualClass RequiredIndex : Type u}
     {ActuallyRequired : ActualClass → Prop}
@@ -237,16 +256,19 @@ theorem k3n_nonempty_geometric_reduction_does_not_force_arbitrary_semantic_closu
 BOUNDARY:
 This module proves no unconditional `ZeroDayClosure` theorem.  In particular,
 it does not define an independent K3^[n] actual-requirement predicate, prove
-that actual required classes are covered by the finite inventory, construct
-any concrete required-class inventory element, prove monodromy stability,
-classify concrete quotient orbits, prove that a degree-four required-class
-index exists, prove vanishing of a concrete c2/2 scalar obstruction, define a
-K3^[n]-specific semantic `ZeroDayClosure`, prove the separate semantic closure
-bridge, or derive K3^[n] semantics from the generic payload-blind intended-state
-closure.  The inhabited-extractor equivalence above machine-checks that the
-current defect-extraction interface itself contributes no degree-four existence
-beyond `exists i, DegreeFour i`; a genuine geometric source must supply more.
-The nonempty `Unit` model above machine-checks that the geometric SH reduction
+that an actual required class exists, prove that actual required classes are
+covered by the finite inventory, construct any concrete required-class
+inventory element, prove monodromy stability, classify concrete quotient
+orbits, prove that a degree-four required-class index exists, prove vanishing
+of a concrete c2/2 scalar obstruction, define a K3^[n]-specific semantic
+`ZeroDayClosure`, prove the separate semantic closure bridge, or derive K3^[n]
+semantics from the generic payload-blind intended-state closure.  The coverage
+countermodel above machine-checks that coverage itself cannot manufacture an
+actual required class, even over inhabited class and index types.  The
+inhabited-extractor equivalence above machine-checks that the current
+defect-extraction interface itself contributes no degree-four existence beyond
+`exists i, DegreeFour i`; a genuine geometric source must supply more.  The
+nonempty `Unit` model above machine-checks that the geometric SH reduction
 alone does not determine an arbitrary semantic closure.  Those semantic and
 geometric inputs remain explicit boundaries.
 -/
