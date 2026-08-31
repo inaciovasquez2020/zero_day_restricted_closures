@@ -29,6 +29,12 @@ jobs:
             core/intended_unrestricted_state_closure.lean
           LEAN_PATH=. lean lean/Chronos/Frontier/K3nTerminalClosureReduction.lean
 
+      - name: Verify explicit deviation-two six-generator family
+        shell: bash
+        run: |
+          python3 -m pip install --disable-pip-version-check sympy==1.14.0
+          python3 verification/verify_order13_deviation2_six_generator_family.py
+
       - name: Reject unsound placeholders in terminal reduction
         shell: bash
         run: |
