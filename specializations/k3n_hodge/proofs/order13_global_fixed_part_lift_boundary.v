@@ -115,22 +115,65 @@ Reason:
   do not remove the auxiliary inverse-Lefschetz operation.
 Qed.
 
+ExternalConjecture GrothendieckInvariantCycleConjecture:
+  Let g:V->S be a smooth projective morphism of smooth connected
+  quasi-projective complex varieties and let
+
+    eta in H^0(S,R^(2p) g_* Q(p))
+
+  be a flat rational class.  If eta(s0) is algebraic for one point s0 in S,
+  then eta(s) is algebraic for every s in S.
+
+Source:
+  Grothendieck's invariant cycle conjecture, in the form used by
+  Ulrich Schlickewei, Hodge classes on self-products of K3 surfaces,
+  Section 1.3; Schlickewei notes that this conjecture would imply the Hodge
+  conjecture for self-products of K3 surfaces by exactly this deformation
+  mechanism.
+
+Theorem order13_remaining_step_is_an_invariant_cycle_instance:
+  The remaining assertion
+
+    for every t in C, z_alpha,13(t) is algebraic
+
+  is exactly the p=2 instance of GrothendieckInvariantCycleConjecture for
+
+    f : Y -> C
+
+  and the flat section z_alpha,13.
+
+Proof:
+  The family f is smooth projective over the connected curve C and
+  z_alpha,13 is a flat section of R^4 f_* Q(2).  At the order-13 CM point
+  t0, the class z_alpha,13(t0) is represented by the algebraic cycle
+  Z_alpha,13.  Therefore GrothendieckInvariantCycleConjecture applied to
+  (f,z_alpha,13,t0) gives algebraicity on every fiber.
+
+  Conversely, Deligne's global invariant cycle theorem supplies only a
+  cohomological Hodge lift Zeta_alpha,13.  It does not assert that this lift
+  is algebraic.  Thus the global fixed-part construction does not remove the
+  invariant-cycle/variational-Hodge obstruction.
+Qed.
+
 Boundary:
   the flat primitive F_13 class has an unconditional rational Hodge lift on a
     smooth projective compactification of the relative self-product
   the transported class is Andre-motivated on every RM fiber
   no algebraic global lift Gamma_alpha,13 is presently proved
   algebraicity of Zeta_alpha,13 is sufficient but is not claimed
+  the remaining generic-fiber algebraicity is an instance of Grothendieck's
+    invariant cycle conjecture and is not proved unconditionally here
   no general standard conjecture or variational Hodge conjecture is assumed
   this .v file is pseudo-formal mathematical documentation, not a Coq proof
   no ZeroDayClosure semantics are used
   no required-class index is used
 
 First missing object:
-  an algebraic codimension-two class
+  the family-specific invariant-cycle statement
 
-    Gamma_alpha,13 in CH^2(Ybar)_Q
+    z_alpha,13(t0) algebraic
+      ->
+    z_alpha,13(t) algebraic for every t in C.
 
-  whose cohomology class maps to the flat fixed-part section
-
-    z_alpha,13 in H^0(C,R^4 f_* Q(2)).
+  An algebraic global lift Gamma_alpha,13 in CH^2(Ybar)_Q would be a stronger
+  sufficient input, but is not the weakest missing statement.
