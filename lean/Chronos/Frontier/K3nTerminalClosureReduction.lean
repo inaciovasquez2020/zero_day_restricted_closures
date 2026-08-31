@@ -88,17 +88,16 @@ A machine-checkable terminal reduction surface for the K3^[n] restricted
 closure argument.
 
 All geometric, monodromy, quotient-classification, and scalar-vanishing
-content enters through explicit hypotheses below.  The required-class index
-is also required to be nonempty so the terminal reduction cannot close through
-an empty inventory.  This file proves only the logical composition of those
-inputs; it does not construct any of them for a concrete K3^[n]-type manifold.
+content enters through explicit hypotheses below.  Inventory nonemptiness is
+not imposed here: when an independently actual required class exists, the
+coverage bridge above derives nonemptiness from that class.  This file proves
+only the logical composition of supplied inputs; it does not construct any of
+them for a concrete K3^[n]-type manifold.
 -/
 structure K3nTerminalClosureHypotheses
     (RequiredIndex : Type u)
     (DegreeFour InSH FiniteOrbitQuotient ScalarObstructionVanishes : RequiredIndex → Prop)
     (ZeroDayClosure : Prop) where
-  requiredIndexNonempty :
-    Nonempty RequiredIndex
   nonDegreeFourInSH :
     ∀ i, ¬ DegreeFour i → InSH i
   degreeFourFiniteOrbit :
@@ -155,10 +154,10 @@ BOUNDARY:
 This module proves no unconditional `ZeroDayClosure` theorem.  In particular,
 it does not define an independent K3^[n] actual-requirement predicate, prove
 that actual required classes are covered by the finite inventory, construct
-the nonempty required-class inventory, prove monodromy stability, classify
-concrete quotient orbits, prove that a degree-four required-class index exists,
-or prove vanishing of a concrete c2/2 scalar obstruction.  Those remain
-explicit inputs.
+any concrete required-class inventory element, prove monodromy stability,
+classify concrete quotient orbits, prove that a degree-four required-class
+index exists, or prove vanishing of a concrete c2/2 scalar obstruction.  Those
+remain explicit inputs.
 -/
 
 end Frontier
