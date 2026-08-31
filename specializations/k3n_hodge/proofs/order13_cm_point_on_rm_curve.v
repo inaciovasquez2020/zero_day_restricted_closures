@@ -311,6 +311,43 @@ Proof:
   multiplication by alpha.
 Qed.
 
+ExternalResult AndreDeformationPrincipleForMotivatedCycles:
+  Let pi:Y->B be a smooth projective morphism with B connected and
+  quasi-projective, and let
+
+    nu in Gamma(B,R^(2p) pi_* Q(p))
+
+  be a flat rational cohomology class.  If nu is a motivated cohomology
+  class on one fiber, then it is motivated on every fiber.
+
+Source:
+  Yves Andre,
+  Pour une theorie inconditionnelle des motifs,
+  Publications Mathematiques de l'IHES 83 (1996), Theorem 0.5.
+
+Corollary transported_alpha13_is_motivated_on_every_RM_fiber:
+  After restricting the one-dimensional F_13-RM period family to a connected
+  quasi-projective curve carrying the marked local system, the cohomology
+  class of Z_alpha,13 has a flat continuation
+
+    z_alpha,13(t) in H^4(X_t x X_t,Q(2)).
+
+  For every t on this connected RM curve, z_alpha,13(t) is an Andre-motivated
+  cohomology class.  In particular it is an absolute Hodge class.
+
+Proof:
+  The preserved F-action gives the flat alpha endomorphism on T_L1,Q.
+  Extend it on the fixed algebraic subsystem L1_Q by the action 2*Id supplied
+  by the graph sum at the CM fiber; the H^0 and H^4 graph components are also
+  flat.  Via Kunneth and the polarization, these pieces define a single flat
+  degree-four class z_alpha,13(t) on the relative self-product.
+
+  At the special point t=0 this flat class is the cohomology class of the
+  algebraic cycle Z_alpha,13, hence is motivated.  Apply Andre's deformation
+  principle to the relative self-product.  Therefore z_alpha,13(t) is
+  motivated for every t.  Motivated classes are absolute Hodge.
+Qed.
+
 Boundary:
   this file proves a compatible maximal F_13 RM period deformation through
     the isolated CM surface at the rational Hodge/lattice level
