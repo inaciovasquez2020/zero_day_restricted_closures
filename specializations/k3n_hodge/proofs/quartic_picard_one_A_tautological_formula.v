@@ -39,7 +39,7 @@ Mukai classes:
 
   Let u : K(S) -> K(X) be Markman's universal-ideal-sheaf transform
 
-    u(x) = p_X! ( p_S!(-x^dual) cup [I_Z] ).
+    u(x) = p_X! ( p_S^!(-x^dual) cup [I_Z] ).
 
 ExternalResult MarkmanPointSliceFormula:
   Markman computes
