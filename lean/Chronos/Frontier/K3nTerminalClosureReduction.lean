@@ -232,8 +232,11 @@ theorem k3n_reduction_plus_coverage_plus_semantic_bridge_imply_zero_day_closure
       ZeroDayClosure) :
     ZeroDayClosure := by
   apply hBridge.closureFromActualRequiredSubsetSH
-  apply k3n_inventory_SH_plus_coverage_implies_actual_required_SH coverage
-  exact k3n_required_subset_hypotheses_imply_required_subset_SH hReduction
+  exact k3n_inventory_SH_plus_coverage_implies_actual_required_SH
+    (ActuallyRequired := ActuallyRequired)
+    (InSH := InSH)
+    coverage
+    (k3n_required_subset_hypotheses_imply_required_subset_SH hReduction)
 
 /--
 The geometric SH reduction does not determine an arbitrary semantic closure,
