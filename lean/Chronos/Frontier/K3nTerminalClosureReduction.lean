@@ -1,3 +1,5 @@
+import core.intended_unrestricted_state_closure
+
 namespace Chronos
 namespace Frontier
 
@@ -84,6 +86,28 @@ theorem k3n_inventory_SH_plus_coverage_implies_actual_required_SH
   exact hInventory i
 
 /--
+The repository's concrete intended-state closure saturates only the encoded
+`Fin 256` coordinate and preserves an arbitrary payload.  Consequently that
+closure theorem cannot, by itself, force a semantic predicate on the payload:
+whenever the predicate fails for one payload value, the implication from
+intended-state closure to universal payload validity is false.
+
+This blocks a vacuous K3^[n] specialization that would merely store Hodge data
+as the payload of the generic intended state.
+-/
+theorem generic_intended_closure_does_not_force_payload_property
+    {Payload : Type u}
+    (P : Payload → Prop)
+    (p : Payload)
+    (hp : ¬ P p) :
+    ¬ (ZeroDayRestrictedClosures.IntendedUnrestrictedStateClosure
+          (Payload := Payload) →
+        ∀ x, P x) := by
+  intro h
+  have hAll := h ZeroDayRestrictedClosures.intendedUnrestrictedStateClosure
+  exact hp (hAll p)
+
+/--
 A machine-checkable terminal reduction surface for the K3^[n] restricted
 closure argument.
 
@@ -156,8 +180,9 @@ it does not define an independent K3^[n] actual-requirement predicate, prove
 that actual required classes are covered by the finite inventory, construct
 any concrete required-class inventory element, prove monodromy stability,
 classify concrete quotient orbits, prove that a degree-four required-class
-index exists, or prove vanishing of a concrete c2/2 scalar obstruction.  Those
-remain explicit inputs.
+index exists, prove vanishing of a concrete c2/2 scalar obstruction, or derive
+a K3^[n] semantic closure predicate from the generic payload-blind intended
+state closure.  Those remain explicit inputs.
 -/
 
 end Frontier
