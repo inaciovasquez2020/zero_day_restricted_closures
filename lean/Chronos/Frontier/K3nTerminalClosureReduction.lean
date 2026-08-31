@@ -94,14 +94,15 @@ exists vacuously while no actually required class exists.
 -/
 theorem k3n_coverage_does_not_create_actual_requirement :
     ∃ (ActuallyRequired : Unit → Prop),
-      K3nActualRequiredCoverage Unit Unit ActuallyRequired ∧
+      Nonempty (K3nActualRequiredCoverage Unit Unit ActuallyRequired) ∧
       ¬ ∃ c, ActuallyRequired c := by
   refine ⟨(fun _ => False), ?_, ?_⟩
-  · exact
+  · exact ⟨
       { classOf := fun i => i
         cover := by
           intro c hc
           exact False.elim hc }
+    ⟩
   · rintro ⟨c, hc⟩
     exact hc
 
