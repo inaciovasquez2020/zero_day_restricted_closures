@@ -171,17 +171,21 @@ structure K3nRequiredSubsetSHHypotheses
     ∀ i, DegreeFour i → ScalarObstructionVanishes i
 
 /--
-The semantic bridge is intentionally separate from the geometric SH reduction.
-For the current K3^[n] specialization this bridge remains an input: the
-repository does not independently define the mathematical meaning of
-`ZeroDayClosure` or derive this implication from that meaning.
+The semantic bridge is intentionally stated over classes that are actually
+required, not merely over entries of the declared inventory.  Therefore a
+terminal closure proof must separately establish inventory coverage before the
+geometric SH reduction can discharge this bridge.
+
+For the current K3^[n] specialization this remains an input: the repository
+does not independently define `ActuallyRequired`, define the mathematical
+meaning of `ZeroDayClosure`, or derive this implication from those semantics.
 -/
-structure K3nSemanticClosureBridge
-    (RequiredIndex : Type u)
-    (InSH : RequiredIndex → Prop)
+structure K3nActualSemanticClosureBridge
+    (ActualClass : Type u)
+    (ActuallyRequired InSH : ActualClass → Prop)
     (ZeroDayClosure : Prop) where
-  closureFromRequiredSubsetSH :
-    (∀ i, InSH i) → ZeroDayClosure
+  closureFromActualRequiredSubsetSH :
+    (∀ c, ActuallyRequired c → InSH c) → ZeroDayClosure
 
 theorem k3n_required_subset_hypotheses_imply_required_subset_SH
     {RequiredIndex : Type u}
@@ -202,19 +206,33 @@ theorem k3n_required_subset_hypotheses_imply_required_subset_SH
       (h.degreeFourScalarVanishes i hDegreeFour)
   · exact h.nonDegreeFourInSH i hDegreeFour
 
-theorem k3n_required_subset_plus_semantic_bridge_imply_zero_day_closure
-    {RequiredIndex : Type u}
-    {DegreeFour InSH FiniteOrbitQuotient ScalarObstructionVanishes : RequiredIndex → Prop}
+/--
+Terminal closure now has to traverse the completeness bridge explicitly:
+first prove every declared inventory class is in SH, then use coverage to move
+that result to every actually required class, and only then invoke the semantic
+closure bridge.  An incomplete inventory can no longer discharge this theorem
+by itself.
+-/
+theorem k3n_reduction_plus_coverage_plus_semantic_bridge_imply_zero_day_closure
+    {ActualClass RequiredIndex : Type u}
+    {ActuallyRequired InSH : ActualClass → Prop}
+    {DegreeFour FiniteOrbitQuotient ScalarObstructionVanishes : RequiredIndex → Prop}
     {ZeroDayClosure : Prop}
+    (coverage : K3nActualRequiredCoverage ActualClass RequiredIndex ActuallyRequired)
     (hReduction : K3nRequiredSubsetSHHypotheses
       RequiredIndex
       DegreeFour
-      InSH
+      (fun i => InSH (coverage.classOf i))
       FiniteOrbitQuotient
       ScalarObstructionVanishes)
-    (hBridge : K3nSemanticClosureBridge RequiredIndex InSH ZeroDayClosure) :
+    (hBridge : K3nActualSemanticClosureBridge
+      ActualClass
+      ActuallyRequired
+      InSH
+      ZeroDayClosure) :
     ZeroDayClosure := by
-  apply hBridge.closureFromRequiredSubsetSH
+  apply hBridge.closureFromActualRequiredSubsetSH
+  apply k3n_inventory_SH_plus_coverage_implies_actual_required_SH coverage
   exact k3n_required_subset_hypotheses_imply_required_subset_SH hReduction
 
 /--
@@ -225,16 +243,18 @@ geometric reduction hypotheses hold.  Nevertheless there can be no semantic
 bridge to the false proposition.
 -/
 theorem k3n_nonempty_geometric_reduction_does_not_force_arbitrary_semantic_closure :
-    ∃ (DegreeFour InSH FiniteOrbitQuotient ScalarObstructionVanishes : Unit → Prop),
+    ∃ (DegreeFour InSH FiniteOrbitQuotient ScalarObstructionVanishes
+        ActuallyRequired : Unit → Prop),
       K3nRequiredSubsetSHHypotheses
           Unit
           DegreeFour
           InSH
           FiniteOrbitQuotient
           ScalarObstructionVanishes ∧
-      ¬ K3nSemanticClosureBridge Unit InSH False := by
+      ¬ K3nActualSemanticClosureBridge Unit ActuallyRequired InSH False := by
   refine ⟨
     (fun _ => False),
+    (fun _ => True),
     (fun _ => True),
     (fun _ => True),
     (fun _ => True),
@@ -251,7 +271,7 @@ theorem k3n_nonempty_geometric_reduction_does_not_force_arbitrary_semantic_closu
     · intro _ hDegreeFour
       exact False.elim hDegreeFour
   · intro hBridge
-    exact hBridge.closureFromRequiredSubsetSH (fun _ => True.intro)
+    exact hBridge.closureFromActualRequiredSubsetSH (fun _ _ => True.intro)
 
 /-
 BOUNDARY:
@@ -262,16 +282,18 @@ covered by the finite inventory, construct any concrete required-class
 inventory element, prove monodromy stability, classify concrete quotient
 orbits, prove that a degree-four required-class index exists, prove vanishing
 of a concrete c2/2 scalar obstruction, define a K3^[n]-specific semantic
-`ZeroDayClosure`, prove the separate semantic closure bridge, or derive K3^[n]
-semantics from the generic payload-blind intended-state closure.  The coverage
-countermodel above machine-checks that coverage itself cannot manufacture an
-actual required class, even over inhabited class and index types.  The
-inhabited-extractor equivalence above machine-checks that the current
+`ZeroDayClosure`, prove the actual-required semantic closure bridge, or derive
+K3^[n] semantics from the generic payload-blind intended-state closure.  The
+terminal theorem above now requires coverage explicitly, so proving SH for an
+incomplete declared inventory cannot by itself reach `ZeroDayClosure`.  The
+coverage countermodel above machine-checks that coverage itself cannot
+manufacture an actual required class, even over inhabited class and index
+types.  The inhabited-extractor equivalence machine-checks that the current
 defect-extraction interface itself contributes no degree-four existence beyond
 `exists i, DegreeFour i`; a genuine geometric source must supply more.  The
-nonempty `Unit` model above machine-checks that the geometric SH reduction
-alone does not determine an arbitrary semantic closure.  Those semantic and
-geometric inputs remain explicit boundaries.
+nonempty `Unit` model machine-checks that the geometric SH reduction alone does
+not determine an arbitrary semantic closure.  Those semantic and geometric
+inputs remain explicit boundaries.
 -/
 
 end Frontier
