@@ -1,0 +1,35 @@
+name: k3n-terminal-lean
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: compile-k3n-terminal-reduction
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up pinned Lean toolchain
+        uses: leanprover/lean-action@v1
+        with:
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+          use-github-cache: false
+
+      - name: Compile terminal conditional reduction
+        run: lean lean/Chronos/Frontier/K3nTerminalClosureReduction.lean
+
+      - name: Reject unsound placeholders in terminal reduction
+        shell: bash
+        run: |
+          if grep -nE '\b(axiom|opaque|sorry|admit)\b' lean/Chronos/Frontier/K3nTerminalClosureReduction.lean; then
+            echo "Unsound placeholder token found in terminal reduction"
+            exit 1
+          fi
