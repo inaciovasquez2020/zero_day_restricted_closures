@@ -67,7 +67,7 @@ theorem k3n_terminal_hypotheses_imply_zero_day_closure
   apply h.closureFromRequiredSubsetSH
   exact k3n_terminal_hypotheses_imply_required_subset_SH h
 
-/--
+/-
 BOUNDARY:
 This module proves no unconditional `ZeroDayClosure` theorem.  In particular,
 it does not construct the required-class inventory, prove monodromy stability,
