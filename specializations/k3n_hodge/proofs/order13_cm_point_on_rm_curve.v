@@ -248,11 +248,76 @@ Corollary alpha13_is_a_flat_Hodge_endomorphism_along_the_RM_curve:
   unrelated K3 surfaces.
 Qed.
 
+Theorem corrected_special_fiber_alpha13_correspondence_is_algebraic:
+  There is an algebraic rational codimension-two cycle
+
+    Z_alpha,13 in CH^2(X_13 x X_13)_Q
+
+  whose action on
+
+    T_L1,Q = T(X_13)_Q direct_sum K_Q
+
+  is multiplication by alpha.
+
+Proof:
+  Put
+
+    G := Graph(sigma) + Graph(sigma^(-1)).
+
+  For the unique order-13 surface, the rank-10 invariant lattice of sigma is
+  NS(X_13). Hence sigma acts trivially on NS(X_13), so G acts as 2*Id on K_Q.
+  On T(X_13)_Q, G acts as
+
+    sigma^* + (sigma^*)^(-1) = alpha.
+
+  Let alpha_K denote multiplication by alpha on K_Q through the isometry
+
+    K_Q ~= (F,-Tr_F/Q(x*y))
+
+  above, and set
+
+    Delta := alpha_K - 2*Id_K.
+
+  The operator Delta is self-adjoint for the intersection form on K_Q.
+
+  Choose divisor classes D_1,...,D_6 forming a Q-basis of K_Q.  Their
+  intersection matrix Q_K is nonsingular because K_Q is negative definite.
+  If A is the matrix of Delta in this basis, choose rational coefficients
+  c_ij satisfying
+
+    C^T Q_K = A,
+
+  where C=(c_ij).  This is possible because Q_K is invertible.
+
+  Define the divisor-product correspondence
+
+    C_K := sum_(i,j) c_ij (D_i x D_j)
+           in CH^2(X_13 x X_13)_Q.
+
+  By the standard action of divisor-product correspondences on H^2,
+  C_K acts as Delta on K_Q.  It acts trivially on T(X_13)_Q because
+  transcendental classes are orthogonal to NS(X_13), and trivially on L1_Q
+  because every D_i lies in K_Q=L1_Q^perp inside NS(X_13)_Q.
+
+  Therefore the algebraic cycle
+
+    Z_alpha,13 := G + C_K
+
+  acts on the orthogonal decomposition
+
+    T_L1,Q = T(X_13)_Q direct_sum K_Q
+
+  as alpha on both summands. Hence its action on all of T_L1,Q is
+  multiplication by alpha.
+Qed.
+
 Boundary:
   this file proves a compatible maximal F_13 RM period deformation through
     the isolated CM surface at the rational Hodge/lattice level
-  it does NOT prove that the special graph cycle spreads as an algebraic Chow
-    cycle over the family
+  it proves an algebraic corrected alpha_13 correspondence on the full
+    rank-18 deformation lattice at the special CM fiber
+  it does NOT prove that this corrected special-fiber alpha cycle spreads as
+    an algebraic Chow cycle over the family
   it does NOT prove the generic F_13 endomorphism alpha is algebraic
   that remaining step is precisely a codimension-two variational-Hodge/spread
     problem on the relative self-product
