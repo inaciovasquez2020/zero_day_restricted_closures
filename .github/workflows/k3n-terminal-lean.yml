@@ -23,7 +23,11 @@ jobs:
           "$HOME/.elan/bin/elan" toolchain install "$(cat lean-toolchain)"
 
       - name: Compile terminal conditional reduction
-        run: lean lean/Chronos/Frontier/K3nTerminalClosureReduction.lean
+        shell: bash
+        run: |
+          lean -o core/intended_unrestricted_state_closure.olean \
+            core/intended_unrestricted_state_closure.lean
+          LEAN_PATH=. lean lean/Chronos/Frontier/K3nTerminalClosureReduction.lean
 
       - name: Reject unsound placeholders in terminal reduction
         shell: bash
