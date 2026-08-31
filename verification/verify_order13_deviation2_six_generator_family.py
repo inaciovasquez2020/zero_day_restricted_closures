@@ -1,21 +1,28 @@
 #!/usr/bin/env python3
-"""Exact tangent-space check for a concrete six-generator deviation-two family.
+"""Exact tangent-space checks for concrete six-generator deviation-two families.
 
-For a in {4,5}, let
+Family A, for a in {4,5}:
 
-  I_a = (x^a, y^a, z^a, w^a, x*y + z*w, x*z + y*w)
-      in Q[x,y,z,w],
-  A_a = Q[x,y,z,w]/I_a.
+  I_a = (x^a, y^a, z^a, w^a, x*y + z*w, x*z + y*w).
 
-The verifier checks, over QQ:
+Family B, for a in {14,16}:
+
+  J_a = (x^2, y^2, z^2, x*y + z*w, x*z + y*w, w^a).
+
+The second family is the first maximal-quadratic-count shape left after the
+quadratic-generator reduction: five quadratic minimal generators plus one
+higher-degree generator, with lengths already above the N>=32 frontier.
+
+For every tested member the verifier checks, over QQ:
   * all six displayed generators are minimal;
-  * length(A_a) = (2a-1)^2;
-  * dim Soc(A_a) = 4, hence A_a is non-Gorenstein;
-  * using a Groebner basis, standard S-pair syzygies, and exact rational
-    linear algebra, dim Hom_P(I_a,A_a) = 4*length(A_a);
+  * the claimed finite length;
+  * dim Soc = 4, hence non-Gorenstein;
+  * using a Groebner basis, standard S-pair/Schreyer syzygies, and exact
+    rational linear algebra, dim Hom_P(I,A) = 4*length(A);
   * therefore the order-13 necessary gate t(A) <= N-20 fails strongly.
 
-No claim is made for a outside {4,5}, nor is smoothability inferred from t=4N.
+No claim is made outside the explicitly tested parameters, nor is
+smoothability inferred from t=4N.
 """
 
 from __future__ import annotations
@@ -98,9 +105,7 @@ def schreyer_pair_syzygies(G: sp.GroebnerBasis):
     return syzygies
 
 
-def analyze(a: int):
-    original = [x**a, y**a, z**a, w**a, x * y + z * w, x * z + y * w]
-
+def analyze_generators(label: str, a: int, original, expected_N: int):
     for i, f in enumerate(original):
         H = sp.groebner(
             original[:i] + original[i + 1 :],
@@ -109,15 +114,16 @@ def analyze(a: int):
             domain=sp.QQ,
         )
         if sp.expand(H.reduce(f)[1]) == 0:
-            raise AssertionError(f"generator {i} is redundant for a={a}")
+            raise AssertionError(f"generator {i} is redundant for {label}, a={a}")
 
     G = sp.groebner(original, *VARS, order="grevlex", domain=sp.QQ)
     mons = standard_monomials(G)
     index = {e: i for i, e in enumerate(mons)}
     N = len(mons)
-    expected_N = (2 * a - 1) ** 2
     if N != expected_N:
-        raise AssertionError(f"length mismatch for a={a}: got {N}, expected {expected_N}")
+        raise AssertionError(
+            f"length mismatch for {label}, a={a}: got {N}, expected {expected_N}"
+        )
 
     def nf_entries(expr):
         if expr == 0:
@@ -145,7 +151,9 @@ def analyze(a: int):
     ]
     socle_dim = len(sp.Matrix.vstack(*variable_matrices).nullspace())
     if socle_dim != 4:
-        raise AssertionError(f"socle mismatch for a={a}: got {socle_dim}, expected 4")
+        raise AssertionError(
+            f"socle mismatch for {label}, a={a}: got {socle_dim}, expected 4"
+        )
 
     syzygies = schreyer_pair_syzygies(G)
     r = len(G.polys)
@@ -167,12 +175,15 @@ def analyze(a: int):
 
     if tangent_dim != 4 * N:
         raise AssertionError(
-            f"tangent mismatch for a={a}: got {tangent_dim}, expected {4*N}"
+            f"tangent mismatch for {label}, a={a}: got {tangent_dim}, expected {4*N}"
         )
     if not tangent_dim > N - 20:
-        raise AssertionError(f"order-13 tangent gate unexpectedly passed for a={a}")
+        raise AssertionError(
+            f"order-13 tangent gate unexpectedly passed for {label}, a={a}"
+        )
 
     return {
+        "label": label,
         "a": a,
         "N": N,
         "socle": socle_dim,
@@ -184,17 +195,28 @@ def analyze(a: int):
     }
 
 
+def analyze_balanced(a: int):
+    original = [x**a, y**a, z**a, w**a, x * y + z * w, x * z + y * w]
+    return analyze_generators("balanced", a, original, (2 * a - 1) ** 2)
+
+
+def analyze_five_quadratic(a: int):
+    original = [x**2, y**2, z**2, x * y + z * w, x * z + y * w, w**a]
+    return analyze_generators("five_quadratic", a, original, 2 * a + 5)
+
+
 def main():
-    rows = [analyze(a) for a in (4, 5)]
+    rows = [analyze_balanced(a) for a in (4, 5)]
+    rows += [analyze_five_quadratic(a) for a in (14, 16)]
     for row in rows:
         print(
             "ORDER13_DEVIATION2_FAMILY "
-            f"a={row['a']} N={row['N']} socle={row['socle']} "
-            f"gb={row['gb_generators']} syzygies={row['syzygies_checked']} "
-            f"rank={row['constraint_rank']} tangent={row['tangent']} "
-            f"gate={row['gate']} status=REJECTED"
+            f"kind={row['label']} a={row['a']} N={row['N']} "
+            f"socle={row['socle']} gb={row['gb_generators']} "
+            f"syzygies={row['syzygies_checked']} rank={row['constraint_rank']} "
+            f"tangent={row['tangent']} gate={row['gate']} status=REJECTED"
         )
-    print("ORDER13_DEVIATION2_SIX_GENERATOR_EXPLICIT_FAMILY_REJECTED")
+    print("ORDER13_DEVIATION2_SIX_GENERATOR_EXPLICIT_FAMILIES_REJECTED")
 
 
 if __name__ == "__main__":
