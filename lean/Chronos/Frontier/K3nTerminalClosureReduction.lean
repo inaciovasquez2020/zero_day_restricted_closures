@@ -128,6 +128,37 @@ theorem k3n_inventory_SH_plus_coverage_implies_actual_required_SH
   exact hInventory i
 
 /--
+A nonempty declared inventory can be entirely inside SH while still omitting
+an actually required class.  The one-entry `Unit` inventory represents only
+`false`; that class is in SH.  The distinct class `true` is actually required
+and is not in SH, so the fixed inventory map cannot cover it.
+
+This is the direct countermodel showing why the terminal closure theorem must
+require the independent coverage bridge rather than only inventory-SH.
+-/
+theorem k3n_nonempty_inventory_SH_does_not_imply_actual_required_coverage :
+    ∃ (classOf : Unit → Bool) (ActuallyRequired InSH : Bool → Prop),
+      (∀ i, InSH (classOf i)) ∧
+      (∃ c, ActuallyRequired c ∧ ¬ InSH c) ∧
+      ¬ (∀ c, ActuallyRequired c → ∃ i, classOf i = c) := by
+  refine ⟨
+    (fun _ => false),
+    (fun c => c = true),
+    (fun c => c = false),
+    ?_,
+    ?_,
+    ?_
+  ⟩
+  · intro _
+    rfl
+  · refine ⟨true, rfl, ?_⟩
+    intro h
+    cases h
+  · intro hCoverage
+    obtain ⟨i, hi⟩ := hCoverage true rfl
+    cases hi
+
+/--
 The repository's concrete intended-state closure saturates only the encoded
 `Fin 256` coordinate and preserves an arbitrary payload.  Consequently that
 closure theorem cannot, by itself, force a semantic predicate on the payload:
