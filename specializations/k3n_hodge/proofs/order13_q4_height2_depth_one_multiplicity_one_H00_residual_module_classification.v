@@ -1,0 +1,565 @@
+Standalone residual-module classification of the exact H00 endpoint in the
+homogeneous q=4, height-two multiplicity-one, depth-one order-13 deviation-two
+program.
+
+SCOPE:
+  Continue only from
+
+    order13_q4_height2_depth_one_multiplicity_one_residual_hilbert_floor.v
+    order13_q4_height2_depth_one_multiplicity_one_H10_tangent_closed.v
+
+  and leave the now-closed H10 endpoint.
+
+  Retain
+
+    S := C[x1,x2,x3,x4],
+    P := (l1,l2),
+    Q subset Qsat subset P,
+    D := P/Qsat,
+
+  with
+
+    dim D = 1,
+    depth_m(D)=1,
+    D generated in degree one.
+
+Treat only the exact H00 state
+
+    (u1,u2)=(0,3),
+    Hilb_D(t)=2*t/(1-t).
+
+Thus
+
+    dim_C D_n = 2
+
+for every n>=1.
+
+This file performs one bounded task only: classify the graded S-module D itself.
+It does not recover Qsat from the embedding D=P/Qsat, does not classify Q, and
+does not make a tangent-space estimate.
+
+This is pseudo-formal mathematical documentation.  It is not Coq or Lean and
+MACHINE_VERIFICATION_OF_NEW_THEOREM is not claimed.
+
+--------------------------------------------------------------------------
+1. H00 IS FREE OF RANK TWO OVER A GENERAL LINE
+--------------------------------------------------------------------------
+
+Choose a linear nonzerodivisor
+
+    h in S_1
+
+on the one-dimensional Cohen--Macaulay module D.
+
+Theorem H00_multiplication_by_h_is_an_isomorphism_in_every_positive_degree:
+  For every n>=1,
+
+    h : D_n -> D_(n+1)
+
+is an isomorphism.
+
+Proof:
+  Since h is D-regular, multiplication by h is injective in every degree.
+
+  H00 gives
+
+    dim_C D_n = dim_C D_(n+1)=2
+
+for every n>=1.  An injective map between two-dimensional vector spaces is an
+isomorphism.
+Qed.
+
+Corollary H00_is_free_rank_two_over_C_h:
+  If
+
+    V:=D_1,
+
+then multiplication induces a graded C[h]-module isomorphism
+
+    C[h](-1) tensor_C V  ~=  D.
+
+In particular
+
+    D ~= C[h](-1)^2
+
+as a graded C[h]-module.
+
+Proof:
+  The preceding theorem identifies
+
+    D_n = h^(n-1) D_1
+
+for every n>=1, with no h-torsion.  Since dim_C V=2, the asserted free
+C[h]-module description follows.
+Qed.
+
+--------------------------------------------------------------------------
+2. EVERY LINEAR FORM ACTS THROUGH A COMMUTING 2 BY 2 MATRIX
+--------------------------------------------------------------------------
+
+Use the identification
+
+    D_2 = h*D_1 = h*V.
+
+For every x in S_1 define the C-linear endomorphism
+
+    A_x : V -> V
+
+by the rule
+
+    x*v = h*A_x(v)
+
+for v in V.
+
+Theorem H00_linear_action_representation:
+  The assignment
+
+    rho : S_1 -> End_C(V),
+    rho(x):=A_x
+
+is C-linear, satisfies
+
+    rho(h)=Id_V,
+
+and has pairwise commuting image:
+
+    A_x*A_y=A_y*A_x
+
+for all x,y in S_1.
+
+Moreover, for every n>=1 and v in V,
+
+    x*(h^(n-1)*v)=h^n*A_x(v).
+
+Proof:
+  Linearity is immediate from the definition in D_2=hV.
+
+  Since h*v=h*Id_V(v), one has A_h=Id_V.
+
+  Commutativity of S gives
+
+    x*y*v = y*x*v.
+
+  Rewriting both sides with the h-identification gives
+
+    h^2*A_x*A_y(v)=h^2*A_y*A_x(v).
+
+  Multiplication by h is injective on D, so the matrices commute.
+
+  The formula in higher degree follows from commutativity:
+
+    x*h^(n-1)*v
+      = h^(n-1)*x*v
+      = h^n*A_x(v).
+Qed.
+
+Corollary H00_linear_annihilator_is_the_kernel_of_rho:
+  Put
+
+    L:=Ann_S(D)_1.
+
+Then
+
+    L=ker(rho).
+
+Proof:
+  If x is in ker(rho), then x kills D_1 and the higher-degree formula shows that
+  x kills every D_n.  Hence x is in Ann_S(D)_1.
+
+  The converse is immediate.
+Qed.
+
+--------------------------------------------------------------------------
+3. A COMMUTING FAMILY OF 2 BY 2 MATRICES HAS DIMENSION AT MOST TWO
+--------------------------------------------------------------------------
+
+Theorem H00_matrix_image_has_dimension_one_or_two:
+  One has
+
+    dim_C im(rho) in {1,2}.
+
+Equivalently,
+
+    dim_C L in {3,2}.
+
+Proof:
+  The image contains Id_V, so its dimension is at least one.
+
+  If every matrix in im(rho) is scalar, the image is exactly C*Id_V and has
+  dimension one.
+
+  Otherwise choose a non-scalar matrix A in im(rho).  Every matrix in im(rho)
+  commutes with A.  For a non-scalar 2 by 2 matrix over C, its centralizer in
+  End_C(V) is the two-dimensional algebra
+
+    C[Id_V,A].
+
+  Hence im(rho) has dimension at most two.  Since it already contains Id_V and
+  the non-scalar A, its dimension is exactly two.
+
+  Finally dim S_1=4, so the kernel has dimension three or two respectively.
+Qed.
+
+Thus H00 has only two linear-annihilator ranks.  The rank-two case splits once
+more by the Jordan form of one non-scalar matrix.
+
+--------------------------------------------------------------------------
+4. TYPE H00-P2: TWO COPIES OF ONE POINT MODULE
+--------------------------------------------------------------------------
+
+Assume
+
+    dim_C im(rho)=1,
+    dim_C L=3.
+
+Let
+
+    J:=L.
+
+Then J is generated by three independent linear forms and
+
+    S/J ~= C[h].
+
+Theorem H00_point_double_module:
+  In this case
+
+    D ~= (S/J)(-1) direct_sum (S/J)(-1)
+
+as graded S-modules.
+
+Moreover
+
+    Ann_S(D)=J.
+
+Proof:
+  Every x in S_1 acts on V by a scalar multiple of Id_V.  Because rho(h)=Id_V,
+  the scalar is exactly the image of x in the one-dimensional quotient S_1/J_1.
+
+  Therefore the S-action on D=C[h](-1) tensor V factors through S/J=C[h] and is
+  scalar on the two-dimensional factor V.  This is precisely two copies of the
+  shifted point module S/J(-1).
+
+  Since S/J acts faithfully on each copy, the annihilator is exactly J.
+Qed.
+
+Interpretation:
+  H00-P2 is a rank-two residual module supported at one reduced projective point.
+  The two generators do not interact through any non-scalar linear action.
+
+--------------------------------------------------------------------------
+5. RANK-TWO IMAGE: REDUCE TO ONE EXTRA LINEAR FORM u
+--------------------------------------------------------------------------
+
+Assume now
+
+    dim_C im(rho)=2,
+    dim_C L=2.
+
+Choose u in S_1 such that A_u is non-scalar.  Then
+
+    S_1 = L direct_sum C*h direct_sum C*u
+
+and
+
+    im(rho)=C*Id_V + C*A_u.
+
+Because C is algebraically closed, a non-scalar 2 by 2 matrix has exactly one of
+these two forms up to change of basis in V and replacing u by an affine linear
+combination of u and h:
+
+  SEMISIMPLE:
+    A_u = diag(0,1).
+
+  JORDAN:
+    A_u = N,
+    N^2=0,
+    N!=0.
+
+These give the remaining two H00 module types.
+
+--------------------------------------------------------------------------
+6. TYPE H00-P1P1: TWO DISTINCT POINT MODULES
+--------------------------------------------------------------------------
+
+Assume A_u is diagonalizable with two distinct eigenvalues.
+
+After replacing u by
+
+    (u-lambda_1*h)/(lambda_2-lambda_1)
+
+and choosing an eigenbasis e0,e1 of V, normalize
+
+    A_u(e0)=0,
+    A_u(e1)=e1.
+
+Define the height-three linear primes
+
+    J0 := L+(u),
+    J1 := L+(u-h).
+
+They are distinct and
+
+    S/J0 ~= C[h],
+    S/J1 ~= C[h].
+
+Theorem H00_two_distinct_point_module:
+  One has
+
+    D ~= S/J0(-1) direct_sum S/J1(-1).
+
+Furthermore
+
+    Ann_S(D)=J0 intersect J1
+            =L+(u*(u-h)).
+
+Proof:
+  The C[h]-free summand generated by e0 is killed by L and by u, so it is
+  S/J0(-1).
+
+  The C[h]-free summand generated by e1 is killed by L and by u-h, so it is
+  S/J1(-1).
+
+  The two eigenspaces are independent and span V, hence their C[h]-extensions
+  split D as stated.
+
+  The annihilator of a direct sum is the intersection of the two annihilators.
+  Modulo L this is
+
+    (u) intersect (u-h)
+
+inside C[h,u].  The two linear forms are relatively prime, so their intersection
+is their product ideal
+
+    (u*(u-h)).
+
+  Lifting back to S gives the formula.
+Qed.
+
+Interpretation:
+  H00-P1P1 is supported at two distinct reduced projective points on the line
+  Proj(S/L).
+
+--------------------------------------------------------------------------
+7. TYPE H00-J2: THE UNIQUE JORDAN SELF-EXTENSION
+--------------------------------------------------------------------------
+
+Assume A_u has one eigenvalue and is not scalar.
+
+Subtract that eigenvalue times h from u and rescale u.  Choose a basis e0,e1 of
+V so that
+
+    A_u(e0)=0,
+    A_u(e1)=e0.
+
+Thus
+
+    u*e0=0,
+    u*e1=h*e0.
+
+Let
+
+    J:=L+(u).
+
+Then J is a height-three linear prime and S/J~=C[h].
+
+Theorem H00_Jordan_module_has_explicit_two_generator_presentation:
+  The module D is generated in degree one by e0,e1 with relations
+
+    L*e0=0,
+    L*e1=0,
+    u*e0=0,
+    u*e1-h*e0=0.
+
+All higher relations follow from these and commutativity.
+
+Proof:
+  The relations are exactly the normalized matrix action together with the fact
+  that L=ker(rho).
+
+  They define a C[h]-module generated by e0,e1 on which h is free and u acts by
+  the fixed nilpotent matrix N.  Hence the presented module is C[h](-1)^2 as a
+  C[h]-module, with exactly the same S_1-action as D.  Since S is generated by
+  S_1, the two graded S-modules agree.
+Qed.
+
+Theorem H00_Jordan_annihilator:
+  In the Jordan case
+
+    Ann_S(D)=L+(u^2).
+
+Proof:
+  Certainly L and u^2 annihilate D because L kills both generators and N^2=0.
+
+  Conversely work modulo L, so S/L=C[h,u].  Reduce any polynomial modulo u^2:
+
+    F(h,u)=a(h)+u*b(h).
+
+  If F annihilates D, apply it to e0.  Since u*e0=0,
+
+    F*e0=a(h)*e0=0.
+
+  D is h-torsion-free, so a(h)=0.
+
+  Then apply u*b(h) to e1:
+
+    u*b(h)*e1=h*b(h)*e0.
+
+  Again h-torsion-freeness gives b(h)=0.  Thus no nonzero class modulo u^2 can
+  annihilate D, proving the formula.
+Qed.
+
+Theorem H00_Jordan_module_is_a_nonsplit_self_extension:
+  There is an exact sequence
+
+    0 -> S/J(-1)
+      -> D
+      -> S/J(-1)
+      -> 0
+
+which is nonsplit as an S-module.
+
+Proof:
+  The submodule C[h]*e0 is S/J(-1).  Modulo it, the class of e1 is also killed by
+  J and generates another S/J(-1).
+
+  If the extension split, one could choose a complementary generator killed by
+  u.  But in the normalized Jordan action every vector independent of e0 has
+  nonzero u-action into C[h]*e0.  Hence no such S-stable complement exists.
+Qed.
+
+Interpretation:
+  H00-J2 is the unique non-semisimple two-generator H00 module up to graded
+  linear coordinate change and basis change.  Its annihilator defines a doubled
+  projective point on Proj(S/L), but D is not the cyclic ring module
+  S/(L,u^2)(-1); it is the rank-two Jordan module above.
+
+--------------------------------------------------------------------------
+8. EXACT H00 RESIDUAL-MODULE TRICHOTOMY
+--------------------------------------------------------------------------
+
+Theorem q4_H00_exact_residual_module_classification:
+  Every H00 residual module
+
+    D=P/Qsat,
+    Hilb_D(t)=2*t/(1-t),
+    dim D=1,
+    depth(D)=1,
+
+is, up to graded linear coordinate change in S and basis change of D_1, exactly
+one of the following three S-module types:
+
+  H00-P2:
+    D ~= S/J(-1) direct_sum S/J(-1),
+    J a height-three linear prime,
+    Ann(D)=J.
+
+  H00-P1P1:
+    D ~= S/J0(-1) direct_sum S/J1(-1),
+    J0,J1 distinct height-three linear primes,
+    Ann(D)=J0 intersect J1=L+(u*(u-h)).
+
+  H00-J2:
+    D is the nonsplit self-extension
+
+      0 -> S/J(-1) -> D -> S/J(-1) -> 0,
+
+    with normalized action
+
+      u*e0=0,
+      u*e1=h*e0,
+
+    and
+
+      Ann(D)=L+(u^2).
+
+No fourth module type occurs.
+
+Proof:
+  Sections 1--3 reduce D to a free rank-two C[h]-module with a commuting linear
+  action rho:S_1->M_2(C), whose image has dimension one or two.
+
+  Dimension one gives H00-P2.
+
+  Dimension two is generated by Id and one non-scalar matrix.  Over C that
+  matrix is either diagonalizable with two distinct eigenvalues or has one
+  Jordan block.  Sections 6 and 7 give H00-P1P1 and H00-J2 respectively.
+
+  These Jordan alternatives exhaust all 2 by 2 matrices over an algebraically
+  closed field.
+Qed.
+
+Corollary H00_annihilator_degree_bound:
+  The H00 residual annihilator is generated in degrees at most two.
+
+More precisely:
+
+  H00-P2:
+    Ann(D) is generated by three linears.
+
+  H00-P1P1:
+    Ann(D) is generated by two linears and one quadric u*(u-h).
+
+  H00-J2:
+    Ann(D) is generated by two linears and one quadric u^2.
+Qed.
+
+--------------------------------------------------------------------------
+9. SHARP BOUNDARY
+--------------------------------------------------------------------------
+
+NEWLY_CLASSIFIED:
+  q4_height2_multiplicity_one_depth_one_H00_residual_module_trichotomy.
+
+IMPORTANT_NONCONCLUSION:
+  The classification above is the abstract graded S-module classification of D.
+
+  It does NOT yet impose the distinguished embedding
+
+    D=P/Qsat
+
+  strongly enough to determine which of H00-P2, H00-P1P1, H00-J2 can actually
+  arise from a saturated ideal Qsat contained in the fixed height-two linear
+  prime P.
+
+  It does NOT recover Qsat.
+  It does NOT classify the four-dimensional quadratic generator space Q_2.
+  It does NOT classify the saturation defect T=Qsat/Q.
+  It does NOT make a tangent-space estimate.
+  It does NOT enter H01 or H11.
+  It does NOT enter q<=3.
+  It does NOT prove full q=4 height-two or full order-13 closure.
+
+PROOF_STATUS:
+  pseudo-formal mathematical documentation.
+
+MACHINE_VERIFICATION_OF_NEW_THEOREM:
+  not claimed.
+
+BOUNDARY:
+  q4_height2_multiplicity_one_depth_one_H10_tangent_closed.
+  q4_height2_multiplicity_one_depth_one_H00_residual_module_classified.
+  not q4_height2_multiplicity_one_depth_one_H00_closed.
+  not q4_height2_multiplicity_one_depth_one_closed.
+  not q4_height2_full_closure.
+  not homogeneous_q_le_3_closure.
+  not full_order13_closure.
+
+MISSING_OBJECT:
+  Impose the distinguished quotient presentation
+
+    D=P/Qsat,
+    P=(l1,l2),
+    Qsat saturated,
+    Qsat subset P,
+
+  on the three H00 module types and determine the permitted incidence of P with
+  their point/double-point annihilator support.  Recover Qsat from the resulting
+  two-generator relation module, but do not yet use the original four-quadric
+  subspace Q_2.
+
+NEXT_ACTIONS:
+  1. Stay only in H00.
+  2. Impose D=P/Qsat on H00-P2, H00-P1P1, and H00-J2.
+  3. Recover the corresponding saturated ideals Qsat up to coordinates.
+  4. Do not use Q_2 until the saturated H00 incidence list is exact.
+  5. Stop before tangent estimates, H01, or H11.
