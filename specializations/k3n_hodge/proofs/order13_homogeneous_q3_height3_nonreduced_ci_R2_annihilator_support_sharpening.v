@@ -266,7 +266,76 @@ candidate must satisfy
   dim_C Cbar_1>=2.                                  (15)
 
 --------------------------------------------------------------------------
-6. UPDATED FRONTIER
+6. ALL NONEXTREMAL DEGREE-FOUR MULTIPLICATION RANKS CLOSE
+--------------------------------------------------------------------------
+
+Continue with the surviving case (15).  Put
+
+  U:=Cbar_1,
+  V:=Cbar_5,
+
+and define the multiplication map
+
+  m_4:A_4 -> Hom_C(U,V),
+  m_4(a)(c)=a*c.
+
+Let
+
+  rho:=rank_C(m_4).
+
+For every j>=2, multiplication by A_4 sends Cbar_j into Cbar_{4+j}=0.
+Therefore an element a in A_4 annihilates all of Cbar if and only if it
+annihilates U.  Hence
+
+  Ann_A(Cbar)_4=ker(m_4).                            (16)
+
+Since Ann_A(Cbar) subset Ann_A(eta), the degree-four multiplier layer of the
+cyclic quotient A*eta=A/Ann_A(eta) has dimension at most rho.  The lower
+multiplier layers have total dimension
+
+  h_A(0)+h_A(1)+h_A(2)+h_A(3)=1+4+7+8=20.
+
+Thus
+
+  length_C(A*eta)<=20+rho.                          (17)
+
+If
+
+  rho<=2t-1,
+
+then equations (8) and (17) give
+
+  length_C(A*eta)
+    <=20+(2t-1)
+    =2t+19
+    <=dim_C ker(lambda)+19.
+
+Therefore every multiplication rank rho<=2t-1 closes the sharp R2 tangent
+inequality.
+
+Theorem R2_equal_degree_four_nonextremal_multiplication_rank_closed:
+  In the surviving d=4 branch, if
+
+    rank_C(A_4 -> Hom_C(Cbar_1,Cbar_5))<=2t-1,
+
+  then
+
+    length_C(A*eta)<=dim_C ker(lambda)+19.
+Qed.
+
+Since dim_C A_4=6, a still-unresolved d=4 candidate must now satisfy exactly
+one of
+
+  t=2 and rho in {4,5,6},
+
+or
+
+  t=3 and rho=6.                                    (18)
+
+No contradiction for the extremal ranks in (18) is asserted here.
+
+--------------------------------------------------------------------------
+7. UPDATED FRONTIER
 --------------------------------------------------------------------------
 
 RESULT:
@@ -275,6 +344,7 @@ RESULT:
   R2_Koszul_overlap_is_confined_to_D_through_d.
   R2_equal_degree_four_reduces_to_low_type_nonzero_linear_colon.
   R2_equal_degree_four_principal_linear_colon_closed.
+  R2_equal_degree_four_nonextremal_multiplication_rank_closed.
 
 IMPORTANT_NONCONCLUSION:
   This file does NOT prove
@@ -294,24 +364,33 @@ MACHINE_VERIFICATION_OF_NEW_THEOREM:
 
 BOUNDARY:
   Equal degree d=3 is closed in the dedicated low-degree file.  The first
-  unresolved equal-degree case is d=4, and only candidates with
+  unresolved equal-degree case is d=4.  After the linear-colon and
+  multiplication-rank reductions, every still-unresolved d=4 candidate has
 
-    dim_C Soc(A) in {2,3},
-    dim_C Cbar_1>=2
+    dim_C Cbar_1>=2,
 
-  survive this reduction.
+  and exactly one of
+
+    t=2, rho in {4,5,6},
+    t=3, rho=6,
+
+  where
+
+    rho=rank_C(A_4 -> Hom_C(Cbar_1,Cbar_5)).
 
 MISSING_OBJECT:
-  For d=4, t in {2,3}, and dim_C Cbar_1>=2, prove enough common annihilator of
-  the multiplication pairing
+  Exclude the extremal multiplication ranks
 
-    A_4 x Cbar_1 -> Cbar_5 subset Soc(A)_5
+    t=2 with rho>=4,
+    t=3 with rho=6,
 
-  or enough extra Koszul kernel beyond Soc(A)^2 to recover the remaining
-  sharp compensation.
+  using the graded algebra structure of A and Cbar, or prove enough extra
+  Koszul kernel beyond Soc(A)^2 to offset rho-(2t-1).
 
 NEXT_ACTIONS:
   1. Rebuild the exact terminal workflow on this commit.
-  2. If green, analyze the rank of A_4 -> Hom_C(Cbar_1,Cbar_5) in the cases
-     t=2 and t=3.
-  3. Do not continue past a failed rebuild.
+  2. If green, test whether rho=6 forces an injective multiplication map
+     A_4 -> Hom_C(Cbar_1,Cbar_5) incompatible with the degree-five socle and
+     the known Hilbert function.
+  3. Treat t=2, rho=4 or 5 only after the rho=6 case is resolved.
+  4. Do not continue past a failed rebuild.
