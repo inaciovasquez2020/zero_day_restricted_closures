@@ -6,7 +6,9 @@ SCOPE:
   Continue only from
 
     order13_homogeneous_q3_height3_nonreduced_ci_R2_koszul_hilbert_symmetry_reduction.v
-    order13_homogeneous_q3_height3_nonreduced_ci_R2_colon_koszul_image_identification.v.
+    order13_homogeneous_q3_height3_nonreduced_ci_R2_colon_koszul_image_identification.v
+    order13_homogeneous_q3_height3_nonreduced_ci_R2_socle_kernel_reduction.v
+    order13_homogeneous_q3_height3_nonreduced_ci_R2_regular_escape_reduction.v.
 
   Retain
 
@@ -107,42 +109,136 @@ Corollary R2_escape_gap_at_least_d_plus_1_has_zero_Koszul_overlap:
 Qed.
 
 --------------------------------------------------------------------------
-4. UPDATED FRONTIER
+4. EQUAL DEGREE FOUR REDUCES TO LOW SOCLE TYPE WITH NONZERO LINEAR COLON
+--------------------------------------------------------------------------
+
+Assume now
+
+  d=4.
+
+The surviving R2 branch has D=e-d>=2, hence e>=6.  From
+
+  Hilb_R(t)=(1+t+...+t^{e-1})(1+t)^3
+
+and the fact that u1,u2 form a two-dimensional minimal degree-four slice, the
+initial Hilbert function of A is
+
+  h_A(0)=1,
+  h_A(1)=4,
+  h_A(2)=7,
+  h_A(3)=8,
+  h_A(4)=6.                                         (6)
+
+By (4), only multiplier degrees 0,...,4 can contribute to A*eta.  Therefore
+
+  length_C(A*eta)<=1+4+7+8+6=26.                   (7)
+
+Let
+
+  t=dim_C Soc(A).
+
+The surviving branch is non-Gorenstein, so t>=2, and the established socle
+square injection gives
+
+  dim_C ker(lambda)>=2t.                            (8)
+
+If t>=4, equations (7) and (8) give
+
+  length_C(A*eta)<=26<=27<=dim_C ker(lambda)+19.
+
+Thus equal degree four is closed whenever t>=4.
+
+It remains to use the linear colon layer.  Suppose
+
+  Cbar_1=0.
+
+Then (1), with d=4, sharpens to
+
+  Cbar_j=0 unless 2<=j<=5.
+
+For a in A_4 and c in Cbar_j we have
+
+  deg(a*c)=4+j>=6.
+
+Because Cbar has no component above degree 5, a*c=0.  Hence
+
+  A_4 subset Ann_A(Cbar) subset Ann_A(eta).         (9)
+
+Consequently the degree-four multiplier layer contributes nothing to A*eta,
+and
+
+  length_C(A*eta)<=1+4+7+8=20.                     (10)
+
+Using only t>=2 in (8),
+
+  dim_C ker(lambda)+19>=4+19=23,
+
+so (10) closes the sharp tangent inequality.
+
+Theorem R2_equal_degree_four_reduces_to_low_type_nonzero_linear_colon:
+  In the surviving d=4 branch, the sharp inequality
+
+    length_C(A*eta)<=dim_C ker(lambda)+19
+
+  holds if either
+
+    t>=4
+
+  or
+
+    Cbar_1=0.
+
+  Therefore every still-unresolved d=4 candidate satisfies
+
+    t in {2,3},
+    Cbar_1 != 0.
+Qed.
+
+--------------------------------------------------------------------------
+5. UPDATED FRONTIER
 --------------------------------------------------------------------------
 
 RESULT:
   R2_cyclic_obstruction_is_annihilated_from_degree_d_plus_1.
   R2_cyclic_obstruction_multiplier_support_is_at_most_d.
   R2_Koszul_overlap_is_confined_to_D_through_d.
+  R2_equal_degree_four_reduces_to_low_type_nonzero_linear_colon.
 
 IMPORTANT_NONCONCLUSION:
   This file does NOT prove
 
     length_C(A*eta)<=dim_C ker(lambda)+19
 
-  for every d>=3.
+  for every surviving d=4 candidate.
   It does NOT close all residual R2.
   It does NOT close residual R1 or any parent branch.
 
 PROOF_STATUS:
-  pseudo-formal mathematical documentation.  The improvement is only the
-  exact degree consequence of the already proved support
-  Supp_deg(Cbar) subset {1,...,d+1}.  The theorem statements are not
-  machine-verified.
+  pseudo-formal mathematical documentation.  The theorem statements in this
+  file are not machine-verified.
 
 MACHINE_VERIFICATION_OF_NEW_THEOREM:
   not claimed.
 
 BOUNDARY:
-  Every surviving R2 cyclic loss A*eta is now supported only by multiplier
-  degrees 0,...,d.  Nonzero lambda-overlap is possible only in D,...,d.
+  Equal degree d=3 is closed in the dedicated low-degree file.  The first
+  unresolved equal-degree case is now d=4, and only candidates with
+
+    dim_C Soc(A) in {2,3},
+    Cbar_1 != 0
+
+  survive this reduction.
 
 MISSING_OBJECT:
-  Use the shortened support to close d=3, then isolate the first unresolved
-  equal degree d=4.
+  For d=4, t in {2,3}, and Cbar_1 != 0, recover the remaining three units of
+  compensation in
+
+    dim_C Ann_A(eta)_{<=4} + (dim_C ker(lambda)-4) >= 3,
+
+  or prove a stronger structural reduction of the linear colon layer.
 
 NEXT_ACTIONS:
   1. Rebuild the exact terminal workflow on this commit.
-  2. If green, close d=3 using h_A(0..2)=(1,4,7), h_A(3)=6, and
-     dim_C ker(lambda)>=4.
+  2. If green, analyze the case dim_C Cbar_1=1 using multiplication
+     A_4*Cbar_1 -> Cbar_5 and Cbar_5 subset Soc(A)_5.
   3. Do not continue past a failed rebuild.
