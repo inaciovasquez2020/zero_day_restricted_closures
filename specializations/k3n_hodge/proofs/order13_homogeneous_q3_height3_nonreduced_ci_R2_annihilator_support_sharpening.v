@@ -195,7 +195,78 @@ Theorem R2_equal_degree_four_reduces_to_low_type_nonzero_linear_colon:
 Qed.
 
 --------------------------------------------------------------------------
-5. UPDATED FRONTIER
+5. A PRINCIPAL LINEAR COLON LAYER CLOSES EQUAL DEGREE FOUR
+--------------------------------------------------------------------------
+
+Continue with d=4 and suppose
+
+  dim_C Cbar_1=1.
+
+Choose a nonzero homogeneous generator
+
+  c in Cbar_1.
+
+For every j>=2 and every a in A_4, equation (1) gives
+
+  a*Cbar_j subset Cbar_{4+j}=0,
+
+because 4+j>=6 while Cbar has no component above degree 5.  Hence the only
+part of Cbar seen by multiplication from A_4 is Cbar_1=C*c.  Therefore
+
+  Ann_A(Cbar)_4
+    =ker(m_c:A_4 -> Cbar_5),
+
+where
+
+  m_c(a)=a*c.                                       (11)
+
+Also
+
+  A_+*Cbar_5 subset Cbar_{>=6}=0.
+
+Thus
+
+  Cbar_5 subset Soc(A)_5,
+
+and consequently
+
+  dim_C Cbar_5<=t.                                  (12)
+
+Since h_A(4)=6, equations (11) and (12) imply
+
+  dim_C Ann_A(Cbar)_4>=6-t.                         (13)
+
+Using Ann_A(Cbar) subset Ann_A(eta), the degree-four quotient layer of A*eta
+has dimension at most t.  Together with (6),
+
+  length_C(A*eta)
+    <=1+4+7+8+t
+    =20+t.                                          (14)
+
+The socle-square kernel estimate (8) gives
+
+  dim_C ker(lambda)+19>=2t+19.
+
+Since t>=2,
+
+  20+t<=19+2t.
+
+Therefore
+
+  length_C(A*eta)<=dim_C ker(lambda)+19.
+
+Theorem R2_equal_degree_four_principal_linear_colon_closed:
+  If d=4 and dim_C Cbar_1=1, the sharp R2 tangent inequality holds.
+Qed.
+
+Combining this with the preceding reduction, every still-unresolved d=4
+candidate must satisfy
+
+  t in {2,3},
+  dim_C Cbar_1>=2.                                  (15)
+
+--------------------------------------------------------------------------
+6. UPDATED FRONTIER
 --------------------------------------------------------------------------
 
 RESULT:
@@ -203,6 +274,7 @@ RESULT:
   R2_cyclic_obstruction_multiplier_support_is_at_most_d.
   R2_Koszul_overlap_is_confined_to_D_through_d.
   R2_equal_degree_four_reduces_to_low_type_nonzero_linear_colon.
+  R2_equal_degree_four_principal_linear_colon_closed.
 
 IMPORTANT_NONCONCLUSION:
   This file does NOT prove
@@ -222,23 +294,24 @@ MACHINE_VERIFICATION_OF_NEW_THEOREM:
 
 BOUNDARY:
   Equal degree d=3 is closed in the dedicated low-degree file.  The first
-  unresolved equal-degree case is now d=4, and only candidates with
+  unresolved equal-degree case is d=4, and only candidates with
 
     dim_C Soc(A) in {2,3},
-    Cbar_1 != 0
+    dim_C Cbar_1>=2
 
   survive this reduction.
 
 MISSING_OBJECT:
-  For d=4, t in {2,3}, and Cbar_1 != 0, recover the remaining three units of
-  compensation in
+  For d=4, t in {2,3}, and dim_C Cbar_1>=2, prove enough common annihilator of
+  the multiplication pairing
 
-    dim_C Ann_A(eta)_{<=4} + (dim_C ker(lambda)-4) >= 3,
+    A_4 x Cbar_1 -> Cbar_5 subset Soc(A)_5
 
-  or prove a stronger structural reduction of the linear colon layer.
+  or enough extra Koszul kernel beyond Soc(A)^2 to recover the remaining
+  sharp compensation.
 
 NEXT_ACTIONS:
   1. Rebuild the exact terminal workflow on this commit.
-  2. If green, analyze the case dim_C Cbar_1=1 using multiplication
-     A_4*Cbar_1 -> Cbar_5 and Cbar_5 subset Soc(A)_5.
+  2. If green, analyze the rank of A_4 -> Hom_C(Cbar_1,Cbar_5) in the cases
+     t=2 and t=3.
   3. Do not continue past a failed rebuild.
