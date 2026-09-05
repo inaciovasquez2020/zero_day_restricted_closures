@@ -563,3 +563,221 @@ NEXT_ACTIONS:
   2. If green, compute lambda on the one-dimensional tail in (30), using that
      U kills every degree >=5 layer and x is the only surviving linear action.
   3. Do not continue past a failed rebuild.
+
+--------------------------------------------------------------------------
+9. THE UNIQUE RANK-SIX TAIL HAS AN EXTRA DEGREE-FOUR KOSZUL KERNEL DIRECTION
+--------------------------------------------------------------------------
+
+Continue with the unique tail shape (30).  Put
+
+  K:=(U)_4 subset A_4.
+
+Because dim_C U=3 and dim_C A_1=4, the quotient A/(U) has embedding dimension
+one.  Its degree-six part is nonzero by (30).  A standard graded quotient of
+C[x] which is nonzero in degree six is one-dimensional in every degree from
+zero through six.  Hence
+
+  dim_C (A/(U))_4=1.
+
+Since dim_C A_4=6, it follows that
+
+  dim_C K=5.                                        (31)
+
+Now restrict lambda to coefficient pairs in K^2.  A homogeneous Koszul class
+of total degree 4+k has coefficients of degree k.  For k>=2 and alpha in K,
+
+  R_k*alpha subset (U)_{4+k} subset Cbar_{4+k}=0,
+
+because 4+k>=6 and Cbar has no component above degree five.  There are no
+nonzero Koszul classes with scalar coefficients by minimality of u1,u2.
+Therefore lambda on K^2 can see only the linear-coefficient component H1_5:
+
+  lambda|_{K^2}:K^2 -> Hom_C(H1_5,A_5).             (32)
+
+The degreewise Koszul Euler formula at degree five gives, for d=4 and e>=6,
+
+  h_H1(5)
+    =h_A(5)+h_A(e+5)-h_R(5)+2h_R(1)-h_R(-3).
+
+Since A is a quotient of the Artinian Gorenstein ring R of socle degree e+2,
+
+  A_{e+5}=0.
+
+Also h_R(5)=8, h_R(1)=4, and h_R(-3)=0.  Thus
+
+  h_H1(5)=h_A(5)=3.                                 (33)
+
+By (31) and (33), the domain of (32) has dimension ten while its target has
+dimension nine.  Therefore
+
+  dim_C(ker(lambda) intersect K^2)>=1.              (34)
+
+The rank-six assumption makes m_4 injective, so equation (20) gives
+
+  Soc(A)_4=0.
+
+Consequently the nonzero degree-four kernel direction in (34) is disjoint
+from the already established graded subspace
+
+  Soc(A)^2 subset ker(lambda),
+
+which has dimension 2t=6.  Hence
+
+  dim_C ker(lambda)>=7.                             (35)
+
+Combining (35) with the universal degree-four cyclic bound (7),
+
+  length_C(A*eta)<=26<=7+19<=dim_C ker(lambda)+19.
+
+Therefore the unique tail shape (30) also closes.
+
+Theorem R2_equal_degree_four_rank_six_closed:
+  Every surviving d=4 candidate with rho=6 satisfies
+
+    length_C(A*eta)<=dim_C ker(lambda)+19.
+Qed.
+
+--------------------------------------------------------------------------
+10. THE REMAINING TYPE-TWO RANKS FOUR AND FIVE ALSO CLOSE
+--------------------------------------------------------------------------
+
+It remains from (18) only to consider
+
+  t=2,
+  rho in {4,5}.
+
+Retain
+
+  u:=dim_C U,
+  v:=dim_C V.
+
+We have u<=4, v<=2 and rho<=u*v.
+
+First suppose
+
+  v=2.
+
+Since V subset Soc(A)_5 and t=2, V is the entire socle of A.  If A had a
+nonzero homogeneous component above degree five, its highest nonzero component
+would supply an additional socle element outside V.  Hence
+
+  A_{>=6}=0,
+  A_5=V,
+  dim_C A_5=2.                                      (36)
+
+As in (25), the degreewise Euler formula gives
+
+  dim_C H1_5=dim_C A_5=2.                           (37)
+
+For coefficient pairs in A_4^2, all Koszul classes whose coefficients have
+degree at least two are invisible by (36), and there are no scalar-coefficient
+Koszul classes.  Thus
+
+  lambda|_{A_4^2}:A_4^2 -> Hom_C(H1_5,A_5).
+
+The domain has dimension twelve and, by (36)-(37), the target has dimension
+four.  Therefore
+
+  dim_C ker(lambda)>=8.                             (38)
+
+Using (17) and rho<=5,
+
+  length_C(A*eta)<=25<=8+19<=dim_C ker(lambda)+19.
+
+So every v=2 case closes.
+
+Now suppose
+
+  v=1.
+
+Since rho>=4 and u<=4, the inequality rho<=u*v forces
+
+  rho=4,
+  u=4.
+
+Thus U=A_1.  Since Cbar is an ideal supported only through degree five and A
+is standard graded, for every j>=6,
+
+  A_j=A_1*A_{j-1}=U*A_{j-1} subset Cbar_j=0.
+
+Hence again A_{>=6}=0.  Moreover
+
+  A_5=A_1*A_4=U*A_4 subset V,
+
+while V subset A_5, so
+
+  A_5=V,
+  dim_C A_5=1.                                      (39)
+
+The same degree-five Euler formula gives
+
+  dim_C H1_5=1.
+
+Therefore lambda on the twelve-dimensional space A_4^2 factors through a
+one-dimensional target, and
+
+  dim_C ker(lambda)>=11.                            (40)
+
+Together with (17) and rho=4,
+
+  length_C(A*eta)<=24<=11+19<=dim_C ker(lambda)+19.
+
+Thus the v=1 case also closes.
+
+Theorem R2_equal_degree_four_type_two_extremal_ranks_closed:
+  Every surviving d=4 candidate with t=2 and rho in {4,5} satisfies
+
+    length_C(A*eta)<=dim_C ker(lambda)+19.
+Qed.
+
+Combining Sections 4--10 yields the full equal-degree-four closure.
+
+Theorem R2_equal_degree_four_closed:
+  Every surviving non-Gorenstein R2 candidate with d=4 satisfies
+
+    length_C(A*eta)<=dim_C ker(lambda)+19,
+
+  and hence
+
+    dim_C Hom_B(L,A)>=N-19.
+Qed.
+
+--------------------------------------------------------------------------
+11. FINAL UPDATED FRONTIER
+--------------------------------------------------------------------------
+
+RESULT:
+  R2_equal_degree_four_rank_six_closed.
+  R2_equal_degree_four_type_two_extremal_ranks_closed.
+  R2_equal_degree_four_closed.
+
+IMPORTANT_NONCONCLUSION:
+  This file does NOT close every surviving R2 degree.
+  It does NOT close residual R1 or any parent branch.
+  The theorem statements in this file remain pseudo-formal mathematical
+  documentation and are not machine-verified Lean or Coq theorems.
+
+MACHINE_VERIFICATION_OF_NEW_THEOREM:
+  not claimed.
+
+BOUNDARY:
+  Equal degree d=3 is closed in the dedicated low-degree file, and equal
+  degree d=4 is now closed here.  The first equal-degree value not closed by
+  these low-degree arguments is d=5.
+
+MISSING_OBJECT:
+  For d=5 in the surviving non-Gorenstein R2 branch, sharpen the finite
+  multiplier-window estimate using the explicit initial Hilbert function,
+  the socle-square inclusion in ker(lambda), and the multiplication pairing
+
+    A_5 x Cbar_1 -> Cbar_6 subset Soc(A)_6,
+
+  strongly enough to prove
+
+    length_C(A*eta)<=dim_C ker(lambda)+19.
+
+NEXT_ACTIONS:
+  1. Rebuild the exact terminal workflow on this commit.
+  2. If green, compute the forced initial Hilbert function of A through degree
+     five for d=5 and reduce only the resulting extremal multiplication ranks.
+  3. Do not continue past a failed rebuild.
