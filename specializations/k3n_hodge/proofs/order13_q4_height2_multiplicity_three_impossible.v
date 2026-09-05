@@ -133,7 +133,7 @@ regular sequence, as in the saturated-core profile.  Since
 Theorem the_unmixed_degree_three_core_has_at_most_three_quadrics:
   Under U_1=0,
 
-    dim_C (Uunm)_2<=3.
+    dim_C U_2<=3.
 
 Proof:
   First suppose (Uunm)_1=0.  Then Y is nondegenerate.  Apply the external
