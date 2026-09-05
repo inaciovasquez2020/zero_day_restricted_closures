@@ -36,7 +36,7 @@ ExternalResult graded_AR_Serre_duality_dim1:
       ~= D underlineHom^Z_R(Y,X(a)),
 
   functorially. Here underlineHom denotes morphisms modulo those factoring
-  through graded projectives. This is Proposition 4.6 of Buchweitz--Iyama--
+  through graded projectives. This is Proposition 4.5 of Buchweitz--Iyama--
   Yamaura, Tilting theory for Gorenstein rings in dimension one.
 
 --------------------------------------------------------------------------
@@ -120,7 +120,7 @@ The sum is finite because P contains the m-primary ideal L, so B/P has finite
 length.
 
 --------------------------------------------------------------------------
-3. SPLIT THE FULL NEGATIVE DEFECT INTO TWO EXPLICIT PIECES
+3. NEGATIVE FACTOR-THROUGH MAPS VANISH
 --------------------------------------------------------------------------
 
 For each r, let
@@ -128,34 +128,44 @@ For each r, let
   F_r := P_r subset E_r
 
 be the subspace of degree-r endomorphisms factoring through graded projectives.
-Degreewise there is an exact sequence
 
-  0 -> F_r -> E_r -> underlineE_r -> 0.
+This is where the previous version carried an unnecessary term. Since B is
+standard nonnegatively graded,
 
-Define
+  B_r=0 for every r<0.
 
-  phi_neg := sum_{s>=1} dim_C F_{-s}.
+Because P is a homogeneous ideal of B,
 
-Then
+  P_r=0 for every r<0.
+
+Hence
+
+  F_r=0 for every r<0.
+
+Therefore
+
+  phi_neg := sum_{s>=1} dim_C F_{-s}=0.
+
+Theorem negative_factor_through_defect_vanishes:
+
+  phi_neg=0.
+Qed.
+
+Consequently the full negative defect is exactly the stable negative defect:
 
   delta_neg
     := sum_{s>=1} dim_C E_{-s}
-     = phi_neg + sum_{s>=1} dim_C underlineE_{-s}
-     = phi_neg + length_C(B/P)_{>=3}.
+     = sum_{s>=1} dim_C underlineE_{-s}
+     = length_C(B/tr_B(L))_{>=3}.
 
-Theorem exact_negative_defect_trace_decomposition:
+Theorem exact_negative_defect_is_trace_tail:
 
   delta_neg
-    = phi_neg + length_C(B/tr_B(L))_{>=3}.
+    = length_C(B/tr_B(L))_{>=3}.
 Qed.
 
-This replaces the opaque quantity delta_neg by two concrete finite objects:
-
-  (i) negative-degree trace products L*L, measured by phi_neg;
-  (ii) the degree-at-least-three tail of the Artinian trace quotient B/tr(L).
-
 --------------------------------------------------------------------------
-4. UPDATED SUFFICIENT INEQUALITY
+4. SHARPENED SUFFICIENT INEQUALITY
 --------------------------------------------------------------------------
 
 The preceding rigidity reduction gives
@@ -171,23 +181,29 @@ with
 
   delta_nonneg<=12.
 
-Hence it is sufficient to prove
+Using the exact trace-tail identity, it is sufficient to prove
 
-  phi_neg
-    + length_C(B/tr_B(L))_{>=3}
-    - epsilon_L
-      <=7.
+  length_C(B/tr_B(L))_{>=3} - epsilon_L <= 7.
 
-Equivalently, the remaining obstruction is no longer an arbitrary collection
-of negative endomorphisms: its stable quotient is exactly the high-degree tail
-of a finite trace quotient, and only the negative factor-through part remains
-to be compared directly with self-extensions.
+Since epsilon_L>=1, the simpler bound
+
+  length_C(B/tr_B(L))_{>=3} <= 8
+
+is sufficient.
+
+Thus the residual nonreduced H3-CI obstruction has been reduced to one
+concrete Artinian quantity: the degree-at-least-three tail of the trace
+quotient.
 
 RESULT:
-  exact_negative_defect_trace_decomposition.
+  negative_factor_through_defect_vanishes.
+  exact_negative_defect_is_trace_tail.
 
 IMPORTANT_NONCONCLUSION:
-  This file does NOT prove the displayed sufficient inequality.
+  This file does NOT prove
+
+    length_C(B/tr_B(L))_{>=3}<=8.
+
   It does NOT close R1 or R2.
   It does NOT close the full nonreduced H3-CI child.
   It does NOT close H2-CM, H2-NCM, homogeneous q=3, q<=2, or Oblivion Closure.
@@ -200,22 +216,22 @@ MACHINE_VERIFICATION_OF_NEW_THEOREM:
   not claimed.
 
 BOUNDARY:
-  delta_neg is exactly decomposed into negative trace-factor maps plus the
-  high-degree trace-quotient tail.
+  delta_neg is exactly the high-degree tail of B/tr_B(L); there is no separate
+  negative factor-through contribution.
 
 MISSING_OBJECT:
-  Prove
+  Prove, beginning with R2=d1=d2<d3,
 
-    phi_neg + length_C(B/tr_B(L))_{>=3} - epsilon_L <= 7
+    length_C(B/tr_B(L))_{>=3} <= 8,
 
-  for the residual R1/R2 degree patterns, beginning with R2.
+  or directly prove the sharper compensated inequality
+
+    length_C(B/tr_B(L))_{>=3} - epsilon_L <= 7.
 
 NEXT_ACTIONS:
   1. Re-read the exact terminal workflow for this commit.
-  2. If green, attack R2 by expressing F_{-s}=(L*L)_{-s} through the two
-     degree-d generators and the degree-e escape generator.
-  3. Compare the kernel of L tensor Lstar -> tr(L) with Ext^1_B(L,L), using
-     only a verified exact sequence or duality.
-  4. Bound the remaining trace-quotient tail by the multiplicity-eight generic
-     component data.
-  5. Do not promote H3-CI until the compensated bound is proved.
+  2. If green, attack R2 through the trace ideal of the two degree-d trapped
+     generators and the degree-e escape generator.
+  3. Bound the high-degree trace quotient rather than delta_neg directly.
+  4. Use Ext^1 compensation only if the raw trace-tail bound eight fails.
+  5. Do not promote H3-CI until R1 and R2 are both closed.
