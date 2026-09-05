@@ -781,3 +781,167 @@ NEXT_ACTIONS:
   2. If green, compute the forced initial Hilbert function of A through degree
      five for d=5 and reduce only the resulting extremal multiplication ranks.
   3. Do not continue past a failed rebuild.
+
+--------------------------------------------------------------------------
+12. EQUAL DEGREE FIVE REDUCES TO TWO ADJACENT MULTIPLICATION RANKS
+--------------------------------------------------------------------------
+
+Assume now
+
+  d=5.
+
+The surviving R2 branch has D=e-d>=2, hence e>=7.  The explicit Hilbert
+series of R gives
+
+  h_R(0)=1,
+  h_R(1)=4,
+  h_R(2)=7,
+  h_R(3)=8,
+  h_R(4)=8,
+  h_R(5)=8.
+
+Because u1,u2 are the two independent minimal generators of J_R in degree
+five, no quotient drop occurs below degree five, while the degree-five slice
+drops by exactly two.  Therefore
+
+  h_A(0)=1,
+  h_A(1)=4,
+  h_A(2)=7,
+  h_A(3)=8,
+  h_A(4)=8,
+  h_A(5)=6.                                         (41)
+
+By (4), A*eta is supported only by multiplier degrees 0,...,5.  The crude
+bound is therefore
+
+  length_C(A*eta)<=1+4+7+8+8+6=34.                 (42)
+
+The support of Cbar is now confined to degrees 1,...,6.  For a in A_4, only
+Cbar_1 and Cbar_2 can contribute to multiplication by a: for j>=3,
+
+  a*Cbar_j subset Cbar_{4+j}=0
+
+because 4+j>=7.  Define
+
+  mu4:A_4
+      -> Hom_C(Cbar_1,Cbar_5) direct_sum Hom_C(Cbar_2,Cbar_6)
+
+by
+
+  mu4(a)=(c |-> a*c on Cbar_1,
+          c |-> a*c on Cbar_2),
+
+and set
+
+  sigma:=rank_C(mu4).
+
+Then an element of A_4 annihilates all of Cbar if and only if both displayed
+multiplication components vanish.  Hence
+
+  Ann_A(Cbar)_4=ker(mu4).                            (43)
+
+For a in A_5, only Cbar_1 can contribute because
+
+  a*Cbar_j subset Cbar_{5+j}=0
+
+for j>=2.  Define
+
+  mu5:A_5 -> Hom_C(Cbar_1,Cbar_6),
+  mu5(a)(c)=a*c,
+
+and set
+
+  rho:=rank_C(mu5).
+
+Then
+
+  Ann_A(Cbar)_5=ker(mu5).                            (44)
+
+Since Ann_A(Cbar) subset Ann_A(eta), equations (43)-(44) imply that the
+degree-four and degree-five multiplier layers of A*eta have dimensions at
+most sigma and rho respectively.  The lower multiplier degrees contribute at
+most
+
+  h_A(0)+h_A(1)+h_A(2)+h_A(3)=1+4+7+8=20.
+
+Consequently
+
+  length_C(A*eta)<=20+sigma+rho.                    (45)
+
+The sharp R2 tangent inequality follows whenever
+
+  20+sigma+rho<=dim_C ker(lambda)+19,
+
+i.e. whenever
+
+  sigma+rho<=dim_C ker(lambda)-1.                   (46)
+
+Using the established socle-square inclusion
+
+  Soc(A)^2 subset ker(lambda),
+
+and writing t=dim_C Soc(A), a sufficient purely numerical condition is
+
+  sigma+rho<=2t-1.                                  (47)
+
+Theorem R2_equal_degree_five_two_layer_rank_reduction:
+  In the surviving d=5 branch, if
+
+    rank_C(mu4)+rank_C(mu5)<=2*dim_C Soc(A)-1,
+
+  then
+
+    length_C(A*eta)<=dim_C ker(lambda)+19,
+
+  and hence
+
+    dim_C Hom_B(L,A)>=N-19.
+Qed.
+
+Therefore every still-unresolved d=5 candidate must satisfy
+
+  sigma+rho>=2t.                                    (48)
+
+No contradiction for the rank-sum regime (48) is asserted here.
+
+--------------------------------------------------------------------------
+13. LATEST FRONTIER
+--------------------------------------------------------------------------
+
+RESULT:
+  R2_equal_degree_five_two_layer_rank_reduction.
+
+IMPORTANT_NONCONCLUSION:
+  This file does NOT close every surviving d=5 candidate.
+  It does NOT close all residual R2.
+  It does NOT close residual R1 or any parent branch.
+  The theorem statements in this file remain pseudo-formal mathematical
+  documentation and are not machine-verified Lean or Coq theorems.
+
+MACHINE_VERIFICATION_OF_NEW_THEOREM:
+  not claimed.
+
+BOUNDARY:
+  Equal degrees d=3 and d=4 are closed by the preceding low-degree arguments.
+  For d=5, every still-unresolved candidate satisfies
+
+    sigma+rho>=2t,
+
+  where
+
+    sigma=rank_C(A_4 -> Hom_C(Cbar_1,Cbar_5)
+                         direct_sum Hom_C(Cbar_2,Cbar_6)),
+    rho=rank_C(A_5 -> Hom_C(Cbar_1,Cbar_6)),
+    t=dim_C Soc(A).
+
+MISSING_OBJECT:
+  In the surviving d=5 rank-sum regime sigma+rho>=2t, use the graded algebra
+  structure of Cbar_6 subset Soc(A)_6 and the degree-six Koszul layer to force
+  either additional annihilator in degrees four and five or additional
+  kernel beyond Soc(A)^2.
+
+NEXT_ACTIONS:
+  1. Rebuild the exact terminal workflow on this commit.
+  2. If green, compute H1_6 degreewise and use the top colon layer Cbar_6 to
+     reduce only the extremal rank-sum cases in (48).
+  3. Do not continue past a failed rebuild.
