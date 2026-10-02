@@ -15,3 +15,5 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run anti-unconditional verifier
         run: python3 verification/anti_unconditional_rule.py
+      - name: Run K3n degree-four closure arithmetic certificate
+        run: python3 verification/verify_k3n_degree_four_closure_reduction.py
