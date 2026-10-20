@@ -114,3 +114,53 @@ The mathematical conclusion follows from (iii). The substantive Zero Day work is
 `UNIVERSAL_ZERO_DAY_ORIGIN := OPEN`
 
 No unconditional creation theorem, physical cosmological conclusion, or metaphysical conclusion is claimed.
+
+
+## 9. Backtrack result: finite stages do not classify the succession
+
+Let `B(x)` mean that x comes to be, and `Fin(x)` mean x is finite under the intended, independently specified measure.
+
+The premise
+
+`forall x, B(x) -> Fin(x)`
+
+does not classify the collection or succession of becoming-events. A model can have a finite stage at every index while the index set is infinite. For example, for each natural number n, let stage n contain a finite number n+1 of items. Every stage is finite, but there is no last stage in the sequence indexed by the natural numbers. This model does not establish that an actual universe behaves this way; it establishes that finite stages alone do not exclude an endless succession.
+
+This is the central distinction between:
+- **finite member:** each individual stage has finite content;
+- **potentially endless succession:** for every stage, a later stage is possible in the model;
+- **actual infinite totality:** the complete set of stages is treated as an existing infinite collection.
+
+The actual/potential distinction is discussed in the scholarly literature on infinity, including Linnebo and Shapiro, *Actual and Potential Infinity* (Noûs 53, 2019): https://doi.org/10.1111/nous.12208 and the Stanford Encyclopedia of Philosophy overview: https://plato.stanford.edu/entries/infinity/.
+
+## 10. Candidate restriction principle and its burden
+
+A stronger premise could be stated:
+
+`NoActualInfiniteTotalityOfBecoming := the complete collection of becoming-stages is not an actual infinite totality.`
+
+This is **not yet a theorem** of finite becoming. It is an additional restriction. To use it, Zero Day must justify why the complete succession of becoming-stages is excluded from the permitted classes of infinity. If the restriction simply says “the past cannot be infinite because it must have a beginning,” it is circular. If it is independently derived from a general rule about which kinds of things can be infinite, that rule and its application to the succession must be proved.
+
+Also, forbidding an actual infinite totality is not automatically the same as proving that time emerges. A theory may reject a completed infinite past while still needing an account of the temporal order, its first state, and whether the state domain captures all existence.
+
+## 11. Physics connection: useful but non-decisive
+
+Research explores time as a relational or emergent description rather than a fundamental external parameter. For example, *Emergence of Time from Quantum Interaction with the Environment* (Physical Review Letters 131, 140202) studies how a system/environment relation can support a time description: https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.131.140202. This is a research framework, not evidence that finite things necessarily generate time or that the universe has an absolute first state.
+
+Conversely, a 2025 *Physical Review D* paper constructs past- and future-eternal geodesically complete cosmological models under particular assumptions and discusses energy-condition constraints: https://journals.aps.org/prd/abstract/10.1103/5mhz-m8bg. Such models show that a universal physical beginning is not a consequence of every theoretical spacetime framework; they do not disprove a correctly specified metaphysical premise.
+
+## 12. Updated weakest link
+
+The immediate missing lemma is:
+
+**Restricted-Infinity Application Lemma (unproved):** From an independently justified classification of which kinds of things may be infinite, show that the complete succession of things that come to be cannot be an admissible infinite process or totality.
+
+If this lemma fails, finite becoming alone cannot force a first state. If it succeeds, the next steps are to derive an appropriate ordering, prove well-foundedness or finiteness, and show the domain is exhaustive for the intended claim about all existence.
+
+`FINITE_MEMBERS -> FINITE_SUCCESSION := NOT_PROVED`
+
+`RESTRICTED_INFINITY_APPLICATION := NOT_PROVED`
+
+`FINITE_SUCCESSION + NONEMPTY_STRICT_TOTAL_ORDER -> FIRST_STATE := PROVED`
+
+`TIME_EMERGENCE_FROM_FINITE_BECOMING := OPEN`
