@@ -1,0 +1,48 @@
+{
+  "model": "FiniteObjectsInfiniteHistoryCountermodel",
+  "status": "EXPLICIT_LOGICAL_COUNTERMODEL",
+  "purpose": "Disprove the inference from finite individual objects or a finite object collection to a finite temporal history or a first temporal state.",
+  "domains": {
+    "objects": ["a"],
+    "temporal_states": "Z"
+  },
+  "interpretation": {
+    "object_collection_is_finite": true,
+    "every_object_is_finite": true,
+    "history_state_set_is_infinite": true,
+    "earlier_than": "m < n in the usual integer order means state m is earlier than state n",
+    "object_exists_at": "a exists at every temporal state n in Z"
+  },
+  "verified_consequences": {
+    "nonempty_object_collection": true,
+    "finite_object_collection": true,
+    "each_object_is_finite": true,
+    "no_first_temporal_state": "For every n in Z, n-1 is a temporal state and n-1 < n.",
+    "no_finite_history_conclusion": "The temporal-state set Z is infinite."
+  },
+  "logical_boundary": {
+    "refutes": [
+      "every object is finite -> temporal history is finite",
+      "the collection of objects is finite -> temporal history is finite",
+      "every object is finite -> a first temporal state exists"
+    ],
+    "does_not_refute": [
+      "the complete temporal-state set is finite and nonempty, with a strict total order -> a first state exists",
+      "the temporal order is well-founded -> a first state exists, assuming a nonempty state set and a strict total order"
+    ],
+    "does_not_claim": [
+      "that the physical universe has an infinite past",
+      "that this abstract model describes actual cosmology",
+      "that time is fundamental rather than emergent",
+      "that Zero Day is disproved"
+    ]
+  },
+  "proof_sketch": [
+    "Let the object domain be the singleton {a}; it is finite.",
+    "Let temporal states be the integers Z with the usual strict order.",
+    "Let a exist at every integer-indexed state.",
+    "For any proposed first state n, the state n-1 exists and is earlier.",
+    "Therefore the history has no first state, despite the finite object domain and finite individual object."
+  ],
+  "next_missing_premise": "An independently justified principle linking the intended notion of finiteness to well-foundedness of the global temporal order."
+}
